@@ -2,18 +2,18 @@ import type { ArticleData } from './types';
 
 const article: ArticleData = {
   slug: 'getting-started',
-  title: 'Getting Started with PainTracker: Your First Week of Symptom Tracking',
+  title: 'Getting Started with Pain Tracker: Your First Week of Symptom Tracking',
   description:
-    'Set up PainTracker in under a minute and start tracking pain symptoms privately. No account. No cloud. Just install, set a passphrase, and log your first entry.',
-  h1: 'Getting Started with PainTracker: From Install to First Export',
+    'Set up Pain Tracker in under a minute and start tracking pain symptoms privately. No account. No cloud. Just install, set a passphrase, and log your first entry.',
+  h1: 'Getting Started with Pain Tracker: From Install to First Export',
   cluster: 'utility',
   isPillar: false,
   schemaTypes: ['HowTo', 'FAQPage'],
   sections: [
     {
-      h2: 'Install PainTracker in under a minute',
+      h2: 'Install Pain Tracker in under a minute',
       paragraphs: [
-        'PainTracker is a Progressive Web App that installs directly from your browser. No app store. No account. Visit www.paintracker.ca/app in Chrome, Safari, Edge, or Firefox on any device. On mobile, tap the browser\'s "Add to Home Screen" option. On desktop, click the install icon in the address bar. The app downloads to your device and works offline immediately.',
+        'Pain Tracker is a Progressive Web App that installs directly from your browser. No app store. No account. Visit www.paintracker.ca/app in Chrome, Safari, Edge, or Firefox on any device. On mobile, tap the browser\'s "Add to Home Screen" option. On desktop, click the install icon in the address bar. The app downloads to your device and works offline immediately.',
         'There is no registration, no email verification, no terms-of-service agreement for your data. You set a passphrase that encrypts your entries, and you are ready. The entire setup takes under sixty seconds.',
       ],
     },
@@ -62,19 +62,19 @@ const article: ArticleData = {
   ],
   faqs: [
     {
-      question: 'Do I need to create an account to use PainTracker?',
+      question: 'Do I need to create an account to use Pain Tracker?',
       answer:
-        'No. PainTracker requires no account, email, or personal information. You set a passphrase to encrypt your data locally, and that is the only setup required.',
+        'No. Pain Tracker requires no account, email, or personal information. You set a passphrase to encrypt your data locally, and that is the only setup required.',
     },
     {
-      question: 'What devices does PainTracker work on?',
+      question: 'What devices does Pain Tracker work on?',
       answer:
-        'PainTracker works on any device with a modern web browser: iPhones, Android phones, iPads, tablets, laptops, and desktop computers. It installs as a Progressive Web App from your browser.',
+        'Pain Tracker works on any device with a modern web browser: iPhones, Android phones, iPads, tablets, laptops, and desktop computers. It installs as a Progressive Web App from your browser.',
     },
     {
-      question: 'Can I use PainTracker without an internet connection?',
+      question: 'Can I use Pain Tracker without an internet connection?',
       answer:
-        'Yes. After the initial installation, PainTracker works entirely offline. Entry logging, analytics, and exports all function without any internet connection.',
+        'Yes. After the initial installation, Pain Tracker works entirely offline. Entry logging, analytics, and exports all function without any internet connection.',
     },
     {
       question: 'What if I forget my passphrase?',

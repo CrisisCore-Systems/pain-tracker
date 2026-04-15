@@ -20,28 +20,28 @@ const article: ArticleData = {
     {
       h2: 'What a clinical PDF report includes',
       paragraphs: [
-        'PainTracker\'s PDF export is designed for clinical contexts, not visual appeal. The report includes a summary section with date range, total entries, average pain intensity, peak pain levels, and most common pain locations. Trend charts show pain intensity over time, giving clinicians an immediate visual overview of the tracking period.',
+        'Pain Tracker\'s PDF export is designed for clinical contexts, not visual appeal. The report includes a summary section with date range, total entries, average pain intensity, peak pain levels, and most common pain locations. Trend charts show pain intensity over time, giving clinicians an immediate visual overview of the tracking period.',
         'Below the summary, the report includes a medication log showing what was taken and when, functional impact data documenting the real-world effects of pain on daily activities, and individual entry details for clinicians who want to examine specific days. The layout follows medical documentation conventions: summary first, details second, in a format that healthcare providers are trained to read.',
       ],
     },
     {
       h2: 'You decide what leaves your device',
       paragraphs: [
-        'Every PainTracker export is user-initiated. Nothing leaves your device automatically, and you control exactly what is included. Select a date range, choose which data fields appear in the report, and generate the PDF locally. The export process runs entirely in your browser. No server processes your data at any point.',
-        'This control matters because different providers need different data. Your physiotherapist needs functional impact details and body location maps. Your prescribing physician needs medication-response correlations. An insurance reviewer needs consistent intensity documentation and timeline evidence. PainTracker lets you tailor each export to its intended audience.',
+        'Every Pain Tracker export is user-initiated. Nothing leaves your device automatically, and you control exactly what is included. Select a date range, choose which data fields appear in the report, and generate the PDF locally. The export process runs entirely in your browser. No server processes your data at any point.',
+        'This control matters because different providers need different data. Your physiotherapist needs functional impact details and body location maps. Your prescribing physician needs medication-response correlations. An insurance reviewer needs consistent intensity documentation and timeline evidence. Pain Tracker lets you tailor each export to its intended audience.',
       ],
     },
     {
       h2: 'Export formats beyond PDF',
       paragraphs: [
-        'While PDF is the most common choice for clinical sharing, PainTracker also supports CSV and JSON exports. CSV provides raw tabular data that clinicians or researchers can analyse in spreadsheet software, apply their own statistical methods, or import into clinical databases. Each row represents one entry with standardised columns.',
+        'While PDF is the most common choice for clinical sharing, Pain Tracker also supports CSV and JSON exports. CSV provides raw tabular data that clinicians or researchers can analyse in spreadsheet software, apply their own statistical methods, or import into clinical databases. Each row represents one entry with standardised columns.',
         'JSON export captures the complete data structure and is intended for technical backup and data portability. If you ever need to move your data to another tool or maintain a machine-readable archive, JSON preserves the full fidelity of your records including structured fields that CSV flattens.',
       ],
     },
     {
       h2: 'WorkSafeBC-specific exports',
       paragraphs: [
-        'Workers\' compensation claims in British Columbia require specific documentation that demonstrates the relationship between a workplace injury and ongoing symptoms. PainTracker includes a WorkSafeBC export template that structures your pain data according to the documentation expectations of WCB adjudicators.',
+        'Workers\' compensation claims in British Columbia require specific documentation that demonstrates the relationship between a workplace injury and ongoing symptoms. Pain Tracker includes a WorkSafeBC export template that structures your pain data according to the documentation expectations of WCB adjudicators.',
         'The template emphasises timeline evidence linking injury dates to symptom onset, consistent documentation of pain levels and functional limitations, medication management records, and treatment compliance evidence. This structured approach helps ensure your claim is supported by the kind of documentation reviewers expect.',
       ],
     },

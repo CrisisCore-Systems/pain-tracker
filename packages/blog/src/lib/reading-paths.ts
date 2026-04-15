@@ -77,7 +77,7 @@ export const readingPaths: ReadingPath[] = [
     description:
       'A careful path through structured summaries, export boundaries, and privacy-safe documentation workflows for claims support.',
     postCount: 3,
-    startLabel: 'How Pain Tracker Pro Streamlines WorkSafeBC Claims',
+    startLabel: 'How Pain Tracker Streamlines WorkSafeBC Claims',
     startHref:
       'https://blog.paintracker.ca/worksafe-bc-case-study-documentation-time-savings',
     relatedSlugs: [

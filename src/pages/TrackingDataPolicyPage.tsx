@@ -17,7 +17,7 @@ export const TrackingDataPolicyPage: React.FC = () => {
   useEffect(() => {
     document.title = 'Tracking & Data Policy — Pain Tracker';
     return () => {
-      document.title = 'PainTracker';
+      document.title = 'Pain Tracker';
     };
   }, []);
 

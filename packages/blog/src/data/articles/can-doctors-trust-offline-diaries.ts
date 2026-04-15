@@ -21,7 +21,7 @@ const article: ArticleData = {
       h2: 'What clinical research shows',
       paragraphs: [
         'Studies on electronic pain diaries have shown several advantages over paper diaries: higher compliance rates, elimination of backfilling, and more accurate pain intensity data when compared against physiological markers. Digital timestamps prevent the common paper diary problem of patients filling out an entire week\'s worth of entries before the appointment.',
-        'The Numerical Rating Scale used in digital diaries like PainTracker is one of the most validated pain measurement tools in clinical research. Its reliability and sensitivity to change are well established across pain conditions. Applied consistently in a structured digital format, NRS data is clinically actionable.',
+        'The Numerical Rating Scale used in digital diaries like Pain Tracker is one of the most validated pain measurement tools in clinical research. Its reliability and sensitivity to change are well established across pain conditions. Applied consistently in a structured digital format, NRS data is clinically actionable.',
       ],
     },
     {
@@ -35,13 +35,13 @@ const article: ArticleData = {
       h2: 'Structured data vs. free-text notes',
       paragraphs: [
         'Clinicians can interpret structured data, numerical scales, categorical selections, body maps, far more efficiently than free-text narratives. A pain log with consistent numerical intensity, standardised descriptors, and timestamped entries allows a clinician to assess trends at a glance, without parsing individual writing styles.',
-        'PainTracker prioritizes structured inputs for this reason. Free-text notes are available for context, but the core data points use consistent scales and categories. The data is readable, trend-analysable, and clinically interpretable. That is a design decision made in service of the appointment.',
+        'Pain Tracker prioritizes structured inputs for this reason. Free-text notes are available for context, but the core data points use consistent scales and categories. The data is readable, trend-analysable, and clinically interpretable. That is a design decision made in service of the appointment.',
       ],
     },
     {
       h2: 'How export quality builds clinical trust',
       paragraphs: [
-        'The format in which data is presented to clinicians significantly affects how it is received. A well-organized PDF with clear charts, summary statistics, and structured data tables conveys reliability. PainTracker\'s clinical export templates present patient-generated data in a format that aligns with clinical documentation standards, because if the output does not look like something a professional produced, it may not get the attention it deserves.',
+        'The format in which data is presented to clinicians significantly affects how it is received. A well-organized PDF with clear charts, summary statistics, and structured data tables conveys reliability. Pain Tracker\'s clinical export templates present patient-generated data in a format that aligns with clinical documentation standards, because if the output does not look like something a professional produced, it may not get the attention it deserves.',
         'The export includes: date range and entry count, average and peak pain intensity, pain location frequency, medication log, functional impact trends, and individual entries for detail review. Comprehensive but organized. That combination is what makes a clinician actually use the data rather than set it aside.',
       ],
     },

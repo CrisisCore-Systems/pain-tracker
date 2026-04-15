@@ -307,7 +307,7 @@ const FAQS = [
   {
     question: 'Is there a digital version?',
     answer:
-      'Yes. PainTracker tracks all these symptoms digitally, auto-detects correlations between symptoms, generates clinical reports, and encrypts everything on your device. Many people start with paper to figure out which symptoms matter most, then transition to digital for pattern detection and convenience.',
+      'Yes. Pain Tracker tracks all these symptoms digitally, auto-detects correlations between symptoms, generates clinical reports, and encrypts everything on your device. Many people start with paper to figure out which symptoms matter most, then transition to digital for pattern detection and convenience.',
   },
 ];
 

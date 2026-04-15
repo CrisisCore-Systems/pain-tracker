@@ -14,7 +14,7 @@ const article: ArticleData = {
       h2: 'Why structure matters more than effort',
       paragraphs: [
         'An unstructured pain diary becomes a collection of inconsistent entries that are difficult to interpret. A structured template ensures you capture the same data points each time, producing comparable records that reveal trends and support clinical decisions. The template defines what to record, not how you feel about it. Consistency comes from structure, not discipline.',
-        'PainTracker provides a built-in template through its structured entry interface: intensity scale, body map, quality descriptors, timing, medications, functional impact, and optional notes. This combines the thoroughness of a clinical assessment tool with the accessibility of a daily habit.',
+        'Pain Tracker provides a built-in template through its structured entry interface: intensity scale, body map, quality descriptors, timing, medications, functional impact, and optional notes. This combines the thoroughness of a clinical assessment tool with the accessibility of a daily habit.',
       ],
     },
     {
@@ -22,13 +22,13 @@ const article: ArticleData = {
       paragraphs: [
         'Every pain diary entry should capture at minimum: date and time, pain intensity on a consistent scale (0 to 10 is standard), primary pain location, and pain quality. These four data points take seconds to record and provide the foundation for meaningful trend analysis. Everything else is valuable but optional. A minimal entry is always better than a skipped day.',
         'Expanding beyond the minimum, record: duration of pain, whether the pain radiates to other areas, medications taken (name, dose, timing), functional impact on daily activities, potential triggers you have noticed, and any interventions you attempted like rest, ice, or stretching. This richer dataset allows more nuanced analysis and gives clinicians a multi-dimensional view of your condition.',
-        'PainTracker organises these elements into a flow that moves from quick-capture essentials to optional enrichments. The interface design reflects the priority: capture something every day, capture everything when you have the capacity.',
+        'Pain Tracker organises these elements into a flow that moves from quick-capture essentials to optional enrichments. The interface design reflects the priority: capture something every day, capture everything when you have the capacity.',
       ],
     },
     {
       h2: 'Pain intensity scales explained',
       paragraphs: [
-        'The 0 to 10 Numerical Rating Scale is the most widely used pain measurement tool in clinical practice. Zero represents no pain, ten represents the worst pain imaginable. Its simplicity makes it fast to use and universally understood by healthcare providers. PainTracker uses a visual slider that maps to this scale, providing a tactile input that many users find more intuitive than selecting a number.',
+        'The 0 to 10 Numerical Rating Scale is the most widely used pain measurement tool in clinical practice. Zero represents no pain, ten represents the worst pain imaginable. Its simplicity makes it fast to use and universally understood by healthcare providers. Pain Tracker uses a visual slider that maps to this scale, providing a tactile input that many users find more intuitive than selecting a number.',
         'Consistency matters more than precision. A patient who rates their daily headache as a 4 every day and a flare as a 7 is providing useful relative data, even if another patient would rate the same sensations differently. The scale tracks your pain relative to your own experience. That is what makes it useful.',
       ],
     },
@@ -36,7 +36,7 @@ const article: ArticleData = {
       h2: 'Body mapping for pain location',
       paragraphs: [
         'Written descriptions of pain location are often imprecise. "Lower back" might mean the lumbar spine, the sacroiliac joint, or the gluteal muscles. Each suggests different conditions and different treatments. A visual body map lets you tap or click the exact area, producing location data that is unambiguous and clinically precise.',
-        'Recording whether pain is localised, diffuse, or radiating adds diagnostic value. Pain radiating from the lower back down the leg suggests nerve involvement. Pain that is widespread and bilateral may suggest central sensitisation. PainTracker\'s body map captures location with enough specificity to support these distinctions.',
+        'Recording whether pain is localised, diffuse, or radiating adds diagnostic value. Pain radiating from the lower back down the leg suggests nerve involvement. Pain that is widespread and bilateral may suggest central sensitisation. Pain Tracker\'s body map captures location with enough specificity to support these distinctions.',
       ],
     },
     {
@@ -49,7 +49,7 @@ const article: ArticleData = {
     {
       h2: 'Adapting the template to your condition',
       paragraphs: [
-        'No single template is perfect for every pain condition. Migraine sufferers might add aura descriptions and light sensitivity ratings. Arthritis patients might track joint stiffness duration and grip strength. Fibromyalgia patients might include fatigue and cognitive fog scores alongside pain. PainTracker\'s tags and notes fields provide the flexibility to extend the standard template to your specific needs.',
+        'No single template is perfect for every pain condition. Migraine sufferers might add aura descriptions and light sensitivity ratings. Arthritis patients might track joint stiffness duration and grip strength. Fibromyalgia patients might include fatigue and cognitive fog scores alongside pain. Pain Tracker\'s tags and notes fields provide the flexibility to extend the standard template to your specific needs.',
         'The key is to decide on your personal additions once and then use them consistently. A custom field you track every day for a month is far more useful than one you remember intermittently. Start with the core template, add one or two condition-specific fields, and adjust after a few weeks of use.',
       ],
     },

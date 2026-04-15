@@ -34,7 +34,7 @@ export const OvertonFrameworkPage: React.FC = () => {
   useEffect(() => {
     document.title = 'The Overton Framework — Protective Computing (Canon)';
     return () => {
-      document.title = 'PainTracker';
+      document.title = 'Pain Tracker';
     };
   }, []);
 
@@ -68,7 +68,7 @@ export const OvertonFrameworkPage: React.FC = () => {
           </h2>
           <p className="text-slate-300 leading-relaxed">
             The Overton Framework is a systems-engineering discipline for designing software under conditions of human
-            vulnerability. PainTracker is its reference implementation.
+            vulnerability. Pain Tracker is its reference implementation.
           </p>
         </section>
 
@@ -127,7 +127,7 @@ export const OvertonFrameworkPage: React.FC = () => {
             Boundary
           </h2>
           <p className="text-slate-300 leading-relaxed">
-            PainTracker can be used without knowledge of the framework.
+            Pain Tracker can be used without knowledge of the framework.
           </p>
         </section>
 

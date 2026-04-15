@@ -20,7 +20,7 @@ const article: ArticleData = {
     {
       h2: 'Documenting flare severity and duration',
       paragraphs: [
-        'Consistent severity measurement during flares is critical for comparing one flare to another. Was this one worse than last month\'s? Longer? More disabling? Without structured tracking, those comparisons rely on memory, which is unreliable during periods of high pain and distress. PainTracker\'s daily intensity recording creates a continuous timeline that makes flare comparison objective.',
+        'Consistent severity measurement during flares is critical for comparing one flare to another. Was this one worse than last month\'s? Longer? More disabling? Without structured tracking, those comparisons rely on memory, which is unreliable during periods of high pain and distress. Pain Tracker\'s daily intensity recording creates a continuous timeline that makes flare comparison objective.',
         'Duration matters as much as peak severity for clinical assessment and self-management. A flare that peaks at 8 but resolves in two days may be less functionally disabling than one that peaks at 6 but persists for two weeks. Daily entries through a flare capture both dimensions.',
       ],
     },
@@ -28,7 +28,7 @@ const article: ArticleData = {
       h2: 'Finding your triggers',
       paragraphs: [
         'Common flare triggers include physical overexertion, sleep disruption, emotional stress, weather changes, dietary factors, hormonal fluctuations, and illness. The challenge is that triggers often precede flares by one or two days, making the connection invisible without tracked data you can review retrospectively.',
-        'PainTracker\'s tagging and notes system lets you record potential triggers alongside your daily entries. After several flares, review the days before each one: what activities did you do, what was the weather, how did you sleep, how was your stress. Patterns typically emerge within two to three months of consistent tracking. Sometimes sooner. Rarely never.',
+        'Pain Tracker\'s tagging and notes system lets you record potential triggers alongside your daily entries. After several flares, review the days before each one: what activities did you do, what was the weather, how did you sleep, how was your stress. Patterns typically emerge within two to three months of consistent tracking. Sometimes sooner. Rarely never.',
       ],
     },
     {
@@ -42,7 +42,7 @@ const article: ArticleData = {
       h2: 'Showing your care team the full picture',
       paragraphs: [
         'When you can show your doctor a three-month timeline with flare events marked, including triggers, severity, duration, and treatment response, the clinical conversation shifts. Instead of describing flares verbally, you are presenting objective data that supports treatment decisions.',
-        'PainTracker\'s export tools let you create reports that highlight flare periods within the broader context of your daily tracking. This contextualised view shows your care team not just what happens during flares, but what your baseline looks like, how quickly you recover, and whether flare frequency is changing over time.',
+        'Pain Tracker\'s export tools let you create reports that highlight flare periods within the broader context of your daily tracking. This contextualised view shows your care team not just what happens during flares, but what your baseline looks like, how quickly you recover, and whether flare frequency is changing over time.',
       ],
     },
   ],

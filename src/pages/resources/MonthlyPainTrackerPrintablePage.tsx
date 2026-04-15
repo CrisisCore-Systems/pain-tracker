@@ -290,7 +290,7 @@ const FAQS = [
   {
     question: 'Can I use this alongside the digital app?',
     answer:
-      'Absolutely. Paper monthly logs work well alongside PainTracker. The app captures daily detail with less effort, auto-generates monthly reports, and detects patterns. Many people use paper for the calendar overview (it\'s satisfying to see a full month at a glance) and the app for the analysis and convenience. The data is compatible — you\'re tracking the same clinical dimensions.',
+      'Absolutely. Paper monthly logs work well alongside Pain Tracker. The app captures daily detail with less effort, auto-generates monthly reports, and detects patterns. Many people use paper for the calendar overview (it\'s satisfying to see a full month at a glance) and the app for the analysis and convenience. The data is compatible — you\'re tracking the same clinical dimensions.',
   },
   {
     question: 'Is my privacy protected?',

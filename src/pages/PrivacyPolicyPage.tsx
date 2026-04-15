@@ -16,7 +16,7 @@ export const PrivacyPolicyPage: React.FC = () => {
 
   useEffect(() => {
     document.title = 'Privacy Policy — Pain Tracker';
-    return () => { document.title = 'PainTracker'; };
+    return () => { document.title = 'Pain Tracker'; };
   }, []);
 
   return (

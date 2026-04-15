@@ -29,28 +29,28 @@ const article: ArticleData = {
       h2: 'Security: smaller attack surface, different responsibility',
       paragraphs: [
         'Cloud apps benefit from professional security teams, automated backups, and infrastructure redundancy. A well-managed cloud platform can be highly secure. But the attack surface is vastly larger: network transmission, server-side storage, backup systems, admin access, third-party integrations, and API endpoints all represent potential vulnerabilities.',
-        'Local apps have a smaller attack surface. The data exists on one device, protected by device security and application-level encryption. The trade-off: you are responsible for your own backups. If your device is lost or damaged, local data without an exported backup is gone. PainTracker mitigates this by making exports simple and encouraging regular backups.',
+        'Local apps have a smaller attack surface. The data exists on one device, protected by device security and application-level encryption. The trade-off: you are responsible for your own backups. If your device is lost or damaged, local data without an exported backup is gone. Pain Tracker mitigates this by making exports simple and encouraging regular backups.',
       ],
     },
     {
       h2: 'When the connection drops',
       paragraphs: [
         'Cloud apps require internet to sync and may become unusable during outages. This is more than inconvenient. If you need to log symptoms during a flare and your connection is down, that data point is lost. For people in rural areas with unreliable connectivity, cloud dependency is not a minor limitation, it is a structural problem that makes the tool unreliable exactly when it is needed most.',
-        'PainTracker works entirely offline once installed as a Progressive Web App. Every feature, entry logging, analytics, exports, functions without any network connection. Offline-first is the primary operating mode, not a degraded fallback.',
+        'Pain Tracker works entirely offline once installed as a Progressive Web App. Every feature, entry logging, analytics, exports, functions without any network connection. Offline-first is the primary operating mode, not a degraded fallback.',
       ],
     },
     {
       h2: 'Who controls your data in the long run',
       paragraphs: [
         'With cloud apps, your data is subject to the provider\'s terms of service, retention policies, and business continuity. If the company shuts down, your data may disappear with it, or be sold as a business asset in bankruptcy proceedings. Even operational apps sometimes make it difficult to export your complete data in a usable format.',
-        'Local-first apps give you direct control. PainTracker stores data in your browser\'s IndexedDB and provides export tools for PDF, CSV, and JSON. You can back up anytime, store copies wherever you choose, and switch tools without losing your history. That is genuine data ownership, not a marketing claim.',
+        'Local-first apps give you direct control. Pain Tracker stores data in your browser\'s IndexedDB and provides export tools for PDF, CSV, and JSON. You can back up anytime, store copies wherever you choose, and switch tools without losing your history. That is genuine data ownership, not a marketing claim.',
       ],
     },
     {
       h2: 'Making the right choice for your situation',
       paragraphs: [
         'If you need multi-device sync or collaborative care features, and you are comfortable with the trade-offs, a well-designed cloud app with strong encryption and transparent privacy practices can work. If your privacy requirements are strict, because of insurance claims, legal proceedings, workplace injury documentation, or personal principle, local-only storage provides structural guarantees that no privacy policy can match.',
-        'PainTracker is designed for people who choose privacy as a non-negotiable. The local-only architecture is not a limitation to work around. It is the point.',
+        'Pain Tracker is designed for people who choose privacy as a non-negotiable. The local-only architecture is not a limitation to work around. It is the point.',
       ],
     },
   ],

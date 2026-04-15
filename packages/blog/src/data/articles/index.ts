@@ -1,4 +1,4 @@
-export type { SchemaType, ArticleSection, FAQ, HowToStep, ArticleData, InternalLinks } from './types';
+export type { SchemaType, ArticleSection, FAQ, HowToStep, ComparisonTable, ArticleData, InternalLinks } from './types';
 
 import offlinePainDiary from './offline-pain-diary';
 import privatePainTracker from './private-pain-tracker';

@@ -30,21 +30,21 @@ const article: ArticleData = {
       h2: 'What your doctor gets from structured local data',
       paragraphs: [
         'Clinicians need consistent records, not feelings. An offline pain diary that exports clean PDF or CSV reports gives them exactly what they need, without requiring them to log into another portal, learn another interface, or trust that a tech company formatted the output for clinical use. The export is a document. They can print it, annotate it, file it. It looks like documentation because it is.',
-        'PainTracker generates exports structured for physiotherapists, specialists, and WorkSafeBC reviewers. The data you share is the data you choose to share. You pick the date range, the format, the level of detail. Nothing happens without your deliberate action.',
+        'Pain Tracker generates exports structured for physiotherapists, specialists, and WorkSafeBC reviewers. The data you share is the data you choose to share. You pick the date range, the format, the level of detail. Nothing happens without your deliberate action.',
         'A month of consistent daily entries tells a doctor something no fifteen-minute appointment can replicate. They see whether your pain is improving, holding steady, or worsening. They see which medications correlate with better days. They see which activities or times of day reliably push things higher. That is a clinical picture. That is what drives actual treatment decisions.',
       ],
     },
     {
       h2: 'The structure behind the privacy',
       paragraphs: [
-        'PainTracker stores everything in your browser\'s IndexedDB, encrypted with keys derived from your passphrase. Not stored on a server. Not transmitted anywhere. The developers cannot read your entries. This is not a privacy feature toggle, it is the architecture itself.',
+        'Pain Tracker stores everything in your browser\'s IndexedDB, encrypted with keys derived from your passphrase. Not stored on a server. Not transmitted anywhere. The developers cannot read your entries. This is not a privacy feature toggle, it is the architecture itself.',
         'There is no server to breach, no database to leak, no admin panel where someone can look at your records. The attack surface is one device, the one you hold. Compare that to cloud apps where your data moves through load balancers, application servers, databases, backup pipelines, and probably analytics systems. Every one of those is a potential exposure point. Local storage eliminates the category of risk, not just one instance of it.',
       ],
     },
     {
-      h2: 'Getting started with PainTracker',
+      h2: 'Getting started with Pain Tracker',
       paragraphs: [
-        'PainTracker is a Progressive Web App. No app store. No account. Install it from your browser at paintracker.ca/app, tap "Add to Home Screen" on mobile, and your entries are encrypted on-device from the first one. The whole setup takes under a minute.',
+        'Pain Tracker is a Progressive Web App. No app store. No account. Install it from your browser at paintracker.ca/app, tap "Add to Home Screen" on mobile, and your entries are encrypted on-device from the first one. The whole setup takes under a minute.',
         'The entry interface is built for the days when you have very little left to give. Slide to set intensity, tap the body map, pick descriptors, add a note if you have capacity. Under sixty seconds even during a flare. Structured inputs instead of typing, the words do not have to come from you. When you are ready to share with a clinician, the export is user-initiated. Nothing leaves your device until you decide.',
         'For WorkSafeBC claims, there is a dedicated export template that aligns with what reviewers expect. You control the date range, the format, the level of detail. No surprises.',
       ],
@@ -60,7 +60,7 @@ const article: ArticleData = {
       h2: 'Long-term data ownership',
       paragraphs: [
         'Your pain data may be relevant for years. Chronic conditions do not resolve on app-update timelines. A diary stored in an open format, exportable as JSON, CSV, or PDF, remains yours regardless of what happens to the software that created it.',
-        'PainTracker is open source. If the project stops active development, the code stays public and forkable. Your data format is documented. The export tools keep working. This is what real data ownership looks like. Not a marketing promise. A structural guarantee.',
+        'Pain Tracker is open source. If the project stops active development, the code stays public and forkable. Your data format is documented. The export tools keep working. This is what real data ownership looks like. Not a marketing promise. A structural guarantee.',
       ],
     },
   ],
@@ -68,7 +68,7 @@ const article: ArticleData = {
     {
       question: 'Does an offline pain diary work without Wi-Fi?',
       answer:
-        'Yes. PainTracker is a Progressive Web App that works fully offline once installed. Entry logging, trend analysis, and export all run locally. You only need internet once, for the initial install.',
+        'Yes. Pain Tracker is a Progressive Web App that works fully offline once installed. Entry logging, trend analysis, and export all run locally. You only need internet once, for the initial install.',
     },
     {
       question: 'Can I share my offline diary with my doctor?',
@@ -78,12 +78,12 @@ const article: ArticleData = {
     {
       question: 'Is my data encrypted in an offline pain diary?',
       answer:
-        'Yes. PainTracker encrypts everything at rest using keys derived from your passphrase on your device. Nobody, including the developers, can read your entries without your passphrase.',
+        'Yes. Pain Tracker encrypts everything at rest using keys derived from your passphrase on your device. Nobody, including the developers, can read your entries without your passphrase.',
     },
     {
       question: 'What happens to my data if I clear my browser?',
       answer:
-        'Clearing browser data deletes your entries. Export your data regularly. PainTracker supports JSON export for complete backup and restore.',
+        'Clearing browser data deletes your entries. Export your data regularly. Pain Tracker supports JSON export for complete backup and restore.',
     },
     {
       question: 'Can I use an offline pain diary on multiple devices?',

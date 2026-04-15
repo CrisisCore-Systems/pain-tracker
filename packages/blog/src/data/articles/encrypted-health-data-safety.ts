@@ -18,9 +18,9 @@ const article: ArticleData = {
       ],
     },
     {
-      h2: 'How PainTracker encrypts your data',
+      h2: 'How Pain Tracker encrypts your data',
       paragraphs: [
-        'PainTracker uses client-side encryption with keys derived from your passphrase through a key derivation function. The encryption happens in your browser using the Web Crypto API, a browser-native cryptographic library maintained by browser vendors and audited by the security research community, before any data is written to IndexedDB. Your passphrase is never stored anywhere. The derived key is held only in memory during your active session.',
+        'Pain Tracker uses client-side encryption with keys derived from your passphrase through a key derivation function. The encryption happens in your browser using the Web Crypto API, a browser-native cryptographic library maintained by browser vendors and audited by the security research community, before any data is written to IndexedDB. Your passphrase is never stored anywhere. The derived key is held only in memory during your active session.',
         'This means there is no "forgot password" recovery. No server holds a backup of your key. This is a deliberate trade-off: you must remember your passphrase, and in exchange, nobody, not the developers, not your employer, not a court order, not a breach, can ever access your data without it.',
         'The implementation is open source, auditable, and uses standard algorithms. Security professionals can inspect the code to verify that the encryption is implemented correctly and that no data leaks in plaintext. The protection does not rely on obscurity.',
       ],
@@ -43,14 +43,14 @@ const article: ArticleData = {
       h2: 'Encryption and regulatory frameworks',
       paragraphs: [
         'Health privacy regulations like PIPEDA in Canada recognize encryption as a key technical safeguard. But regulatory compliance is a minimum bar, not a guarantee of privacy. An app can be technically compliant while still collecting more data than necessary or sharing it in ways that users did not anticipate.',
-        'PainTracker goes beyond compliance frameworks by eliminating server-side data collection entirely. Encryption is one layer of a defence-in-depth approach that includes local-only storage, zero-knowledge architecture, open-source transparency, and user-controlled sharing. The goal is not to be compliant. The goal is to actually protect your data.',
+        'Pain Tracker goes beyond compliance frameworks by eliminating server-side data collection entirely. Encryption is one layer of a defence-in-depth approach that includes local-only storage, zero-knowledge architecture, open-source transparency, and user-controlled sharing. The goal is not to be compliant. The goal is to actually protect your data.',
       ],
     },
     {
       h2: 'Protecting your encrypted data long-term',
       paragraphs: [
         'Encryption protects your data today. Long-term protection also requires your own habits. Choose a strong, unique passphrase for your pain diary, not a reused password, not a word someone who knows you could guess. Export and back up your data regularly. Encrypted local storage is protected against breaches, not against device failure.',
-        'PainTracker\'s JSON export preserves the complete data structure for full backups. PDF and CSV exports produce human-readable files for sharing with clinicians. They are not encrypted by default, they are designed to be read. Know which export format to use for which purpose: JSON for backup, PDF for your doctor, CSV for analysis.',
+        'Pain Tracker\'s JSON export preserves the complete data structure for full backups. PDF and CSV exports produce human-readable files for sharing with clinicians. They are not encrypted by default, they are designed to be read. Know which export format to use for which purpose: JSON for backup, PDF for your doctor, CSV for analysis.',
       ],
     },
   ],

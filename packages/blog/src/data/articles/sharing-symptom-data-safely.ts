@@ -21,7 +21,7 @@ const article: ArticleData = {
       h2: 'Choosing what to share',
       paragraphs: [
         'Before exporting, consider what data is relevant to the recipient and purpose. For a medical appointment: pain intensity trends, medication logs, functional impacts, and patterns you have noticed. For an insurance claim: timeline evidence, functional documentation, and treatment compliance records. For a second opinion: a comprehensive summary over the entire relevant period.',
-        'Exclude entries that are irrelevant to the purpose. Personal notes, emotional processing, entries from unrelated health conditions, and data outside the relevant date range do not need to be in every export. PainTracker\'s selective export controls let you choose date ranges and data fields for each export independently.',
+        'Exclude entries that are irrelevant to the purpose. Personal notes, emotional processing, entries from unrelated health conditions, and data outside the relevant date range do not need to be in every export. Pain Tracker\'s selective export controls let you choose date ranges and data fields for each export independently.',
       ],
     },
     {
@@ -51,7 +51,7 @@ const article: ArticleData = {
     {
       question: 'Can I share just part of my pain diary?',
       answer:
-        'Yes. PainTracker\'s export controls let you select specific date ranges and data fields. You can create different exports for different recipients, sharing only what is relevant to each situation.',
+        'Yes. Pain Tracker\'s export controls let you select specific date ranges and data fields. You can create different exports for different recipients, sharing only what is relevant to each situation.',
     },
     {
       question: 'Are exported files encrypted?',

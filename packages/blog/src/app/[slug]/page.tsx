@@ -12,6 +12,55 @@ import {
 import { articles, getArticleBySlug, APP_CTA_URL } from '@/data/articles';
 import type { ArticleData } from '@/data/articles';
 
+const HOMEPAGE_URL = 'https://www.paintracker.ca/';
+
+const PRINTABLE_RECOMMENDATIONS: Record<string, { label: string; href: string }> = {
+  'offline-pain-diary': {
+    label: 'Get the daily printable',
+    href: 'https://www.paintracker.ca/resources/daily-pain-tracker-printable',
+  },
+  'pain-log-for-doctors': {
+    label: 'Get the doctor-visit diary',
+    href: 'https://www.paintracker.ca/resources/pain-diary-for-doctor-visits',
+  },
+  'track-chronic-pain-symptoms': {
+    label: 'Get the symptom tracker printable',
+    href: 'https://www.paintracker.ca/resources/symptom-tracker-printable',
+  },
+  'pain-tracking-fibromyalgia': {
+    label: 'Get the fibromyalgia diary',
+    href: 'https://www.paintracker.ca/resources/fibromyalgia-pain-diary',
+  },
+  'migraine-symptom-diary': {
+    label: 'Get the migraine diary printable',
+    href: 'https://www.paintracker.ca/resources/migraine-pain-diary-printable',
+  },
+  'paintracker-worksafebc-claims': {
+    label: 'Get the WorkSafeBC journal template',
+    href: 'https://www.paintracker.ca/resources/worksafebc-pain-journal-template',
+  },
+  'pain-tracking-insurance-evidence': {
+    label: 'Get the WorkSafeBC journal template',
+    href: 'https://www.paintracker.ca/resources/worksafebc-pain-journal-template',
+  },
+  'preparing-physiotherapy-pain-logs': {
+    label: 'Get the doctor-visit diary',
+    href: 'https://www.paintracker.ca/resources/pain-diary-for-doctor-visits',
+  },
+  'paper-vs-app-pain-diary': {
+    label: 'Get the pain diary template PDF',
+    href: 'https://www.paintracker.ca/resources/pain-diary-template-pdf',
+  },
+  'pain-diary-template': {
+    label: 'Get the pain diary template PDF',
+    href: 'https://www.paintracker.ca/resources/pain-diary-template-pdf',
+  },
+  'getting-started': {
+    label: 'Get the daily printable',
+    href: 'https://www.paintracker.ca/resources/daily-pain-tracker-printable',
+  },
+};
+
 // ── Static params for all 30 SEO pages ──────────────────────────────
 
 export function generateStaticParams() {
@@ -115,6 +164,43 @@ function getRelated(article: ArticleData): ArticleData[] {
     .slice(0, 3);
 }
 
+function getPrintableRecommendation(article: ArticleData): { label: string; href: string } {
+  const resourcePrintable = article.resourceLinks?.find(
+    (link) => link.href.includes('/resources/') && !link.href.includes('/download'),
+  );
+
+  if (resourcePrintable) {
+    return {
+      label: `Get ${resourcePrintable.label.toLowerCase()}`,
+      href: resourcePrintable.href,
+    };
+  }
+
+  const slugSpecific = PRINTABLE_RECOMMENDATIONS[article.slug];
+  if (slugSpecific) {
+    return slugSpecific;
+  }
+
+  if (article.cluster === 'clinical') {
+    return {
+      label: 'Get the doctor-visit diary',
+      href: 'https://www.paintracker.ca/resources/pain-diary-for-doctor-visits',
+    };
+  }
+
+  if (article.cluster === 'chronic') {
+    return {
+      label: 'Get the symptom tracker printable',
+      href: 'https://www.paintracker.ca/resources/symptom-tracker-printable',
+    };
+  }
+
+  return {
+    label: 'Get the daily printable',
+    href: 'https://www.paintracker.ca/resources/daily-pain-tracker-printable',
+  };
+}
+
 // ── Page component ───────────────────────────────────────────────────
 
 export default async function ArticlePage({ params }: Readonly<Props>) {
@@ -124,6 +210,7 @@ export default async function ArticlePage({ params }: Readonly<Props>) {
 
   const schemas = buildSchemas(article);
   const related = getRelated(article);
+  const printableRecommendation = getPrintableRecommendation(article);
 
   return (
     <>
@@ -172,7 +259,7 @@ export default async function ArticlePage({ params }: Readonly<Props>) {
               Helpful printables and next steps
             </h2>
             <p className="mb-4 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
-              If you are comparing tools, these resource pages give you direct templates, clinician-facing guidance, and a low-friction way to try PainTracker.
+              These resource pages give you direct templates, clinician-facing guidance, and a low-friction way to try Pain Tracker.
             </p>
             <ul className="space-y-3">
               {article.resourceLinks.map((link) => (
@@ -187,6 +274,41 @@ export default async function ArticlePage({ params }: Readonly<Props>) {
                 </li>
               ))}
             </ul>
+          </section>
+        )}
+
+        {article.comparisonTable && (
+          <section className="mb-10 rounded-lg border border-gray-200 bg-white/90 p-6 dark:border-gray-700 dark:bg-gray-900/70">
+            <h2 className="mb-3 text-2xl font-semibold text-gray-900 dark:text-white">
+              Quick comparison
+            </h2>
+            <p className="mb-4 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+              Use this table to separate apps that are convenient in screenshots from tools that still hold up in real-life symptom tracking.
+            </p>
+            <div className="overflow-x-auto">
+              <table className="min-w-full border-collapse text-left text-sm">
+                <thead>
+                  <tr className="border-b border-gray-200 dark:border-gray-700">
+                    {article.comparisonTable.columns.map((column) => (
+                      <th key={column} className="px-3 py-3 font-semibold text-gray-900 dark:text-white">
+                        {column}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {article.comparisonTable.rows.map((row) => (
+                    <tr key={row.join('|')} className="border-b border-gray-100 align-top dark:border-gray-800">
+                      {row.map((cell, cellIndex) => (
+                        <td key={`${row[0]}-${cellIndex}`} className="px-3 py-3 leading-relaxed text-gray-700 dark:text-gray-300">
+                          {cell}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </section>
         )}
 
@@ -261,17 +383,32 @@ export default async function ArticlePage({ params }: Readonly<Props>) {
         {/* CTA — links to root domain for authority transfer */}
         <div className="mb-12 rounded-lg border border-blue-200 bg-blue-50 p-6 text-center dark:border-blue-800 dark:bg-blue-900/30">
           <h2 className="mb-2 text-xl font-semibold text-gray-900 dark:text-white">
-            Ready to start tracking?
+            Ready to move from research to use?
           </h2>
           <p className="mb-4 text-gray-600 dark:text-gray-300">
-            PainTracker is free, private, and works offline. No account required.
+            Pain Tracker is private by default, works offline after install, and gives you printable and clinician-facing paths when you need them.
           </p>
-          <a
-            href={APP_CTA_URL}
-            className="inline-block rounded-lg bg-blue-600 px-6 py-3 font-medium text-white transition hover:bg-blue-700"
-          >
-            Open PainTracker
-          </a>
+          <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <a
+              href={APP_CTA_URL}
+              className="inline-block rounded-lg bg-blue-600 px-6 py-3 font-medium text-white transition hover:bg-blue-700"
+            >
+              Download Pain Tracker
+            </a>
+            <a
+              href={printableRecommendation.href}
+              className="inline-block rounded-lg border border-blue-300 px-6 py-3 font-medium text-blue-700 transition hover:border-blue-500 hover:text-blue-900 dark:border-blue-700 dark:text-blue-300 dark:hover:border-blue-500 dark:hover:text-blue-200"
+            >
+              {printableRecommendation.label}
+            </a>
+          </div>
+          <p className="mt-4 text-sm text-gray-600 dark:text-gray-300">
+            Prefer to keep exploring first? Visit the{' '}
+            <a href={HOMEPAGE_URL} className="font-medium text-blue-600 underline decoration-blue-300 underline-offset-2 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
+              Pain Tracker homepage
+            </a>
+            .
+          </p>
         </div>
 
         {/* Related articles */}

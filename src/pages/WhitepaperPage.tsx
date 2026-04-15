@@ -5,13 +5,13 @@ import { combineSchemas, generateBreadcrumbSchema } from '../lib/seo';
 import '../styles/pages/landing.css';
 
 const WHITEPAPER_VERSION = '1.3.0';
-const WHITEPAPER_PDF_FILENAME = `PainTracker-Whitepaper-v${WHITEPAPER_VERSION}.pdf`;
+const WHITEPAPER_PDF_FILENAME = `Pain-Tracker-Whitepaper-v${WHITEPAPER_VERSION}.pdf`;
 
 export function WhitepaperPage() {
   useEffect(() => {
     document.title = 'Pain Tracker Whitepaper (PDF)';
     return () => {
-      document.title = 'PainTracker';
+      document.title = 'Pain Tracker';
     };
   }, []);
 

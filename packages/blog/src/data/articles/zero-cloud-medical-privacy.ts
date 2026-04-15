@@ -14,7 +14,7 @@ const article: ArticleData = {
       h2: 'What zero-cloud actually means',
       paragraphs: [
         'Zero-cloud medical privacy is not a marketing label. It is an architectural commitment. Health data never touches a remote server at any point in its lifecycle, not during entry, not during storage, not during analysis, not during export. The server delivers the application code; your device handles everything else. This provides privacy guarantees that no cloud-based privacy policy can match, because the protection is structural rather than contractual.',
-        'Traditional cloud apps ask you to trust a company\'s promises. Zero-cloud asks you to trust mathematics and code, both of which are verifiable. PainTracker\'s open-source codebase lets anyone confirm that no data leaves your device. The privacy guarantee is auditable, not aspirational.',
+        'Traditional cloud apps ask you to trust a company\'s promises. Zero-cloud asks you to trust mathematics and code, both of which are verifiable. Pain Tracker\'s open-source codebase lets anyone confirm that no data leaves your device. The privacy guarantee is auditable, not aspirational.',
       ],
     },
     {
@@ -27,7 +27,7 @@ const article: ArticleData = {
     {
       h2: 'How zero-cloud architecture works in practice',
       paragraphs: [
-        'PainTracker is delivered as a Progressive Web App. After the initial load, the service worker caches all application code locally. The app then functions entirely offline, using IndexedDB for encrypted data storage and the Web Crypto API for on-device encryption.',
+        'Pain Tracker is delivered as a Progressive Web App. After the initial load, the service worker caches all application code locally. The app then functions entirely offline, using IndexedDB for encrypted data storage and the Web Crypto API for on-device encryption.',
         'There are no API endpoints that accept health data. No database on the server. No user accounts, authentication tokens, or session cookies that identify individual users. The server is stateless and health-data-free. It could be replaced by any static file hosting service without affecting functionality.',
         'This architecture also means no server logs containing health information, no database backups that could be exposed, and no admin panel displaying user data. The attack surface for health data is reduced to one point: your physical device.',
       ],
@@ -36,7 +36,7 @@ const article: ArticleData = {
       h2: 'The trade-offs worth knowing about',
       paragraphs: [
         'Choosing zero-cloud means accepting certain trade-offs. There is no automatic multi-device sync, your data lives on one device unless you manually export and import. There is no "forgot password" recovery, your passphrase is the only key, and losing it means losing access. There are no server-side analytics that the development team can use to improve the product automatically.',
-        'These trade-offs are intentional. Each represents a feature that would require server-side data access, which would break the zero-cloud guarantee. PainTracker mitigates these limitations through easy exports for manual backup, clear onboarding guidance about passphrase management, and open-source community feedback as an alternative to analytics. Nothing is hidden.',
+        'These trade-offs are intentional. Each represents a feature that would require server-side data access, which would break the zero-cloud guarantee. Pain Tracker mitigates these limitations through easy exports for manual backup, clear onboarding guidance about passphrase management, and open-source community feedback as an alternative to analytics. Nothing is hidden.',
       ],
     },
     {

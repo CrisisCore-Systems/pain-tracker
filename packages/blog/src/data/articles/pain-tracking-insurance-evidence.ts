@@ -21,14 +21,14 @@ const article: ArticleData = {
       h2: 'What claims reviewers are actually evaluating',
       paragraphs: [
         'Insurance adjudicators look for specific qualities in symptom documentation: consistency over time, correlation between the claimed injury and documented symptoms, evidence of treatment compliance, and documentation of functional limitations that support the claimed disability level. A gap in documentation can be interpreted as a gap in symptoms, even when it simply reflects a period when tracking was too hard.',
-        'PainTracker\'s structured format addresses each of these needs. Daily entries with consistent timestamps demonstrate ongoing symptoms. Body location mapping confirms that pain locations align with the claimed injury. Medication logs show treatment compliance. Functional impact records document the real-world consequences of pain in concrete, measurable terms.',
+        'Pain Tracker\'s structured format addresses each of these needs. Daily entries with consistent timestamps demonstrate ongoing symptoms. Body location mapping confirms that pain locations align with the claimed injury. Medication logs show treatment compliance. Functional impact records document the real-world consequences of pain in concrete, measurable terms.',
       ],
     },
     {
       h2: 'What makes a pain record credible',
       paragraphs: [
         'Credibility in documentation comes from three qualities: consistency, contemporaneity, and specificity. Consistent entries using the same scales and format produce data that reviewers can verify for internal coherence. Contemporaneous recording, logging symptoms as they occur rather than reconstructing them later, produces more accurate and credible data. Specific, structured entries with numerical values and categorical selections are harder to dismiss than narrative descriptions.',
-        'Start tracking as soon as possible after an injury or diagnosis. Even if a claim has not been filed yet, having documentation from the earliest days of your condition strengthens the timeline evidence that reviewers examine. PainTracker makes it easy to begin tracking immediately with zero account setup and no waiting period.',
+        'Start tracking as soon as possible after an injury or diagnosis. Even if a claim has not been filed yet, having documentation from the earliest days of your condition strengthens the timeline evidence that reviewers examine. Pain Tracker makes it easy to begin tracking immediately with zero account setup and no waiting period.',
       ],
     },
     {
@@ -41,7 +41,7 @@ const article: ArticleData = {
     {
       h2: 'WorkSafeBC claim documentation',
       paragraphs: [
-        'British Columbia\'s WorkSafeBC system requires clear evidence linking workplace injuries to ongoing symptoms and functional limitations. PainTracker\'s WorkSafeBC export template organises your data in the format that adjudicators expect: injury date timeline, symptom progression, treatment records, and functional impact assessments.',
+        'British Columbia\'s WorkSafeBC system requires clear evidence linking workplace injuries to ongoing symptoms and functional limitations. Pain Tracker\'s WorkSafeBC export template organises your data in the format that adjudicators expect: injury date timeline, symptom progression, treatment records, and functional impact assessments.',
         'The export emphasises the temporal relationship between injury and symptoms, consistent documentation of pain levels and their functional consequences, and evidence of active participation in prescribed treatment. This structured approach aligns with WorkSafeBC documentation standards and helps reviewers process your claim efficiently.',
       ],
     },
@@ -49,7 +49,7 @@ const article: ArticleData = {
       h2: 'What you share is your choice',
       paragraphs: [
         'When using pain tracking data for insurance claims, be selective about what you share. Export only the date range and data fields relevant to your claim. Your complete pain history may contain entries unrelated to the claim that could be misinterpreted or used to challenge your credibility.',
-        'PainTracker\'s selective export controls let you choose exactly which data to include in each report. This approach ensures that you share enough evidence to support your claim without exposing your entire health history to an insurance company\'s file.',
+        'Pain Tracker\'s selective export controls let you choose exactly which data to include in each report. This approach ensures that you share enough evidence to support your claim without exposing your entire health history to an insurance company\'s file.',
       ],
     },
   ],

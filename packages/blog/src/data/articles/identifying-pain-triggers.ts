@@ -21,21 +21,21 @@ const article: ArticleData = {
       h2: 'Common pain triggers worth tracking',
       paragraphs: [
         'The most frequently identified pain triggers across chronic pain conditions include: physical overexertion, prolonged static postures, sleep disruption, emotional stress, weather changes including barometric pressure drops and temperature shifts, dietary factors, hormonal fluctuations, and illness or infection.',
-        'PainTracker lets you record these potential triggers through tags, structured fields, and notes alongside your daily pain entries. The key is consistency: record the same trigger categories every day, not just on days when you think they might be relevant. This creates the complete dataset needed for meaningful correlation analysis.',
+        'Pain Tracker lets you record these potential triggers through tags, structured fields, and notes alongside your daily pain entries. The key is consistency: record the same trigger categories every day, not just on days when you think they might be relevant. This creates the complete dataset needed for meaningful correlation analysis.',
       ],
     },
     {
       h2: 'Investigating triggers systematically',
       paragraphs: [
         'Rather than tracking everything simultaneously, investigate triggers one cluster at a time. Start with two or three candidate triggers based on your clinical suspicion and track them consistently for four to six weeks. Then review the data: do high-pain days consistently follow days with the suspected trigger? Is the relationship meaningful or just occasional?',
-        'PainTracker\'s local analytics can help visualise these correlations on your device. Time-of-day analysis reveals whether morning, afternoon, or evening pain dominates. Activity-pain correlation views show whether busy days predict worse pain the next day.',
+        'Pain Tracker\'s local analytics can help visualise these correlations on your device. Time-of-day analysis reveals whether morning, afternoon, or evening pain dominates. Activity-pain correlation views show whether busy days predict worse pain the next day.',
       ],
     },
     {
       h2: 'Weather as a pain trigger',
       paragraphs: [
         'The relationship between weather and pain is widely reported by patients but inconsistently supported by population-level research. Likely because the relationship varies significantly between individuals. Some people are sensitive to barometric pressure changes, others to temperature, and many to combinations unique to their condition.',
-        'PainTracker integrates local weather data to automatically correlate your pain entries with barometric pressure, temperature, and humidity. This person-specific analysis can confirm or rule out weather sensitivity for you as an individual, which is far more useful than population-level studies that average across different sensitivities.',
+        'Pain Tracker integrates local weather data to automatically correlate your pain entries with barometric pressure, temperature, and humidity. This person-specific analysis can confirm or rule out weather sensitivity for you as an individual, which is far more useful than population-level studies that average across different sensitivities.',
       ],
     },
     {

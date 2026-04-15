@@ -28,14 +28,14 @@ const article: ArticleData = {
       h2: 'Setbacks are part of the record, not evidence against you',
       paragraphs: [
         'Recovery setbacks are normal and do not mean you are not healing. A week of increased pain after attempting a new activity does not erase months of progress. Without tracked data, it can feel that way. Your pain log provides objective evidence of your overall trajectory, helping you and your care team distinguish between temporary setbacks and genuine regression.',
-        'PainTracker\'s trend visualisations show your recovery arc: the overall trajectory from injury through healing, with flares and setbacks visible as temporary deviations from an improving baseline. This big-picture view is both therapeutically valuable and clinically informative.',
+        'Pain Tracker\'s trend visualisations show your recovery arc: the overall trajectory from injury through healing, with flares and setbacks visible as temporary deviations from an improving baseline. This big-picture view is both therapeutically valuable and clinically informative.',
       ],
     },
     {
       h2: 'Documentation for return-to-work planning',
       paragraphs: [
         'Return-to-work planning requires evidence of functional capacity that goes beyond pain intensity numbers. Your employer, your doctor, and your WorkSafeBC representative all need to understand what you can and cannot do. Structured tracking of functional milestones, activity tolerance, and work-specific capacity provides this evidence in a format that all parties can interpret.',
-        'PainTracker\'s exports can document your functional progression alongside pain levels, showing reviewers that you are actively recovering and that your reported limitations are consistent with your daily tracking data. This consistency between self-report and tracked data strengthens your credibility throughout the return-to-work process.',
+        'Pain Tracker\'s exports can document your functional progression alongside pain levels, showing reviewers that you are actively recovering and that your reported limitations are consistent with your daily tracking data. This consistency between self-report and tracked data strengthens your credibility throughout the return-to-work process.',
       ],
     },
     {
@@ -50,12 +50,12 @@ const article: ArticleData = {
     {
       question: 'When should I start tracking after an injury?',
       answer:
-        'Start as soon as possible. Ideally the day of injury. Early documentation establishes your baseline and creates a continuous record. PainTracker requires no setup time, so you can begin immediately.',
+        'Start as soon as possible. Ideally the day of injury. Early documentation establishes your baseline and creates a continuous record. Pain Tracker requires no setup time, so you can begin immediately.',
     },
     {
       question: 'Is it normal for recovery tracking to show ups and downs?',
       answer:
-        'Yes. Recovery is rarely linear. Setbacks, flares, and daily fluctuations are normal. What matters is the overall trend over weeks and months, which PainTracker\'s trend visualisations make clear.',
+        'Yes. Recovery is rarely linear. Setbacks, flares, and daily fluctuations are normal. What matters is the overall trend over weeks and months, which Pain Tracker\'s trend visualisations make clear.',
     },
   ],
 };

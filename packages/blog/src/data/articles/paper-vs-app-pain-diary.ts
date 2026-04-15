@@ -28,21 +28,21 @@ const article: ArticleData = {
       h2: 'What a digital diary actually does better',
       paragraphs: [
         'Digital pain diaries address paper\'s core weaknesses. Timestamped entries prevent backfilling. Structured inputs ensure consistent data capture. Automatic trend calculation makes patterns visible at a glance. Export tools produce professional reports that clinicians can review efficiently.',
-        'Apps also reduce tracking burden. A slider is faster than writing a number. A body map tap is more precise than describing location in words. Structured quality descriptors eliminate the challenge of finding vocabulary during a flare. PainTracker is designed so that a minimal daily entry requires no typing and fewer than four interactions.',
+        'Apps also reduce tracking burden. A slider is faster than writing a number. A body map tap is more precise than describing location in words. Structured quality descriptors eliminate the challenge of finding vocabulary during a flare. Pain Tracker is designed so that a minimal daily entry requires no typing and fewer than four interactions.',
       ],
     },
     {
       h2: 'Privacy comparison',
       paragraphs: [
         'Paper diaries are inherently private: they exist only as physical objects under your control. But they can be discovered and read by anyone with physical access. A paper diary left in a bag, on a desk, or in a waiting room is immediately readable. No encryption, no passphrase, no protection beyond your physical custody of the object.',
-        'PainTracker provides stronger privacy through device-level encryption with passphrase protection. Even if someone accesses your device, your pain entries remain encrypted and unreadable without your passphrase. The protection depends on technology rather than physical custody, but for most people, encrypted digital storage is more secure than an unlocked notebook.',
+        'Pain Tracker provides stronger privacy through device-level encryption with passphrase protection. Even if someone accesses your device, your pain entries remain encrypted and unreadable without your passphrase. The protection depends on technology rather than physical custody, but for most people, encrypted digital storage is more secure than an unlocked notebook.',
       ],
     },
     {
       h2: 'How to choose',
       paragraphs: [
         'For patients who are comfortable with basic smartphone or computer use, a digital diary provides better clinical data, higher compliance, stronger privacy, and richer analytical capabilities. For patients who genuinely cannot or prefer not to use technology, a structured paper template is better than no tracking at all.',
-        'Some patients benefit from a hybrid approach: using a paper template for daily capture and periodically entering the data into PainTracker for analysis and export. This combines the tactile simplicity of paper with the analytical power of structured digital data. The important thing is consistent tracking, using whatever method you will actually maintain over months.',
+        'Some patients benefit from a hybrid approach: using a paper template for daily capture and periodically entering the data into Pain Tracker for analysis and export. This combines the tactile simplicity of paper with the analytical power of structured digital data. The important thing is consistent tracking, using whatever method you will actually maintain over months.',
       ],
     },
   ],

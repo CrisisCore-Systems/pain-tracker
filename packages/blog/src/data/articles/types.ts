@@ -25,6 +25,11 @@ export interface HowToStep {
   text: string;
 }
 
+export interface ComparisonTable {
+  columns: string[];
+  rows: string[][];
+}
+
 /**
  * Cross-domain internal linking for subdomain SEO architecture.
  *
@@ -63,4 +68,5 @@ export interface ArticleData {
     label: string;
     description: string;
   }>;
+  comparisonTable?: ComparisonTable;
 }

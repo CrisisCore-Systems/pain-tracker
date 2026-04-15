@@ -21,7 +21,7 @@ const article: ArticleData = {
       h2: 'Tracking exercise response',
       paragraphs: [
         'Record your pain levels before and after prescribed exercises. Note which exercises you completed, any modifications you made, and whether specific movements consistently worsen or improve symptoms. This exercise-response data is valuable for PTs: it shows not just whether you are doing the exercises, but how your body responds to them.',
-        'PainTracker\'s notes and tags fields let you annotate entries with exercise details. Over several sessions, patterns emerge. Certain exercises may consistently reduce pain. Others may need modification. This data helps your PT fine-tune your program without waiting for you to recall details during a pressured appointment.',
+        'Pain Tracker\'s notes and tags fields let you annotate entries with exercise details. Over several sessions, patterns emerge. Certain exercises may consistently reduce pain. Others may need modification. This data helps your PT fine-tune your program without waiting for you to recall details during a pressured appointment.',
       ],
     },
     {
@@ -34,7 +34,7 @@ const article: ArticleData = {
     {
       h2: 'Preparing your export for PT appointments',
       paragraphs: [
-        'Before your physiotherapy appointment, export a report covering the period since your last visit. PainTracker\'s PDF export provides the summary statistics and trend charts that give your PT an instant overview. Highlight any changes in pain patterns, functional improvements or declines, and your response to prescribed exercises.',
+        'Before your physiotherapy appointment, export a report covering the period since your last visit. Pain Tracker\'s PDF export provides the summary statistics and trend charts that give your PT an instant overview. Highlight any changes in pain patterns, functional improvements or declines, and your response to prescribed exercises.',
         'Bring the report printed or on your phone. Start the session by handing it to your physiotherapist with a brief verbal summary: "Pain has decreased on average since we started the new exercises, but I am still getting sharp pain in the left shoulder when I reach overhead." That combination of structured data and specific verbal context makes the appointment more productive.',
       ],
     },
@@ -50,12 +50,12 @@ const article: ArticleData = {
     {
       question: 'Should I track pain during physiotherapy exercises?',
       answer:
-        'Yes. Recording pain before, during, and after exercises helps your PT assess whether specific movements are therapeutic or aggravating. Use PainTracker\'s notes field to record exercise-specific observations.',
+        'Yes. Recording pain before, during, and after exercises helps your PT assess whether specific movements are therapeutic or aggravating. Use Pain Tracker\'s notes field to record exercise-specific observations.',
     },
     {
-      question: 'How do I share my PainTracker data with my physiotherapist?',
+      question: 'How do I share my Pain Tracker data with my physiotherapist?',
       answer:
-        'Export a PDF report covering the period since your last appointment. Print it or show it on your phone at the start of your session. PainTracker\'s export format is designed for clinical readability.',
+        'Export a PDF report covering the period since your last appointment. Print it or show it on your phone at the start of your session. Pain Tracker\'s export format is designed for clinical readability.',
     },
   ],
 };

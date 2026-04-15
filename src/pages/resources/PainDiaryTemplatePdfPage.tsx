@@ -255,7 +255,7 @@ const FAQS = [
   {
     question: 'What if I have too much pain to write?',
     answer:
-      'On high-pain days, just fill in the number (0-10) and check a few boxes — that takes under 30 seconds. The template is designed so you can capture meaningful data even with minimal effort. If paper is consistently difficult, PainTracker\'s digital version lets you log entries with a few taps on your phone.',
+      'On high-pain days, just fill in the number (0-10) and check a few boxes — that takes under 30 seconds. The template is designed so you can capture meaningful data even with minimal effort. If paper is consistently difficult, Pain Tracker\'s digital version lets you log entries with a few taps on your phone.',
   },
   {
     question: 'Is there a digital version of this template?',

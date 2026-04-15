@@ -20,7 +20,7 @@ const article: ArticleData = {
     {
       h2: 'What to track during and between attacks',
       paragraphs: [
-        'For each attack: onset time, pain intensity at peak, pain location, associated symptoms including nausea, photophobia, phonophobia, aura, duration until resolution, and acute medications taken with their timing and effectiveness. PainTracker captures all of these through taps and selections rather than typing, because the last thing you can manage during an attack is forming sentences.',
+        'For each attack: onset time, pain intensity at peak, pain location, associated symptoms including nausea, photophobia, phonophobia, aura, duration until resolution, and acute medications taken with their timing and effectiveness. Pain Tracker captures all of these through taps and selections rather than typing, because the last thing you can manage during an attack is forming sentences.',
         'Between attacks: sleep patterns, dietary factors, weather changes, hormonal timing, stress levels, and physical activity. Consistent tracking between attacks is where trigger patterns emerge. You cannot identify a trigger retrospectively if you only recorded the attack itself. A month of daily tracking typically reveals two or three triggers you can then test systematically.',
       ],
     },
@@ -35,13 +35,13 @@ const article: ArticleData = {
       h2: 'The prodrome and what comes before',
       paragraphs: [
         'Many migraineurs experience prodromal symptoms, mood changes, food cravings, neck stiffness, yawning, hours or days before an attack. Tracking these pre-attack symptoms alongside attacks can help you recognise warning signs earlier, potentially allowing pre-emptive treatment or at least preparation.',
-        'Seasonal patterns, menstrual cycle correlations, and weather-related triggers also emerge from longitudinal tracking. PainTracker\'s local analytics can highlight these temporal patterns without sending your sensitive health data anywhere. An important consideration when tracking involves hormonal and mental health data alongside pain.',
+        'Seasonal patterns, menstrual cycle correlations, and weather-related triggers also emerge from longitudinal tracking. Pain Tracker\'s local analytics can highlight these temporal patterns without sending your sensitive health data anywhere. An important consideration when tracking involves hormonal and mental health data alongside pain.',
       ],
     },
     {
       h2: 'Sharing migraine data with your neurologist',
       paragraphs: [
-        'Neurologists managing migraine patients want concise, structured data: attack frequency per month, average severity, medication use patterns, and any changes in headache characteristics. PainTracker\'s PDF export provides this clinical summary with trend charts that show attack patterns over time.',
+        'Neurologists managing migraine patients want concise, structured data: attack frequency per month, average severity, medication use patterns, and any changes in headache characteristics. Pain Tracker\'s PDF export provides this clinical summary with trend charts that show attack patterns over time.',
         'If you are being evaluated for chronic migraine, fifteen or more headache days per month, a detailed diary is not just helpful. It is diagnostically necessary. Three months of consistent tracking provides the evidence your neurologist needs to confirm diagnosis, justify treatment changes, or support referrals to headache specialty centres.',
       ],
     },

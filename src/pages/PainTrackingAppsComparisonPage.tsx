@@ -23,13 +23,13 @@ const pageContent: SEOPageContent = {
   subheadline:
     'If you are comparing pain tracking apps, do not stop at screenshots. Compare privacy, offline use, clinician-ready exports, and whether the app still works when you are tired, interrupted, or offline.',
   primaryCTA: {
-    text: 'Use the app free',
-    href: '/start',
+    text: 'Download Pain Tracker',
+    href: '/download',
     download: false,
   },
   secondaryCTA: {
-    text: 'See Printable Option',
-    href: '/pain-diary-template',
+    text: 'Get Daily Printable',
+    href: '/resources/daily-pain-tracker-printable',
   },
   utilityBlock: {
     type: 'tool-embed',
@@ -135,21 +135,100 @@ const comparisonPoints = [
   },
 ];
 
+const comparisonRows = [
+  {
+    criterion: 'Storage model',
+    whyItMatters: 'Health records can become appointment notes, insurance evidence, or legal documentation.',
+    bestFit: 'Prefer local-first storage with explicit export instead of account-required cloud storage.',
+  },
+  {
+    criterion: 'Offline behavior',
+    whyItMatters: 'Pain tracking often happens in clinics, transit, or unstable-signal environments.',
+    bestFit: 'Prefer tools that still support logging, review, and export without network access.',
+  },
+  {
+    criterion: 'Export quality',
+    whyItMatters: 'If the record is not usable outside the app, your control is weaker and appointments are harder.',
+    bestFit: 'Prefer PDF, CSV, or JSON exports that are readable by clinicians and by you.',
+  },
+  {
+    criterion: 'Daily friction',
+    whyItMatters: 'A tool that only works on good days will not produce a consistent record.',
+    bestFit: 'Prefer short entry paths, low typing burden, and clearer language.',
+  },
+];
+
+const nextStepCards = [
+  {
+    title: 'Download the app',
+    description: 'Use the local-first app if you want structured records, analysis, and export without cloud-first workflow lock-in.',
+    href: '/download',
+  },
+  {
+    title: 'Start with a printable',
+    description: 'Use the daily printable if you need a no-setup option right now or want a paper backup lane.',
+    href: '/resources/daily-pain-tracker-printable',
+  },
+  {
+    title: 'Browse clinician resources',
+    description: 'Move from comparison into doctor-visit and documentation pages that help convert tracking into usable records.',
+    href: '/resources',
+  },
+];
+
 export const PainTrackingAppsComparisonPage: React.FC = () => (
   <SEOPageLayout content={pageContent}>
-    <div className="grid gap-6 md:grid-cols-2">
-      {comparisonPoints.map((point) => {
-        const Icon = point.icon;
-        return (
-          <div key={point.title} className="rounded-2xl border border-slate-700 bg-slate-800/70 p-6 text-left">
-            <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-300">
-              <Icon className="h-6 w-6" />
+    <div className="space-y-8">
+      <div className="grid gap-6 md:grid-cols-2">
+        {comparisonPoints.map((point) => {
+          const Icon = point.icon;
+          return (
+            <div key={point.title} className="rounded-2xl border border-slate-700 bg-slate-800/70 p-6 text-left">
+              <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-300">
+                <Icon className="h-6 w-6" />
+              </div>
+              <h3 className="mb-2 text-lg font-semibold text-white">{point.title}</h3>
+              <p className="text-sm leading-relaxed text-slate-400">{point.description}</p>
             </div>
-            <h3 className="mb-2 text-lg font-semibold text-white">{point.title}</h3>
-            <p className="text-sm leading-relaxed text-slate-400">{point.description}</p>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
+
+      <section className="rounded-2xl border border-slate-700 bg-slate-900/70 p-6 text-left">
+        <h2 className="mb-3 text-2xl font-semibold text-white">Quick comparison table</h2>
+        <p className="mb-4 text-sm leading-relaxed text-slate-300">
+          Compare categories by what changes the real outcome: who holds the data, what still works offline, and whether the record is usable outside the app.
+        </p>
+        <div className="overflow-x-auto">
+          <table className="min-w-full border-collapse text-sm">
+            <thead>
+              <tr className="border-b border-slate-700 text-left text-slate-200">
+                <th className="px-3 py-3 font-semibold">What to compare</th>
+                <th className="px-3 py-3 font-semibold">Why it matters</th>
+                <th className="px-3 py-3 font-semibold">What to prefer</th>
+              </tr>
+            </thead>
+            <tbody>
+              {comparisonRows.map((row) => (
+                <tr key={row.criterion} className="border-b border-slate-800 align-top text-slate-300">
+                  <td className="px-3 py-3 font-medium text-white">{row.criterion}</td>
+                  <td className="px-3 py-3">{row.whyItMatters}</td>
+                  <td className="px-3 py-3">{row.bestFit}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section className="grid gap-4 md:grid-cols-3">
+        {nextStepCards.map((card) => (
+          <a key={card.title} href={card.href} className="rounded-2xl border border-slate-700 bg-slate-800/70 p-6 text-left transition hover:border-emerald-500/60 hover:bg-slate-800">
+            <h3 className="mb-2 text-lg font-semibold text-white">{card.title}</h3>
+            <p className="text-sm leading-relaxed text-slate-400">{card.description}</p>
+          </a>
+        ))}
+      </section>
     </div>
   </SEOPageLayout>
 );

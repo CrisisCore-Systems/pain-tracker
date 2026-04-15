@@ -399,7 +399,7 @@ export async function exportWorkSafeBCPDF(
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(18);
     doc.setFont('helvetica', 'bold');
-    doc.text('Pain Tracker Pro', leftMargin, 14);
+    doc.text('Pain Tracker', leftMargin, 14);
 
     doc.setFontSize(11);
     doc.setFont('helvetica', 'normal');
@@ -890,7 +890,7 @@ export async function exportWorkSafeBCPDF(
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(8);
     const disclaimerText =
-      'This report is a structured summary of self-reported pain data for WorkSafe BC reference only. It does not constitute medical advice, diagnosis, or treatment. This document should be reviewed with a qualified healthcare provider. Pain Tracker Pro is not affiliated with WorkSafe BC.';
+      'This report is a structured summary of self-reported pain data for WorkSafe BC reference only. It does not constitute medical advice, diagnosis, or treatment. This document should be reviewed with a qualified healthcare provider. Pain Tracker is not affiliated with WorkSafe BC.';
     const disclaimerLines = doc.splitTextToSize(disclaimerText, contentWidth - 10);
     doc.text(disclaimerLines, leftMargin + 5, yPosition + 15);
   };
@@ -904,7 +904,7 @@ export async function exportWorkSafeBCPDF(
 
       doc.setTextColor(148, 163, 184);
       doc.setFontSize(8);
-      doc.text(`Pain Tracker Pro | WorkSafe BC Clinical Report | ${reportId}`, leftMargin, pageHeight - 8);
+      doc.text(`Pain Tracker | WorkSafe BC Clinical Report | ${reportId}`, leftMargin, pageHeight - 8);
       doc.text(`Page ${i} of ${pageCount}`, rightMargin, pageHeight - 8, { align: 'right' });
     }
   };

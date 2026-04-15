@@ -21,7 +21,7 @@ const article: ArticleData = {
       h2: 'Offline-first is a product decision, not a technical one',
       paragraphs: [
         'Offline-first architecture is often treated as a technical constraint to engineer around. In healthcare apps it is a product requirement. A pain log entry that fails to save because the user walked out of range is not a minor UX inconvenience. It is a data loss event that directly harms the clinical value of the app.',
-        'The practical implication is that every write path must succeed locally before any network call is attempted. If sync exists, it must be asynchronous, non-blocking, and invisible to the user during the write. The user\'s confirmation that their entry was saved must be based on local persistence, not network acknowledgement. PainTracker achieves this by persisting all data to IndexedDB synchronously on every entry, with no cloud backend involved at any point in the write path.',
+        'The practical implication is that every write path must succeed locally before any network call is attempted. If sync exists, it must be asynchronous, non-blocking, and invisible to the user during the write. The user\'s confirmation that their entry was saved must be based on local persistence, not network acknowledgement. Pain Tracker achieves this by persisting all data to IndexedDB synchronously on every entry, with no cloud backend involved at any point in the write path.',
       ],
     },
     {
@@ -42,7 +42,7 @@ const article: ArticleData = {
       h2: 'Local-only analytics and pattern recognition',
       paragraphs: [
         'Pattern recognition is one of the highest-value features of a pain tracking app: correlating pain levels with weather, sleep, medications, and activity to reveal actionable triggers. The architectural choice that determines whether this feature is acceptable is where the computation happens.',
-        'Remote processing of health data for analytics, even anonymised, creates exposure that patients have not meaningfully consented to and that persists beyond the app relationship. Local-only computation using the Web Workers API keeps the analysis on the patient\'s device, eliminates transmission risk, and actually produces better results: it has access to the full entry history without rate limits, without API costs, and without any privacy tradeoff. PainTracker runs all correlations in a local Web Worker against the full IndexedDB dataset, returning results without a single byte of health data leaving the device.',
+        'Remote processing of health data for analytics, even anonymised, creates exposure that patients have not meaningfully consented to and that persists beyond the app relationship. Local-only computation using the Web Workers API keeps the analysis on the patient\'s device, eliminates transmission risk, and actually produces better results: it has access to the full entry history without rate limits, without API costs, and without any privacy tradeoff. Pain Tracker runs all correlations in a local Web Worker against the full IndexedDB dataset, returning results without a single byte of health data leaving the device.',
       ],
     },
     {

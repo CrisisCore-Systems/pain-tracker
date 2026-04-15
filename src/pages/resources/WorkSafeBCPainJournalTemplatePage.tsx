@@ -468,8 +468,8 @@ const pageContent: SEOPageContent = {
       answer: 'For the duration of your claim — and ideally beyond. If your claim is active, track daily. If you\'re on graduated return-to-work, track until fully back to pre-injury duties. If you have a permanent partial disability, periodic entries (weekly) create a long-term record. For appeals, maintain the journal through the entire process. WorkSafeBC has a 3-year window for claim reviews, so your records may be relevant for years.',
     },
     {
-      question: 'Can I use the digital version in PainTracker for my WCB claim?',
-      answer: 'Yes. PainTracker generates WorkSafeBC-specific reports in PDF format, aligned with Form 8 documentation. The digital version adds automatic pain trend analysis, work impact calculations, treatment compliance tracking, and one-click PDF export. Each export includes a SHA-256 integrity hash for verifiability. Many users combine both: the paper diary for daily quick entries (especially at work) and the digital version for analysis, reporting, and export.',
+      question: 'Can I use the digital version in Pain Tracker for my WCB claim?',
+      answer: 'Yes. Pain Tracker generates WorkSafeBC-specific reports in PDF format, aligned with Form 8 documentation. The digital version adds automatic pain trend analysis, work impact calculations, treatment compliance tracking, and one-click PDF export. Each export includes a SHA-256 integrity hash for verifiability. Many users combine both: the paper diary for daily quick entries (especially at work) and the digital version for analysis, reporting, and export.',
     },
     {
       question: 'What about the Workers\' Compensation Appeal Tribunal (WCAT)?',
@@ -595,7 +595,7 @@ const WorkSafeBCCustomSections: React.FC = () => (
               <Shield className="w-6 h-6 text-sky-400" />
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-white mb-2">PainTracker: Auto-Generate WCB Reports</h3>
+              <h3 className="text-lg font-semibold text-white mb-2">Pain Tracker: Auto-Generate WCB Reports</h3>
               <p className="text-slate-300 text-sm leading-relaxed mb-4">
                 The digital version automatically calculates pain trends, work impact metrics, treatment compliance rates, and functional capacity changes — then exports a Form 8-aligned PDF report with one click. Each export includes a SHA-256 integrity hash for verifiability. Everything stays encrypted on your device.
               </p>

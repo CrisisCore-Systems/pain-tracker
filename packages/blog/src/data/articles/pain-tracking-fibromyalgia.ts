@@ -14,13 +14,13 @@ const article: ArticleData = {
       h2: 'Fibromyalgia is not just pain, and tracking it that way sells you short',
       paragraphs: [
         'The diagnostic criteria for fibromyalgia explicitly include widespread pain, fatigue, sleep disturbance, and cognitive difficulties. Tracking only pain intensity misses at least half the clinical picture. If all you record is a number, you give your rheumatologist or pain specialist a number. That is not enough to understand what your days actually look like, or to justify treatment decisions that go beyond the basics.',
-        'PainTracker\'s structured entry system supports multi-symptom tracking. Beyond the core pain fields, you can use tags and notes to consistently record fatigue levels, sleep quality, cognitive fog severity, and other symptoms relevant to your specific presentation. That comprehensive data gives clinicians something to actually work with.',
+        'Pain Tracker\'s structured entry system supports multi-symptom tracking. Beyond the core pain fields, you can use tags and notes to consistently record fatigue levels, sleep quality, cognitive fog severity, and other symptoms relevant to your specific presentation. That comprehensive data gives clinicians something to actually work with.',
       ],
     },
     {
       h2: 'Tracking widespread pain with body mapping',
       paragraphs: [
-        'Fibromyalgia pain is characteristically widespread and often migratory. It may be concentrated in different areas on different days. The body map in PainTracker lets you record exactly where pain is located each day, building a visual history that shows distribution patterns, migration trends, and whether new areas are becoming involved.',
+        'Fibromyalgia pain is characteristically widespread and often migratory. It may be concentrated in different areas on different days. The body map in Pain Tracker lets you record exactly where pain is located each day, building a visual history that shows distribution patterns, migration trends, and whether new areas are becoming involved.',
         'This location tracking is clinically valuable for distinguishing fibromyalgia from other conditions with more localised pain patterns. It also helps identify whether treatments are reducing the number of affected areas, a sign of improvement that intensity scores alone might not capture.',
       ],
     },
@@ -35,7 +35,7 @@ const article: ArticleData = {
       h2: 'Finding flare patterns in the noise',
       paragraphs: [
         'Fibromyalgia flares can seem random. They are rarely entirely random. Consistent tracking often reveals patterns invisible to memory. Weather changes, hormonal cycles, stress events, overexertion, and sleep disruption are common triggers that emerge from tracked data over weeks. Identifying your personal triggers allows proactive management: adjusting activity levels, pre-medicating before known triggers, and communicating patterns to your care team with something more than a hunch.',
-        'PainTracker\'s local analytics can highlight time-of-day patterns, day-of-week variations, and correlations between pain levels and tracked variables. Because all analysis happens on your device, you can explore sensitive patterns, like the relationship between workplace stress and symptom severity, without worrying about who else might see the data.',
+        'Pain Tracker\'s local analytics can highlight time-of-day patterns, day-of-week variations, and correlations between pain levels and tracked variables. Because all analysis happens on your device, you can explore sensitive patterns, like the relationship between workplace stress and symptom severity, without worrying about who else might see the data.',
       ],
     },
     {

@@ -22,7 +22,7 @@ const article: ArticleData = {
       paragraphs: [
         'An offline-first health app stores all data on your device using browser storage technologies like IndexedDB. The app itself is delivered as a Progressive Web App that caches its code locally, allowing it to function entirely without an internet connection after the initial installation. No API calls. No server-side processing. No cloud database.',
         'This is privacy through structure, not privacy through policy. No privacy policy is required when there is no data collection. No encryption-in-transit is needed when data never transits a network. The security model becomes radically simpler: protect the device, protect the data.',
-        'PainTracker extends this with at-rest encryption using passphrase-derived keys, ensuring that physical access to your device does not expose your health records without your passphrase.',
+        'Pain Tracker extends this with at-rest encryption using passphrase-derived keys, ensuring that physical access to your device does not expose your health records without your passphrase.',
       ],
     },
     {
@@ -43,7 +43,7 @@ const article: ArticleData = {
       h2: 'What offline health technology can actually do',
       paragraphs: [
         'As browser capabilities continue to advance, better IndexedDB, Web Crypto, service workers, and Progressive Web App standards, offline health apps become increasingly capable without sacrificing privacy. Local machine learning, on-device analytics, and sophisticated visualization are all achievable without sending data to a server.',
-        'PainTracker is this approach in practice: clinically useful symptom tracking with rich analytics, pattern recognition, and export capabilities, running entirely on your device. The future of health technology does not require surrendering your privacy. It requires developers who refuse to take the easy path of cloud storage when local alternatives exist and are better.',
+        'Pain Tracker is this approach in practice: clinically useful symptom tracking with rich analytics, pattern recognition, and export capabilities, running entirely on your device. The future of health technology does not require surrendering your privacy. It requires developers who refuse to take the easy path of cloud storage when local alternatives exist and are better.',
       ],
     },
   ],

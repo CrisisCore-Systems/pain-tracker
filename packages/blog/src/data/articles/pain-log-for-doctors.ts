@@ -22,14 +22,14 @@ const article: ArticleData = {
       h2: 'What clinicians look for in pain data',
       paragraphs: [
         'Doctors reviewing pain documentation are not reading for narrative. They are looking for patterns: intensity over time, the relationship between medication changes and symptom levels, functional impacts, and potential triggers. Generic apps that record only a number on a scale produce data too thin to be useful.',
-        'PainTracker captures multi-dimensional data per entry: numerical intensity on a 0–10 scale, body location on a visual map, pain quality descriptors, timing, duration, medications taken, functional impact scores, and free-text notes for context. That is not completeness for its own sake. That is the data clinicians actually need to make decisions.',
-        'Export format matters as much as the data itself. A PDF that a physiotherapist can print and annotate. A CSV that a researcher or data-minded clinician can open in a spreadsheet. A JSON file for clinical workflows that want structured import. PainTracker supports all three. The formatting is designed for clinical readability, not for a marketing screenshot.',
+        'Pain Tracker captures multi-dimensional data per entry: numerical intensity on a 0–10 scale, body location on a visual map, pain quality descriptors, timing, duration, medications taken, functional impact scores, and free-text notes for context. That is not completeness for its own sake. That is the data clinicians actually need to make decisions.',
+        'Export format matters as much as the data itself. A PDF that a physiotherapist can print and annotate. A CSV that a researcher or data-minded clinician can open in a spreadsheet. A JSON file for clinical workflows that want structured import. Pain Tracker supports all three. The formatting is designed for clinical readability, not for a marketing screenshot.',
       ],
     },
     {
       h2: 'Creating clinical-grade exports',
       paragraphs: [
-        'PainTracker\'s export system is designed around the actual needs of Canadian healthcare providers and insurance reviewers. PDF reports include summary statistics, trend charts, medication logs, and individual entry details in a clean professional layout. The format is modelled on documentation standards familiar to physiotherapists and occupational health professionals, because if the doctor does not recognize the format, they may not trust the data.',
+        'Pain Tracker\'s export system is designed around the actual needs of Canadian healthcare providers and insurance reviewers. PDF reports include summary statistics, trend charts, medication logs, and individual entry details in a clean professional layout. The format is modelled on documentation standards familiar to physiotherapists and occupational health professionals, because if the doctor does not recognize the format, they may not trust the data.',
         'CSV exports provide raw tabular data for clinicians who want to examine patterns themselves or integrate your data into their own tracking systems. Each row is one entry, with standardised column headers, consistent date-time formatting, and values that can be sorted, filtered, or graphed.',
         'Every export is user-initiated and user-controlled. You select the date range, choose which fields appear, decide the format. Nothing is automatic. This control is not just privacy, it ensures that the data you share with each provider is relevant to that context, not everything you have ever recorded.',
       ],
@@ -38,8 +38,8 @@ const article: ArticleData = {
       h2: 'WorkSafeBC and insurance documentation',
       paragraphs: [
         'Workers\' compensation claims live or die on documentation. A claim without structured, consistent symptom records gives adjudicators very little to work with. Generic pain logs often lack the structure WorkSafeBC reviewers expect, which leads to delays, requests for more information, or rejections that could have been avoided.',
-        'PainTracker includes a WorkSafeBC-specific export template. The report captures pain intensity trends, medication logs, functional limitation descriptions, and a timeline that maps symptom progression to injury dates. This structured approach gives reviewers the objective evidence they need without requiring them to interpret your free-text narrative.',
-        'Insurance documentation requires balance: thorough enough to support the claim, but selective enough that irrelevant personal information does not enter the file. PainTracker\'s export controls let you include clinically relevant data while excluding private notes or entries unrelated to the claim period.',
+        'Pain Tracker includes a WorkSafeBC-specific export template. The report captures pain intensity trends, medication logs, functional limitation descriptions, and a timeline that maps symptom progression to injury dates. This structured approach gives reviewers the objective evidence they need without requiring them to interpret your free-text narrative.',
+        'Insurance documentation requires balance: thorough enough to support the claim, but selective enough that irrelevant personal information does not enter the file. Pain Tracker\'s export controls let you include clinically relevant data while excluding private notes or entries unrelated to the claim period.',
       ],
     },
     {
@@ -53,7 +53,7 @@ const article: ArticleData = {
       h2: 'Consistency is what makes data useful',
       paragraphs: [
         'Clinicians value consistency. A pain log that uses the same scales, the same body map, the same entry structure every day produces comparable data points. That comparability is what makes trends visible and treatment responses measurable. Entries that vary wildly in format and detail are hard to interpret and easy to dismiss.',
-        'PainTracker\'s structured entry interface enforces consistency without adding burden. The same fields appear in the same order every day, with sensible defaults that speed up daily logging. The design goal is consistent tracking that is easy, not tracking that requires effort for the clinician\'s benefit.',
+        'Pain Tracker\'s structured entry interface enforces consistency without adding burden. The same fields appear in the same order every day, with sensible defaults that speed up daily logging. The design goal is consistent tracking that is easy, not tracking that requires effort for the clinician\'s benefit.',
         'Consistency also matters legally. A log that uses standardised scales and automatic timestamps is harder to challenge than handwritten notes with varying formats. The structured, timestamped nature of digital entries provides a level of documentation rigour that paper diaries cannot match.',
       ],
     },
@@ -61,7 +61,7 @@ const article: ArticleData = {
       h2: 'Preparing for appointments',
       paragraphs: [
         'Export before the appointment. Bring the PDF, printed or on your phone. Hand it to your doctor at the start of the session with two sentences: what you tracked, and what the data shows. "I tracked six weeks. My average pain was a five. The medication change brought my morning levels down but the afternoons are still high." That shifts the appointment from history-taking to decision-making.',
-        'PainTracker\'s summary view highlights key statistics for any date range: average and peak pain, most common locations, medication patterns, functional impact trends. That at-a-glance overview gives your clinician context in seconds, leaving the rest of the appointment for the conversation that actually matters.',
+        'Pain Tracker\'s summary view highlights key statistics for any date range: average and peak pain, most common locations, medication patterns, functional impact trends. That at-a-glance overview gives your clinician context in seconds, leaving the rest of the appointment for the conversation that actually matters.',
       ],
     },
   ],
@@ -74,17 +74,17 @@ const article: ArticleData = {
     {
       question: 'How far back should my pain log cover for a medical appointment?',
       answer:
-        'Most clinicians find 4–8 weeks useful for a follow-up assessment. For treatment effectiveness reviews, include data from before and after the intervention. PainTracker lets you select any date range.',
+        'Most clinicians find 4–8 weeks useful for a follow-up assessment. For treatment effectiveness reviews, include data from before and after the intervention. Pain Tracker lets you select any date range.',
     },
     {
-      question: 'Will my doctor understand the PainTracker export format?',
+      question: 'Will my doctor understand the Pain Tracker export format?',
       answer:
-        'Yes. PainTracker exports use standard 0–10 pain scales, body location mapping, and clinical terminology that healthcare providers are trained to interpret. The PDF layout follows clinical documentation conventions.',
+        'Yes. Pain Tracker exports use standard 0–10 pain scales, body location mapping, and clinical terminology that healthcare providers are trained to interpret. The PDF layout follows clinical documentation conventions.',
     },
     {
       question: 'Can I use my pain log as evidence for a disability claim?',
       answer:
-        'Structured, timestamped pain logs can support disability and insurance claims by providing consistent documentation of symptoms over time. PainTracker includes WorkSafeBC-specific export templates designed for this purpose.',
+        'Structured, timestamped pain logs can support disability and insurance claims by providing consistent documentation of symptoms over time. Pain Tracker includes WorkSafeBC-specific export templates designed for this purpose.',
     },
   ],
 };

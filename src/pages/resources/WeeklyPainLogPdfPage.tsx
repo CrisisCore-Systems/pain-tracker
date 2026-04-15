@@ -290,7 +290,7 @@ const FAQS = [
   {
     question: 'Can I use this alongside the digital app?',
     answer:
-      'Absolutely. Paper weekly logs work well alongside PainTracker. Some people use the app for quick daily entries and paper for the weekly spread view. Others use paper when traveling or when they need a break from screens. The data is compatible — you\'re tracking the same clinical dimensions either way.',
+      'Absolutely. Paper weekly logs work well alongside Pain Tracker. Some people use the app for quick daily entries and paper for the weekly spread view. Others use paper when traveling or when they need a break from screens. The data is compatible — you\'re tracking the same clinical dimensions either way.',
   },
   {
     question: 'Is my privacy protected?',

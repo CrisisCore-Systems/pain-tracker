@@ -21,27 +21,27 @@ const article: ArticleData = {
       h2: 'The irreducible minimum that makes entries useful',
       paragraphs: [
         'Four data points form the minimum of a clinically useful pain diary: date and time, pain intensity on a 0 to 10 scale, primary pain location, and pain quality. These take seconds to record using structured inputs and provide the foundation for trend analysis, medication assessment, and clinical communication.',
-        'PainTracker captures these essentials through a slider for intensity, a body map tap for location, and descriptor selection for quality, with the timestamp recorded automatically. The design principle is that the minimum viable entry should require no typing and fewer than four taps.',
+        'Pain Tracker captures these essentials through a slider for intensity, a body map tap for location, and descriptor selection for quality, with the timestamp recorded automatically. The design principle is that the minimum viable entry should require no typing and fewer than four taps.',
       ],
     },
     {
       h2: 'Valuable additions worth the small extra effort',
       paragraphs: [
         'Beyond the minimum, three additional data points substantially increase clinical value without significantly increasing burden: medications taken, functional impact, and one brief contextual note. Recording medications reveals treatment-response patterns. Functional impact gives clinicians the real-world context they need. A brief note, "couldn\'t sleep," "walked 2km today," "weather change," captures triggers and context that structured fields miss.',
-        'PainTracker presents these as optional fields that follow the essential inputs. On a hard day, skip them. On a day when something noteworthy happened, add context in a few seconds. This tiered approach means your diary always has the essentials and often has richer context, without ever demanding a specific level of completeness.',
+        'Pain Tracker presents these as optional fields that follow the essential inputs. On a hard day, skip them. On a day when something noteworthy happened, add context in a few seconds. This tiered approach means your diary always has the essentials and often has richer context, without ever demanding a specific level of completeness.',
       ],
     },
     {
       h2: 'When more detail is clinically useful',
       paragraphs: [
         'Certain clinical situations warrant temporarily increased tracking detail. When starting a new medication, track medication timing alongside pain levels at multiple points during the day to capture onset, peak effect, and wear-off patterns. When investigating triggers, add systematic notes about activities, food, weather, and stress levels for two to four weeks.',
-        'After diagnostic assessments or treatment changes, your clinician might request specific data. A good pain diary app should make it easy to increase detail temporarily without permanently raising the daily burden. PainTracker\'s optional fields and tagging system support this kind of temporary deep-dive without restructuring your entire tracking habit.',
+        'After diagnostic assessments or treatment changes, your clinician might request specific data. A good pain diary app should make it easy to increase detail temporarily without permanently raising the daily burden. Pain Tracker\'s optional fields and tagging system support this kind of temporary deep-dive without restructuring your entire tracking habit.',
       ],
     },
     {
       h2: 'When less detail is actually better',
       paragraphs: [
-        'During severe flares, cognitive capacity and motor function may be significantly limited. A pain diary that demands detailed entries during your worst moments is poorly designed. PainTracker\'s minimal entry path, a single slider swipe, ensures that even on your worst days you can record something meaningful.',
+        'During severe flares, cognitive capacity and motor function may be significantly limited. A pain diary that demands detailed entries during your worst moments is poorly designed. Pain Tracker\'s minimal entry path, a single slider swipe, ensures that even on your worst days you can record something meaningful.',
         'For long-term tracking across months or years, simpler entries also produce cleaner trend data. Daily entries with consistent essential data points create smooth trend lines that reveal seasonal patterns, medication effectiveness over time, and the natural trajectory of your condition. Over-detailed entries add noise without necessarily adding clinical signal at this timescale.',
       ],
     },
