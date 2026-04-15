@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { exportToCSV, downloadData } from '../utils/pain-tracker/export';
+import { exportToCSV, downloadData, clearExportArtifacts } from '../utils/pain-tracker/export';
 import type { PainEntry } from '../types';
 
 const sample: PainEntry = {
@@ -36,11 +36,25 @@ describe('export utils gaps', () => {
     const revokeSpy = vi.spyOn(window.URL, 'revokeObjectURL');
     const createSpy = vi.spyOn(window.URL, 'createObjectURL').mockReturnValue('blob:fake');
     const appendSpy = vi.spyOn(document.body, 'appendChild');
-    const removeSpy = vi.spyOn(document.body, 'removeChild');
+    const originalCreateElement = document.createElement.bind(document);
+    const anchor = originalCreateElement('a');
+    const click = vi.spyOn(anchor, 'click').mockImplementation(() => undefined);
+    const remove = vi.spyOn(anchor, 'remove').mockImplementation(() => undefined);
+    vi.spyOn(document, 'createElement').mockImplementation((tagName: string) => {
+      if (tagName === 'a') {
+        return anchor;
+      }
+
+      return originalCreateElement(tagName);
+    });
+
     downloadData('test', 'file.txt');
+    clearExportArtifacts();
+
     expect(createSpy).toHaveBeenCalled();
     expect(appendSpy).toHaveBeenCalled();
-    expect(removeSpy).toHaveBeenCalled();
+    expect(click).toHaveBeenCalled();
+    expect(remove).toHaveBeenCalled();
     expect(revokeSpy).toHaveBeenCalled();
   });
 });

@@ -13,7 +13,7 @@ const article: ArticleData = {
     {
       h2: 'Install Pain Tracker in under a minute',
       paragraphs: [
-        'Pain Tracker is a Progressive Web App that installs directly from your browser. No app store. No account. Visit www.paintracker.ca/app in Chrome, Safari, Edge, or Firefox on any device. On mobile, tap the browser\'s "Add to Home Screen" option. On desktop, click the install icon in the address bar. The app downloads to your device and works offline immediately.',
+        'Pain Tracker is a Progressive Web App that installs directly from your browser. No app store. No account. Visit www.paintracker.ca/start in Chrome, Safari, Edge, or Firefox on any device. On mobile, tap the browser\'s "Add to Home Screen" option. On desktop, click the install icon in the address bar. The app downloads to your device and works offline immediately.',
         'There is no registration, no email verification, no terms-of-service agreement for your data. You set a passphrase that encrypts your entries, and you are ready. The entire setup takes under sixty seconds.',
       ],
     },
@@ -54,7 +54,7 @@ const article: ArticleData = {
     },
   ],
   howToSteps: [
-    { name: 'Install the app', text: 'Visit www.paintracker.ca/app and use "Add to Home Screen" on mobile or the install icon on desktop.' },
+    { name: 'Install the app', text: 'Visit www.paintracker.ca/start and use "Add to Home Screen" on mobile or the install icon on desktop.' },
     { name: 'Set your passphrase', text: 'Choose a strong, memorable passphrase that encrypts all your health data locally.' },
     { name: 'Log your first entry', text: 'Use the slider for intensity, tap the body map for location, and select pain quality descriptors.' },
     { name: 'Track daily for one week', text: 'Log at least one entry per day at a consistent time to establish your tracking habit and baseline data.' },

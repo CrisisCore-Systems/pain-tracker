@@ -128,7 +128,7 @@ describe('Vault kill switch', () => {
 
     await vaultService.initialize();
     if (vaultService.getStatus().state === 'uninitialized') {
-      await vaultService.setupPassphrase(TEST_PASSPHRASE);
+        await vaultService.setupPassphrase(TEST_UNLOCK_SECRET);
     }
     vaultService.lock();
 

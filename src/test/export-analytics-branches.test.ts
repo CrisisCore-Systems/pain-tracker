@@ -87,7 +87,7 @@ describe('export.ts analytics catch branches', () => {
   });
 
   it('handles data URI path in downloadData', async () => {
-    const { downloadData } = await import('../utils/pain-tracker/export');
+    const { downloadData, clearExportArtifacts } = await import('../utils/pain-tracker/export');
 
     const createObjectURL = vi.fn(() => 'blob:mock');
     const revokeObjectURL = vi.fn();
@@ -97,8 +97,9 @@ describe('export.ts analytics catch branches', () => {
     });
 
     const click = vi.fn();
+    const remove = vi.fn();
     vi.spyOn(document, 'createElement').mockImplementation(
-      () => ({ href: '', download: '', click } as unknown as HTMLElement),
+      () => ({ href: '', download: '', click, remove } as unknown as HTMLElement),
     );
 
     const appendChild = vi.fn();
@@ -109,9 +110,12 @@ describe('export.ts analytics catch branches', () => {
     });
 
     downloadData('data:text/plain;base64,SGVsbG8=', 'hello.txt');
+    clearExportArtifacts();
 
     expect(createObjectURL).toHaveBeenCalled();
+    expect(remove).toHaveBeenCalled();
     expect(revokeObjectURL).toHaveBeenCalled();
     expect(click).toHaveBeenCalled();
+    expect(removeChild).not.toHaveBeenCalled();
   });
 });

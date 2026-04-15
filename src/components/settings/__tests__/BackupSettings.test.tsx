@@ -22,6 +22,7 @@ vi.mock('../../../lib/storage/secureStorage', () => ({
 }));
 
 function makeBackupFile(data: Record<string, unknown>) {
+  const json = JSON.stringify({
     schema: 'paintracker.settings-backup',
     version: 1,
     createdAt: new Date().toISOString(),

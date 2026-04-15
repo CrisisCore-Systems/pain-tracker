@@ -11,7 +11,7 @@ describe('Testimonials component', () => {
 
     // Subheader text (updated to match current copy)
     expect(
-      screen.getByText(/Representative scenarios showing how people use PainTracker/i)
+      screen.getByText(/Representative scenarios showing how people use Pain Tracker/i)
     ).toBeInTheDocument();
 
     // Should render testimonials badge

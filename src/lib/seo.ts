@@ -25,6 +25,16 @@ export interface BreadcrumbItem {
   url: string;
 }
 
+const seoIdentity = {
+  productName: 'Pain Tracker',
+  siteName: 'Pain Tracker',
+  organizationName: 'CrisisCore Systems',
+  siteUrl: 'https://www.paintracker.ca',
+  appUrl: 'https://www.paintracker.ca/start',
+  logoUrl: 'https://www.paintracker.ca/logos/pain-tracker-logo.svg',
+  githubUrl: 'https://github.com/CrisisCore-Systems/pain-tracker',
+} as const;
+
 export function safeJsonLdStringify(value: unknown): string {
   const json = JSON.stringify(value) ?? 'null';
   // Prevent breaking out of <script> via </script> and avoid legacy JS line-separator hazards.
@@ -91,11 +101,11 @@ export function generateMedicalWebPageSchema(metadata: {
     },
     publisher: {
       '@type': 'Organization',
-      name: defaultSEOConfig.siteName,
+      name: defaultSEOConfig.organizationName,
       url: defaultSEOConfig.siteUrl,
       logo: {
         '@type': 'ImageObject',
-        url: defaultSEOConfig.defaultImage
+        url: defaultSEOConfig.logoUrl
       }
     },
     inLanguage: 'en-CA',
@@ -128,7 +138,8 @@ export function generateSoftwareApplicationSchema(): object {
   return {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
-    name: defaultSEOConfig.siteName,
+    name: defaultSEOConfig.productName,
+    url: defaultSEOConfig.appUrl,
     description: 'Track pain privately. No account. Works offline. Bring better records to appointments.',
     applicationCategory: 'HealthApplication',
     operatingSystem: 'Web Browser, iOS, Android',
@@ -150,9 +161,19 @@ export function generateSoftwareApplicationSchema(): object {
     ],
     screenshot: 'https://www.paintracker.ca/main-dashboard.png',
     softwareVersion: '1.0.0',
+    brand: {
+      '@type': 'Brand',
+      name: defaultSEOConfig.siteName
+    },
     creator: {
       '@type': 'Organization',
-      name: defaultSEOConfig.siteName
+      name: defaultSEOConfig.organizationName,
+      url: defaultSEOConfig.siteUrl
+    },
+    provider: {
+      '@type': 'Organization',
+      name: defaultSEOConfig.organizationName,
+      url: defaultSEOConfig.siteUrl
     }
   };
 }
@@ -200,16 +221,16 @@ export function generateArticleSchema(metadata: {
     url: metadata.url,
     author: {
       '@type': 'Organization',
-      name: defaultSEOConfig.siteName,
+      name: defaultSEOConfig.organizationName,
       url: defaultSEOConfig.siteUrl
     },
     publisher: {
       '@type': 'Organization',
-      name: defaultSEOConfig.siteName,
+      name: defaultSEOConfig.organizationName,
       url: defaultSEOConfig.siteUrl,
       logo: {
         '@type': 'ImageObject',
-        url: defaultSEOConfig.defaultImage
+        url: defaultSEOConfig.logoUrl
       }
     },
     image: metadata.imageUrl ?? defaultSEOConfig.defaultImage
@@ -271,11 +292,16 @@ export function generateOrganizationSchema(): object {
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: defaultSEOConfig.siteName,
+    name: defaultSEOConfig.organizationName,
+    alternateName: defaultSEOConfig.siteName,
     url: defaultSEOConfig.siteUrl,
-    logo: defaultSEOConfig.defaultImage,
+    logo: defaultSEOConfig.logoUrl,
     description: 'Private offline-first pain tracking application for daily symptom logging, clinician-friendly records, and local-first privacy controls.',
     foundingDate: '2024',
+    brand: {
+      '@type': 'Brand',
+      name: defaultSEOConfig.productName
+    },
     knowsAbout: [
       'Chronic Pain Management',
       'Pain Tracking',
@@ -285,7 +311,7 @@ export function generateOrganizationSchema(): object {
       'Privacy-First Healthcare Applications'
     ],
     sameAs: [
-      'https://github.com/CrisisCore-Systems/pain-tracker'
+      defaultSEOConfig.githubUrl
     ],
     contactPoint: {
       '@type': 'ContactPoint',
@@ -304,12 +330,13 @@ export function generateWebSiteSchema(): object {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: defaultSEOConfig.siteName,
+    alternateName: defaultSEOConfig.productName,
     url: defaultSEOConfig.siteUrl,
     description: 'Track pain privately. No account. Works offline. Bring better records to appointments.',
     inLanguage: 'en-CA',
     publisher: {
       '@type': 'Organization',
-      name: defaultSEOConfig.siteName,
+      name: defaultSEOConfig.organizationName,
       url: defaultSEOConfig.siteUrl
     }
   };
@@ -319,8 +346,13 @@ export function generateWebSiteSchema(): object {
  * Default SEO configuration for the site
  */
 export const defaultSEOConfig = {
-  siteName: 'Pain Tracker',
-  siteUrl: 'https://www.paintracker.ca',
+  productName: seoIdentity.productName,
+  siteName: seoIdentity.siteName,
+  organizationName: seoIdentity.organizationName,
+  siteUrl: seoIdentity.siteUrl,
+  appUrl: seoIdentity.appUrl,
+  logoUrl: seoIdentity.logoUrl,
+  githubUrl: seoIdentity.githubUrl,
   defaultTitle: 'Track Pain Privately. No Account. Works Offline. | Pain Tracker',
   defaultDescription: 'Track pain privately. No account. Works offline. Bring better records to appointments.',
   defaultImage: 'https://www.paintracker.ca/og-image.png',

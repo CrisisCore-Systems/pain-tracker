@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Download, ExternalLink, Shield, Smartphone, Monitor, Globe, HelpCircle } from 'lucide-react';
-import { combineSchemas, generateBreadcrumbSchema, generateFAQSchema } from '../lib/seo';
+import { combineSchemas, defaultSEOConfig, generateBreadcrumbSchema, generateFAQSchema } from '../lib/seo';
 import { ResourceCtaStack } from '../components/seo';
 
 const breadcrumbs = [
@@ -36,7 +36,7 @@ export const DownloadPage: React.FC = () => {
   const schema = combineSchemas(
     generateBreadcrumbSchema(
       breadcrumbs,
-      { siteUrl: 'https://www.paintracker.ca' }
+      { siteUrl: defaultSEOConfig.siteUrl }
     ),
     generateFAQSchema(downloadFaqs)
   );
@@ -46,7 +46,7 @@ export const DownloadPage: React.FC = () => {
       title: 'Use Pain Tracker Online, Installed, or Self-Hosted | Pain Tracker',
       description:
         'Track pain privately. No account. Works offline. Bring better records to appointments.',
-      canonicalUrl: 'https://www.paintracker.ca/download',
+      canonicalUrl: `${defaultSEOConfig.siteUrl}/download`,
     };
 
     document.title = meta.title;
@@ -61,6 +61,7 @@ export const DownloadPage: React.FC = () => {
     updateMeta('meta[name="description"]', meta.description);
     updateMeta('meta[property="og:title"]', meta.title);
     updateMeta('meta[property="og:description"]', meta.description);
+    updateMeta('meta[property="og:site_name"]', defaultSEOConfig.siteName);
     updateMeta('meta[property="og:url"]', meta.canonicalUrl);
     updateMeta('meta[name="twitter:title"]', meta.title);
     updateMeta('meta[name="twitter:description"]', meta.description);
@@ -71,7 +72,7 @@ export const DownloadPage: React.FC = () => {
       canonicalLink.setAttribute('href', meta.canonicalUrl);
     }
 
-    return () => { document.title = 'Pain Tracker'; };
+    return () => { document.title = defaultSEOConfig.siteName; };
   }, []);
 
   return (

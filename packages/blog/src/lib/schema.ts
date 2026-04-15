@@ -30,9 +30,10 @@ export function organizationJsonLd() {
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: 'CrisisCore Systems',
+    name: siteConfig.organizationName,
+    alternateName: siteConfig.productName,
     url: siteConfig.url,
-    logo: `${siteConfig.url}/logo.png`,
+    logo: siteConfig.logoUrl,
     sameAs: [
       siteConfig.links.github,
       siteConfig.links.twitter,
@@ -49,8 +50,8 @@ export function softwareApplicationJsonLd() {
   return {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
-    name: 'Pain Tracker',
-    url: `${siteConfig.url}/app`,
+    name: siteConfig.productName,
+    url: siteConfig.links.app,
     applicationCategory: 'HealthApplication',
     operatingSystem: 'Web',
     description:
@@ -68,9 +69,18 @@ export function softwareApplicationJsonLd() {
       'Trauma-informed UX',
       'Local-only analytics',
     ],
+    brand: {
+      '@type': 'Brand',
+      name: siteConfig.productName,
+    },
     author: {
       '@type': 'Organization',
-      name: 'CrisisCore Systems',
+      name: siteConfig.organizationName,
+      url: siteConfig.url,
+    },
+    provider: {
+      '@type': 'Organization',
+      name: siteConfig.organizationName,
       url: siteConfig.url,
     },
   };
@@ -88,7 +98,7 @@ export function websiteJsonLd() {
     description: siteConfig.description,
     publisher: {
       '@type': 'Organization',
-      name: 'CrisisCore Systems',
+      name: siteConfig.organizationName,
     },
   };
 }
@@ -155,13 +165,13 @@ export function articleJsonLd(opts: {
     dateModified: opts.dateModified ?? new Date().toISOString().split('T')[0],
     author: {
       '@type': 'Organization',
-      name: 'CrisisCore Systems',
+      name: siteConfig.organizationName,
       url: siteConfig.url,
     },
     publisher: {
       '@type': 'Organization',
-      name: 'CrisisCore Systems',
-      logo: { '@type': 'ImageObject', url: `${siteConfig.url}/logo.png` },
+      name: siteConfig.organizationName,
+      logo: { '@type': 'ImageObject', url: siteConfig.logoUrl },
     },
   };
 }
@@ -182,7 +192,7 @@ export function webPageJsonLd(opts: {
     url: opts.url,
     publisher: {
       '@type': 'Organization',
-      name: 'CrisisCore Systems',
+      name: siteConfig.organizationName,
       url: siteConfig.url,
     },
   };

@@ -167,7 +167,7 @@ export default function FeaturesPage() {
         <p className="text-muted-foreground mb-8 max-w-lg mx-auto">
           Start tracking in seconds — no account, no cloud, no compromise.
         </p>
-        <Link href="/app" className="btn-primary">
+        <Link href={siteConfig.links.app} className="btn-primary">
           Open Pain Tracker
         </Link>
       </section>

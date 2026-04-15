@@ -220,7 +220,13 @@ export const downloadData = (
   link.download = filename;
   document.body.appendChild(link);
   link.click();
-  link.remove();
+
+  if (typeof link.remove === 'function') {
+    link.remove();
+  } else {
+    document.body.removeChild(link);
+  }
+
   trackExportArtifact(url);
 };
 

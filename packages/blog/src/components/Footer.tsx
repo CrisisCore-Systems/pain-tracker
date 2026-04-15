@@ -122,7 +122,7 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href="https://www.paintracker.ca/app"
+                  href={siteConfig.links.app}
                   className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium inline-flex items-center group"
                 >
                   <FooterLinkAccent />

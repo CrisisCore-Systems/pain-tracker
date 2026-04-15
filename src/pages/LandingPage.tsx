@@ -21,6 +21,7 @@ import {
   generateSoftwareApplicationSchema,
   generateFAQSchema,
   combineSchemas,
+  defaultSEOConfig,
 } from '../lib/seo';
 
 export const LandingPage: React.FC = () => {
@@ -55,14 +56,14 @@ export const LandingPage: React.FC = () => {
     updateMeta('meta[name="keywords"]', meta.keywords);
     updateMeta('meta[property="og:title"]', meta.title);
     updateMeta('meta[property="og:description"]', meta.description);
-    updateMeta('meta[property="og:site_name"]', 'Pain Tracker');
+    updateMeta('meta[property="og:site_name"]', defaultSEOConfig.siteName);
     updateMeta('meta[name="twitter:title"]', meta.title);
     updateMeta('meta[name="twitter:description"]', meta.description);
     
     // Reset canonical URL to homepage
     const canonicalLink = document.querySelector('link[rel="canonical"]');
     if (canonicalLink) {
-      canonicalLink.setAttribute('href', 'https://www.paintracker.ca/');
+      canonicalLink.setAttribute('href', `${defaultSEOConfig.siteUrl}/`);
     }
 
     // Announce page to screen readers
@@ -82,7 +83,7 @@ export const LandingPage: React.FC = () => {
       } catch {
         // Element already removed, ignore
       }
-      document.title = 'Pain Tracker';
+      document.title = defaultSEOConfig.siteName;
     };
   }, []);
 

@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import handler from '../../../../../api/weather';
+import handler from '../../../../api/weather';
 
 type MockReq = {
   method: string;

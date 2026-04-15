@@ -30,6 +30,7 @@ import {
   generateSoftwareApplicationSchema,
   generateBreadcrumbSchema,
   combineSchemas,
+  defaultSEOConfig,
   type FAQItem,
   type BreadcrumbItem
 } from '../../lib/seo';
@@ -100,7 +101,7 @@ interface SEOPageLayoutProps {
 }
 
 export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children }) => {
-  const canonicalUrl = `https://www.paintracker.ca${content.canonicalPath ?? `/resources/${content.slug}`}`;
+  const canonicalUrl = `${defaultSEOConfig.siteUrl}${content.canonicalPath ?? `/resources/${content.slug}`}`;
   
   // Set document title and meta tags
   useEffect(() => {
@@ -195,7 +196,7 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
   });
   const softwareSchema = generateSoftwareApplicationSchema();
   const breadcrumbSchema = generateBreadcrumbSchema(content.breadcrumbs, {
-    siteUrl: 'https://www.paintracker.ca'
+    siteUrl: defaultSEOConfig.siteUrl
   });
   
   const combinedSchema = combineSchemas(
