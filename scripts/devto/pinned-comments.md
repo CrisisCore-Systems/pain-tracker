@@ -5,13 +5,15 @@
 ## Sync Conflict Handling in Offline-First PWAs: How to Merge Without Lying to the User
 
 ```md
-TL;DR
-- Sync conflicts are not just merge problems. They are trust problems.
-- Last-write-wins often destroys valid user intent while pretending the system resolved it.
-- Safer sync starts by distinguishing field, structural, ordering, and semantic conflicts.
+Offline-first sync stops being a data problem the second reconnect starts rewriting what the user meant.
 
-Why this matters
-- If offline work can be silently flattened on reconnect, the app is lying about what it saved.
+Three things matter here:
+- Sync conflicts are trust failures before they are merge failures.
+- Last-write-wins is cheap, but cheap conflict handling is usually just silent erasure with better branding.
+- Better systems separate field, structural, ordering, and semantic conflicts instead of flattening everything into one fake answer.
+
+Bottom line:
+If reconnect can silently flatten offline work, the system is not resolving conflict. It is laundering loss.
 
 Sponsor the build → https://paintracker.ca/sponsor
 ```
@@ -19,13 +21,15 @@ Sponsor the build → https://paintracker.ca/sponsor
 ## Coercion-Resistant UX: Designing Interfaces That Don't Pressure Users Under Stress
 
 ```md
-TL;DR
-- Interfaces can reduce pressure or amplify it. They are not neutral.
-- Defaults, timers, hidden exits, and guilt-driven nudges can turn UX into manipulation.
-- Recovery paths, reversible actions, and calm language are part of user dignity.
+Most coercive UX does not look violent. It looks polished, efficient, and suspiciously hard to refuse.
 
-Why this matters
-- Under stress, people need legible choices and survivable mistakes, not rounded-corner coercion.
+What that usually means in practice:
+- Interfaces are part of the pressure around the user. They are not neutral.
+- Defaults, timers, hidden exits, and guilt-driven nudges turn UX into compliance machinery fast.
+- Recovery paths, reversible actions, and calm language are part of dignity, not decoration.
+
+The standard should be simple:
+Under stress, people need legible choices and survivable mistakes, not pressure dressed up as usability.
 
 Sponsor the build → https://paintracker.ca/sponsor
 ```
@@ -33,13 +37,15 @@ Sponsor the build → https://paintracker.ca/sponsor
 ## Service Worker Failure Modes in Offline-First PWAs
 
 ```md
-TL;DR
-- Service worker failures are usually mismatch failures, not simple cache misses.
-- Mixed-version sessions can pair old tabs, new workers, and stale assets in the same user flow.
-- Broken local migrations are worse than visible crashes because they can quietly corrupt trust.
+Service workers look elegant on whiteboards. In production, they create overlap, timing races, and mixed-version reality.
 
-Why this matters
-- Offline-first updates have to survive overlap in the wild, not just clean installs in test.
+The failure pattern is usually this:
+- Most failures are mismatch failures, not simple stale-cache failures.
+- Old tabs, new workers, and stale assets can all coexist in the same session and call that a release.
+- Broken local migrations are often worse than visible crashes because they can quietly carry bad state forward.
+
+That is why:
+Offline-first updates have to survive overlap in the wild, not just the fantasy of one clean version at a time.
 
 Sponsor the build → https://paintracker.ca/sponsor
 ```
@@ -47,13 +53,15 @@ Sponsor the build → https://paintracker.ca/sponsor
 ## Rollback Patterns in Offline-First PWAs
 
 ```md
-TL;DR
-- Rollback in offline-first systems is about state continuity, not just redeploying old code.
-- Old clients, new schemas, queued writes, and waiting service workers create mixed-version reality.
-- Some migrations are not reversible, and pretending otherwise turns rollback into silent damage.
+Rollback sounds simple right up until the client has memory, local state, and unfinished work.
 
-Why this matters
-- A rollback plan that ignores local state is not recovery. It is hope with version numbers.
+The hard part is not code deployment:
+- Real rollback is about state continuity, not just putting older code back on the server.
+- Old clients, new schemas, queued writes, and waiting service workers create mixed-version reality whether the team planned for it or not.
+- Some migrations are not reversible, and pretending otherwise is how rollback turns into corruption.
+
+Translation:
+A rollback plan that ignores local state is not recovery. It is a prayer circle with deployment logs.
 
 Sponsor the build → https://paintracker.ca/sponsor
 ```
@@ -61,13 +69,15 @@ Sponsor the build → https://paintracker.ca/sponsor
 ## Testing IndexedDB Schema Migrations in Offline-First PWAs
 
 ```md
-TL;DR
-- Fresh databases only prove installability. They do not prove upgrade safety.
-- Migration tests need historical fixtures, partial failures, and long-delayed clients.
-- The real question is whether meaning survived, not whether the database opened.
+Fresh databases are one of the easiest ways to lie to yourself about migration safety.
 
-Why this matters
-- A migration that quietly rewrites user history is worse than a migration that fails loudly.
+What actually has to be tested:
+- Fresh databases only prove installability. They do not prove upgrade safety.
+- Serious migration tests need historical fixtures, partial failures, and long-delayed clients.
+- The real question is whether meaning survived, not whether the database managed to open without screaming.
+
+The real risk:
+A migration that quietly rewrites user history is worse than a migration that fails loudly, because it keeps pretending the past survived.
 
 Sponsor the build → https://paintracker.ca/sponsor
 ```
@@ -75,13 +85,15 @@ Sponsor the build → https://paintracker.ca/sponsor
 ## Trust Boundaries in Client-Side Health Apps
 
 ```md
-TL;DR
-- In health apps, privacy lives in the architecture, not in the marketing copy.
-- The device should be the first boundary for pain logs, notes, symptoms, and recovery history.
-- Export, observation, and remote movement all need explicit user-owned boundaries.
+Health-app privacy is not a brand value. It is a system boundary.
 
-Why this matters
-- If sensitive health data becomes product exhaust by default, the product has already crossed the line.
+Where the line actually sits:
+- Privacy lives in the system design, not in the marketing copy.
+- The device should be the first boundary for pain logs, notes, symptoms, and recovery history.
+- Export, observation, and remote movement all need explicit user-owned limits instead of product-shaped excuses.
+
+No amount of copy fixes this:
+If sensitive health data becomes product exhaust by default, the boundary is already broken no matter what the privacy page says.
 
 Sponsor the build → https://paintracker.ca/sponsor
 ```
@@ -89,13 +101,15 @@ Sponsor the build → https://paintracker.ca/sponsor
 ## Offline Queue Replay and Idempotency in Offline-First PWAs
 
 ```md
-TL;DR
-- Offline queues store deferred user intent, not just payloads waiting for the network.
-- Retry is easy. Safe retry requires idempotency, replay identity, and stale-world checks.
-- Without those safeguards, replay can duplicate writes, revive deleted records, or overwrite newer truth.
+Offline queues are holding unfinished promises, not just payloads waiting for the network to behave.
 
-Why this matters
-- If queued work replays blindly, the app can corrupt history while claiming sync succeeded.
+To keep replay from becoming damage:
+- Queues store deferred user intent, not just requests.
+- Retry is easy. Safe retry requires idempotency, replay identity, and stale-world checks.
+- Without those safeguards, replay can duplicate writes, revive deleted records, or overwrite newer truth while claiming sync succeeded.
+
+If the system gets this wrong:
+If queued work replays blindly, the queue stops being resilience and starts becoming a damage multiplier.
 
 Sponsor the build → https://paintracker.ca/sponsor
 ```
