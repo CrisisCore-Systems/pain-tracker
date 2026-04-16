@@ -1,5 +1,5 @@
 ---
-title: How to Handle Sync Conflicts Without Lying to the User
+title: Sync Conflict Handling in Offline-First PWAs: How to Merge Without Lying to the User
 published: false
 tags: webdev,pwa,offlinefirst,distributed
 series: Honest Offline First Systems
@@ -7,362 +7,304 @@ canonical_url: https://github.com/CrisisCore-Systems/pain-tracker
 description: Offline first sync is not just a data problem. It is a trust problem. Here is how to handle conflicts without silently erasing user intent.
 ---
 
-Offline first apps make a promise that sounds simple until you actually have to keep it:
+Offline-first apps make a promise that sounds simple until you actually have to keep it:
 
-keep working when the network dies.
+keep working even when the network dies.
 
-That is the elegant part.
+That is the beautiful part.
 
-The harder part begins when the network comes back and the world has changed in the meantime.
+The brutal part is what happens when the network comes back and the world has changed underneath you.
 
-Because once people can create, edit, delete, and move data while offline, you are no longer dealing with one clean timeline. You are dealing with delayed writes, multiple devices, replayed actions, stale reads, and competing versions of reality.
+Because once you let people create, edit, delete, and move things while offline, you are no longer dealing with one clean version of reality. You are dealing with fragments. Multiple devices. Delayed writes. Cached intent. Competing truths.
 
-That is the moment sync conflict handling stops being a background implementation detail and becomes a trust problem.
+And that is where sync conflict handling stops being a technical detail and starts becoming a trust issue.
 
-The real question is not just:
+The real question is not, "How do I merge data?"
 
-How do we merge data?
-
-It is:
-
-How do we merge data without lying to the person who made it?
+It is, "How do I merge data without lying to the person who made it?"
 
 ## The myth of one true version
 
-A lot of systems quietly treat the server like the sacred source of truth and the client like a temporary reflection of it.
+A lot of sync systems quietly act like the server is the sacred source of truth and the client is just a temporary mirror.
 
-That model works right up until the client goes offline and keeps functioning anyway.
+That story falls apart the second someone goes offline.
 
-Now the phone is making decisions.  
-The laptop is making decisions.  
-The tablet is making decisions.  
-The user is still living their life and expecting the app to remember what they meant.
+Now the phone is making decisions. The laptop is making decisions. The tablet is making decisions. The user is still living their life, still creating value, still expecting the app to remember what they meant.
 
-At that point, the system has to stop pretending that there is always one final correct answer waiting in the cloud.
+So the system has to stop pretending there is always one correct answer sitting somewhere in the cloud.
 
-Sometimes there are two valid versions.  
-Sometimes there are three.  
-Sometimes the system genuinely cannot determine which outcome is right without user context.
+Sometimes there are two valid versions.
 
-That is not weakness. That is reality.
+Sometimes there are three.
 
-A trustworthy system does not fake certainty just to look smooth.
+Sometimes the app has to admit it does not know which one is "right" without context.
 
-## The kinds of conflicts you actually have to handle
+That honesty matters more than looking smooth.
 
-Not every conflict is the same, and treating them all with one generic merge rule is how systems start losing data while calling it resolution.
+## The kinds of conflicts you actually need to deal with
 
-### Field level conflicts
+Not every conflict deserves the same treatment. That is where a lot of sync logic gets lazy and starts smashing everything through the same pipe.
 
-These are the simplest cases.
+That is how you lose trust.
 
-One device changes a task title.  
-Another changes the due date.
+### Field-level conflicts
 
-One edits a profile bio.  
-Another updates the avatar.
+This is the easy one.
 
-These changes affect separate fields and can usually be merged safely, assuming your model is granular enough to see the difference.
+One device changes the task title. Another changes the due date. One edits the bio. Another updates the avatar. These are separate wounds. They can usually heal separately.
 
-### Same field conflicts
+If your data model is good, these can be merged cleanly without drama.
 
-This is where the easy logic stops working.
+### Same-field conflicts
 
-One device renames a note from "Vendor follow up" to "Urgent invoice."  
-Another renames that same note to "Tax stuff."
+This is where things start to get real.
 
-Now the system has a real conflict. It cannot just combine both values and pretend the result makes sense.
+Two devices edit the same value in two different ways. One user renames a note on their phone from "Vendor follow-up" to "Urgent invoice." Another renames it on the laptop to "Tax stuff." Now the system has to choose, blend, or ask.
 
-This is where last write wins starts acting like judgment when it is really just timing.
+This is where "last write wins" starts pretending it has wisdom.
+
+It usually does not.
 
 ### Structural conflicts
 
-These are more dangerous.
+These are nastier.
 
-One device deletes a task while another continues editing it.  
-One device moves a card into a board that another device has already archived.  
-One user removes a section while another adds new items inside it.
+One device deletes a task while another keeps editing it. One device moves a card into a board that another device already archived. One user removes a section while another adds items into that section.
 
-Now the system is not just choosing between values. It is reconciling incompatible versions of reality.
+Now you are not just merging values. You are reconciling reality.
 
 ### Ordering conflicts
 
-These show up anywhere sequence matters.
+These matter when sequence has meaning.
 
-Lists.  
-Boards.  
-Timelines.  
-Playlists.  
-Drag and drop interfaces.
+Lists. Boards. Timelines. Playlists. Drag-and-drop layouts.
 
-If two devices reorder the same items differently while offline, timestamps alone do not solve the problem. The issue is not only when something changed. It is where that thing is supposed to live.
+If two devices reorder the same list differently while offline, a timestamp alone will not save you. The problem is not just when something happened. It is where it belongs.
 
 ### Semantic conflicts
 
-This is the subtle one, and often the most dangerous.
+This is the quiet killer.
 
-Two changes can both be technically valid and still produce a broken result together.
+Two changes are both technically valid, but together they make no sense.
 
-One device changes shipping to express.  
-Another changes the address to a region that express delivery does not support.
+One device switches shipping to express. Another changes the address to a region that express shipping cannot reach. One edits a work order to "complete" while another adds a missing part that makes completion impossible.
 
-One device marks a work order as complete.  
-Another adds a missing dependency that makes completion impossible.
+Nothing looks broken at the field level, but the final state is nonsense.
 
-Nothing looks broken at the field level, but the final state fails the real world.
+That is the kind of bug that passes validation and still fails reality.
 
-That is how you end up with systems that pass validation and still betray the user.
+## Why last-write-wins keeps disappointing people
 
-## Why last write wins keeps disappointing people
+Last-write-wins is popular because it is cheap.
 
-Last write wins remains popular because it is cheap to implement and easy to explain.
+It gives you a rule, a timestamp, and the comforting illusion that the machine has resolved the problem.
 
-Pick the latest timestamp.  
-Keep that version.  
-Move on.
+But timestamps are not truth. They are just timing.
 
-The problem is that timestamps are not truth. They are just timing.
+A later write does not automatically mean a better one. It might just mean:
 
-A later write is not automatically a better one. It may only mean that:
+one device synced later,
+one clock was wrong,
+one client replayed an old action,
+one update was delayed in transit,
+one user changed a different field and got punished for it.
 
-one device synced later  
-one client had a bad clock  
-one stale action was replayed late  
-one request was delayed in transit  
-one user changed something unrelated and still got overwritten  
+A user updates their address on one device and then changes their display name on another. If your sync logic is coarse enough, the second update can overwrite the first even though the edits had nothing to do with each other.
 
-That is the part many systems get wrong.
+The app may call that "resolved."
 
-A user updates their address on one device.  
-Later, on another device, they change their display name.
-
-If your sync model is too coarse and treats the whole object as one blob, the second update can wipe out the first even though the changes had nothing to do with each other.
-
-The system may report success.
-
-The user sees missing data.
-
-That is not conflict resolution.  
-That is silent loss with better branding.
+The user will call it missing data.
 
 ## Better ways to merge
 
-There is no universal merge strategy that works for every kind of data.
+There is no magic merge rule that works for every kind of data. The data type decides the strategy. The meaning decides the rules.
 
-The structure of the data matters.  
-The meaning of the data matters.  
-The cost of being wrong matters.
+### Merge at the field level when the fields are independent
 
-### Merge at the field level when fields are truly independent
+This is the cleanest approach for profile data, preferences, metadata, and other objects where each piece can survive on its own.
 
-If one field changed and another did not, do not drag the entire object into the blast radius.
+If one field changed and the other did not, do not drag the whole object into the blast radius.
 
-This works well for profile data, settings, metadata, and other records where fields can safely evolve separately.
+### Sync operations, not just final states
 
-### Sync operations, not just snapshots
+This is often the better mental model.
 
-In many systems, the better model is not "here is the object now."
+Instead of saying, "here is the whole object now," say, "here is what the user did."
 
-It is "here is what the user did."
+Rename note.
+Add tag.
+Move card.
+Increase quantity.
+Delete item.
 
-Rename note.  
-Add tag.  
-Move card.  
-Increase quantity.  
-Delete item.  
+Operations carry intent. Snapshots often lose it.
 
-Operations preserve intent in a way snapshots often do not.
+That matters because intent is what users care about. They do not remember the exact payload shape. They remember the action they took.
 
-That matters because users do not think in payloads. They think in actions.
+### Use revisions so stale writes can be detected
 
-If your sync system can preserve the action, it has a better chance of preserving the user's meaning.
+Every record needs a version marker of some kind.
 
-### Use revisions so stale writes are visible
+That way, when a client tries to update revision 12 and the server is already on revision 14, the system knows there is a conflict instead of blindly accepting whatever arrived last.
 
-Every record should carry a version marker, revision number, or equivalent concurrency token.
+That tiny bit of structure prevents a lot of silent corruption.
 
-That way, when a client tries to update revision 12 while the server is already on revision 14, the system knows it is handling stale data instead of blindly accepting whatever arrived last.
+### Use CRDTs or OT where the surface is collaborative
 
-That small piece of structure prevents a surprising amount of corruption.
+For shared text, live editing, shared cursors, or highly concurrent content, basic timestamp logic is not enough.
 
-### Use CRDTs or OT where concurrency is part of the product
+Sometimes you need conflict-free replicated data types. Sometimes you need operational transform.
 
-For shared editing surfaces, you will eventually need CRDTs or operational transform.
+These are not fancy extras. They are the tools that let multiple writers converge without shredding each other's work.
 
-These are not decorative patterns for architecture discussions. They are practical tools for helping multiple writers converge without shredding each other's work.
+### Treat deletes carefully
 
-### Treat deletes as first class decisions
+A delete is not just absence.
 
-A delete is not just the absence of data.
+It is a decision.
 
-It is an action with consequences.
+If another device still has stale references, you need tombstones or equivalent logic so the deleted object does not crawl back from the dead during sync.
 
-If another device still holds stale references, you need tombstones or equivalent deletion markers so the deleted object does not crawl back into existence during sync.
-
-Few things damage trust faster than ghost data reappearing after a user thought it was gone.
-
-Not every surface deserves CRDT level complexity, but every surface deserves an explicit conflict policy.
-
-## A simple conflict policy matrix
-
-If your system cannot explain its conflict rules in a few lines, it does not have them.
-
-A minimal conflict policy might look like this:
-
-**Profile fields**  
-Auto merge by field. Independent fields should not overwrite each other.
-
-**Note titles and text fields**  
-Preserve both versions and require review. Do not pretend the system knows which one is right.
-
-**Deletes**  
-Use tombstones plus a user visible recovery window. A delete should not be silently reversible or silently final.
-
-**List ordering**  
-Use sequence aware merge logic. Position is meaning, not decoration.
-
-**Money, permissions, and access control**  
-Hard conflict. No automatic resolution. Require explicit confirmation.
-
-This is not about perfection.
-
-It is about making sure each kind of data has a merge rule that matches its actual risk.
+That ghost data is exactly how apps start feeling unreliable.
 
 ## The UI has to tell the truth too
 
-If sync is in progress, say so.
+The user should never feel like the app secretly rewrote their reality behind a curtain.
+
+If sync is happening, say so.
 
 If there is a conflict, say so.
 
-If the system merged something automatically, show that.
+If the app kept one version and discarded another, say so.
 
-If one version was discarded, make that visible.
+If the user needs to choose, show them the choice.
 
-If something can still be recovered, surface it.
+If the system merged safely, show what happened.
 
-What breaks trust is usually not the conflict itself.
+What breaks trust is not conflict itself.
 
 What breaks trust is silence.
 
 ### Good behavior
 
-Show syncing state.  
-Show conflict detected.  
-Show what was merged automatically.  
-Show what requires review.  
-Show what can still be recovered.  
+Show "syncing."
+Show "conflict detected."
+Show which version was kept.
+Show what was merged automatically.
+Show what can still be recovered.
 
 ### Bad behavior
 
-Hide failures.  
-Pretend everything saved cleanly.  
-Overwrite data without explanation.  
-Use loading indicators to cover uncertainty.  
-Call a destructive overwrite success just because the request returned 200.  
+Hide failures.
+Pretend everything saved cleanly.
+Replace data without explanation.
+Use a spinner to cover up uncertainty.
+Call a destructive overwrite "success."
 
-The user should never feel like the app rewrote their reality behind a curtain.
+That is not good UX. That is institutional gaslighting with a pretty interface.
 
-## What truth actually means in offline first systems
+## What truth actually means in offline-first systems
 
-In a disconnected system, truth is not a single static object.
+In a disconnected system, truth is not one static object.
 
-It is the result of multiple timelines being reconciled.
+Truth is the current state of a negotiation.
 
-A trustworthy system keeps three things visible and coherent:
+A truthful app keeps track of three things at once:
 
-the last confirmed server state  
-the user's local pending changes  
-the result of any conflicts between them  
+the latest confirmed server state,
+the user's local pending intent,
+the history that explains how the conflict was resolved.
 
-If something changed during reconciliation, the system should be able to explain it plainly:
+That third part is huge.
 
-this was saved locally  
-this conflicted with another version  
-this is what was kept  
-this is what can be recovered  
+Because people do not just want the outcome. They want to know why the outcome exists.
 
-The goal is not to eliminate conflict.
+If a user edits something offline and the server later rejects or reshapes it, the app should not just snap the UI back like nothing happened. That feels fake.
 
-The goal is to make sure nothing disappears without a trace.
+It should explain the sequence.
+
+This was saved locally.
+Another device had a different version.
+These values conflicted.
+This is what was kept.
+This is what can be restored.
+
+That is honesty. That is how you keep trust alive.
 
 ## A real conflict policy needs categories
 
-A good offline first system should not improvise its way through every disagreement.
+A good offline-first app should not improvise every conflict.
 
-It should already know which kinds of data can be merged automatically, which should surface a review state, and which are too risky to resolve without explicit user input.
+It should already know how different data behaves.
 
-### Safe to auto merge
+### Safe to auto-merge
 
-Use this when changes are independent, additive, or low risk.
+Use this when fields are independent, changes are additive, and nothing important gets lost by combining them.
 
-A name change and an avatar update can usually coexist without drama.
+A name change and an avatar change can usually coexist.
 
 ### Soft conflict
 
-Use this when the system can preserve both sides, but the result still deserves user review.
+Use this when the system can merge, but the result should still be visible to the user for review.
 
-Two conflicting note titles are a good example. The app can keep both versions, but it should not pretend it found the one true answer.
+Example: two people edit the same note title. The system can preserve both versions, but it should not pretend it picked the "right" one without telling anyone.
 
 ### Hard conflict
 
-Use this when guessing would be dangerous, destructive, or difficult to reverse.
+Use this when guessing would be dangerous, destructive, or irreversible.
 
-Deletes.  
-Permissions.  
-Financial values.  
-Access control.  
-Legal or compliance sensitive records.  
+That includes deletions, permission changes, financial data, and anything where the wrong answer causes real damage.
 
-When the wrong answer causes real harm, the system should stop being clever and ask for confirmation.
+If a user's invoice amount, access level, or saved payment details are involved, the app should not get creative.
 
-## Build conflict handling into the model from the start
+## Build the model for conflict from the start
 
-Conflict handling is not something you bolt on at the end after the sync layer already exists.
+Conflict handling is not something you bolt on at the end.
 
-It begins in the schema and the write model.
+It starts in the schema.
 
-A sync capable system usually needs:
+A sync-friendly system usually needs:
 
-stable IDs  
-revision tracking  
-timestamps  
-operation logs  
-mutation queues  
-conflict metadata  
-replay safe endpoints  
-undo or recovery paths  
-writes must be idempotent and safe to replay without side effects  
+stable IDs,
+revision tracking,
+timestamps,
+operation logs,
+mutation queues,
+conflict metadata,
+undo paths,
+and endpoints that can survive replay.
 
-If the backend cannot survive delayed, repeated, or reordered writes, offline first behavior will eventually expose that weakness.
+If the backend cannot handle delayed, repeated, or reordered writes, offline-first behavior will eventually bend it into something untrustworthy.
 
-The architecture has to be designed for friction, not just ideal connectivity.
+The architecture has to be built for friction.
 
 ## The rule that matters most
 
-Do not optimize for no conflicts.
+Do not optimize for "no conflicts."
 
-Optimize for no silent loss.
+Optimize for "no silent loss."
 
-Conflict means the system noticed that reality split.
+Conflict is not failure.
 
-That is a good thing.
+Conflict is evidence that the system respected reality enough to notice it was split.
 
-What destroys trust is when the system hides that split, picks a winner, and acts like nothing happened.
+That is the job.
 
-A good offline first system should always be able to say:
+Not to erase disagreement.
 
-this was saved  
-this was merged  
-this was overwritten  
-this was rejected  
-this is what you can recover  
+Not to fake certainty.
 
-If it cannot say that, it is not really resolving conflict.
+Not to make the interface look smooth while the user's work disappears in the background.
 
-It is erasing evidence that conflict happened at all.
+The job is to preserve intent, expose uncertainty, and keep the user oriented when the world forks.
 
-That may look smooth in the interface.
+A good offline-first app should be able to say:
 
-To the user, it feels like disappearance.
+This was saved.
+This was merged.
+This was overwritten.
+This was rejected.
+This is what happened.
+This is what you can still recover.
 
-Once a system makes work disappear, trust does not come back.
+That is what truth looks like when devices disagree.
