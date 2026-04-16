@@ -522,9 +522,99 @@
       "published": false
     },
     {
+      "key": "service-worker-failure-modes",
+      "enabled": false,
+      "title": "Service Worker Failure Modes in Offline-First PWAs",
+      "sourceFile": "docs/content/blog/devto-service-worker-failure-modes-what-breaks-when-your-offline-app-updates-in-the-wild.md",
+      "publishAt": "2026-04-16T17:00:00Z",
+      "tags": [
+        "pwa",
+        "serviceworker",
+        "webdev",
+        "architecture"
+      ],
+      "description": "Offline-first PWAs do not update in one clean motion. Service workers, stale assets, and mixed-version sessions can break trust long before the UI crashes.",
+      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
+      "articleId": null,
+      "devtoUrl": null,
+      "published": false
+    },
+    {
+      "key": "rollback-patterns-offline-first-pwas",
+      "enabled": false,
+      "title": "Rollback Patterns in Offline-First PWAs",
+      "sourceFile": "docs/content/blog/devto-rollback-patterns-offline-first-pwas-how-to-recover-without-corrupting-local-state.md",
+      "publishAt": "2026-04-16T17:00:00Z",
+      "tags": [
+        "pwa",
+        "webdev",
+        "architecture",
+        "databases"
+      ],
+      "description": "Rollback in an offline-first PWA is not just redeploying old code. It has to survive mixed versions, local history, and queued intent without silent corruption.",
+      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
+      "articleId": null,
+      "devtoUrl": null,
+      "published": false
+    },
+    {
+      "key": "testing-indexeddb-schema-migrations",
+      "enabled": false,
+      "title": "Testing IndexedDB Schema Migrations in Offline-First PWAs",
+      "sourceFile": "docs/content/blog/devto-testing-indexeddb-schema-migrations-in-offline-first-apps.md",
+      "publishAt": "2026-04-16T17:00:00Z",
+      "tags": [
+        "pwa",
+        "javascript",
+        "testing",
+        "databases"
+      ],
+      "description": "Schema migration safety in an offline-first PWA means proving that old local data survives upgrades, partial failures, and delayed clients without losing meaning.",
+      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
+      "articleId": null,
+      "devtoUrl": null,
+      "published": false
+    },
+    {
+      "key": "trust-boundaries-client-side-health-apps",
+      "enabled": false,
+      "title": "Trust Boundaries in Client-Side Health Apps",
+      "sourceFile": "docs/content/blog/devto-trust-boundaries-client-side-health-apps-what-never-leaves-the-device.md",
+      "publishAt": "2026-04-16T17:00:00Z",
+      "tags": [
+        "privacy",
+        "healthtech",
+        "pwa",
+        "architecture"
+      ],
+      "description": "Health-app privacy is an architectural boundary: what stays on device, what leaves by choice, and what must never become product exhaust.",
+      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
+      "articleId": null,
+      "devtoUrl": null,
+      "published": false
+    },
+    {
+      "key": "offline-queue-replay-idempotency",
+      "enabled": false,
+      "title": "Offline Queue Replay and Idempotency in Offline-First PWAs",
+      "sourceFile": "docs/content/blog/devto-offline-queue-replay-idempotency-how-to-retry-without-making-a-mess.md",
+      "publishAt": "2026-04-16T17:00:00Z",
+      "tags": [
+        "pwa",
+        "webdev",
+        "distributed",
+        "architecture"
+      ],
+      "description": "Offline queues hold user intent for later. Replay only stays trustworthy if retries, duplicates, and stale-world writes are handled idempotently.",
+      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
+      "articleId": null,
+      "devtoUrl": null,
+      "published": false
+    },
+    {
       "key": "proofvault-trust-case-release-artifact",
       "enabled": true,
-      "title": "How ProofVault turned trust from a documentation claim into a reproducible release artifact",
+      "title": "ProofVault as a Release Artifact: Turning Trust Into Something You Can Verify",
       "sourceFile": "docs/content/blog/devto-proofvault-trust-case-release-artifact.md",
       "publishAt": "2026-03-14T00:00:00Z",
       "tags": [
@@ -533,7 +623,7 @@
         "privacy",
         "showdev"
       ],
-      "description": "How ProofVault turned trust from a documentation claim into a reproducible, release-bound artifact.",
+      "description": "Trust is not real until it survives contact with evidence. ProofVault turns release trust into something you can inspect instead of something you have to believe.",
       "injectCtas": false,
       "main_image": "https://dev-to-uploads.s3.amazonaws.com/uploads/articles/1awypd543rg4724oq3i9.png",
       "canonical_url": null,
