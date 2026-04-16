@@ -183,17 +183,17 @@
     {
       "key": "devto-sync-conflict-handling-offline-first-pwas",
       "enabled": false,
-      "series": null,
-      "title": "Sync Conflict Handling in Offline First PWAs: How to Merge Without Lying to the User",
+      "series": "Honest Offline First Systems",
+      "title": "How to Handle Sync Conflicts Without Lying to the User",
       "sourceFile": "docs/content/blog/devto-sync-conflict-handling-offline-first-pwas.md",
       "publishAt": "2026-04-16T17:00:00Z",
       "tags": [
+        "webdev",
         "pwa",
         "offlinefirst",
-        "architecture",
-        "webdev"
+        "distributed"
       ],
-      "description": "A practical conflict policy for offline-first apps: field merges, revision tokens, tombstones, hard conflicts, and UI that tells the truth when timelines diverge.",
+      "description": "Offline first sync is not just a data problem. It is a trust problem. Here is how to handle conflicts without silently erasing user intent.",
       "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
       "articleId": null,
       "devtoUrl": null,
