@@ -213,6 +213,92 @@ independently, the organization starts lying to itself.
 
 Release gating is how you force those layers back into alignment.
 
+## A pinned specimen is what makes the claim concrete
+
+This is where ProofVault stops being abstract.
+
+The trust case is not just a set of principles.
+
+It includes a real dossier under `docs/trust-case/` and a pinned specimen
+under `docs/trust-case/demo/`.
+
+That matters because a reproducible specimen changes the burden of proof.
+
+Now the project can say:
+
+Here is the specimen.
+Here is how it is regenerated.
+Here is what counts as expected output.
+Here is what tampering looks like.
+Here is the exact release tree tied to the proof.
+
+That is a stronger claim than "we care about integrity."
+
+It is a concrete example that can be checked later.
+
+## Drift detection is the enforcement layer
+
+A pinned specimen without drift detection decays into theater.
+
+Once you publish expected outputs, the obvious risk is that future code
+changes silently alter trust-critical behavior while the docs keep
+describing the old story.
+
+That is why ProofVault does not just publish the specimen.
+
+It regenerates it and compares it against the pinned outputs.
+
+If the trust-critical surface changes, the check is supposed to fail
+until the change is reviewed and the specimen is intentionally updated.
+
+That is what turns the trust case into a release artifact instead of a
+one-time writeup.
+
+## Hosted CI mattered more than local green
+
+One of the important parts of this work happened after the local system
+already looked correct.
+
+The specimen was green on Windows.
+It was green under `TZ=UTC`.
+It was green in WSL.
+
+But GitHub's hosted runner still failed.
+
+That was the decisive moment.
+
+At that point the responsible move was not to weaken the check, blame CI,
+or normalize away the mismatch.
+
+The responsible move was to treat the hosted runner as part of the real
+release surface and keep digging until the disagreement had a concrete
+explanation.
+
+A trust case that only passes on the author's machine is not yet a
+release artifact.
+
+It is still a local belief.
+
+## The release history matters because provenance matters
+
+The public trust-case history is part of the proof surface too.
+
+`proofvault-trust-case-v1.0` remains the first public cut.
+
+`proofvault-trust-case-v1.0.1` exists because the project found real
+cross-environment specimen drift, fixed it at source, proved the result
+on hosted CI, removed temporary diagnostics, and tagged the corrected
+non-debug release tree.
+
+The final hosted-green non-debug release commit is `dc5fbe9`.
+
+That matters because the first tag was not silently rewritten.
+
+The history stayed legible.
+
+That is what provenance looks like when it is treated as part of the
+artifact instead of part of the marketing.
+
 ## Proof after the docs are written is the real test
 
 This is the part that separates serious systems from decorative ones.

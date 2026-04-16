@@ -33,7 +33,7 @@ Read next: [Maintaining truthful docs over time](https://github.com/CrisisCore-S
 
 This pair also sits inside a broader Documentation Integrity / Verifiable Trust
 reading path with
-[How ProofVault turned trust from a documentation claim into a reproducible release artifact](https://dev.to/crisiscoresystems/how-proofvault-turned-trust-from-a-documentation-claim-into-a-reproducible-release-artifact-22pb)
+[ProofVault as a Release Artifact: Turning Trust Into Something You Can Verify](https://dev.to/crisiscoresystems/how-proofvault-turned-trust-from-a-documentation-claim-into-a-reproducible-release-artifact-22pb)
 and
 [Preview Mode First](https://dev.to/crisiscoresystems/preview-mode-first-agent-plans-as-prs-plan-diff-invariants-4ikd).
 

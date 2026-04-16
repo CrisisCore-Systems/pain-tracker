@@ -182,11 +182,11 @@
     },
     {
       "key": "devto-sync-conflict-handling-offline-first-pwas",
-      "enabled": false,
+      "enabled": true,
       "series": "Honest Offline First Systems",
       "title": "Sync Conflict Handling in Offline-First PWAs: How to Merge Without Lying to the User",
       "sourceFile": "docs/content/blog/devto-sync-conflict-handling-offline-first-pwas.md",
-      "publishAt": "2026-04-16T17:00:00Z",
+      "publishAt": "2026-04-21T16:00:00Z",
       "tags": [
         "webdev",
         "pwa",
@@ -194,10 +194,10 @@
         "distributed"
       ],
       "description": "Offline first sync is not just a data problem. It is a trust problem. Here is how to handle conflicts without silently erasing user intent.",
-      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
-      "articleId": null,
-      "devtoUrl": null,
-      "published": false
+      "canonical_url": null,
+      "articleId": 3512233,
+      "devtoUrl": "https://dev.to/crisiscoresystems/sync-conflict-handling-in-offline-first-pwas-how-to-merge-without-lying-to-the-user-59i3",
+      "published": true
     },
     {
       "key": "privacy-first-default-standard",
@@ -505,10 +505,10 @@
     },
     {
       "key": "coercion-resistant-ux",
-      "enabled": false,
+      "enabled": true,
       "title": "Coercion-Resistant UX: Designing Interfaces That Don't Pressure Users Under Stress",
       "sourceFile": "docs/content/blog/devto-coercion-resistant-ux-designing-interfaces-that-dont-pressure-users-under-stress.md",
-      "publishAt": "2026-04-16T17:00:00Z",
+      "publishAt": "2026-04-28T16:00:00Z",
       "tags": [
         "webdev",
         "design",
@@ -516,17 +516,17 @@
         "privacy"
       ],
       "description": "Interfaces are part of the pressure around the user. Coercion-resistant UX keeps defaults honest, recovery possible, and urgency truthful when people are under strain.",
-      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
-      "articleId": null,
-      "devtoUrl": null,
-      "published": false
+      "canonical_url": null,
+      "articleId": 3512234,
+      "devtoUrl": "https://dev.to/crisiscoresystems/coercion-resistant-ux-designing-interfaces-that-dont-pressure-users-under-stress-18m9",
+      "published": true
     },
     {
       "key": "service-worker-failure-modes",
-      "enabled": false,
+      "enabled": true,
       "title": "Service Worker Failure Modes in Offline-First PWAs",
       "sourceFile": "docs/content/blog/devto-service-worker-failure-modes-what-breaks-when-your-offline-app-updates-in-the-wild.md",
-      "publishAt": "2026-04-16T17:00:00Z",
+      "publishAt": "2026-05-05T16:00:00Z",
       "tags": [
         "pwa",
         "serviceworker",
@@ -534,17 +534,17 @@
         "architecture"
       ],
       "description": "Offline-first PWAs do not update in one clean motion. Service workers, stale assets, and mixed-version sessions can break trust long before the UI crashes.",
-      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
-      "articleId": null,
-      "devtoUrl": null,
-      "published": false
+      "canonical_url": null,
+      "articleId": 3512235,
+      "devtoUrl": "https://dev.to/crisiscoresystems/service-worker-failure-modes-in-offline-first-pwas-3dnp",
+      "published": true
     },
     {
       "key": "rollback-patterns-offline-first-pwas",
-      "enabled": false,
+      "enabled": true,
       "title": "Rollback Patterns in Offline-First PWAs",
       "sourceFile": "docs/content/blog/devto-rollback-patterns-offline-first-pwas-how-to-recover-without-corrupting-local-state.md",
-      "publishAt": "2026-04-16T17:00:00Z",
+      "publishAt": "2026-05-12T16:00:00Z",
       "tags": [
         "pwa",
         "webdev",
@@ -552,17 +552,17 @@
         "databases"
       ],
       "description": "Rollback in an offline-first PWA is not just redeploying old code. It has to survive mixed versions, local history, and queued intent without silent corruption.",
-      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
-      "articleId": null,
-      "devtoUrl": null,
-      "published": false
+      "canonical_url": null,
+      "articleId": 3512236,
+      "devtoUrl": "https://dev.to/crisiscoresystems/rollback-patterns-in-offline-first-pwas-13f9",
+      "published": true
     },
     {
       "key": "testing-indexeddb-schema-migrations",
-      "enabled": false,
+      "enabled": true,
       "title": "Testing IndexedDB Schema Migrations in Offline-First PWAs",
       "sourceFile": "docs/content/blog/devto-testing-indexeddb-schema-migrations-in-offline-first-apps.md",
-      "publishAt": "2026-04-16T17:00:00Z",
+      "publishAt": "2026-05-19T16:00:00Z",
       "tags": [
         "pwa",
         "javascript",
@@ -570,17 +570,17 @@
         "databases"
       ],
       "description": "Schema migration safety in an offline-first PWA means proving that old local data survives upgrades, partial failures, and delayed clients without losing meaning.",
-      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
-      "articleId": null,
-      "devtoUrl": null,
-      "published": false
+      "canonical_url": null,
+      "articleId": 3512237,
+      "devtoUrl": "https://dev.to/crisiscoresystems/testing-indexeddb-schema-migrations-in-offline-first-pwas-26m8",
+      "published": true
     },
     {
       "key": "trust-boundaries-client-side-health-apps",
-      "enabled": false,
+      "enabled": true,
       "title": "Trust Boundaries in Client-Side Health Apps",
       "sourceFile": "docs/content/blog/devto-trust-boundaries-client-side-health-apps-what-never-leaves-the-device.md",
-      "publishAt": "2026-04-16T17:00:00Z",
+      "publishAt": "2026-05-26T16:00:00Z",
       "tags": [
         "privacy",
         "healthtech",
@@ -588,17 +588,17 @@
         "architecture"
       ],
       "description": "Health-app privacy is an architectural boundary: what stays on device, what leaves by choice, and what must never become product exhaust.",
-      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
-      "articleId": null,
-      "devtoUrl": null,
-      "published": false
+      "canonical_url": null,
+      "articleId": 3512238,
+      "devtoUrl": "https://dev.to/crisiscoresystems/trust-boundaries-in-client-side-health-apps-2pa9",
+      "published": true
     },
     {
       "key": "offline-queue-replay-idempotency",
-      "enabled": false,
+      "enabled": true,
       "title": "Offline Queue Replay and Idempotency in Offline-First PWAs",
       "sourceFile": "docs/content/blog/devto-offline-queue-replay-idempotency-how-to-retry-without-making-a-mess.md",
-      "publishAt": "2026-04-16T17:00:00Z",
+      "publishAt": "2026-06-02T16:00:00Z",
       "tags": [
         "pwa",
         "webdev",
@@ -606,10 +606,10 @@
         "architecture"
       ],
       "description": "Offline queues hold user intent for later. Replay only stays trustworthy if retries, duplicates, and stale-world writes are handled idempotently.",
-      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
-      "articleId": null,
-      "devtoUrl": null,
-      "published": false
+      "canonical_url": null,
+      "articleId": 3512239,
+      "devtoUrl": "https://dev.to/crisiscoresystems/offline-queue-replay-and-idempotency-in-offline-first-pwas-3hpg",
+      "published": true
     },
     {
       "key": "proofvault-trust-case-release-artifact",

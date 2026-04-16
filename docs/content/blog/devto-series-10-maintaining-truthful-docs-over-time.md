@@ -32,7 +32,7 @@ This works best as Part 2 of a 2-post trust-and-verifiability pair.
 Read first: [Quality gates that earn trust](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-09-quality-gates-that-earn-trust.md)
 
 Together with
-[How ProofVault turned trust from a documentation claim into a reproducible release artifact](https://dev.to/crisiscoresystems/how-proofvault-turned-trust-from-a-documentation-claim-into-a-reproducible-release-artifact-22pb)
+[ProofVault as a Release Artifact: Turning Trust Into Something You Can Verify](https://dev.to/crisiscoresystems/how-proofvault-turned-trust-from-a-documentation-claim-into-a-reproducible-release-artifact-22pb)
 and
 [Preview Mode First](https://dev.to/crisiscoresystems/preview-mode-first-agent-plans-as-prs-plan-diff-invariants-4ikd),
 this forms the Documentation Integrity / Verifiable Trust reading path.
@@ -102,7 +102,7 @@ Pain Tracker’s documentation style leans this way:
 
 For a concrete example of this pattern becoming a release artifact instead of a
 writing guideline, read
-[How ProofVault turned trust from a documentation claim into a reproducible release artifact](https://dev.to/crisiscoresystems/how-proofvault-turned-trust-from-a-documentation-claim-into-a-reproducible-release-artifact-22pb).
+[ProofVault as a Release Artifact: Turning Trust Into Something You Can Verify](https://dev.to/crisiscoresystems/how-proofvault-turned-trust-from-a-documentation-claim-into-a-reproducible-release-artifact-22pb).
 
 ---
 
