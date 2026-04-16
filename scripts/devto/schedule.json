@@ -181,6 +181,25 @@
       "published": true
     },
     {
+      "key": "devto-sync-conflict-handling-offline-first-pwas",
+      "enabled": false,
+      "series": null,
+      "title": "Sync Conflict Handling in Offline First PWAs: How to Merge Without Lying to the User",
+      "sourceFile": "docs/content/blog/devto-sync-conflict-handling-offline-first-pwas.md",
+      "publishAt": "2026-04-16T17:00:00Z",
+      "tags": [
+        "pwa",
+        "offlinefirst",
+        "architecture",
+        "webdev"
+      ],
+      "description": "A practical conflict policy for offline-first apps: field merges, revision tokens, tombstones, hard conflicts, and UI that tells the truth when timelines diverge.",
+      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
+      "articleId": null,
+      "devtoUrl": null,
+      "published": false
+    },
+    {
       "key": "privacy-first-default-standard",
       "enabled": false,
       "title": "Privacy-first, offline-capable, trauma-informed, open-source health tools should be the default",
