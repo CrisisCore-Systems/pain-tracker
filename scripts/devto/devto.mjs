@@ -285,7 +285,7 @@ function buildCtas({ sponsorUrl, repoUrl, seriesStartUrl }) {
 
   const seriesLine = seriesStartUrl
     ? `- Read the full series from the start: ${seriesStartUrl}`
-    : '- Read the full series from the start: (link)';
+    : null;
 
   const bottom = [
     '',
@@ -297,7 +297,7 @@ function buildCtas({ sponsorUrl, repoUrl, seriesStartUrl }) {
     `- Star the repo (secondary): ${repoUrl}`,
     seriesLine,
     '',
-  ].join('\n');
+  ].filter((line) => line !== null).join('\n');
 
   const pinnedComment = [
     'TL;DR',
