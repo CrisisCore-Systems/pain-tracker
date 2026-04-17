@@ -200,6 +200,25 @@
       "published": true
     },
     {
+      "key": "devto-openclaw-boundary-problem",
+      "enabled": true,
+      "series": null,
+      "title": "OpenClaw and the Boundary Problem",
+      "sourceFile": "docs/content/blog/devto-openclaw-boundary-problem.md",
+      "publishAt": "2026-04-16T00:00:00Z",
+      "tags": [
+        "openclawchallenge",
+        "devchallenge",
+        "privacy",
+        "security"
+      ],
+      "description": "Personal AI is not mainly a feature problem. It is a boundary problem. OpenClaw makes that truth visible.",
+      "canonical_url": null,
+      "articleId": 3512877,
+      "devtoUrl": "https://dev.to/crisiscoresystems/openclaw-and-the-boundary-problem-5f85",
+      "published": true
+    },
+    {
       "key": "privacy-first-default-standard",
       "enabled": false,
       "title": "Privacy-first, offline-capable, trauma-informed, open-source health tools should be the default",
