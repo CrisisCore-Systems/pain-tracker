@@ -7,6 +7,7 @@ tags:
   - privacy
   - security
 description: Personal AI is not mainly a feature problem. It is a boundary problem. OpenClaw makes that truth visible.
+canonical_url: "https://github.com/CrisisCore-Systems/pain-tracker"
 ---
 
 *This is a submission for the [OpenClaw Writing Challenge](https://dev.to/challenges/openclaw-2026-04-16).*
