@@ -10,6 +10,17 @@ published: false
 canonical_url: "https://github.com/CrisisCore-Systems/pain-tracker"
 ---
 
+This is the second stop in the failure-mode and testing path.
+
+Read first:
+[Service Worker Failure Modes in Offline-First PWAs](https://dev.to/crisiscoresystems/service-worker-failure-modes-in-offline-first-pwas-3dnp)
+
+Then continue to:
+[Testing IndexedDB Schema Migrations in Offline-First PWAs](https://dev.to/crisiscoresystems/testing-indexeddb-schema-migrations-in-offline-first-pwas-26m8)
+
+If you want the trust boundary underneath rollback risk, add:
+[Trust Boundaries in Client-Side Health Apps](https://dev.to/crisiscoresystems/trust-boundaries-in-client-side-health-apps-2pa9)
+
 Rollback sounds simple until the app keeps state locally.
 
 If all you have is a server and stateless clients, rollback usually means
@@ -315,3 +326,6 @@ If your rollback plan only restores the code and leaves the user's local
 reality to fend for itself, then it is not really recovery.
 
 It is abandonment with version control.
+
+Next in the failure-mode path:
+[Testing IndexedDB Schema Migrations in Offline-First PWAs](https://dev.to/crisiscoresystems/testing-indexeddb-schema-migrations-in-offline-first-pwas-26m8)

@@ -10,6 +10,19 @@ published: false
 canonical_url: "https://github.com/CrisisCore-Systems/pain-tracker"
 ---
 
+This is the migration-safety stop in the failure-mode and testing path.
+
+Read first:
+[Service Worker Failure Modes in Offline-First PWAs](https://dev.to/crisiscoresystems/service-worker-failure-modes-in-offline-first-pwas-3dnp)
+and
+[Rollback Patterns in Offline-First PWAs](https://dev.to/crisiscoresystems/rollback-patterns-in-offline-first-pwas-13f9)
+
+Then continue to:
+[Offline Queue Replay and Idempotency in Offline-First PWAs](https://dev.to/crisiscoresystems/offline-queue-replay-and-idempotency-in-offline-first-pwas-3hpg)
+
+If you want the privacy boundary that makes migration fidelity matter, add:
+[Trust Boundaries in Client-Side Health Apps](https://dev.to/crisiscoresystems/trust-boundaries-in-client-side-health-apps-2pa9)
+
 IndexedDB migrations look straightforward right up until real users keep
 their data for months.
 
@@ -252,3 +265,6 @@ If the migration test suite cannot demonstrate that, then the app is not
 really proving upgrade safety.
 
 It is just hoping the user's device is kinder than production usually is.
+
+Next in the failure-mode path:
+[Offline Queue Replay and Idempotency in Offline-First PWAs](https://dev.to/crisiscoresystems/offline-queue-replay-and-idempotency-in-offline-first-pwas-3hpg)

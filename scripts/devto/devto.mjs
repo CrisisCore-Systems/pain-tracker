@@ -1844,7 +1844,7 @@ async function cmdPushSource(schedule, { yes, write, allowPublished, onlyKeys })
 
   for (const post of schedule.posts) {
     if (!matchesOnlyKeys(post, onlyKeys)) continue;
-    if (!post.enabled) continue;
+    if (!onlyKeys && !post.enabled) continue;
 
     const result = await processPushSourcePost({ post, allCache, now, yes, allowPublished, config });
     pushed += result.pushed;

@@ -1,7 +1,6 @@
 ---
 title: Protective Computing Is Not Privacy Theater
 published: true
-series: Protective Computing in Practice
 tags: protectivecomputing, architecture, privacy, webdev
 cover_image:
 ---
@@ -12,7 +11,7 @@ cover_image:
 >
 > If you want the AI / agentic systems reading path that grows out of this
 > doctrine, start with
-> [AI Agents Under Protective Computing: Start Here](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/blog-ai-agents-protective-computing-start-here.md)
+> [AI Agents Under Protective Computing: Start Here](https://blog.paintracker.ca/ai-agents-protective-computing-start-here)
 
 Privacy features are easy to ship. A toggle. A consent modal. An export button.
 Protective Computing asks a different question: does this system stay legible
@@ -198,11 +197,11 @@ does not.
 
 ***
 
-## What This Series Is
+## What This Doctrine Path Is
 
-This series exists to turn protective claims into auditable design rules.
+This reading path exists to turn protective claims into auditable design rules.
 
-Seven parts. One question repeated across all of them:
+Three pieces. One question repeated across all of them:
 
 > What design rules make software stay usable, legible, and non coercive when human stability breaks down?
 
@@ -213,12 +212,13 @@ demonstrate that these constraints are implementable in production software
 under real conditions. The series is grounded in that implementation, not
 doctrine invented to fill posts.
 
-- Part 2 — [The Stability Assumption: The Hidden Defect Source](https://dev.to/crisiscoresystems/the-stability-assumption-the-hidden-defect-source-5cpd)
-- Part 3 — Local Authority: Who Controls the System When Conditions Degrade
-- Part 4 — Bounded Failure: How Systems Break Without Turning Coercive
-- Part 5 — Trust Cases, Not Trust Claims
-- Part 6 — Friction as Protection
-- Part 7 — How to Audit a Product for Protective Computing
+- Entry point — [Architecting for Vulnerability: Introducing Protective Computing Core v1.0](https://dev.to/crisiscoresystems/architecting-for-vulnerability-introducing-protective-computing-core-v10-91g)
+- This piece — translating doctrine into product and architecture boundaries
+- Closing argument — [The Stability Assumption: The Hidden Defect Source](https://dev.to/crisiscoresystems/the-stability-assumption-the-hidden-defect-source-5cpd)
+
+Adjacent essays like [The Micro-Coercion of Speed](https://dev.to/crisiscoresystems/the-micro-coercion-of-speed-why-friction-is-an-engineering-prerequisite-g4j)
+and [Coercion-Resistant UX](https://dev.to/crisiscoresystems/coercion-resistant-ux-designing-interfaces-that-dont-pressure-users-under-stress-18m9)
+extend the same discipline into engineering process and interface design.
 
 No manifestos. Patterns, failure modes, and implementation level evidence.
 
@@ -236,9 +236,9 @@ One of those is a posture. The other is a discipline.
 
 ***
 
-*This is Part 1 of Protective Computing in Practice.*
+*This is the bridge between the doctrine entry point and the closing argument in the Protective Computing reading path.*
 
-*Next: [The Stability Assumption: The Hidden Defect Source](https://dev.to/crisiscoresystems/the-stability-assumption-the-hidden-defect-source-5cpd).*
+*Read first: [Architecting for Vulnerability: Introducing Protective Computing Core v1.0](https://dev.to/crisiscoresystems/architecting-for-vulnerability-introducing-protective-computing-core-v10-91g). Then finish with [The Stability Assumption: The Hidden Defect Source](https://dev.to/crisiscoresystems/the-stability-assumption-the-hidden-defect-source-5cpd).*
 
 ***
 

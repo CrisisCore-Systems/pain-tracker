@@ -10,6 +10,18 @@ published: false
 canonical_url: "https://github.com/CrisisCore-Systems/pain-tracker"
 ---
 
+If you want the failure-mode and testing path through the catalog, start here.
+
+Recommended route:
+
+1. Service Worker Failure Modes in Offline-First PWAs
+2. [Rollback Patterns in Offline-First PWAs](https://dev.to/crisiscoresystems/rollback-patterns-in-offline-first-pwas-13f9)
+3. [Testing IndexedDB Schema Migrations in Offline-First PWAs](https://dev.to/crisiscoresystems/testing-indexeddb-schema-migrations-in-offline-first-pwas-26m8)
+4. [Offline Queue Replay and Idempotency in Offline-First PWAs](https://dev.to/crisiscoresystems/offline-queue-replay-and-idempotency-in-offline-first-pwas-3hpg)
+
+If you want the privacy boundary underneath those failures, add:
+[Trust Boundaries in Client-Side Health Apps](https://dev.to/crisiscoresystems/trust-boundaries-in-client-side-health-apps-2pa9)
+
 Service workers look elegant on paper.
 
 They make offline apps feel solid. They cache the shell, keep the
@@ -335,3 +347,6 @@ That is the field guide version.
 Pretty architecture is easy in calm weather.
 
 The real work is what holds when the storm hits.
+
+Next in the failure-mode path:
+[Rollback Patterns in Offline-First PWAs](https://dev.to/crisiscoresystems/rollback-patterns-in-offline-first-pwas-13f9)

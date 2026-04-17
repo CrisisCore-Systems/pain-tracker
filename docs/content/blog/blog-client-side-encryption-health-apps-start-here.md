@@ -22,7 +22,7 @@ This reading path exists to separate those claims from a system where the user, 
 2. [If Your Health App Can't Explain Its Encryption, It Doesn't Have Any](https://blog.paintracker.ca/if-your-health-app-cant-explain-its-encryption-it-doesnt-have-any)
 3. [Client-Side Encryption for Healthcare Apps](https://blog.paintracker.ca/client-side-encryption-for-healthcare-apps)
 
-If you want the adjacent sharing/export boundary after that, read [Exports are a security boundary: the moment local-first becomes shareable](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-06-exports-as-a-security-boundary.md).
+If you want the adjacent sharing/export boundary after that, read [Exports are a security boundary: the moment local-first becomes shareable](https://dev.to/crisiscoresystems/exports-are-a-security-boundary-the-moment-local-first-becomes-shareable-3gj9).
 
 ---
 

@@ -75,10 +75,10 @@ async function lockItUp<T>(
 
 > Series: Client-Side Encryption for Health Apps
 > Part 1 of 3.
-> Start here: [Client-Side Encryption for Health Apps: Start Here](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/blog-client-side-encryption-health-apps-start-here.md)
+> Start here: [Client-Side Encryption for Health Apps: Start Here](/blog/client-side-encryption-health-apps-start-here)
 > Read next: [If Your Health App Can't Explain Its Encryption, It Doesn't Have Any](https://blog.paintracker.ca/if-your-health-app-cant-explain-its-encryption-it-doesnt-have-any)
 > Then: [Client-Side Encryption for Healthcare Apps](https://blog.paintracker.ca/client-side-encryption-for-healthcare-apps)
-> Related: [Exports are a security boundary: the moment local-first becomes shareable](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-06-exports-as-a-security-boundary.md)
+> Related: [Exports are a security boundary: the moment local-first becomes shareable](https://dev.to/crisiscoresystems/exports-are-a-security-boundary-the-moment-local-first-becomes-shareable-3gj9)
 
 Why HMAC the ciphertext? Because you verify integrity BEFORE attempting
 decryption. Tampered data fails fast. No wasted cycles on corrupted input.

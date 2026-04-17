@@ -9,7 +9,7 @@ canonical_url:
 
 > Series: Client-Side Encryption for Health Apps
 > Part 2 of 3.
-> Start here: [Client-Side Encryption for Health Apps: Start Here](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/blog-client-side-encryption-health-apps-start-here.md)
+> Start here: [Client-Side Encryption for Health Apps: Start Here](/blog/client-side-encryption-health-apps-start-here)
 > Read first: [Keeping Your Health Data Out of Court](https://blog.paintracker.ca/keeping-your-health-data-out-of-court)
 > Read next: [Client-Side Encryption for Healthcare Apps](https://blog.paintracker.ca/client-side-encryption-for-healthcare-apps)
 

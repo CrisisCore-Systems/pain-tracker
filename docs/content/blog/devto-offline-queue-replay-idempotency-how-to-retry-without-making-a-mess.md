@@ -10,6 +10,17 @@ published: false
 canonical_url: "https://github.com/CrisisCore-Systems/pain-tracker"
 ---
 
+This is the replay-safety stop in the failure-mode and testing path.
+
+Read first:
+[Service Worker Failure Modes in Offline-First PWAs](https://dev.to/crisiscoresystems/service-worker-failure-modes-in-offline-first-pwas-3dnp)
+[Rollback Patterns in Offline-First PWAs](https://dev.to/crisiscoresystems/rollback-patterns-in-offline-first-pwas-13f9)
+and
+[Testing IndexedDB Schema Migrations in Offline-First PWAs](https://dev.to/crisiscoresystems/testing-indexeddb-schema-migrations-in-offline-first-pwas-26m8)
+
+If you want the boundary question that sits under replay discipline, read next:
+[Trust Boundaries in Client-Side Health Apps](https://dev.to/crisiscoresystems/trust-boundaries-in-client-side-health-apps-2pa9)
+
 Offline-first apps do not just store data.
 
 They store unfinished promises.
@@ -273,3 +284,6 @@ If the app cannot replay intent safely when the world has changed, then
 the queue is not preserving user work.
 
 It is gambling with it.
+
+Related boundary question:
+[Trust Boundaries in Client-Side Health Apps](https://dev.to/crisiscoresystems/trust-boundaries-in-client-side-health-apps-2pa9)

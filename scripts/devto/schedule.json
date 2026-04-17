@@ -33,10 +33,10 @@
         "series": "CrisisCore Build Log",
         "startHereKey": "devto-series-start-here",
         "orderedKeys": [
-          "privacy-first-default-standard",
           "devto-architecting-vulnerability",
-          "micro-coercion-of-speed",
+          "privacy-first-default-standard",
           "protective-computing-not-privacy-theater",
+          "micro-coercion-of-speed",
           "coercion-resistant-ux"
         ]
       },
@@ -74,8 +74,7 @@
           "devto-series-07-worksafebc-workflows",
           "devto-series-08-analytics-without-surveillance",
           "devto-series-09-quality-gates",
-          "devto-series-10-truthful-docs",
-          "stability-assumption-hidden-defect-source"
+          "devto-series-10-truthful-docs"
         ]
       },
       "honest-offline-first-systems": {
@@ -89,7 +88,7 @@
   "posts": [
     {
       "key": "devto-series-start-here",
-      "enabled": false,
+      "enabled": true,
       "series": null,
       "title": "Start Here: PainTracker and the CrisisCore Build Log",
       "sourceFile": "docs/content/blog/devto-series-00-start-here.md",
@@ -769,8 +768,7 @@
     {
       "key": "stability-assumption-hidden-defect-source",
       "enabled": true,
-      "series": "Protective Computing in Practice",
-      "seriesChain": "protective-computing-in-practice",
+      "series": null,
       "title": "The Stability Assumption: The Hidden Defect Source",
       "sourceFile": "docs/content/blog/devto-stability-assumption-hidden-defect-source.md",
       "publishAt": "2026-04-07T15:30:00Z",

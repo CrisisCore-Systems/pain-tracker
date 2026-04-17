@@ -25,7 +25,7 @@ And that shift creates a form of micro-coercion.
 
 If you want the short reading path that connects this piece to the doctrine and
 the concrete agent workflow pattern, start with
-[AI Agents Under Protective Computing: Start Here](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/blog-ai-agents-protective-computing-start-here.md).
+[AI Agents Under Protective Computing: Start Here](https://blog.paintracker.ca/ai-agents-protective-computing-start-here).
 
 ---
 

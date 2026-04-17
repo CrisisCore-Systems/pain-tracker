@@ -9,7 +9,7 @@ canonical_url:
 
 # Trauma-Informed React Hooks
 
-> For the full reading path around this work, start with [Trauma-Informed Design: Start Here](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/blog-trauma-informed-design-start-here.md)
+> For the full reading path around this work, start with [Trauma-Informed Design: Start Here](/blog/trauma-informed-design-start-here)
 
 Early testing feedback: "The interface was unusable when I needed it most."
 

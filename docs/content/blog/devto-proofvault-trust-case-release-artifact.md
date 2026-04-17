@@ -5,6 +5,16 @@ tags: architecture, security, privacy, showdev
 description: Trust is not real until it survives contact with evidence. ProofVault turns release trust into something you can inspect instead of something you have to believe.
 ---
 
+If you want the trust and release path instead of a single artifact essay, use this route:
+
+1. [Quality gates that earn trust](https://dev.to/crisiscoresystems/quality-gates-that-earn-trust-checks-you-can-run-not-promises-you-cant-58a3)
+2. [Maintaining truthful docs over time](https://dev.to/crisiscoresystems/maintaining-truthful-docs-over-time-how-to-keep-security-claims-honest-2778)
+3. ProofVault as a Release Artifact
+4. [Preview Mode First: Agent Plans as PRs (Plan Diff + Invariants)](https://dev.to/crisiscoresystems/preview-mode-first-agent-plans-as-prs-plan-diff-invariants-4ikd)
+5. [The Overton Framework is now DOI-backed](https://dev.to/crisiscoresystems/the-overton-framework-is-now-doi-backed-ko7)
+
+For the broader catalog route, start with [Start Here: PainTracker and the CrisisCore Build Log](https://dev.to/crisiscoresystems/start-here-paintracker-crisiscore-build-log-privacy-first-offline-first-no-surveillance-3h0k).
+
 Trust is a dangerous word.
 
 People throw it around like a vibe. Like a brand promise. Like something
@@ -358,6 +368,9 @@ should be earning verification.
 This is the deeper shift.
 
 Most teams think release integrity is an internal engineering concern.
+
+Next in the trust and release path:
+[Preview Mode First: Agent Plans as PRs (Plan Diff + Invariants)](https://dev.to/crisiscoresystems/preview-mode-first-agent-plans-as-prs-plan-diff-invariants-4ikd)
 
 It is not.
 

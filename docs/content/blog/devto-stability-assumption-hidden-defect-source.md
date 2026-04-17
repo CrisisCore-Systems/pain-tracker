@@ -2,10 +2,20 @@
 title: The Stability Assumption: The Hidden Defect Source
 description: Most software does not fail at the bug layer first. It fails at the assumption layer.
 published: false
-series: Protective Computing in Practice
 tags: architecture, privacy, offlinefirst, security
 cover_image:
 ---
+
+If you have already read
+[Architecting for Vulnerability: Introducing Protective Computing Core v1.0](https://dev.to/crisiscoresystems/architecting-for-vulnerability-introducing-protective-computing-core-v10-91g)
+and
+[Protective Computing Is Not Privacy Theater](https://dev.to/crisiscoresystems/protective-computing-is-not-privacy-theater-2job),
+read this next.
+
+This is the closing argument in that doctrine path. It names the hidden defect
+source underneath the rest of the work: the assumption that the user is
+operating under stable conditions when the system most needs to survive
+instability.
 
 Most software bugs are not random.
 
@@ -243,7 +253,7 @@ And teams should start hunting it like the defect source it is.
 
 ***
 
-*This is part of Protective Computing in Practice.*
+*Closing argument in the Protective Computing doctrine reading path.*
 
-*Companion reading: [Protective Computing Is Not Privacy Theater](https://dev.to/crisiscoresystems/protective-computing-is-not-privacy-theater-2job)
-and [Architecting for Vulnerability: Introducing Protective Computing Core v1.0](https://dev.to/crisiscoresystems/architecting-for-vulnerability-introducing-protective-computing-core-v10-91g).*
+*Read first: [Architecting for Vulnerability: Introducing Protective Computing Core v1.0](https://dev.to/crisiscoresystems/architecting-for-vulnerability-introducing-protective-computing-core-v10-91g)
+and [Protective Computing Is Not Privacy Theater](https://dev.to/crisiscoresystems/protective-computing-is-not-privacy-theater-2job).*

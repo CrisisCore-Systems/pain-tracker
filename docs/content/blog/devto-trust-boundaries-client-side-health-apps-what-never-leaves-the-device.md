@@ -10,6 +10,18 @@ published: false
 canonical_url: "https://github.com/CrisisCore-Systems/pain-tracker"
 ---
 
+If you came here from the failure-mode and testing path, this is the boundary
+question underneath it.
+
+Read first:
+[Service Worker Failure Modes in Offline-First PWAs](https://dev.to/crisiscoresystems/service-worker-failure-modes-in-offline-first-pwas-3dnp)
+[Rollback Patterns in Offline-First PWAs](https://dev.to/crisiscoresystems/rollback-patterns-in-offline-first-pwas-13f9)
+[Testing IndexedDB Schema Migrations in Offline-First PWAs](https://dev.to/crisiscoresystems/testing-indexeddb-schema-migrations-in-offline-first-pwas-26m8)
+and
+[Offline Queue Replay and Idempotency in Offline-First PWAs](https://dev.to/crisiscoresystems/offline-queue-replay-and-idempotency-in-offline-first-pwas-3hpg)
+
+This piece names the privacy boundary that those failures are threatening.
+
 Health apps are not just software.
 
 They are vaults for private life.
@@ -314,3 +326,7 @@ That is the line.
 What never leaves the device is not a technical detail.
 
 It is the shape of the promise.
+
+If you want the catalog route that connects this boundary back to the broader
+series map, start here:
+[Start Here: PainTracker and the CrisisCore Build Log](https://dev.to/crisiscoresystems/start-here-paintracker-crisiscore-build-log-privacy-first-offline-first-no-surveillance-3h0k)
