@@ -136,3 +136,14 @@ not a polished privacy page, but a boundary that can be seen,
 checked, and enforced.
 
 If it cannot prove the boundary, it is not discipline. It is marketing with root access.
+
+---
+
+## Go deeper
+
+If this piece resonates, the broader work lives at **[CrisisCore Systems](https://crisiscore-systems.ca/)** — focused on trust boundaries, privacy risk, and structural product failure in sensitive software.
+
+- **Main site:** [CrisisCore Systems](https://crisiscore-systems.ca/)
+- **Framework:** [Protective Computing](https://protective-computing.github.io/)
+- **Reference implementation:** [PainTracker](https://github.com/CrisisCore-Systems/pain-tracker)
+- **Support the work:** [Sponsor CrisisCore-Systems](https://paintracker.ca/sponsor)
