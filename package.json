@@ -116,6 +116,7 @@
     "devto:create-drafts": "node scripts/devto/devto.mjs create-drafts --write",
     "devto:publish-due": "node scripts/devto/devto.mjs publish-due --yes",
     "devto:auth-check": "node scripts/devto/devto.mjs auth-check",
+    "devto:series-report": "node scripts/devto/devto.mjs series-report",
     "devto:sync-schedule": "node scripts/devto/devto.mjs sync-schedule",
     "devto:sync-schedule:apply": "node scripts/devto/devto.mjs sync-schedule --yes --write",
     "devto:sync-titles": "node scripts/devto/devto.mjs sync-titles",

@@ -76,7 +76,104 @@ function getDevtoPublishConfig(schedule) {
     seriesStartUrl,
     series,
     organization_id,
+    schedule,
   };
+}
+
+function getSeriesProfiles(config) {
+  const profiles = config?.schedule?.defaults?.series_profiles;
+  if (!profiles || typeof profiles !== 'object') return {};
+  return profiles;
+}
+
+function normalizeOrderedKeys(raw) {
+  if (!Array.isArray(raw)) return [];
+  return raw.map((key) => String(key ?? '').trim()).filter(Boolean);
+}
+
+function findSeriesProfileBySeriesName(seriesName, config) {
+  const desired = String(seriesName ?? '').trim();
+  if (!desired) return null;
+
+  for (const [key, value] of Object.entries(getSeriesProfiles(config))) {
+    if (!value || typeof value !== 'object') continue;
+    if (String(value.series ?? '').trim() !== desired) continue;
+    return {
+      key,
+      series: desired,
+      chainKey: String(value.chainKey ?? '').trim() || null,
+      startHereKey: String(value.startHereKey ?? '').trim() || null,
+      startHereUrl: String(value.startHereUrl ?? '').trim() || null,
+      orderedKeys: normalizeOrderedKeys(value.orderedKeys),
+    };
+  }
+
+  return null;
+}
+
+function resolveSeriesProfile(post, config) {
+  const explicitKey = String(post?.seriesProfile ?? post?.seriesKey ?? '').trim();
+  if (explicitKey) {
+    const value = getSeriesProfiles(config)[explicitKey];
+    if (value && typeof value === 'object') {
+      return {
+        key: explicitKey,
+        series: String(value.series ?? '').trim() || null,
+        chainKey: String(value.chainKey ?? '').trim() || null,
+        startHereKey: String(value.startHereKey ?? '').trim() || null,
+        startHereUrl: String(value.startHereUrl ?? '').trim() || null,
+        orderedKeys: normalizeOrderedKeys(value.orderedKeys),
+      };
+    }
+  }
+
+  if (post && Object.hasOwn(post, 'series')) {
+    return findSeriesProfileBySeriesName(post.series, config);
+  }
+
+  return findSeriesProfileBySeriesName(config?.series, config);
+}
+
+function getSchedulePostByKey(schedule, key) {
+  const safeKey = String(key ?? '').trim();
+  if (!safeKey) return null;
+  return schedule?.posts?.find((entry) => String(entry?.key ?? '').trim() === safeKey) ?? null;
+}
+
+function getOrderedSeriesPosts({ schedule, config, chainKey, profile }) {
+  const keyedPosts = new Map((schedule?.posts ?? []).map((entry) => [String(entry?.key ?? '').trim(), entry]));
+  const explicitOrdered = (profile?.orderedKeys ?? []).map((key) => keyedPosts.get(key)).filter(Boolean);
+
+  if (explicitOrdered.length > 0) {
+    if (!chainKey) return explicitOrdered;
+
+    const seen = new Set(explicitOrdered.map((entry) => String(entry?.key ?? '').trim()));
+    const extras = (schedule?.posts ?? [])
+      .filter((entry) => resolvePostSeriesChain(entry, config) === chainKey)
+      .filter((entry) => !seen.has(String(entry?.key ?? '').trim()))
+      .slice()
+      .sort((a, b) => Date.parse(a.publishAt) - Date.parse(b.publishAt));
+
+    return [...explicitOrdered, ...extras];
+  }
+
+  if (!chainKey) return [];
+
+  return (schedule?.posts ?? [])
+    .filter((entry) => resolvePostSeriesChain(entry, config) === chainKey)
+    .slice()
+    .sort((a, b) => Date.parse(a.publishAt) - Date.parse(b.publishAt));
+}
+
+function resolveSeriesStartUrl({ schedule, config, profile, orderedPosts }) {
+  if (profile?.startHereUrl) return profile.startHereUrl;
+
+  if (profile?.startHereKey) {
+    const startHerePost = getSchedulePostByKey(schedule, profile.startHereKey);
+    if (startHerePost?.devtoUrl) return startHerePost.devtoUrl;
+  }
+
+  return orderedPosts[0]?.devtoUrl ?? config.seriesStartUrl ?? null;
 }
 
 function buildBodyMarkdown(md, post, { sponsorUrl, repoUrl, seriesStartUrl }) {
@@ -102,12 +199,16 @@ function resolvePostSeriesName(post, config) {
   if (post && Object.hasOwn(post, 'series')) {
     return post.series ?? null;
   }
+  const profile = resolveSeriesProfile(post, config);
+  if (profile?.series) return profile.series;
   return config.series ?? null;
 }
 
-function resolvePostSeriesChain(post) {
-  if (!post || !Object.hasOwn(post, 'seriesChain')) return null;
-  return post.seriesChain ?? null;
+function resolvePostSeriesChain(post, config) {
+  if (!post) return null;
+  if (Object.hasOwn(post, 'seriesChain')) return post.seriesChain ?? null;
+  const profile = resolveSeriesProfile(post, config);
+  return profile?.chainKey ?? null;
 }
 
 function buildArticleUpsertPayload(post, body_markdown, config, overrides = {}) {
@@ -821,6 +922,17 @@ async function listAllUserArticles() {
   return all;
 }
 
+async function getArticleById(articleId) {
+  try {
+    return await devtoRequest('GET', `/articles/${articleId}`);
+  } catch (err) {
+    if (String(err?.message ?? '').includes('404')) {
+      return null;
+    }
+    throw err;
+  }
+}
+
 function pickBestTitleMatch(matches, desiredIso, now = new Date()) {
   if (!Array.isArray(matches) || matches.length === 0) return null;
   if (matches.length === 1) return matches[0];
@@ -1112,25 +1224,23 @@ function getPostsForSync(schedule, onlyKeys) {
 
 function getSeriesChainContext({ schedule, post, config }) {
   const desiredSeries = resolvePostSeriesName(post, config);
-  const chainKey = resolvePostSeriesChain(post);
+  const profile = resolveSeriesProfile(post, config);
+  const chainKey = resolvePostSeriesChain(post, config);
 
   if (!desiredSeries) {
     return { desiredSeries, partLabel: null, nextUpUrl: null, seriesStartUrl: null };
   }
 
-  if (!chainKey) {
-    return { desiredSeries, partLabel: null, nextUpUrl: null, seriesStartUrl: null };
-  }
+  const chainPosts = getOrderedSeriesPosts({ schedule, config, chainKey, profile });
+  const seriesStartUrl = resolveSeriesStartUrl({ schedule, config, profile, orderedPosts: chainPosts });
 
-  const chainPosts = schedule.posts
-    .filter((entry) => resolvePostSeriesChain(entry) === chainKey)
-    .slice()
-    .sort((a, b) => Date.parse(a.publishAt) - Date.parse(b.publishAt));
+  if (!chainKey) {
+    return { desiredSeries, partLabel: null, nextUpUrl: null, seriesStartUrl };
+  }
 
   const index = chainPosts.findIndex((entry) => entry?.key === post?.key);
   const partLabel = index >= 0 ? `Part ${index + 1}` : null;
   const nextUpUrl = index >= 0 ? chainPosts[index + 1]?.devtoUrl ?? null : null;
-  const seriesStartUrl = chainPosts[0]?.devtoUrl ?? null;
 
   return { desiredSeries, partLabel, nextUpUrl, seriesStartUrl };
 }
@@ -1290,9 +1400,6 @@ async function processPushSourcePost({ post, allCache, now, yes, allowPublished,
 
   const payload = buildArticleUpsertPayload(post, body_markdown, config, {
     currentArticle: resolved.current,
-    article: {
-      series: config.series ?? null,
-    },
   });
 
   const updated = await devtoRequest('PUT', `/articles/${post.articleId}`, payload);
@@ -1377,6 +1484,95 @@ function shouldTreatSeriesAsDrift({ currentSeries, desiredSeries }) {
   if (!desiredSeries) return false;
   if (!currentSeries) return false;
   return currentSeries !== desiredSeries;
+}
+
+function buildSeriesReportGroupLabel({ profile, desiredSeries }) {
+  if (profile?.key) return `${profile.key} (${desiredSeries ?? 'no-series'})`;
+  return desiredSeries ?? 'standalone';
+}
+
+async function cmdSeriesReport(schedule, { onlyKeys }) {
+  const config = {
+    schedule,
+    seriesStartUrl: process.env.DEVTO_SERIES_START_URL ?? schedule.defaults?.series_start_url ?? null,
+    series: process.env.DEVTO_SERIES ?? schedule.defaults?.series ?? null,
+  };
+
+  const scopedPosts = (schedule.posts ?? [])
+    .filter((post) => matchesOnlyKeys(post, onlyKeys))
+    .filter((post) => resolvePostSeriesName(post, config));
+
+  if (scopedPosts.length === 0) {
+    console.log('No schedule-mapped posts with a configured series matched the current scope.');
+    return;
+  }
+
+  const groups = new Map();
+
+  for (const post of scopedPosts) {
+    const desiredSeries = resolvePostSeriesName(post, config);
+    const profile = resolveSeriesProfile(post, config);
+    const groupKey = profile?.key ?? desiredSeries;
+    const chainContext = getSeriesChainContext({ schedule, post, config });
+    const liveArticle = post.articleId ? await getArticleById(post.articleId) : null;
+    const collectionId = liveArticle?.collection_id ?? null;
+
+    if (!groups.has(groupKey)) {
+      groups.set(groupKey, {
+        label: buildSeriesReportGroupLabel({ profile, desiredSeries }),
+        desiredSeries,
+        seriesStartUrl: chainContext.seriesStartUrl,
+        items: [],
+      });
+    }
+
+    groups.get(groupKey).items.push({
+      key: post.key,
+      title: post.title,
+      articleId: post.articleId ?? null,
+      devtoUrl: post.devtoUrl ?? liveArticle?.url ?? null,
+      collectionId,
+      partLabel: chainContext.partLabel,
+      nextUpUrl: chainContext.nextUpUrl,
+    });
+  }
+
+  const collectionUsage = new Map();
+  for (const group of groups.values()) {
+    const collectionIds = [...new Set(group.items.map((item) => item.collectionId).filter(Boolean))];
+    for (const collectionId of collectionIds) {
+      if (!collectionUsage.has(collectionId)) {
+        collectionUsage.set(collectionId, new Set());
+      }
+      collectionUsage.get(collectionId).add(group.label);
+    }
+  }
+
+  for (const group of groups.values()) {
+    const collectionIds = [...new Set(group.items.map((item) => item.collectionId).filter(Boolean))];
+    console.log(`Series: ${group.label}`);
+    console.log(`  desired: ${group.desiredSeries}`);
+    console.log(`  start-here: ${group.seriesStartUrl ?? '(none)'}`);
+    console.log(`  collection_ids: ${collectionIds.length > 0 ? collectionIds.join(', ') : '(none from API)'}`);
+    console.log(`  items: ${group.items.length}`);
+
+    for (const item of group.items) {
+      console.log(`  - ${item.key}`);
+      console.log(`    title: ${item.title}`);
+      console.log(`    articleId: ${item.articleId ?? '(none)'}`);
+      console.log(`    collectionId: ${item.collectionId ?? '(none)'}`);
+      console.log(`    part: ${item.partLabel ?? '(none)'}`);
+      console.log(`    next: ${item.nextUpUrl ?? '(none)'}`);
+      console.log(`    url: ${item.devtoUrl ?? '(none)'}`);
+    }
+
+    console.log('');
+  }
+
+  for (const [collectionId, labels] of collectionUsage.entries()) {
+    if (labels.size < 2) continue;
+    console.log(`Warning: collection_id ${collectionId} is shared by ${[...labels].join(', ')}`);
+  }
 }
 
 async function writePinnedCommentsFile(items) {
@@ -1600,9 +1796,6 @@ async function cmdSyncContent(schedule, { yes, write, allowPublished, onlyKeys }
   let skipped = 0;
 
   const config = getDevtoPublishConfig(schedule);
-  if (!config.series) {
-    throw new Error('Missing series name. Set DEVTO_SERIES (or schedule.defaults.series).');
-  }
 
   const allCache = await listAllUserArticles();
 
@@ -2044,6 +2237,10 @@ async function runCommand(cmd, schedule, args, onlyKeys) {
     console.log(`OK: authenticated as ${me?.username ?? me?.name ?? '(unknown)'}`);
     return;
   }
+  if (cmd === 'series-report') {
+    await cmdSeriesReport(schedule, { onlyKeys });
+    return;
+  }
   if (cmd === 'create-drafts') {
     await cmdCreateDrafts(schedule, { write: Boolean(args.write), onlyKeys });
     return;
@@ -2268,7 +2465,10 @@ const isDirectRun = process.argv[1] && import.meta.url === pathToFileURL(process
 
 export {
   buildSyncContentState,
+  getSeriesChainContext,
   normalizeDevComparableTitle,
+  resolvePostSeriesName,
+  resolveSeriesProfile,
   shouldTreatSeriesAsDrift,
 };
 

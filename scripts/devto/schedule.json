@@ -8,7 +8,83 @@
     "organization_id": null,
     "sponsor_url": "https://github.com/sponsors/CrisisCore-Systems",
     "repo_url": "https://github.com/CrisisCore-Systems/pain-tracker",
-    "series_start_url": null
+    "series_start_url": null,
+    "series_profiles": {
+      "crisiscore-build-log": {
+        "series": "CrisisCore Build Log",
+        "startHereKey": "devto-series-start-here"
+      },
+      "crisis-simulation-testing": {
+        "series": "CrisisCore Build Log",
+        "startHereKey": "devto-series-start-here",
+        "orderedKeys": [
+          "privacy-preserving-analytics",
+          "performance-under-pressure",
+          "testing-across-the-stack",
+          "testing-co-occurrence",
+          "testing-the-testing",
+          "testing-recovery",
+          "cross-crisis-calibration",
+          "internationalization-of-trauma",
+          "ethics-of-simulation"
+        ]
+      },
+      "protective-computing-essays": {
+        "series": "CrisisCore Build Log",
+        "startHereKey": "devto-series-start-here",
+        "orderedKeys": [
+          "privacy-first-default-standard",
+          "devto-architecting-vulnerability",
+          "micro-coercion-of-speed",
+          "protective-computing-not-privacy-theater",
+          "coercion-resistant-ux"
+        ]
+      },
+      "release-and-trust-artifacts": {
+        "series": "CrisisCore Build Log",
+        "startHereKey": "devto-series-start-here",
+        "orderedKeys": [
+          "whitepaper-v1-3-0",
+          "overton-framework-doi-backed",
+          "proofvault-trust-case-release-artifact"
+        ]
+      },
+      "offline-first-failure-modes": {
+        "series": "CrisisCore Build Log",
+        "startHereKey": "devto-series-start-here",
+        "orderedKeys": [
+          "service-worker-failure-modes",
+          "rollback-patterns-offline-first-pwas",
+          "testing-indexeddb-schema-migrations",
+          "trust-boundaries-client-side-health-apps",
+          "offline-queue-replay-idempotency"
+        ]
+      },
+      "protective-computing-in-practice": {
+        "series": "Protective Computing in Practice",
+        "chainKey": "protective-computing-in-practice",
+        "startHereKey": "devto-series-start-here",
+        "orderedKeys": [
+          "devto-series-01-offline-first",
+          "devto-series-02-storage-layers",
+          "devto-series-03-service-workers",
+          "devto-series-04-zod-defensive-parsing",
+          "devto-series-05-trauma-informed-ux",
+          "devto-series-06-exports-boundary",
+          "devto-series-07-worksafebc-workflows",
+          "devto-series-08-analytics-without-surveillance",
+          "devto-series-09-quality-gates",
+          "devto-series-10-truthful-docs",
+          "stability-assumption-hidden-defect-source"
+        ]
+      },
+      "honest-offline-first-systems": {
+        "series": "Honest Offline First Systems",
+        "orderedKeys": [
+          "devto-sync-conflict-handling-offline-first-pwas"
+        ]
+      }
+    }
   },
   "posts": [
     {
@@ -221,6 +297,7 @@
     {
       "key": "privacy-first-default-standard",
       "enabled": false,
+      "seriesProfile": "protective-computing-essays",
       "title": "Privacy-first, offline-capable, trauma-informed, open-source health tools should be the default",
       "sourceFile": "docs/content/articles/article-privacy-first-trauma-informed-open-source-digital-health.md",
       "publishAt": "2026-02-05T17:00:00Z",
@@ -272,6 +349,7 @@
     {
       "key": "privacy-preserving-analytics",
       "enabled": true,
+      "seriesProfile": "crisis-simulation-testing",
       "title": "Privacy-Preserving Analytics: Proving You Can Measure Without Identity",
       "sourceFile": "docs/content/blog/blog-testing-privacy-preserving-analytics.md",
       "publishAt": "2025-12-16T17:00:00Z",
@@ -290,6 +368,7 @@
     {
       "key": "performance-under-pressure",
       "enabled": true,
+      "seriesProfile": "crisis-simulation-testing",
       "title": "Performance Under Pressure: Crisis Detection Without UI Lag",
       "sourceFile": "docs/content/blog/blog-performance-under-pressure.md",
       "publishAt": "2025-12-18T17:00:00Z",
@@ -308,6 +387,7 @@
     {
       "key": "testing-across-the-stack",
       "enabled": true,
+      "seriesProfile": "crisis-simulation-testing",
       "title": "Testing Across the Stack: UI → Storage → Encryption → Offline Resilience",
       "sourceFile": "docs/content/blog/blog-testing-across-the-stack.md",
       "publishAt": "2025-12-23T17:00:00Z",
@@ -326,6 +406,7 @@
     {
       "key": "testing-co-occurrence",
       "enabled": true,
+      "seriesProfile": "crisis-simulation-testing",
       "title": "When Crises Stack: Testing Co-Occurrence Without Cascading Failures",
       "sourceFile": "docs/content/blog/blog-testing-co-occurrence.md",
       "publishAt": "2025-12-30T17:00:00Z",
@@ -344,6 +425,7 @@
     {
       "key": "testing-recovery",
       "enabled": true,
+      "seriesProfile": "crisis-simulation-testing",
       "title": "Testing Recovery: Proving Your App Helps People Stabilize",
       "sourceFile": "docs/content/blog/blog-testing-recovery.md",
       "publishAt": "2026-01-08T21:00:00Z",
@@ -362,6 +444,7 @@
     {
       "key": "cross-crisis-calibration",
       "enabled": true,
+      "seriesProfile": "crisis-simulation-testing",
       "title": "Cross-Crisis Calibration: Panic, Dissociation, Sensory Overload",
       "sourceFile": "docs/content/blog/blog-cross-crisis-calibration.md",
       "publishAt": "2026-01-13T17:00:00Z",
@@ -380,6 +463,7 @@
     {
       "key": "ethics-of-simulation",
       "enabled": false,
+      "seriesProfile": "crisis-simulation-testing",
       "title": "The Ethics of Simulation: How to Test Trauma-Informed Features Without Exploiting Real Pain",
       "sourceFile": "docs/content/blog/blog-ethics-of-simulation.md",
       "publishAt": "2026-01-20T17:00:00Z",
@@ -398,6 +482,7 @@
     {
       "key": "testing-the-testing",
       "enabled": true,
+      "seriesProfile": "crisis-simulation-testing",
       "title": "Test Your Tests: Does Your Crisis Simulation Match Reality?",
       "sourceFile": "docs/content/blog/blog-testing-the-testing.md",
       "publishAt": "2026-01-07T17:00:00Z",
@@ -416,6 +501,7 @@
     {
       "key": "internationalization-of-trauma",
       "enabled": true,
+      "seriesProfile": "crisis-simulation-testing",
       "title": "Internationalizing Trauma-Informed UX: Testing Across Cultures",
       "sourceFile": "docs/content/blog/blog-internationalization-of-trauma.md",
       "publishAt": "2026-01-15T17:00:00Z",
@@ -434,6 +520,7 @@
     {
       "key": "whitepaper-v1-3-0",
       "enabled": true,
+      "seriesProfile": "release-and-trust-artifacts",
       "title": "Pain Tracker whitepaper v1.3.0 (PDF)",
       "sourceFile": "docs/content/blog/blog-whitepaper-v1.3.0.md",
       "publishAt": "2026-02-13T00:00:00Z",
@@ -452,6 +539,7 @@
     {
       "key": "overton-framework-doi-backed",
       "enabled": true,
+      "seriesProfile": "release-and-trust-artifacts",
       "title": "The Overton Framework is now DOI-backed",
       "sourceFile": "docs/content/blog/devto-overton-framework-doi-backed.md",
       "publishAt": "2026-02-19T00:00:00Z",
@@ -470,6 +558,7 @@
     {
       "key": "devto-architecting-vulnerability",
       "enabled": true,
+      "seriesProfile": "protective-computing-essays",
       "title": "Architecting for Vulnerability: Introducing Protective Computing Core v1.0",
       "sourceFile": "docs/content/blog/devto-architecting-for-vulnerability.md",
       "publishAt": "2026-02-24T17:00:00Z",
@@ -507,6 +596,7 @@
     {
       "key": "micro-coercion-of-speed",
       "enabled": true,
+      "seriesProfile": "protective-computing-essays",
       "title": "The Micro-Coercion of Speed: Why Friction Is an Engineering Prerequisite",
       "sourceFile": "docs/content/blog/devto-micro-coercion-of-speed.md",
       "publishAt": "2026-03-01T00:00:00Z",
@@ -525,6 +615,7 @@
     {
       "key": "coercion-resistant-ux",
       "enabled": true,
+      "seriesProfile": "protective-computing-essays",
       "title": "Coercion-Resistant UX: Designing Interfaces That Don't Pressure Users Under Stress",
       "sourceFile": "docs/content/blog/devto-coercion-resistant-ux-designing-interfaces-that-dont-pressure-users-under-stress.md",
       "publishAt": "2026-04-28T16:00:00Z",
@@ -543,6 +634,7 @@
     {
       "key": "service-worker-failure-modes",
       "enabled": true,
+      "seriesProfile": "offline-first-failure-modes",
       "title": "Service Worker Failure Modes in Offline-First PWAs",
       "sourceFile": "docs/content/blog/devto-service-worker-failure-modes-what-breaks-when-your-offline-app-updates-in-the-wild.md",
       "publishAt": "2026-05-05T16:00:00Z",
@@ -561,6 +653,7 @@
     {
       "key": "rollback-patterns-offline-first-pwas",
       "enabled": true,
+      "seriesProfile": "offline-first-failure-modes",
       "title": "Rollback Patterns in Offline-First PWAs",
       "sourceFile": "docs/content/blog/devto-rollback-patterns-offline-first-pwas-how-to-recover-without-corrupting-local-state.md",
       "publishAt": "2026-05-12T16:00:00Z",
@@ -579,6 +672,7 @@
     {
       "key": "testing-indexeddb-schema-migrations",
       "enabled": true,
+      "seriesProfile": "offline-first-failure-modes",
       "title": "Testing IndexedDB Schema Migrations in Offline-First PWAs",
       "sourceFile": "docs/content/blog/devto-testing-indexeddb-schema-migrations-in-offline-first-apps.md",
       "publishAt": "2026-05-19T16:00:00Z",
@@ -597,6 +691,7 @@
     {
       "key": "trust-boundaries-client-side-health-apps",
       "enabled": true,
+      "seriesProfile": "offline-first-failure-modes",
       "title": "Trust Boundaries in Client-Side Health Apps",
       "sourceFile": "docs/content/blog/devto-trust-boundaries-client-side-health-apps-what-never-leaves-the-device.md",
       "publishAt": "2026-05-26T16:00:00Z",
@@ -615,6 +710,7 @@
     {
       "key": "offline-queue-replay-idempotency",
       "enabled": true,
+      "seriesProfile": "offline-first-failure-modes",
       "title": "Offline Queue Replay and Idempotency in Offline-First PWAs",
       "sourceFile": "docs/content/blog/devto-offline-queue-replay-idempotency-how-to-retry-without-making-a-mess.md",
       "publishAt": "2026-06-02T16:00:00Z",
@@ -633,6 +729,7 @@
     {
       "key": "proofvault-trust-case-release-artifact",
       "enabled": true,
+      "seriesProfile": "release-and-trust-artifacts",
       "title": "ProofVault as a Release Artifact: Turning Trust Into Something You Can Verify",
       "sourceFile": "docs/content/blog/devto-proofvault-trust-case-release-artifact.md",
       "publishAt": "2026-03-14T00:00:00Z",
@@ -653,6 +750,7 @@
     {
       "key": "protective-computing-not-privacy-theater",
       "enabled": true,
+      "seriesProfile": "protective-computing-essays",
       "title": "Protective Computing Is Not Privacy Theater",
       "sourceFile": "docs/content/blog/devto-protective-computing-is-not-privacy-theater.md",
       "publishAt": "2026-03-24T16:00:00Z",
