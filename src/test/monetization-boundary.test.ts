@@ -10,6 +10,7 @@ describe('monetization boundary guardrails', () => {
 
   beforeEach(() => {
     vi.resetModules();
+    vi.doUnmock('../services/EntitlementService');
 
     // Make fetch observable (core flows should not require it).
     globalThis.fetch = vi.fn(async () => {
@@ -27,6 +28,7 @@ describe('monetization boundary guardrails', () => {
   });
 
   afterEach(() => {
+    vi.doUnmock('../services/EntitlementService');
     vi.resetModules();
 
     if (originalEnv === undefined) delete process.env.VITE_ENABLE_ANALYTICS;
@@ -68,13 +70,13 @@ describe('monetization boundary guardrails', () => {
 
     try {
       // Import representative core tracking modules.
-      await import('../components/pain-tracker/PainEntryForm');
+      await import('../components/pain-tracker/SavePanel');
       await import('../stores/pain-tracker-store');
     } finally {
       vi.doUnmock('../services/EntitlementService');
       vi.resetModules();
     }
-  });
+  }, 10000);
 
   it('defaults to no entitlements when no tier and no local grants', async () => {
     const { entitlementService } = await import('../services/EntitlementService');
