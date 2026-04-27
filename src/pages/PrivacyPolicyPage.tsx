@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Shield, Lock, Eye, Database, Download, Server } from 'lucide-react';
 import { combineSchemas, generateBreadcrumbSchema } from '../lib/seo';
+import { applyPageMetadata } from '../components/seo/applyPageMetadata';
 
 export const PrivacyPolicyPage: React.FC = () => {
   const schema = combineSchemas(
@@ -15,8 +16,11 @@ export const PrivacyPolicyPage: React.FC = () => {
   );
 
   useEffect(() => {
-    document.title = 'Privacy Policy — Pain Tracker';
-    return () => { document.title = 'Pain Tracker'; };
+    return applyPageMetadata({
+      title: 'Privacy Policy | Pain Tracker — Local-First, Zero-Cloud Architecture',
+      description: 'Read how Pain Tracker keeps health data local by default, avoids cloud storage of pain records, and gives you control over exports and sharing.',
+      canonicalUrl: 'https://www.paintracker.ca/privacy',
+    });
   }, []);
 
   return (

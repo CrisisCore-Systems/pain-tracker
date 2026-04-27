@@ -4,20 +4,20 @@ import { ArrowRight, ClipboardList, Download, HeartPulse } from 'lucide-react';
 
 const ctas = [
   {
-    title: 'Use the app free',
+    title: 'Use the free pain tracker',
     description: 'Track pain privately on your device with no account required.',
     href: '/start',
     icon: HeartPulse,
   },
   {
-    title: 'Download a printable',
+    title: 'Get the printable PDF',
     description: 'Start with a paper pain diary, symptom log, or daily tracker PDF.',
     href: '/resources/pain-diary-template-pdf',
     icon: Download,
   },
   {
-    title: 'Prepare records for doctor, disability, or WorkSafeBC documentation',
-    description: 'Use a privacy-safe sharing workflow and structured records when you are ready to bring evidence forward.',
+    title: 'Prepare for doctor visits',
+    description: 'Move into appointment-ready resources and structured records when you are ready to bring evidence forward.',
     href: '/share-pain-records-with-doctor-without-giving-an-app-your-data',
     icon: ClipboardList,
   },
@@ -30,7 +30,7 @@ interface ResourceCtaStackProps {
 
 export const ResourceCtaStack: React.FC<ResourceCtaStackProps> = ({
   heading = 'Choose the next step that fits today',
-  body = 'Start with the app, start with paper, or prepare records for a doctor visit or documentation workflow. The funnel stays patient-first either way.',
+  body = 'Use the free pain tracker, get the printable PDF, or prepare for doctor visits without being pushed into builder content first.',
 }) => (
   <section className="py-16 bg-gradient-to-b from-slate-900 to-slate-800 border-t border-slate-700/50" aria-labelledby="resource-cta-stack-heading">
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">

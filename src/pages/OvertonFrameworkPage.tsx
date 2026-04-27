@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { BookOpen, Link as LinkIcon, Shield } from 'lucide-react';
 import { combineSchemas, generateBreadcrumbSchema } from '../lib/seo';
+import { applyPageMetadata } from '../components/seo/applyPageMetadata';
 
 const OVERTON_FRAMEWORK_VERSION = '1.3';
 const OVERTON_FRAMEWORK_DOI = '10.5281/zenodo.18887610';
@@ -32,10 +33,11 @@ export const OvertonFrameworkPage: React.FC = () => {
   );
 
   useEffect(() => {
-    document.title = 'The Overton Framework — Protective Computing (Canon)';
-    return () => {
-      document.title = 'Pain Tracker';
-    };
+    return applyPageMetadata({
+      title: 'The Overton Framework — Protective Computing (Canon)',
+      description: 'Read the Overton Framework canon page, including the Protective Computing discipline overview, DOI, and canonical citation.',
+      canonicalUrl: 'https://www.paintracker.ca/overton-framework',
+    });
   }, []);
 
   return (

@@ -294,6 +294,25 @@
       "published": true
     },
     {
+      "key": "devto-blackoutbench-real-planet",
+      "enabled": false,
+      "series": null,
+      "title": "BlackoutBench: I Built a Tool That Tests Whether Your App Survives the Real Planet",
+      "sourceFile": "docs/content/blog/devto-blackoutbench-tests-whether-your-app-survives-the-real-planet.md",
+      "publishAt": "2026-04-24T16:00:00Z",
+      "tags": [
+        "webdev",
+        "testing",
+        "pwa",
+        "architecture"
+      ],
+      "description": "BlackoutBench is a planetary stress harness for web apps. It tests what remains useful when stability assumptions fail: signal, power, continuity, and human attention.",
+      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
+      "articleId": null,
+      "devtoUrl": null,
+      "published": false
+    },
+    {
       "key": "privacy-first-default-standard",
       "enabled": false,
       "seriesProfile": "protective-computing-essays",

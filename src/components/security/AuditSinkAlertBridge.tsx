@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useToast } from '../feedback';
+import { useToast } from '../feedback/useToast';
 import type {
   AuditSinkDegradedEventDetail,
   AuditSinkDegradedReasonCode,

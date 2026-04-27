@@ -95,7 +95,7 @@ export const Hero: React.FC = () => {
                 className="btn-cta-primary flex items-center gap-2 text-sm px-5 py-2.5"
                 data-testid="nav-cta-start"
               >
-                Use the app free
+                Use the free pain tracker
                 <ArrowRight className="h-4 w-4" />
               </button>
             </div>
@@ -123,16 +123,16 @@ export const Hero: React.FC = () => {
 
               {/* Headline */}
               <h1 className="landing-headline landing-headline-xl">
-                <span className="text-white">Track pain privately.</span>
+                <span className="text-white">A free pain tracker app</span>
                 <br />
-                <span className="text-white">No account. Works offline.</span>
+                <span className="text-white">for private, offline</span>
                 <br />
-                <span className="text-white">Bring better records to appointments.</span>
+                <span className="text-white">symptom tracking</span>
               </h1>
 
               {/* Subheading */}
               <p className="landing-subhead text-lg lg:text-xl max-w-xl mx-auto lg:mx-0">
-                Pain Tracker helps you log pain, symptoms, flare patterns, and daily function in a way that stays useful on bad days and readable when it is time to show a doctor what has actually been happening.
+                Log pain, flare ups, medications, triggers, and daily function without creating an account. Keep better records for yourself and for doctor visits.
               </p>
 
               <p className="text-sm text-slate-400 max-w-xl mx-auto lg:mx-0">
@@ -162,7 +162,7 @@ export const Hero: React.FC = () => {
                   className="btn-cta-primary text-lg px-8 py-4 flex items-center justify-center gap-3"
                   data-testid="hero-cta-start"
                 >
-                  <span>Use the app free</span>
+                  <span>Use the free pain tracker</span>
                   <ArrowRight className="h-5 w-5" />
                 </button>
 
@@ -170,25 +170,25 @@ export const Hero: React.FC = () => {
                   onClick={() => navigate('/resources/pain-diary-template-pdf')}
                   className="btn-cta-outline text-lg px-8 py-4"
                 >
-                  <span className="inline-flex items-center gap-2"><Download className="h-5 w-5" />Download a printable</span>
+                  <span className="inline-flex items-center gap-2"><Download className="h-5 w-5" />Get the printable PDF</span>
                 </button>
 
                 <button
                   onClick={() => navigate('/share-pain-records-with-doctor-without-giving-an-app-your-data')}
                   className="btn-cta-outline text-lg px-8 py-4"
                 >
-                  <span className="inline-flex items-center gap-2"><FileText className="h-5 w-5" />Prepare records</span>
+                  <span className="inline-flex items-center gap-2"><FileText className="h-5 w-5" />Prepare for doctor visits</span>
                 </button>
               </div>
 
               {/* Trust Line */}
               <div className="space-y-3 text-sm pt-4">
                 <p className="flex items-center gap-3 justify-center lg:justify-start text-slate-200">
-                  <span className="flex items-center gap-1.5 text-emerald-300">Use the app free</span>
+                  <span className="flex items-center gap-1.5 text-emerald-300">Use the free pain tracker</span>
                   <span className="text-slate-400">•</span>
-                  <span>Download printables</span>
+                  <span>Get the printable PDF</span>
                   <span className="text-slate-400">•</span>
-                  <span>Prepare records for appointments</span>
+                  <span>Prepare for doctor visits</span>
                 </p>
                 <p className="flex items-center gap-2 justify-center lg:justify-start text-slate-200">
                   <span className="text-sky-300 font-medium">Patient-first hierarchy:</span>

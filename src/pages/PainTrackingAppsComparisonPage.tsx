@@ -5,10 +5,10 @@ import { SEOPageLayout, type SEOPageContent } from '../components/seo';
 const pageContent: SEOPageContent = {
   slug: 'pain-tracking-apps-comparison',
   canonicalPath: '/pain-tracking-apps-comparison',
-  title: 'Pain Tracking Apps Comparison',
-  metaTitle: 'Pain Tracking Apps Comparison: Privacy, Offline Use, and Doctor Visits | Pain Tracker',
+  title: 'Best Pain Tracking Apps in 2026',
+  metaTitle: 'Best Pain Tracking Apps in 2026: Privacy, Offline Use, and Doctor Visits | PainTracker',
   metaDescription:
-    'Compare pain tracking apps by privacy, offline use, doctor-visit readiness, exports, and daily usability. See how Pain Tracker approaches local-first tracking and clinician-friendly records.',
+    'Compare the best pain tracking apps for privacy, offline use, doctor visit readiness, exports, and daily usability. See which tools work without accounts and which keep records local.',
   keywords: [
     'pain tracking apps',
     'pain management apps',
@@ -19,16 +19,16 @@ const pageContent: SEOPageContent = {
     'pain tracker doctor report',
   ],
   badge: 'Comparison Guide',
-  headline: 'Pain Tracking Apps Comparison: What Actually Matters',
+  headline: 'Best pain tracking apps in 2026',
   subheadline:
-    'If you are comparing pain tracking apps, do not stop at screenshots. Compare privacy, offline use, clinician-ready exports, and whether the app still works when you are tired, interrupted, or offline.',
+    'Most pain tracking apps help you log symptoms. Fewer help you keep your records private, available offline, and easy to use during doctor visits. This comparison focuses on those differences.',
   primaryCTA: {
-    text: 'Download Pain Tracker',
-    href: '/download',
+    text: 'Try PainTracker free',
+    href: '/start',
     download: false,
   },
   secondaryCTA: {
-    text: 'Get Daily Printable',
+    text: 'Get the printable PDF',
     href: '/resources/daily-pain-tracker-printable',
   },
   utilityBlock: {
@@ -160,9 +160,9 @@ const comparisonRows = [
 
 const nextStepCards = [
   {
-    title: 'Download the app',
+    title: 'Try the free app',
     description: 'Use the local-first app if you want structured records, analysis, and export without cloud-first workflow lock-in.',
-    href: '/download',
+    href: '/start',
   },
   {
     title: 'Start with a printable',
@@ -221,14 +221,21 @@ export const PainTrackingAppsComparisonPage: React.FC = () => (
         </div>
       </section>
 
-      <section className="grid gap-4 md:grid-cols-3">
-        {nextStepCards.map((card) => (
-          <a key={card.title} href={card.href} className="rounded-2xl border border-slate-700 bg-slate-800/70 p-6 text-left transition hover:border-emerald-500/60 hover:bg-slate-800">
-            <h3 className="mb-2 text-lg font-semibold text-white">{card.title}</h3>
-            <p className="text-sm leading-relaxed text-slate-400">{card.description}</p>
-          </a>
-        ))}
+      <section className="rounded-2xl border border-slate-700 bg-slate-800/70 p-6 text-left">
+        <h2 className="mb-3 text-2xl font-semibold text-white">Want a private option you can start using now?</h2>
+        <p className="mb-5 text-sm leading-relaxed text-slate-300">
+          Start with the free app if you want daily tracking now, or move into the printable and doctor-visit lanes if paper fits better today.
+        </p>
+        <div className="grid gap-4 md:grid-cols-3">
+          {nextStepCards.map((card) => (
+            <a key={card.title} href={card.href} className="rounded-2xl border border-slate-700 bg-slate-900/60 p-6 text-left transition hover:border-emerald-500/60 hover:bg-slate-900">
+              <h3 className="mb-2 text-lg font-semibold text-white">{card.title}</h3>
+              <p className="text-sm leading-relaxed text-slate-400">{card.description}</p>
+            </a>
+          ))}
+        </div>
       </section>
+
     </div>
   </SEOPageLayout>
 );

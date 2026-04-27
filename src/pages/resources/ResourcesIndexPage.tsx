@@ -4,7 +4,7 @@
  */
 
 import React, { useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
   FileText, 
   Download, 
@@ -21,6 +21,7 @@ import { LandingFooter } from '../../components/landing/LandingFooter';
 import '../../styles/pages/landing.css';
 import { combineSchemas, generateBreadcrumbSchema } from '../../lib/seo';
 import { ResourceCtaStack } from '../../components/seo';
+import { applyPageMetadata } from '../../components/seo/applyPageMetadata';
 
 interface ResourceCard {
   title: string;
@@ -35,23 +36,48 @@ interface ResourceCard {
 function useRobotsMeta(content: string | null) {
   useEffect(() => {
     const existingRobots = document.querySelector<HTMLMetaElement>('meta[name="robots"]');
+    const existingGooglebot = document.querySelector<HTMLMetaElement>('meta[name="googlebot"]');
     const createdRobots = !existingRobots;
+    const createdGooglebot = !existingGooglebot;
     const robotsMeta = existingRobots ?? document.createElement('meta');
+    const googlebotMeta = existingGooglebot ?? document.createElement('meta');
     const previousRobotsContent = robotsMeta.getAttribute('content');
+    const previousGooglebotContent = googlebotMeta.getAttribute('content');
 
     if (createdRobots) {
       robotsMeta.setAttribute('name', 'robots');
       document.head.appendChild(robotsMeta);
     }
 
+    if (createdGooglebot) {
+      googlebotMeta.setAttribute('name', 'googlebot');
+      document.head.appendChild(googlebotMeta);
+    }
+
     if (content) {
       robotsMeta.setAttribute('content', content);
+      googlebotMeta.setAttribute('content', content);
     } else if (createdRobots) {
       robotsMeta.remove();
+      googlebotMeta.remove();
     } else if (previousRobotsContent) {
       robotsMeta.setAttribute('content', previousRobotsContent);
+      if (previousGooglebotContent) {
+        googlebotMeta.setAttribute('content', previousGooglebotContent);
+      } else if (createdGooglebot) {
+        googlebotMeta.remove();
+      } else {
+        googlebotMeta.removeAttribute('content');
+      }
     } else {
       robotsMeta.removeAttribute('content');
+      if (previousGooglebotContent) {
+        googlebotMeta.setAttribute('content', previousGooglebotContent);
+      } else if (createdGooglebot) {
+        googlebotMeta.remove();
+      } else {
+        googlebotMeta.removeAttribute('content');
+      }
     }
 
     return () => {
@@ -61,6 +87,14 @@ function useRobotsMeta(content: string | null) {
         robotsMeta.setAttribute('content', previousRobotsContent);
       } else {
         robotsMeta.removeAttribute('content');
+      }
+
+      if (createdGooglebot) {
+        googlebotMeta.remove();
+      } else if (previousGooglebotContent) {
+        googlebotMeta.setAttribute('content', previousGooglebotContent);
+      } else {
+        googlebotMeta.removeAttribute('content');
       }
     };
   }, [content]);
@@ -289,22 +323,24 @@ const resources: ResourceCard[] = [
 
 export const ResourcesIndexPage: React.FC = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const searchQuery = new URLSearchParams(location.search).get('q')?.trim() ?? '';
+  const isPlaceholderSearch = ['{search_term_string}', 'search_term_string'].includes(searchQuery);
+
+  useEffect(() => {
+    if (isPlaceholderSearch) {
+      navigate('/resources', { replace: true });
+    }
+  }, [isPlaceholderSearch, navigate]);
 
   useRobotsMeta(searchQuery ? 'noindex, follow' : null);
 
   useEffect(() => {
-    document.title = 'Free Pain Tracking Printables, Guides, and Appointment Prep | Pain Tracker';
-    
-    const metaDescription = document.querySelector('meta[name="description"]');
-    if (metaDescription) {
-      metaDescription.setAttribute('content', 'Free downloadable pain diary templates, printable pain logs, symptom trackers, and guides for appointments, disability documentation, and WorkSafeBC workflows.');
-    }
-
-    const canonicalLink = document.querySelector('link[rel="canonical"]');
-    if (canonicalLink) {
-      canonicalLink.setAttribute('href', 'https://www.paintracker.ca/resources');
-    }
+    return applyPageMetadata({
+      title: 'Free Pain Tracking Printables, Guides, and Appointment Prep | Pain Tracker',
+      description: 'Free downloadable pain diary templates, printable pain logs, symptom trackers, and guides for appointments, disability documentation, and WorkSafeBC workflows.',
+      canonicalUrl: 'https://www.paintracker.ca/resources',
+    });
   }, []);
 
   const schema = combineSchemas(

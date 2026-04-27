@@ -241,7 +241,7 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
                 to="/start"
                 className="btn-cta-primary px-4 py-2 text-sm font-medium rounded-lg"
               >
-                Use the app free
+                Use the free pain tracker
               </Link>
             </div>
           </div>

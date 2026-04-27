@@ -179,6 +179,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://www.paintracker.ca/resources/chronic-pain-log-printable</loc>
+    <lastmod>2026-02-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://www.paintracker.ca/resources/chronic-pain-diary-template</loc>
     <lastmod>2026-02-11</lastmod>
     <changefreq>monthly</changefreq>
@@ -205,6 +211,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://www.paintracker.ca/resources/pain-journal-examples</loc>
+    <lastmod>2026-02-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://www.paintracker.ca/resources/how-doctors-use-pain-diaries</loc>
     <lastmod>2026-02-11</lastmod>
     <changefreq>monthly</changefreq>
@@ -217,7 +229,19 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://www.paintracker.ca/resources/pain-diary-for-doctor-visits</loc>
+    <lastmod>2026-02-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://www.paintracker.ca/resources/symptom-tracking-before-diagnosis</loc>
+    <lastmod>2026-02-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.paintracker.ca/resources/symptom-journal-template</loc>
     <lastmod>2026-02-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>

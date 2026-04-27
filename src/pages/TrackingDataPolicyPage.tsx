@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Database, Eye, Lock, Server, Shield } from 'lucide-react';
 import { combineSchemas, generateBreadcrumbSchema } from '../lib/seo';
+import { applyPageMetadata } from '../components/seo/applyPageMetadata';
 
 export const TrackingDataPolicyPage: React.FC = () => {
   const schema = combineSchemas(
@@ -15,10 +16,11 @@ export const TrackingDataPolicyPage: React.FC = () => {
   );
 
   useEffect(() => {
-    document.title = 'Tracking & Data Policy — Pain Tracker';
-    return () => {
-      document.title = 'Pain Tracker';
-    };
+    return applyPageMetadata({
+      title: 'Tracking & Data Policy — Pain Tracker',
+      description: 'See what Pain Tracker stores locally, what it does not collect by default, and how optional analytics and exports are handled.',
+      canonicalUrl: 'https://www.paintracker.ca/tracking-data-policy',
+    });
   }, []);
 
   return (

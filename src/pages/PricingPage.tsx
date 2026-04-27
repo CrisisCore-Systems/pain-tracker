@@ -4,7 +4,7 @@
  * Upgraded with dramatic editorial magazine treatment
  */
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../styles/pages/landing.css';
 import '../styles/pages/pricing.css';
 import { Check, X, ChevronDown, Crown, Star, Users, Sparkles, Shield, Zap, ArrowRight, Activity } from 'lucide-react';
@@ -17,6 +17,7 @@ import { useVaultStatus } from '../hooks/useVault';
 import { createCheckoutSession, getTierForCheckout } from '../utils/stripe-checkout';
 import { getLocalUserId } from '../utils/user-identity';
 import { combineSchemas, generateBreadcrumbSchema } from '../lib/seo';
+import { applyPageMetadata } from '../components/seo/applyPageMetadata';
 
 export const PricingPage: React.FC = () => {
   const { currentTier } = useSubscription();
@@ -24,6 +25,12 @@ export const PricingPage: React.FC = () => {
   const navigate = useNavigate();
   const [billingInterval, setBillingInterval] = useState<'monthly' | 'yearly'>('monthly');
   const [isUpgrading, setIsUpgrading] = useState(false);
+
+  useEffect(() => applyPageMetadata({
+    title: 'Pain Tracker Pricing — Free, Basic $9.99, Pro $24.99 | PainTracker.ca',
+    description: 'Compare Free, Basic, Pro, and Enterprise plans for private, offline-capable pain tracking, clinician-friendly reports, and structured documentation workflows.',
+    canonicalUrl: 'https://www.paintracker.ca/pricing',
+  }), []);
 
   const schema = combineSchemas(
     generateBreadcrumbSchema(

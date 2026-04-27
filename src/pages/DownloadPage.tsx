@@ -43,9 +43,9 @@ export const DownloadPage: React.FC = () => {
 
   useEffect(() => {
     const meta = {
-      title: 'Use Pain Tracker Online, Installed, or Self-Hosted | Pain Tracker',
+      title: 'Free Pain Tracker App Download | Private and Offline | PainTracker',
       description:
-        'Track pain privately. No account. Works offline. Bring better records to appointments.',
+        'Use PainTracker free in your browser, install it for offline use, or self host it. Keep pain records private and available when you need them.',
       canonicalUrl: `${defaultSEOConfig.siteUrl}/download`,
     };
 
@@ -107,10 +107,10 @@ export const DownloadPage: React.FC = () => {
         {/* Header */}
         <header className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
-            Use Pain Tracker your way
+            Download the free pain tracker app
           </h1>
           <p className="text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed">
-            Track pain privately. No account. Works offline. Bring better records to appointments.
+            Use it in your browser, install it for offline access, or self host it if you want full control.
           </p>
         </header>
 
@@ -148,7 +148,7 @@ export const DownloadPage: React.FC = () => {
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold text-white bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 transition-all"
               >
                 <Globe className="h-4 w-4" aria-hidden="true" />
-                Use the app free
+                Use the free app
               </a>
             </div>
 
@@ -178,7 +178,7 @@ export const DownloadPage: React.FC = () => {
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold text-white bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-400 hover:to-purple-500 transition-all"
               >
                 <ExternalLink className="h-4 w-4" aria-hidden="true" />
-                View on GitHub
+                Self host on GitHub
               </a>
             </div>
           </div>

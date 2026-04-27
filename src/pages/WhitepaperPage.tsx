@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Download, FileText, Lock, Shield } from 'lucide-react';
 import { combineSchemas, generateBreadcrumbSchema } from '../lib/seo';
+import { applyPageMetadata } from '../components/seo/applyPageMetadata';
 import '../styles/pages/landing.css';
 
 const WHITEPAPER_VERSION = '1.3.0';
@@ -9,10 +10,11 @@ const WHITEPAPER_PDF_FILENAME = `Pain-Tracker-Whitepaper-v${WHITEPAPER_VERSION}.
 
 export function WhitepaperPage() {
   useEffect(() => {
-    document.title = 'Pain Tracker Whitepaper (PDF)';
-    return () => {
-      document.title = 'Pain Tracker';
-    };
+    return applyPageMetadata({
+      title: 'Pain Tracker Whitepaper (PDF)',
+      description: 'Download the Pain Tracker whitepaper covering local-first architecture, privacy boundaries, and the product threat model.',
+      canonicalUrl: 'https://www.paintracker.ca/whitepaper',
+    });
   }, []);
 
   const schema = combineSchemas(

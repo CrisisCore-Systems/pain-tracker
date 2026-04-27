@@ -140,15 +140,32 @@ export function generateSoftwareApplicationSchema(): object {
     '@type': 'SoftwareApplication',
     name: defaultSEOConfig.productName,
     url: defaultSEOConfig.appUrl,
-    description: 'Track pain privately. No account. Works offline. Bring better records to appointments.',
+    description: 'PainTracker is a free pain tracker app and printable toolkit for private, offline symptom tracking and clearer doctor visit records.',
     applicationCategory: 'HealthApplication',
     operatingSystem: 'Web Browser, iOS, Android',
-    offers: {
-      '@type': 'Offer',
-      price: '0',
-      priceCurrency: 'CAD',
-      availability: 'https://schema.org/InStock'
-    },
+    offers: [
+      {
+        '@type': 'Offer',
+        name: 'Free',
+        price: '0',
+        priceCurrency: 'CAD',
+        availability: 'https://schema.org/InStock'
+      },
+      {
+        '@type': 'Offer',
+        name: 'Basic',
+        price: '9.99',
+        priceCurrency: 'CAD',
+        availability: 'https://schema.org/InStock'
+      },
+      {
+        '@type': 'Offer',
+        name: 'Pro',
+        price: '24.99',
+        priceCurrency: 'CAD',
+        availability: 'https://schema.org/InStock'
+      }
+    ],
     featureList: [
       'Offline-first pain tracking',
       'Local-only by default',
@@ -163,7 +180,7 @@ export function generateSoftwareApplicationSchema(): object {
     softwareVersion: '1.0.0',
     brand: {
       '@type': 'Brand',
-      name: defaultSEOConfig.siteName
+      name: defaultSEOConfig.productName
     },
     creator: {
       '@type': 'Organization',
@@ -311,11 +328,13 @@ export function generateOrganizationSchema(): object {
       'Privacy-First Healthcare Applications'
     ],
     sameAs: [
-      defaultSEOConfig.githubUrl
+      defaultSEOConfig.githubUrl,
+      'https://blog.paintracker.ca/'
     ],
     contactPoint: {
       '@type': 'ContactPoint',
       contactType: 'customer support',
+      email: 'support@paintracker.ca',
       availableLanguage: ['English', 'French']
     }
   };
@@ -332,7 +351,7 @@ export function generateWebSiteSchema(): object {
     name: defaultSEOConfig.siteName,
     alternateName: defaultSEOConfig.productName,
     url: defaultSEOConfig.siteUrl,
-    description: 'Track pain privately. No account. Works offline. Bring better records to appointments.',
+    description: 'PainTracker is a free pain tracker app and printable toolkit for private, offline symptom tracking and clearer doctor visit records.',
     inLanguage: 'en-CA',
     publisher: {
       '@type': 'Organization',
@@ -353,8 +372,8 @@ export const defaultSEOConfig = {
   appUrl: seoIdentity.appUrl,
   logoUrl: seoIdentity.logoUrl,
   githubUrl: seoIdentity.githubUrl,
-  defaultTitle: 'Track Pain Privately. No Account. Works Offline. | Pain Tracker',
-  defaultDescription: 'Track pain privately. No account. Works offline. Bring better records to appointments.',
+  defaultTitle: 'Free Pain Tracker App That Works Offline and Keeps Data Private | PainTracker',
+  defaultDescription: 'Track pain, symptoms, medications, and triggers with a free pain tracker app that works offline and keeps your records private. No account required.',
   defaultImage: 'https://www.paintracker.ca/og-image.png',
   twitterHandle: '@paintrackerpro',
   locale: 'en_CA'

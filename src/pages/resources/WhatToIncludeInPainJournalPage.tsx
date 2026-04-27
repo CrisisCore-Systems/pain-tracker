@@ -129,8 +129,8 @@ const journalStats: StatItem[] = [
 const pageContent: SEOPageContent = {
   slug: 'what-to-include-in-pain-journal',
   title: 'What to Include in a Pain Journal',
-  metaTitle: 'What to Include in a Pain Journal: 6-Category Checklist Your Doctor Will Actually Use',
-  metaDescription: 'Exact list of what to track in your pain journal, organized by priority. Pain levels, meds, functional impact, sleep, and triggers — with time estimates so even your worst days are covered.',
+  metaTitle: 'Pain Journal Checklist for Doctor Visits | PainTracker',
+  metaDescription: 'Learn what to include in a pain journal so your notes are useful at doctor visits. Track pain levels, medications, triggers, sleep, and daily function with a simple checklist.',
   keywords: [
     'what to include in pain journal', 'pain journal content guide',
     'pain diary what to write', 'pain journal template content',
@@ -142,9 +142,9 @@ const pageContent: SEOPageContent = {
   ],
   badge: 'Guide',
   headline: 'What to Include in a Pain Journal',
-  subheadline: 'You don\'t need to track everything. You need to track the RIGHT things. Here\'s exactly what to include, organized by priority, with time estimates and sample entries — so your journal is clinically useful without being overwhelming.',
-  primaryCTA: { text: 'Download a printable', href: '/resources/pain-diary-template-pdf' },
-  secondaryCTA: { text: 'Use the app free', href: '/start' },
+  subheadline: 'A simple checklist for keeping notes that are actually useful during doctor visits.',
+  primaryCTA: { text: 'Get the pain journal checklist', href: '/resources/what-to-include-in-pain-journal' },
+  secondaryCTA: { text: 'Use the free pain tracker', href: '/start' },
   utilityBlock: { type: 'download', downloadUrl: '/assets/pain-journal-checklist.pdf', downloadFileName: 'pain-journal-checklist.pdf' },
   whatIsThis: 'A complete guide to what belongs in a pain journal — and what doesn\'t. Most people either track too little (just pain numbers) or try to track everything (and quit after 3 days). This guide organizes pain journal content into 6 prioritized categories: 3 essential ones you should always track, and 3 additional ones for when you have time. It includes sample entries at different time commitments (1 minute, 3 minutes, 5 minutes) so you can match your journaling to your day.',
   whoShouldUse: [
@@ -205,15 +205,15 @@ export const WhatToIncludeInPainJournalPage: React.FC = () => (
     <SampleEntry />
     <BottomCTACallout
       icon={MonitorSmartphone}
-      heading="Now You Know What to Track — All That's Missing Is Starting."
-      body="Download the checklist PDF for a quick reference, print a journal template, or start digital tracking. Two to three minutes a day is all it takes."
+      heading="You know what to track. Now make it easier to keep up."
+      body="Download the checklist for quick reference or start tracking in the app when you want a lower-friction daily routine."
       pdfUrl="/assets/pain-journal-checklist.pdf"
       gradientClasses="from-amber-600 to-orange-600"
       tintClass="text-amber-100"
       buttonTextClass="text-amber-700"
       buttonHoverClass="hover:bg-amber-50"
-      primaryLabel="Download Checklist"
-      secondaryLabel="Start Digital Tracking"
+      primaryLabel="Get the pain journal checklist"
+      secondaryLabel="Start tracking in the app"
     />
   </SEOPageLayout>
 );

@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
 const SITE_URL = 'https://www.paintracker.ca';
+const NOINDEX_PATH_PREFIXES = ['/app', '/subscription', '/start', '/clinic/login'];
 
 function toCanonicalUrl(pathname: string): string {
   if (!pathname || pathname === '/') {
@@ -24,7 +25,11 @@ export function CanonicalUrlManager() {
 
   useEffect(() => {
     const canonicalUrl = toCanonicalUrl(location.pathname);
-    const shouldNoindex = location.search.trim().length > 0;
+    const shouldNoindex =
+      location.search.trim().length > 0 ||
+      NOINDEX_PATH_PREFIXES.some((prefix) =>
+        location.pathname === prefix || location.pathname.startsWith(`${prefix}/`)
+      );
 
     let canonicalLink = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
     if (!canonicalLink) {

@@ -57,9 +57,9 @@ const SEO = {
   slug: 'daily-pain-tracker-printable',
   title: 'Daily Pain Tracker Printable (Free)',
   metaTitle:
-    'Daily Pain Tracker Printable — Free Comprehensive PDF | Pain Tracker',
+    'Daily Pain Tracker Printable PDF Free | PainTracker',
   metaDescription:
-    'Download a free daily pain tracker printable. Tracks morning check-in, pain episodes, medications, activity impact, mood, and end-of-day summary — everything your provider needs from one day.',
+    'Download a free daily pain tracker printable PDF to record pain levels, medications, flare ups, triggers, daily limits, mood, and notes for doctor visits.',
   keywords: [
     'daily pain tracker printable',
     'daily pain log',
@@ -519,15 +519,11 @@ export const DailyPainTrackerPrintablePage: React.FC = () => {
               id="hero-heading"
               className="landing-headline landing-headline-lg text-white mb-6"
             >
-              A Daily Pain Tracker That{' '}
-              <span className="bg-gradient-to-r from-sky-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">
-                Captures Your Whole Day
-              </span>
+              Free daily pain tracker printable PDF
             </h1>
 
             <p className="landing-subhead text-lg sm:text-xl max-w-2xl mx-auto mb-4">
-              Morning check-in, pain episodes, medications, activity impact, mood,
-              and end-of-day summary — structured so your provider can scan it in seconds.
+              Use this printable pain tracker to log one full day of symptoms, medications, flare ups, activity limits, and notes in a format that is easy to keep and easy to bring to appointments.
             </p>
             <p className="text-slate-500 text-sm mb-8">
               100% free &bull; No email required &bull; No tracking &bull; Prints on standard letter paper
@@ -541,14 +537,14 @@ export const DailyPainTrackerPrintablePage: React.FC = () => {
                 className="btn-cta-primary px-8 py-4 text-lg font-semibold rounded-xl flex items-center gap-3 shadow-lg shadow-primary/20"
               >
                 <Download className="w-5 h-5" />
-                Download Free PDF
+                Download free printable PDF
               </a>
               <Link
                 to="/start"
                 className="px-8 py-4 text-lg font-medium text-slate-300 hover:text-white border border-slate-600 hover:border-slate-500 rounded-xl transition-all flex items-center gap-2"
               >
                 <Sparkles className="w-5 h-5" />
-                Try the Digital Version
+                Use the free app instead
               </Link>
             </div>
 
@@ -585,7 +581,7 @@ export const DailyPainTrackerPrintablePage: React.FC = () => {
                 className="btn-cta-primary px-6 py-3 rounded-xl flex items-center gap-2 whitespace-nowrap"
               >
                 <Download className="w-5 h-5" />
-                Download PDF
+                Download free printable PDF
               </a>
             </div>
           </div>
@@ -812,13 +808,13 @@ export const DailyPainTrackerPrintablePage: React.FC = () => {
                   className="btn-cta-primary px-8 py-4 text-lg font-semibold rounded-xl flex items-center gap-3"
                 >
                   <Download className="w-5 h-5" />
-                  Download Free PDF
+                  Download free printable PDF
                 </a>
                 <Link
                   to="/start"
                   className="text-slate-400 hover:text-white transition-colors flex items-center gap-2 text-sm"
                 >
-                  Or try the digital version
+                  Use the free app instead
                   <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>

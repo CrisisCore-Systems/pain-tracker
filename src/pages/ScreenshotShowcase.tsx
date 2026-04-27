@@ -3,13 +3,14 @@
  * Provides clean, demonstration-ready views for screenshot capture
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { DataExportModal } from '../components/export/DataExportModal';
 import { InteractiveBodyMap } from '../components/body-mapping/InteractiveBodyMap';
 import { Lock, Zap, DollarSign, Heart, Shield, Sparkles, Check, X } from 'lucide-react';
 import type { PainEntry } from '../types';
 import { combineSchemas, generateBreadcrumbSchema } from '../lib/seo';
+import { applyPageMetadata } from '../components/seo/applyPageMetadata';
 
 // Demo data for screenshots
 const DEMO_PAIN_ENTRIES: PainEntry[] = [
@@ -743,6 +744,12 @@ export function CrisisSupportShowcase() {
 export function ScreenshotShowcase() {
   const location = useLocation();
   const hash = location.hash;
+
+  useEffect(() => applyPageMetadata({
+    title: 'Pain Tracker Product Demo and Screenshot Showcase | Pain Tracker',
+    description: 'Browse Pain Tracker demonstration views and screenshot-ready previews of the export workflow, body map, and subscription screens.',
+    canonicalUrl: 'https://www.paintracker.ca/demo',
+  }), []);
 
   const schema = combineSchemas(
     generateBreadcrumbSchema(

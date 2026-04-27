@@ -37,10 +37,10 @@ export const LandingPage: React.FC = () => {
 
   useEffect(() => {
     const meta = {
-      title: 'Track Pain Privately. No Account. Works Offline. | Pain Tracker',
-      description: 'Track pain privately. No account. Works offline. Bring better records to appointments.',
+      title: 'Free Pain Tracker App That Works Offline and Keeps Data Private | PainTracker',
+      description: 'Track pain, symptoms, medications, and triggers with a free pain tracker app that works offline and keeps your records private. No account required.',
       keywords:
-        'pain tracker, pain tracker app, pain tracking app, pain management tracker, pain diary template, symptom tracker printable, doctor pain records',
+        'free pain tracker app, pain tracker app, pain tracker, private pain tracker, offline pain tracker, pain diary template, symptom tracker printable, doctor visit records',
     };
 
     document.title = meta.title;
@@ -68,7 +68,7 @@ export const LandingPage: React.FC = () => {
 
     // Announce page to screen readers
     const announcement =
-      'Welcome to Pain Tracker. Track pain privately with no account required and better records for appointments.';
+      'Welcome to PainTracker. Use a free pain tracker app for private offline symptom tracking and clearer doctor visit records.';
     const ariaLive = document.createElement('div');
     ariaLive.setAttribute('role', 'status');
     ariaLive.setAttribute('aria-live', 'polite');
@@ -89,18 +89,18 @@ export const LandingPage: React.FC = () => {
 
   const intentPages = [
     {
-      title: 'Use the app free',
-      description: 'Start daily pain tracking in the app with no account required and local-first privacy by default.',
+      title: 'Use the free pain tracker',
+      description: 'Start daily pain tracking in the app with no account required and private local-first records by default.',
       href: '/start',
     },
     {
-      title: 'Download a printable',
-      description: 'Get a pain diary template, daily pain tracker, or symptom log you can print today.',
+      title: 'Get the printable PDF',
+      description: 'Get a pain journal template, daily pain tracker, or symptom log you can print today.',
       href: '/resources/pain-diary-template-pdf',
     },
     {
-      title: 'Prepare for appointments',
-      description: 'Use the private sharing workflow to bring pain records to a doctor without handing an app your day-to-day data.',
+      title: 'Prepare for doctor visits',
+      description: 'Use the record-sharing workflow to bring clearer pain records to a doctor without handing an app your day-to-day data.',
       href: '/share-pain-records-with-doctor-without-giving-an-app-your-data',
     },
     {

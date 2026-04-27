@@ -8,13 +8,11 @@
 
 import { Suspense, useEffect, lazy, useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { ThemeProvider } from "./design-system";
-import { ToastProvider } from "./components/feedback";
-import { TraumaInformedProvider } from "./components/accessibility";
+import { ThemeProvider } from "./design-system/ThemeProvider";
+import { ToastProvider } from "./components/feedback/ToastProvider";
+import { TraumaInformedProvider } from "./components/accessibility/TraumaInformedContext";
 import { CanonicalUrlManager } from './components/seo/CanonicalUrlManager';
 import { SubscriptionProvider } from "./contexts/SubscriptionContext";
-import { ToneProvider } from "./contexts/ToneContext";
-import { StartupPromptsProvider } from "./contexts/StartupPromptsContext";
 import { AuditSinkAlertBridge } from './components/security/AuditSinkAlertBridge';
 import { initializeToneEngine } from "./services/ToneEngine";
 import { useGlobalAccessibility } from "./hooks/useGlobalAccessibility";
@@ -173,13 +171,11 @@ function App() {
       <CanonicalUrlManager />
       <ThemeProvider>
         <SubscriptionProvider userId={userId}>
-          <ToneProvider>
-            <TraumaInformedProvider>
-              <ToastProvider>
-                <AuditSinkAlertBridge />
-                <StartupPromptsProvider>
-                  <Suspense fallback={<LoadingFallback />}>
-                    <Routes>
+          <TraumaInformedProvider>
+            <ToastProvider>
+              <AuditSinkAlertBridge />
+              <Suspense fallback={<LoadingFallback />}>
+                <Routes>
                       {/* Landing Page - Public */}
                       <Route path="/" element={<LandingPage />} />
 
@@ -303,12 +299,10 @@ function App() {
 
                     {/* Fallback - redirect to landing */}
                     <Route path="*" element={<Navigate to="/" replace />} />
-                    </Routes>
-                  </Suspense>
-                </StartupPromptsProvider>
-              </ToastProvider>
-            </TraumaInformedProvider>
-          </ToneProvider>
+                </Routes>
+              </Suspense>
+            </ToastProvider>
+          </TraumaInformedProvider>
         </SubscriptionProvider>
       </ThemeProvider>
     </BrowserRouter>

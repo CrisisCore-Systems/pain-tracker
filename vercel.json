@@ -661,6 +661,22 @@
       "destination": "/api/$1"
     },
     {
+      "source": "/clinic/login",
+      "destination": "/clinic/login/index.html"
+    },
+    {
+      "source": "/app/checkin",
+      "destination": "/app/checkin/index.html"
+    },
+    {
+      "source": "/resources/:slug(pain-diary-template-pdf|daily-pain-tracker-printable|weekly-pain-log-pdf|monthly-pain-tracker-printable|pain-scale-chart-printable|symptom-tracker-printable|migraine-pain-diary-printable|printable-pain-log-sheet|chronic-pain-diary-template|7-day-pain-diary-template|how-to-track-pain-for-doctors|what-to-include-in-pain-journal|how-doctors-use-pain-diaries|pain-diary-for-specialist-appointment|symptom-tracking-before-diagnosis|documenting-pain-for-disability-claim|worksafebc-pain-journal-template|pain-journal-for-disability-benefits|daily-functioning-log-for-disability|fibromyalgia-pain-diary|chronic-back-pain-diary|arthritis-pain-tracker|nerve-pain-symptom-log|endometriosis-pain-log|crps-pain-diary-template|neuropathy-symptom-tracker|pain-diary-for-doctor-visits|symptom-journal-template|chronic-pain-log-printable|pain-journal-examples)",
+      "destination": "/resources/:slug/index.html"
+    },
+    {
+      "source": "/:route(pricing|download|privacy|pain-tracker-app|pain-tracking-app|pain-management-tracker|pain-locator-app|share-pain-records-with-doctor-without-giving-an-app-your-data|pain-diary-template|pain-tracking-apps-comparison|privacy-offline-first-pain-tracker|tracking-data-policy|whitepaper|overton-framework|cnet-download|demo|submit-story|resources)",
+      "destination": "/:route/index.html"
+    },
+    {
       "source": "/((?!api/).*)",
       "destination": "/index.html"
     }
