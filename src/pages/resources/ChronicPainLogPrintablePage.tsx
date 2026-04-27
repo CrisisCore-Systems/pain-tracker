@@ -220,10 +220,10 @@ const pageContent: SEOPageContent = {
 
 export const ChronicPainLogPrintablePage: React.FC = () => (
   <SEOPageLayout content={pageContent}>
-    <StatsBanner stats={logStats} colorScheme="green" />
+    <StatsBanner stats={logStats} colorScheme="emerald" />
     <LogFormatComparison />
     <PainPatternTypes />
-    <PdfContentsPreview pages={pdfPages} accentColor="green" variant="badge" heading="What\'s in Your Chronic Pain Log" subtitle="Four formats, one printable set. Use the daily log every day; the others as needed." />
+    <PdfContentsPreview pages={pdfPages} accentColor="emerald" variant="badge" heading="What\'s in Your Chronic Pain Log" subtitle="Four formats, one printable set. Use the daily log every day; the others as needed." />
     <BottomCTACallout
       icon={TrendingUp}
       heading="Chronic Pain Hides Its Patterns. Your Log Reveals Them."

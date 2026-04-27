@@ -14,8 +14,16 @@ import type {
 import type { PainEntry } from '../types';
 
 // --- Web Crypto helpers ---
+function shouldUseNodeBuffer(): boolean {
+  const globals = globalThis as typeof globalThis & {
+    __PAIN_TRACKER_FORCE_WEB_BASE64__?: boolean;
+  };
+
+  return !globals.__PAIN_TRACKER_FORCE_WEB_BASE64__ && typeof Buffer !== 'undefined';
+}
+
 function arrayBufferToBase64(buffer: ArrayBuffer): string {
-  if (typeof Buffer !== 'undefined') {
+  if (shouldUseNodeBuffer()) {
     return Buffer.from(buffer).toString('base64');
   }
   let binary = '';
@@ -26,7 +34,7 @@ function arrayBufferToBase64(buffer: ArrayBuffer): string {
 }
 
 function base64ToArrayBuffer(base64: string): ArrayBuffer {
-  if (typeof Buffer !== 'undefined') {
+  if (shouldUseNodeBuffer()) {
     const buf = Buffer.from(base64, 'base64');
     // IMPORTANT: return an ArrayBuffer that is backed by Node's realm.
     // Under Vitest `jsdom`, ArrayBuffers created via `Uint8Array.from()` can be
@@ -42,7 +50,7 @@ function base64ToArrayBuffer(base64: string): ArrayBuffer {
 
 function base64ToBytes(base64: string): Uint8Array<ArrayBuffer> {
   // Ensure we always pass a BufferSource backed by a plain ArrayBuffer.
-  if (typeof Buffer !== 'undefined') {
+  if (shouldUseNodeBuffer()) {
     const buf = Buffer.from(base64, 'base64');
     const ab = buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength) as ArrayBuffer;
     return new Uint8Array(ab);

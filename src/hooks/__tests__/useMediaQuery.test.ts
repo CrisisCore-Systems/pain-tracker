@@ -2,7 +2,7 @@
  * Tests for useMediaQuery hooks
  */
 
-import { renderHook, waitFor } from '@testing-library/react';
+import { act, renderHook, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { useMediaQuery, useBreakpoint, useResponsive, useIsTouchDevice } from '../useMediaQuery';
 
@@ -22,7 +22,7 @@ describe('useMediaQuery', () => {
       dispatchEvent: vi.fn(),
     }));
 
-    Object.defineProperty(window, 'matchMedia', {
+    Object.defineProperty(globalThis, 'matchMedia', {
       writable: true,
       value: matchMediaMock,
     });
@@ -88,7 +88,9 @@ describe('useMediaQuery', () => {
 
     // Simulate media query change
     if (eventHandler) {
-      eventHandler({ matches: true } as MediaQueryListEvent);
+      act(() => {
+        eventHandler?.({ matches: true } as MediaQueryListEvent);
+      });
     }
 
     await waitFor(() => {
@@ -100,7 +102,7 @@ describe('useMediaQuery', () => {
 describe('useBreakpoint', () => {
   beforeEach(() => {
     const matchMediaMock = vi.fn((query: string) => ({
-      matches: query.includes('768px') ? true : false,
+      matches: query.includes('768px'),
       media: query,
       onchange: null,
       addListener: vi.fn(),
@@ -110,7 +112,7 @@ describe('useBreakpoint', () => {
       dispatchEvent: vi.fn(),
     }));
 
-    Object.defineProperty(window, 'matchMedia', {
+    Object.defineProperty(globalThis, 'matchMedia', {
       writable: true,
       value: matchMediaMock,
     });
@@ -123,7 +125,7 @@ describe('useBreakpoint', () => {
 
   it('should detect sm breakpoint', () => {
     const matchMediaMock = vi.fn((query: string) => ({
-      matches: query.includes('640px') ? true : false,
+      matches: query.includes('640px'),
       media: query,
       onchange: null,
       addListener: vi.fn(),
@@ -133,7 +135,7 @@ describe('useBreakpoint', () => {
       dispatchEvent: vi.fn(),
     }));
 
-    Object.defineProperty(window, 'matchMedia', {
+    Object.defineProperty(globalThis, 'matchMedia', {
       writable: true,
       value: matchMediaMock,
     });
@@ -156,7 +158,7 @@ describe('useResponsive', () => {
       dispatchEvent: vi.fn(),
     }));
 
-    Object.defineProperty(window, 'matchMedia', {
+    Object.defineProperty(globalThis, 'matchMedia', {
       writable: true,
       value: matchMediaMock,
     });
@@ -180,7 +182,7 @@ describe('useResponsive', () => {
       dispatchEvent: vi.fn(),
     }));
 
-    Object.defineProperty(window, 'matchMedia', {
+    Object.defineProperty(globalThis, 'matchMedia', {
       writable: true,
       value: matchMediaMock,
     });
@@ -195,7 +197,7 @@ describe('useResponsive', () => {
 
 describe('useIsTouchDevice', () => {
   it('should detect touch device', () => {
-    Object.defineProperty(window, 'ontouchstart', {
+    Object.defineProperty(globalThis, 'ontouchstart', {
       writable: true,
       configurable: true,
       value: {},

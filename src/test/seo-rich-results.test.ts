@@ -19,7 +19,7 @@ describe('SEO rich-result coverage', () => {
     expect(landingPage).toContain('generateFAQSchema');
     expect(landingPage).toContain('landingFaqs');
     expect(landingFaq).toContain('export const landingFaqs');
-    expect(homeRoute?.structuredData.some((item) => item['@type'] === 'FAQPage')).toBe(false);
+    expect(homeRoute?.structuredData.some((item: Record<string, unknown>) => item['@type'] === 'FAQPage')).toBe(false);
   });
 
   it('keeps breadcrumb and FAQ markup on the download page', () => {

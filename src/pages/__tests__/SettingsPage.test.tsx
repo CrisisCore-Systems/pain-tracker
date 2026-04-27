@@ -1,6 +1,11 @@
 import React from 'react';
+import { vi } from 'vitest';
 import { render, screen } from '../../test/test-utils';
 import SettingsPage from '../SettingsPage';
+
+vi.mock('../../components/notifications/NotificationManagement', () => ({
+  NotificationManagement: () => <div data-testid="notification-management-stub" />,
+}));
 
 describe('SettingsPage', () => {
   it('renders settings sections', () => {

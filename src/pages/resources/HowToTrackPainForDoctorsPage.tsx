@@ -7,6 +7,7 @@
 
 import React from 'react';
 import {
+  Target,
   Stethoscope, CheckCircle, Clock, MessageSquare,
   AlertTriangle, TrendingUp, ClipboardList,
   MonitorSmartphone
