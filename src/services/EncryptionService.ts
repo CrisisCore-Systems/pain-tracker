@@ -4,11 +4,11 @@
  */
 
 import { securityService } from './SecurityService';
+import { isKeyBundleRaw, isKeyBundleWrapped } from '../types/security';
 import type {
   EncryptionKeyPayload,
   EncryptedBlobMeta,
   KeyBundleWrappedPayload,
-  KeyBundleRawPayload,
   OpaqueKeyPayload,
 } from '../types/security';
 import type { PainEntry } from '../types';
@@ -29,7 +29,7 @@ function arrayBufferToBase64(buffer: ArrayBuffer): string {
   let binary = '';
   const bytes = new Uint8Array(buffer);
   const len = bytes.byteLength;
-  for (let i = 0; i < len; i++) binary += String.fromCharCode(bytes[i]);
+  for (let i = 0; i < len; i++) binary += String.fromCodePoint(bytes[i]);
   return btoa(binary);
 }
 
@@ -39,12 +39,12 @@ function base64ToArrayBuffer(base64: string): ArrayBuffer {
     // IMPORTANT: return an ArrayBuffer that is backed by Node's realm.
     // Under Vitest `jsdom`, ArrayBuffers created via `Uint8Array.from()` can be
     // from the jsdom realm and rejected by Node 20 WebCrypto.
-    return buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength) as ArrayBuffer;
+    return buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength);
   }
   const binary = atob(base64);
   const len = binary.length;
   const bytes = new Uint8Array(len);
-  for (let i = 0; i < len; i++) bytes[i] = binary.charCodeAt(i);
+  for (let i = 0; i < len; i++) bytes[i] = binary.codePointAt(i) ?? 0;
   return bytes.buffer;
 }
 
@@ -52,13 +52,13 @@ function base64ToBytes(base64: string): Uint8Array<ArrayBuffer> {
   // Ensure we always pass a BufferSource backed by a plain ArrayBuffer.
   if (shouldUseNodeBuffer()) {
     const buf = Buffer.from(base64, 'base64');
-    const ab = buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength) as ArrayBuffer;
+    const ab = buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength);
     return new Uint8Array(ab);
   }
   const binary = atob(base64);
   const ab = new ArrayBuffer(binary.length);
   const bytes = new Uint8Array(ab);
-  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.codePointAt(i) ?? 0;
   return bytes;
 }
 
@@ -75,7 +75,10 @@ function arrayBufferToHex(buffer: ArrayBuffer): string {
 
 function hexToArrayBuffer(hex: string): ArrayBuffer {
   const bytes = new Uint8Array(hex.length / 2);
-  for (let i = 0; i < bytes.length; i++) bytes[i] = parseInt(hex.substr(i * 2, 2), 16);
+  for (let i = 0; i < bytes.length; i++) {
+    const start = i * 2;
+    bytes[i] = Number.parseInt(hex.slice(start, start + 2), 16);
+  }
   return bytes.buffer;
 }
 
@@ -142,8 +145,8 @@ export interface EncryptionOptions {
  * Handles encryption/decryption of all sensitive data
  */
 export class EndToEndEncryptionService {
-  private keyManager: KeyManager;
-  private defaultKeyId = 'pain-tracker-master';
+  private readonly keyManager: KeyManager;
+  private readonly defaultKeyId = 'pain-tracker-master';
   // Only keys in this whitelist are allowed to be persisted (wrapped) to storage.
   // Other keys will remain in-memory only. Update this list when adding new persisted keys.
   private readonly SENSITIVITY_WHITELIST = new Set<string>([
@@ -151,7 +154,7 @@ export class EndToEndEncryptionService {
     // backup-* keys (password-protected backups) are allowed
   ]);
   // In-memory fallback cache for test/jsdom environments where secure storage may fail
-  private inMemoryKeyCache = new Map<string, { key: string; created: string }>();
+  private readonly inMemoryKeyCache = new Map<string, { key: string; created: string }>();
 
   constructor() {
     this.keyManager = this.createKeyManager();
@@ -163,9 +166,9 @@ export class EndToEndEncryptionService {
     try {
       // process may not exist in some browser-like environments
       const env =
-        (typeof process !== 'undefined'
-          ? (process as unknown as { env?: Record<string, string | undefined> }).env
-          : undefined) || {};
+        typeof process === 'undefined'
+          ? {}
+          : ((process as unknown as { env?: Record<string, string | undefined> }).env ?? {});
       return !!(env && (env.VITEST || env.NODE_ENV === 'test'));
     } catch {
       return false;
@@ -287,8 +290,8 @@ export class EndToEndEncryptionService {
               // Import provided raw keys and wrap using securityService
               let encWrapped: string | undefined;
               let hmacWrapped: string | undefined;
-              if ((parsed as KeyBundleRawPayload).enc) {
-                const encRaw = base64ToArrayBuffer((parsed as KeyBundleRawPayload).enc!);
+              if (isKeyBundleRaw(parsed) && parsed.enc) {
+                const encRaw = base64ToArrayBuffer(parsed.enc);
                 const encCrypto = await crypto.subtle.importKey(
                   'raw',
                   encRaw,
@@ -298,8 +301,8 @@ export class EndToEndEncryptionService {
                 );
                 encWrapped = await securityService.wrapKey(encCrypto);
               }
-              if ((parsed as KeyBundleRawPayload).hmac) {
-                const hmacRaw = base64ToArrayBuffer((parsed as KeyBundleRawPayload).hmac!);
+              if (isKeyBundleRaw(parsed) && parsed.hmac) {
+                const hmacRaw = base64ToArrayBuffer(parsed.hmac);
                 const hmacCrypto = await crypto.subtle.importKey(
                   'raw',
                   hmacRaw,
@@ -555,15 +558,10 @@ export class EndToEndEncryptionService {
       let encCryptoKey: CryptoKey | null = null;
       let hmacCryptoKey: CryptoKey | null = null;
       try {
-        const parsed = JSON.parse(key as string) as EncryptionKeyPayload;
+        const parsed = JSON.parse(key) as EncryptionKeyPayload;
         if (parsed) {
-          if (
-            (parsed as KeyBundleWrappedPayload).encWrapped ||
-            (parsed as KeyBundleWrappedPayload).wrapped
-          ) {
-            const wrapped =
-              (parsed as KeyBundleWrappedPayload).encWrapped ||
-              (parsed as KeyBundleWrappedPayload).wrapped;
+          if (isKeyBundleWrapped(parsed) && (parsed.encWrapped || parsed.wrapped)) {
+            const wrapped = parsed.encWrapped || parsed.wrapped;
             if (wrapped) {
               encCryptoKey = await securityService.unwrapKey(wrapped, { name: 'AES-GCM' }, [
                 'encrypt',
@@ -571,8 +569,8 @@ export class EndToEndEncryptionService {
               ]);
             }
           }
-          if ((parsed as KeyBundleWrappedPayload).hmacWrapped) {
-            const hmacWrapped = (parsed as KeyBundleWrappedPayload).hmacWrapped;
+          if (isKeyBundleWrapped(parsed) && parsed.hmacWrapped) {
+            const hmacWrapped = parsed.hmacWrapped;
             if (hmacWrapped) {
               hmacCryptoKey = await securityService.unwrapKey(hmacWrapped, { name: 'HMAC' }, [
                 'sign',
@@ -580,9 +578,9 @@ export class EndToEndEncryptionService {
               ]);
             }
           }
-          if (!encCryptoKey && (parsed as KeyBundleRawPayload).enc) {
+          if (!encCryptoKey && isKeyBundleRaw(parsed) && parsed.enc) {
             try {
-              const encRaw = base64ToArrayBuffer((parsed as KeyBundleRawPayload).enc!);
+              const encRaw = base64ToArrayBuffer(parsed.enc);
               encCryptoKey = await crypto.subtle.importKey(
                 'raw',
                 encRaw,
@@ -594,9 +592,9 @@ export class EndToEndEncryptionService {
               // ignore HMAC key import failure; will fall back to digest integrity check
             }
           }
-          if (!hmacCryptoKey && (parsed as KeyBundleRawPayload).hmac) {
+          if (!hmacCryptoKey && isKeyBundleRaw(parsed) && parsed.hmac) {
             try {
-              const hmacRaw = base64ToArrayBuffer((parsed as KeyBundleRawPayload).hmac!);
+              const hmacRaw = base64ToArrayBuffer(parsed.hmac);
               hmacCryptoKey = await crypto.subtle.importKey(
                 'raw',
                 hmacRaw,
@@ -612,7 +610,7 @@ export class EndToEndEncryptionService {
       } catch {
         // Not JSON — try to import as raw base64 AES key
         try {
-          const raw = base64ToArrayBuffer(key as string);
+          const raw = base64ToArrayBuffer(key);
           encCryptoKey = await crypto.subtle.importKey('raw', raw, { name: 'AES-GCM' }, false, [
             'encrypt',
             'decrypt',
@@ -695,7 +693,7 @@ export class EndToEndEncryptionService {
       }
 
       // Support legacy CryptoJS ciphertexts for backward compatibility
-      if (metadata.version && metadata.version.startsWith('1.')) {
+      if (metadata.version?.startsWith('1.')) {
         // Lazy-load CryptoJS only when handling legacy data using dynamic import (avoid CommonJS require in TS)
         type CryptoJSLike = {
           AES: {
@@ -731,15 +729,10 @@ export class EndToEndEncryptionService {
       let encCryptoKey: CryptoKey | null = null;
       let hmacCryptoKey: CryptoKey | null = null;
       try {
-        const parsed = JSON.parse(key as string) as EncryptionKeyPayload;
+        const parsed = JSON.parse(key) as EncryptionKeyPayload;
         if (parsed) {
-          if (
-            (parsed as KeyBundleWrappedPayload).encWrapped ||
-            (parsed as KeyBundleWrappedPayload).wrapped
-          ) {
-            const wrapped =
-              (parsed as KeyBundleWrappedPayload).encWrapped ||
-              (parsed as KeyBundleWrappedPayload).wrapped;
+          if (isKeyBundleWrapped(parsed) && (parsed.encWrapped || parsed.wrapped)) {
+            const wrapped = parsed.encWrapped || parsed.wrapped;
             if (wrapped) {
               encCryptoKey = await securityService.unwrapKey(wrapped, { name: 'AES-GCM' }, [
                 'encrypt',
@@ -747,8 +740,8 @@ export class EndToEndEncryptionService {
               ]);
             }
           }
-          if ((parsed as KeyBundleWrappedPayload).hmacWrapped) {
-            const hmacWrapped = (parsed as KeyBundleWrappedPayload).hmacWrapped;
+          if (isKeyBundleWrapped(parsed) && parsed.hmacWrapped) {
+            const hmacWrapped = parsed.hmacWrapped;
             if (hmacWrapped) {
               hmacCryptoKey = await securityService.unwrapKey(hmacWrapped, { name: 'HMAC' }, [
                 'sign',
@@ -756,9 +749,9 @@ export class EndToEndEncryptionService {
               ]);
             }
           }
-          if (!encCryptoKey && (parsed as KeyBundleRawPayload).enc) {
+          if (!encCryptoKey && isKeyBundleRaw(parsed) && parsed.enc) {
             try {
-              const encRaw = base64ToBytes((parsed as KeyBundleRawPayload).enc!);
+              const encRaw = base64ToBytes(parsed.enc);
               encCryptoKey = await crypto.subtle.importKey(
                 'raw',
                 encRaw,
@@ -770,9 +763,9 @@ export class EndToEndEncryptionService {
               // ignore raw AES-GCM key import failure in decrypt path; other forms may succeed
             }
           }
-          if (!hmacCryptoKey && (parsed as KeyBundleRawPayload).hmac) {
+          if (!hmacCryptoKey && isKeyBundleRaw(parsed) && parsed.hmac) {
             try {
-              const hmacRaw = base64ToBytes((parsed as KeyBundleRawPayload).hmac!);
+              const hmacRaw = base64ToBytes(parsed.hmac);
               hmacCryptoKey = await crypto.subtle.importKey(
                 'raw',
                 hmacRaw,
@@ -788,7 +781,7 @@ export class EndToEndEncryptionService {
       } catch {
         // Not JSON -> try bare base64 AES key
         try {
-          const raw = base64ToBytes(key as string);
+          const raw = base64ToBytes(key);
           encCryptoKey = await crypto.subtle.importKey('raw', raw, { name: 'AES-GCM' }, false, [
             'decrypt',
           ]);
@@ -932,7 +925,7 @@ export class EndToEndEncryptionService {
 
     const encrypted = await this.encrypt(data, { keyId });
     if (password && passwordSalt) {
-      (encrypted.metadata as EncryptionMetadata).passwordSalt = passwordSalt;
+      encrypted.metadata.passwordSalt = passwordSalt;
     }
 
     this.logSecurityEvent({
@@ -954,7 +947,7 @@ export class EndToEndEncryptionService {
       const encrypted = JSON.parse(backupData) as EncryptedData<T>;
 
       if (password) {
-        const saltHex = (encrypted.metadata as EncryptionMetadata).passwordSalt;
+        const saltHex = encrypted.metadata.passwordSalt;
         if (!saltHex) throw new Error('Backup missing password salt metadata');
         const salt = hexToArrayBuffer(saltHex);
         const iterationOverride =
@@ -1064,26 +1057,32 @@ export class EndToEndEncryptionService {
       while (j < str.length && str[j] === str[i] && j - i < 255) j++;
       const runLength = j - i;
       if (runLength > 4) {
-        encoded += `~${str[i]}${String.fromCharCode(runLength)}`; // ~ marker + char + length byte
+        encoded += `~${str[i]}${String.fromCodePoint(runLength)}`; // ~ marker + char + length byte
       } else {
         encoded += str.slice(i, j);
       }
       i = j;
     }
-    const b64 = btoa(unescape(encodeURIComponent(encoded)));
+    const utf8 = new TextEncoder().encode(encoded);
+    let binary = '';
+    for (const byte of utf8) binary += String.fromCodePoint(byte);
+    const b64 = btoa(binary);
     return `COMPRESSED:v1:${b64}`;
   }
 
   private decompressString(compressed: string): string {
     if (!compressed.startsWith('COMPRESSED:v1:')) return compressed.replace('COMPRESSED:', '');
     const b64 = compressed.substring('COMPRESSED:v1:'.length);
-    const decoded = decodeURIComponent(escape(atob(b64)));
+    const binary = atob(b64);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) bytes[i] = binary.codePointAt(i) ?? 0;
+    const decoded = new TextDecoder().decode(bytes);
     // Reverse simple RLE
     let out = '';
     for (let i = 0; i < decoded.length; i++) {
       if (decoded[i] === '~' && i + 2 < decoded.length) {
         const ch = decoded[i + 1];
-        const len = decoded.charCodeAt(i + 2);
+        const len = decoded.codePointAt(i + 2) ?? 0;
         out += ch.repeat(len);
         i += 2;
       } else {

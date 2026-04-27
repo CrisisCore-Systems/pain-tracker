@@ -13,11 +13,12 @@ import {
 import {
   SEOPageLayout,
   type SEOPageContent,
+  type StatItem,
+  type PdfPage,
   StatsBanner,
   BottomCTACallout,
   PdfContentsPreview,
 } from '../../components/seo';
-import type { StatItem, PdfPage } from '../../components/seo';
 
 /* ── Log Format Comparison ────────────────────────────────────────────────── */
 

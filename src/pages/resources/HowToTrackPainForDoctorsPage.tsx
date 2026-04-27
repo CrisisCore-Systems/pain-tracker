@@ -12,8 +12,13 @@ import {
   AlertTriangle, TrendingUp, ClipboardList,
   MonitorSmartphone
 } from 'lucide-react';
-import { SEOPageLayout, type SEOPageContent, StatsBanner, BottomCTACallout } from '../../components/seo';
-import type { StatItem } from '../../components/seo';
+import {
+  SEOPageLayout,
+  type SEOPageContent,
+  type StatItem,
+  StatsBanner,
+  BottomCTACallout,
+} from '../../components/seo';
 
 /* ── Custom Visual Components ─────────────────────────────────────────────── */
 
@@ -30,8 +35,8 @@ const DoctorVsPatient: React.FC = () => {
       <h3 className="text-xl font-bold text-slate-800 mb-2">What Doctors Need vs. What Patients Typically Say</h3>
       <p className="text-sm text-slate-500 mb-6">Your doctor has 15 minutes. These translations turn vague descriptions into actionable clinical information.</p>
       <div className="space-y-4">
-        {rows.map((r, i) => (
-          <div key={i} className="rounded-xl border border-slate-200 bg-white p-4">
+        {rows.map((r) => (
+          <div key={r.patient} className="rounded-xl border border-slate-200 bg-white p-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-2">
               <div className="bg-red-50 rounded-lg p-3 border border-red-100">
                 <span className="text-xs font-bold text-red-500 block mb-1">Patient says</span>

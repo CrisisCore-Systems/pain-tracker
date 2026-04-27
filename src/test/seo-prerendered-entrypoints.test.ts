@@ -29,7 +29,9 @@ function parseSitemapPaths(xml: string) {
 describe('SEO prerendered entrypoints', () => {
   it('covers every sitemap URL with unique prerender metadata', () => {
     const sitemapPaths = parseSitemapPaths(readUtf8('public/sitemap.xml'));
-    const metadataPaths = publicRouteMetadata.map((route) => route.path).sort();
+    const metadataPaths = publicRouteMetadata
+      .map((route) => route.path)
+      .sort((left, right) => left.localeCompare(right));
 
     expect(metadataPaths).toEqual(sitemapPaths);
 
