@@ -2,16 +2,16 @@
 
 > Note: Forem API v1 does not expose endpoints to create/pin comments. This file is generated to make manual pinning fast.
 
-## OpenClaw and the Boundary Problem
+## Privacy-first, offline-capable, trauma-informed, open-source health tools should be the default
 
 ```md
 TL;DR
-- Personal AI is mainly a boundary problem, not a convenience problem.
-- OpenClaw is interesting because it makes the trust boundary visible: where it runs, who can reach it, and what it can touch.
-- If the system cannot prove its boundaries in architecture and release discipline, it is just marketing with root access.
+- (bullet 1)
+- (bullet 2)
+- (bullet 3)
 
 Why this matters
-- Personal AI should be judged by inspectable authority, explicit consent, and constrained blast radius, not by vibes.
+- (one line)
 
-Sponsor the build → https://paintracker.ca/sponsor
+Sponsor the build → https://github.com/sponsors/CrisisCore-Systems
 ```

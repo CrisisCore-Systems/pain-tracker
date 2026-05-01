@@ -1,7 +1,10 @@
 {
   "meta": {
+    "schemaVersion": 2,
     "timezoneNote": "All times are UTC. Schedule was planned for 9:00 AM PT (PST, UTC-8) => 17:00 UTC for these dates.",
-    "created": "2025-12-13"
+    "created": "2025-12-13",
+    "lastReviewed": "2026-05-01",
+    "sourceOfTruth": "Repo-backed markdown front matter should stay aligned with schedule entries for title, description, tags, and canonical metadata."
   },
   "defaults": {
     "series": "CrisisCore Build Log",
@@ -99,7 +102,7 @@
         "webdev",
         "testing"
       ],
-      "description": "Start here for PainTracker and the CrisisCore Build Log: privacy-first, offline-first architecture patterns, plain-language security choices, and trust-oriented quality gates.",
+      "description": "Start here for PainTracker: privacy-first, offline-first architecture patterns and the CrisisCore build log.",
       "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
       "articleId": 3104202,
       "devtoUrl": "https://dev.to/crisiscoresystems/start-here-paintracker-crisiscore-build-log-privacy-first-offline-first-no-surveillance-3h0k",
@@ -108,9 +111,8 @@
     {
       "key": "devto-series-01-offline-first",
       "enabled": false,
-      "series": "Protective Computing in Practice",
-      "seriesChain": "protective-computing-in-practice",
-      "title": "Offline-first without a backend: a local-first PWA architecture you can trust",
+      "seriesProfile": "protective-computing-in-practice",
+      "title": "Offline-first without a backend: building a local-first PWA you can actually trust",
       "sourceFile": "docs/content/blog/devto-series-01-offline-first-local-first-architecture.md",
       "devtoUrl": "https://dev.to/crisiscoresystems/offline-first-without-a-backend-a-local-first-pwa-architecture-you-can-trust-3j15",
       "publishAt": "2026-01-24T17:00:00Z",
@@ -121,7 +123,7 @@
         "privacy",
         "accessibility"
       ],
-      "description": "A practical walkthrough: deterministic offline behavior, local-first storage layering, and honest trust boundaries (using the Pain Tracker repo as a real example).",
+      "description": "A practical walkthrough of deterministic offline behavior, layered local storage, and honest trust boundaries—using the Pain Tracker repo as a real, opinionated example.",
       "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
       "articleId": 3190811,
       "published": true
@@ -129,11 +131,18 @@
     {
       "key": "devto-series-02-storage-layers",
       "enabled": false,
-      "series": "Protective Computing in Practice",
-      "seriesChain": "protective-computing-in-practice",
-      "title": "Offline First Storage Design State Cache IndexedDB and Encrypted Vault",
+      "seriesProfile": "protective-computing-in-practice",
+      "title": "Three storage layers in an offline-first health PWA: state cache vs IndexedDB vs encrypted vault",
       "sourceFile": "docs/content/blog/devto-series-02-three-storage-layers-state-cache-offline-db-encrypted-vault.md",
       "publishAt": "2026-01-29T17:18:00.000Z",
+      "tags": [
+        "pwa",
+        "privacy",
+        "typescript",
+        "indexeddb",
+        "security"
+      ],
+      "description": "How Pain Tracker separates fast UI state, durable offline IndexedDB storage, and a vault-gated encrypted-at-rest layer—so “local-first” doesn’t quietly become “local-leak.”",
       "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
       "articleId": 3190812,
       "devtoUrl": "https://dev.to/crisiscoresystems/three-storage-layers-in-an-offline-first-health-pwa-state-cache-vs-indexeddb-vs-encrypted-vault-19b7",
@@ -142,11 +151,18 @@
     {
       "key": "devto-series-03-service-workers",
       "enabled": false,
-      "series": "Protective Computing in Practice",
-      "seriesChain": "protective-computing-in-practice",
-      "title": "Deterministic Service Worker Caching for Offline First PWAs",
+      "seriesProfile": "protective-computing-in-practice",
+      "title": "Service workers that don’t surprise you: deterministic caching for offline-first PWAs",
       "sourceFile": "docs/content/blog/devto-series-03-service-workers-that-dont-surprise-you.md",
       "publishAt": "2026-02-03T17:18:00.000Z",
+      "tags": [
+        "pwa",
+        "serviceworker",
+        "webdev",
+        "privacy",
+        "performance"
+      ],
+      "description": "A repo-grounded guide to service worker strategies that avoid stale HTML, confusing updates, and accidental caching of sensitive data—using Pain Tracker’s minimal SW as the example.",
       "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
       "articleId": 3190813,
       "devtoUrl": "https://dev.to/crisiscoresystems/service-workers-that-dont-surprise-you-deterministic-caching-for-offline-first-pwas-5480",
@@ -155,11 +171,18 @@
     {
       "key": "devto-series-04-zod-defensive-parsing",
       "enabled": false,
-      "series": "Protective Computing in Practice",
-      "seriesChain": "protective-computing-in-practice",
+      "seriesProfile": "protective-computing-in-practice",
       "title": "Zod + defensive parsing in a local-first app: make your offline data trustworthy",
       "sourceFile": "docs/content/blog/devto-series-04-zod-defensive-parsing.md",
       "publishAt": "2026-02-05T17:14:00.000Z",
+      "tags": [
+        "typescript",
+        "zod",
+        "pwa",
+        "privacy",
+        "testing"
+      ],
+      "description": "Offline-first means your inputs aren’t just user forms—they’re also migrations, backups, and stale persisted blobs. This post shows how Pain Tracker uses Zod to keep local data honest.",
       "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
       "articleId": 3190814,
       "devtoUrl": "https://dev.to/crisiscoresystems/zod-defensive-parsing-in-a-local-first-app-make-your-offline-data-trustworthy-1016",
@@ -168,11 +191,18 @@
     {
       "key": "devto-series-05-trauma-informed-ux",
       "enabled": false,
-      "series": "Protective Computing in Practice",
-      "seriesChain": "protective-computing-in-practice",
+      "seriesProfile": "protective-computing-in-practice",
       "title": "Trauma-informed UX + accessibility as architecture (not polish)",
       "sourceFile": "docs/content/blog/devto-series-05-trauma-informed-ux-accessibility-as-architecture.md",
       "publishAt": "2026-02-10T17:11:00.000Z",
+      "tags": [
+        "accessibility",
+        "webdev",
+        "react",
+        "ux",
+        "pwa"
+      ],
+      "description": "In health-adjacent PWAs, accessibility and trauma-informed patterns aren’t optional UI niceties—they’re core reliability features. Here’s how Pain Tracker structures those concerns.",
       "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
       "articleId": 3190815,
       "devtoUrl": "https://dev.to/crisiscoresystems/trauma-informed-ux-accessibility-as-architecture-not-polish-22jg",
@@ -181,11 +211,18 @@
     {
       "key": "devto-series-06-exports-boundary",
       "enabled": false,
-      "series": "Protective Computing in Practice",
-      "seriesChain": "protective-computing-in-practice",
-      "title": "Exports as a security boundary from local record to shareable report",
+      "seriesProfile": "protective-computing-in-practice",
+      "title": "Exports are a security boundary: the moment local-first becomes shareable",
       "sourceFile": "docs/content/blog/devto-series-06-exports-as-a-security-boundary.md",
       "publishAt": "2026-02-12T17:15:00.000Z",
+      "tags": [
+        "privacy",
+        "security",
+        "pwa",
+        "export",
+        "webdev"
+      ],
+      "description": "In a local-first PWA, exports are where privacy can intentionally break. This post shows how Pain Tracker treats export as an explicit boundary: user-triggered, local download, minimal tracking, and calm UX.",
       "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
       "articleId": 3190816,
       "devtoUrl": "https://dev.to/crisiscoresystems/exports-are-a-security-boundary-the-moment-local-first-becomes-shareable-3gj9",
@@ -194,11 +231,18 @@
     {
       "key": "devto-series-07-worksafebc-workflows",
       "enabled": false,
-      "series": "Protective Computing in Practice",
-      "seriesChain": "protective-computing-in-practice",
-      "title": "WorkSafeBC style workflows with careful language and clear evidence limits",
+      "seriesProfile": "protective-computing-in-practice",
+      "title": "WorkSafeBC-oriented workflows without overclaims: structured summaries, careful language",
       "sourceFile": "docs/content/blog/devto-series-07-worksafebc-oriented-workflows-careful-language.md",
       "publishAt": "2026-02-17T17:11:00.000Z",
+      "tags": [
+        "ux",
+        "documentation",
+        "privacy",
+        "export",
+        "webdev"
+      ],
+      "description": "Pain Tracker includes WorkSafeBC-oriented export/report tooling — but the bigger lesson is how to design ‘forms + clinicians’ workflows without turning into surveillance or making legal/medical promises.",
       "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
       "articleId": 3190817,
       "devtoUrl": "https://dev.to/crisiscoresystems/worksafebc-oriented-workflows-without-overclaims-structured-summaries-careful-language-2n3i",
@@ -207,11 +251,18 @@
     {
       "key": "devto-series-08-analytics-without-surveillance",
       "enabled": false,
-      "series": "Protective Computing in Practice",
-      "seriesChain": "protective-computing-in-practice",
-      "title": "Analytics without surveillance consent gates and local boundaries",
+      "seriesProfile": "protective-computing-in-practice",
+      "title": "Analytics without surveillance: explicit consent, layered gates, and never sending Class A data",
       "sourceFile": "docs/content/blog/devto-series-08-analytics-without-surveillance-explicit-consent.md",
       "publishAt": "2026-02-19T17:02:00.000Z",
+      "tags": [
+        "privacy",
+        "security",
+        "analytics",
+        "ux",
+        "webdev"
+      ],
+      "description": "Pain Tracker keeps analytics behind an env flag + explicit consent, avoids sending health data, and prefers local-only tracking where possible. Here’s the concrete pattern, grounded in the repo.",
       "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
       "articleId": 3190818,
       "devtoUrl": "https://dev.to/crisiscoresystems/analytics-without-surveillance-explicit-consent-layered-gates-and-never-sending-class-a-data-59f1",
@@ -220,11 +271,18 @@
     {
       "key": "devto-series-09-quality-gates",
       "enabled": false,
-      "series": "Protective Computing in Practice",
-      "seriesChain": "protective-computing-in-practice",
+      "seriesProfile": "protective-computing-in-practice",
       "title": "Quality gates that earn trust: checks you can run, not promises you can’t",
       "sourceFile": "docs/content/blog/devto-series-09-quality-gates-that-earn-trust.md",
       "publishAt": "2026-02-24T17:07:00.000Z",
+      "tags": [
+        "testing",
+        "typescript",
+        "security",
+        "accessibility",
+        "webdev"
+      ],
+      "description": "Offline-first + health-adjacent means regressions are harm. Pain Tracker treats quality gates as part of the product: typecheck, lint, tests, build, security checks, and accessibility scans.",
       "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
       "articleId": 3190819,
       "devtoUrl": "https://dev.to/crisiscoresystems/quality-gates-that-earn-trust-checks-you-can-run-not-promises-you-cant-58a3",
@@ -233,11 +291,18 @@
     {
       "key": "devto-series-10-truthful-docs",
       "enabled": false,
-      "series": "Protective Computing in Practice",
-      "seriesChain": "protective-computing-in-practice",
+      "seriesProfile": "protective-computing-in-practice",
       "title": "Maintaining truthful docs over time: how to keep security claims honest",
       "sourceFile": "docs/content/blog/devto-series-10-maintaining-truthful-docs-over-time.md",
       "publishAt": "2026-02-26T17:06:00.000Z",
+      "tags": [
+        "documentation",
+        "security",
+        "webdev",
+        "testing",
+        "privacy"
+      ],
+      "description": "Docs drift. In privacy-first software, drift becomes misinformation. This post is a practical strategy for keeping docs anchored to code, tests, and commands you can run.",
       "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
       "articleId": 3190820,
       "devtoUrl": "https://dev.to/crisiscoresystems/maintaining-truthful-docs-over-time-how-to-keep-security-claims-honest-2778",
@@ -247,9 +312,17 @@
       "key": "devto-worksafebc-case-study",
       "enabled": false,
       "series": null,
-      "title": "WorkSafeBC Claim Documentation Workflow in PainTracker Pro Composite Example",
+      "title": "How Pain Tracker Pro Streamlines WorkSafeBC Claims: A Composite Case Study",
       "sourceFile": "docs/content/blog/devto-worksafe-bc-case-study-documentation-time-savings.md",
       "publishAt": "2026-03-03T17:09:00.000Z",
+      "tags": [
+        "privacy",
+        "healthcare",
+        "accessibility",
+        "pwa",
+        "typescript"
+      ],
+      "description": "A composite (privacy-safe) case study showing how structured, local-first pain tracking can reduce WorkSafeBC claim documentation burden.",
       "canonical_url": "https://blog.paintracker.ca/worksafe-bc-case-study-documentation-time-savings",
       "articleId": 3190821,
       "devtoUrl": "https://dev.to/crisiscoresystems/how-pain-tracker-pro-streamlines-worksafebc-claims-a-composite-case-study-4ce8",
@@ -258,7 +331,7 @@
     {
       "key": "devto-sync-conflict-handling-offline-first-pwas",
       "enabled": true,
-      "series": "Honest Offline First Systems",
+      "seriesProfile": "honest-offline-first-systems",
       "title": "Sync Conflict Handling in Offline-First PWAs: How to Merge Without Lying to the User",
       "sourceFile": "docs/content/blog/devto-sync-conflict-handling-offline-first-pwas.md",
       "publishAt": "2026-04-21T16:00:00Z",
@@ -269,7 +342,7 @@
         "distributed"
       ],
       "description": "Offline first sync is not just a data problem. It is a trust problem. Here is how to handle conflicts without silently erasing user intent.",
-      "canonical_url": null,
+      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
       "articleId": 3512233,
       "devtoUrl": "https://dev.to/crisiscoresystems/sync-conflict-handling-in-offline-first-pwas-how-to-merge-without-lying-to-the-user-59i3",
       "published": true
@@ -314,7 +387,7 @@
     },
     {
       "key": "privacy-first-default-standard",
-      "enabled": false,
+      "enabled": true,
       "seriesProfile": "protective-computing-essays",
       "title": "Privacy-first, offline-capable, trauma-informed, open-source health tools should be the default",
       "sourceFile": "docs/content/articles/article-privacy-first-trauma-informed-open-source-digital-health.md",
@@ -327,8 +400,8 @@
       ],
       "description": "Why local-first, trauma-informed, open-source design should be the baseline for pain diaries and digital health tools.",
       "canonical_url": null,
-      "articleId": null,
-      "devtoUrl": null,
+      "articleId": 3597218,
+      "devtoUrl": "https://dev.to/crisiscoresystems/privacy-first-offline-capable-trauma-informed-open-source-health-tools-should-be-the-default-dhj-temp-slug-849014",
       "published": false
     },
     {
@@ -338,6 +411,15 @@
       "title": "If Your Health App Can't Explain Its Encryption, It Doesn't Have Any",
       "sourceFile": "docs/content/articles/article-encryption-transparency.md",
       "publishAt": "2025-12-07T09:13:58.735Z",
+      "tags": [
+        "security",
+        "privacy",
+        "healthtech",
+        "webdev"
+      ],
+      "description": "Most 'encrypted' health apps are lying. Here's how to tell the difference, and what real client-side encryption actually looks like.",
+      "main_image": "https://dev-to-uploads.s3.amazonaws.com/uploads/articles/encryption-transparency-cover.png",
+      "canonical_url": null,
       "articleId": 3090043,
       "devtoUrl": "https://dev.to/crisiscoresystems/if-your-health-app-cant-explain-its-encryption-it-doesnt-have-any-57pf",
       "published": true
@@ -349,6 +431,15 @@
       "title": "Client-Side Encryption for Healthcare Apps",
       "sourceFile": "docs/content/articles/article-part2-encryption-deep-dive.md",
       "publishAt": "2025-12-07T08:11:23.486Z",
+      "tags": [
+        "security",
+        "javascript",
+        "webdev",
+        "encryption"
+      ],
+      "description": "AES-GCM encryption, PBKDF2 key derivation, secure key management. Web Crypto API. No backend. No trust required.",
+      "main_image": "https://dev-to-uploads.s3.amazonaws.com/uploads/articles/encryption-healthcare-cover.png",
+      "canonical_url": null,
       "articleId": 3089961,
       "devtoUrl": "https://dev.to/crisiscoresystems/client-side-encryption-for-healthcare-apps-dhm",
       "published": true
@@ -360,6 +451,15 @@
       "title": "Trauma-Informed React Hooks",
       "sourceFile": "docs/content/articles/article-part3-trauma-informed-hooks.md",
       "publishAt": "2025-12-07T09:06:41.899Z",
+      "tags": [
+        "react",
+        "accessibility",
+        "typescript",
+        "ux"
+      ],
+      "description": "React hooks that adapt to user stress, cognitive load, and emotional states. Crisis detection without surveillance.",
+      "main_image": "https://dev-to-uploads.s3.amazonaws.com/uploads/articles/trauma-informed-hooks-cover.png",
+      "canonical_url": null,
       "articleId": 3090036,
       "devtoUrl": "https://dev.to/crisiscoresystems/trauma-informed-react-hooks-483n",
       "published": true
@@ -558,7 +658,7 @@
       "key": "overton-framework-doi-backed",
       "enabled": true,
       "seriesProfile": "release-and-trust-artifacts",
-      "title": "The Overton Framework is now DOI-backed",
+      "title": "Protective Computing Canon v1.0 is now DOI-backed",
       "sourceFile": "docs/content/blog/devto-overton-framework-doi-backed.md",
       "publishAt": "2026-02-19T00:00:00Z",
       "tags": [
@@ -567,7 +667,7 @@
         "security",
         "opensource"
       ],
-      "description": "A citable canon for Protective Computing (v1.3), archived on Zenodo with a minted DOI—plus a reference implementation in Pain Tracker.",
+      "description": "The formal structural paper for Protective Computing is now published with a canonical DOI, with Pain Tracker as a reference implementation.",
       "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
       "articleId": 3267082,
       "devtoUrl": "https://dev.to/crisiscoresystems/the-overton-framework-is-now-doi-backed-ko7",
@@ -586,7 +686,7 @@
         "offlinefirst",
         "engineering"
       ],
-      "description": "Why standard software architecture fails under human degradation, and how to build systems that don't.",
+      "description": "A testable systems discipline for software built for crisis, coercion, displacement, and cognitive overload.",
       "injectCtas": false,
       "canonical_url": "https://github.com/CrisisCore-Systems/overton-framework",
       "articleId": 3313257,
@@ -644,7 +744,7 @@
         "privacy"
       ],
       "description": "Interfaces are part of the pressure around the user. Coercion-resistant UX keeps defaults honest, recovery possible, and urgency truthful when people are under strain.",
-      "canonical_url": null,
+      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
       "articleId": 3512234,
       "devtoUrl": "https://dev.to/crisiscoresystems/coercion-resistant-ux-designing-interfaces-that-dont-pressure-users-under-stress-18m9",
       "published": true
@@ -663,7 +763,7 @@
         "architecture"
       ],
       "description": "Offline-first PWAs do not update in one clean motion. Service workers, stale assets, and mixed-version sessions can break trust long before the UI crashes.",
-      "canonical_url": null,
+      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
       "articleId": 3512235,
       "devtoUrl": "https://dev.to/crisiscoresystems/service-worker-failure-modes-in-offline-first-pwas-3dnp",
       "published": true
@@ -682,7 +782,7 @@
         "databases"
       ],
       "description": "Rollback in an offline-first PWA is not just redeploying old code. It has to survive mixed versions, local history, and queued intent without silent corruption.",
-      "canonical_url": null,
+      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
       "articleId": 3512236,
       "devtoUrl": "https://dev.to/crisiscoresystems/rollback-patterns-in-offline-first-pwas-13f9",
       "published": true
@@ -701,7 +801,7 @@
         "databases"
       ],
       "description": "Schema migration safety in an offline-first PWA means proving that old local data survives upgrades, partial failures, and delayed clients without losing meaning.",
-      "canonical_url": null,
+      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
       "articleId": 3512237,
       "devtoUrl": "https://dev.to/crisiscoresystems/testing-indexeddb-schema-migrations-in-offline-first-pwas-26m8",
       "published": true
@@ -720,7 +820,7 @@
         "architecture"
       ],
       "description": "Health-app privacy is an architectural boundary: what stays on device, what leaves by choice, and what must never become product exhaust.",
-      "canonical_url": null,
+      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
       "articleId": 3512238,
       "devtoUrl": "https://dev.to/crisiscoresystems/trust-boundaries-in-client-side-health-apps-2pa9",
       "published": true
@@ -739,7 +839,7 @@
         "architecture"
       ],
       "description": "Offline queues hold user intent for later. Replay only stays trustworthy if retries, duplicates, and stale-world writes are handled idempotently.",
-      "canonical_url": null,
+      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
       "articleId": 3512239,
       "devtoUrl": "https://dev.to/crisiscoresystems/offline-queue-replay-and-idempotency-in-offline-first-pwas-3hpg",
       "published": true
