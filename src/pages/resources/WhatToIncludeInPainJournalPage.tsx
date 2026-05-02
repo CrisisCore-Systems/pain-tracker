@@ -6,6 +6,7 @@
  */
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import {
   CheckCircle, Clock, TrendingUp,
   FileText, Activity, Pill, Brain, CloudRain,
@@ -129,8 +130,8 @@ const journalStats: StatItem[] = [
 const pageContent: SEOPageContent = {
   slug: 'what-to-include-in-pain-journal',
   title: 'What to Include in a Pain Journal',
-  metaTitle: 'Pain Journal Checklist for Doctor Visits | PainTracker.ca',
-  metaDescription: 'Use the PainTracker.ca pain journal checklist to learn what to include in a pain journal so your notes are useful at doctor visits. Track pain levels, medications, triggers, sleep, and daily function with a simple checklist.',
+  metaTitle: 'What to Include in a Pain Journal: 12 Things to Track + Free Template',
+  metaDescription: 'Learn what to record in a pain journal, including pain level, location, triggers, medication, sleep, mood, function, and notes for appointments.',
   keywords: [
     'what to include in pain journal', 'pain journal content guide',
     'pain diary what to write', 'pain journal template content',
@@ -141,8 +142,8 @@ const pageContent: SEOPageContent = {
     'what to write in pain diary', 'pain journal best practices'
   ],
   badge: 'Guide',
-  headline: 'Pain Journal Checklist for Doctor Visits',
-  subheadline: 'A simple checklist for keeping notes that are actually useful during doctor visits.',
+  headline: 'What to Include in a Pain Journal: 12 Things to Track',
+  subheadline: 'A direct checklist for pain journal entries that actually help during appointments.',
   primaryCTA: { text: 'Get the pain journal checklist', href: '/resources/what-to-include-in-pain-journal' },
   secondaryCTA: { text: 'Use the free pain tracker', href: '/start' },
   utilityBlock: { type: 'download', downloadUrl: '/assets/pain-journal-checklist.pdf', downloadFileName: 'pain-journal-checklist.pdf' },
@@ -199,6 +200,17 @@ const pageContent: SEOPageContent = {
 
 export const WhatToIncludeInPainJournalPage: React.FC = () => (
   <SEOPageLayout content={pageContent}>
+    <section className="rounded-2xl border border-amber-200 bg-amber-50 p-5 text-left">
+      <p className="text-sm leading-relaxed text-slate-700">
+        A useful pain journal should track more than pain level. At minimum, record where the pain is, how intense it is, what triggered it, what helped, what made it worse, and how it affected your day.
+      </p>
+      <Link
+        to="/resources/daily-pain-tracker-printable"
+        className="mt-4 inline-flex items-center gap-2 rounded-lg bg-amber-600 px-4 py-2 text-sm font-semibold text-white hover:bg-amber-700"
+      >
+        Download the free daily pain tracker printable
+      </Link>
+    </section>
     <StatsBanner stats={journalStats} colorScheme="amber" />
     <JournalContentMap />
     <TimeCommitmentGuide />

@@ -6,9 +6,9 @@ const pageContent: SEOPageContent = {
   slug: 'pain-tracking-apps-comparison',
   canonicalPath: '/pain-tracking-apps-comparison',
   title: 'Best Pain Tracking Apps in 2026',
-  metaTitle: 'Best Pain Tracking Apps in 2026: Privacy, Offline Use, and Doctor Visits | PainTracker',
+  metaTitle: 'Best Pain Tracking Apps in 2026: Private, Free, Offline, and Printable Options',
   metaDescription:
-    'Compare the best pain tracking apps for privacy, offline use, doctor visit readiness, exports, and daily usability. See which tools work without accounts and which keep records local.',
+    'Compare the best pain tracking apps for privacy, offline use, printable logs, chronic pain journaling, and doctor-ready symptom reports.',
   keywords: [
     'pain tracking apps',
     'pain management apps',
@@ -21,7 +21,7 @@ const pageContent: SEOPageContent = {
   badge: 'Comparison Guide',
   headline: 'Best pain tracking apps in 2026',
   subheadline:
-    'Most pain tracking apps help you log symptoms. Fewer help you keep your records private, available offline, and easy to use during doctor visits. This comparison focuses on those differences.',
+    'Most pain apps can log symptoms. Fewer let you track privately without account lock-in, keep working offline, and hand over printable records when needed.',
   primaryCTA: {
     text: 'Try PainTracker free',
     href: '/start',
@@ -137,24 +137,28 @@ const comparisonPoints = [
 
 const comparisonRows = [
   {
-    criterion: 'Storage model',
-    whyItMatters: 'Health records can become appointment notes, insurance evidence, or legal documentation.',
-    bestFit: 'Prefer local-first storage with explicit export instead of account-required cloud storage.',
+    app: 'PainTracker',
+    free: 'Yes',
+    offline: 'Yes',
+    accountRequired: 'No',
+    printableExport: 'Yes',
+    privacyPosture: 'Local-first',
   },
   {
-    criterion: 'Offline behavior',
-    whyItMatters: 'Pain tracking often happens in clinics, transit, or unstable-signal environments.',
-    bestFit: 'Prefer tools that still support logging, review, and export without network access.',
+    app: 'App 2',
+    free: 'Maybe',
+    offline: 'No',
+    accountRequired: 'Yes',
+    printableExport: 'Maybe',
+    privacyPosture: 'Cloud account',
   },
   {
-    criterion: 'Export quality',
-    whyItMatters: 'If the record is not usable outside the app, your control is weaker and appointments are harder.',
-    bestFit: 'Prefer PDF, CSV, or JSON exports that are readable by clinicians and by you.',
-  },
-  {
-    criterion: 'Daily friction',
-    whyItMatters: 'A tool that only works on good days will not produce a consistent record.',
-    bestFit: 'Prefer short entry paths, low typing burden, and clearer language.',
+    app: 'App 3',
+    free: 'Maybe',
+    offline: 'Maybe',
+    accountRequired: 'Yes',
+    printableExport: 'Maybe',
+    privacyPosture: 'Cloud account',
   },
 ];
 
@@ -197,23 +201,29 @@ export const PainTrackingAppsComparisonPage: React.FC = () => (
       <section className="rounded-2xl border border-slate-700 bg-slate-900/70 p-6 text-left">
         <h2 className="mb-3 text-2xl font-semibold text-white">Quick comparison table</h2>
         <p className="mb-4 text-sm leading-relaxed text-slate-300">
-          Compare categories by what changes the real outcome: who holds the data, what still works offline, and whether the record is usable outside the app.
+          Compare the options by what changes real outcomes: privacy posture, offline reliability, account lock-in, and printable outputs.
         </p>
         <div className="overflow-x-auto">
           <table className="min-w-full border-collapse text-sm">
             <thead>
               <tr className="border-b border-slate-700 text-left text-slate-200">
-                <th className="px-3 py-3 font-semibold">What to compare</th>
-                <th className="px-3 py-3 font-semibold">Why it matters</th>
-                <th className="px-3 py-3 font-semibold">What to prefer</th>
+                <th className="px-3 py-3 font-semibold">App</th>
+                <th className="px-3 py-3 font-semibold">Free</th>
+                <th className="px-3 py-3 font-semibold">Offline</th>
+                <th className="px-3 py-3 font-semibold">Account Required</th>
+                <th className="px-3 py-3 font-semibold">Printable Export</th>
+                <th className="px-3 py-3 font-semibold">Privacy Posture</th>
               </tr>
             </thead>
             <tbody>
               {comparisonRows.map((row) => (
-                <tr key={row.criterion} className="border-b border-slate-800 align-top text-slate-300">
-                  <td className="px-3 py-3 font-medium text-white">{row.criterion}</td>
-                  <td className="px-3 py-3">{row.whyItMatters}</td>
-                  <td className="px-3 py-3">{row.bestFit}</td>
+                <tr key={row.app} className="border-b border-slate-800 align-top text-slate-300">
+                  <td className="px-3 py-3 font-medium text-white">{row.app}</td>
+                  <td className="px-3 py-3">{row.free}</td>
+                  <td className="px-3 py-3">{row.offline}</td>
+                  <td className="px-3 py-3">{row.accountRequired}</td>
+                  <td className="px-3 py-3">{row.printableExport}</td>
+                  <td className="px-3 py-3">{row.privacyPosture}</td>
                 </tr>
               ))}
             </tbody>

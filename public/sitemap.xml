@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <!-- Main Pages -->
@@ -33,6 +33,12 @@
   <url>
     <loc>https://www.paintracker.ca/privacy</loc>
     <lastmod>2026-02-13</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://www.paintracker.ca/privacy-architecture</loc>
+    <lastmod>2026-05-02</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -317,3 +323,4 @@
     <priority>0.7</priority>
   </url>
 </urlset>
+

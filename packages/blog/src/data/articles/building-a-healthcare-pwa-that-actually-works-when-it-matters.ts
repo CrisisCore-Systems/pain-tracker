@@ -2,10 +2,10 @@ import type { ArticleData } from './types';
 
 const article: ArticleData = {
   slug: 'building-a-healthcare-pwa-that-actually-works-when-it-matters',
-  title: 'Building a Pain Tracking App That Still Works Offline: What a Reliable Healthcare PWA Must Do in Real Life',
+  title: 'Building an Offline-First Healthcare PWA: Lessons from PainTracker',
   description:
-    'Most health apps fail the moment a patient loses signal, closes the tab, or runs low on battery. Here is how to build a healthcare PWA that keeps working when conditions are not ideal, which is most of the time.',
-  h1: 'Building a Pain Tracking App That Still Works Offline',
+    'A technical breakdown of how PainTracker uses offline-first architecture, local storage, and privacy-preserving design for health documentation under real-world conditions.',
+  h1: 'Building an Offline-First Healthcare PWA: Lessons from PainTracker',
   cluster: 'transparency',
   isPillar: false,
   schemaTypes: ['Article'],
@@ -13,6 +13,7 @@ const article: ArticleData = {
     {
       h2: 'The wrong starting assumption',
       paragraphs: [
+        'Looking for the actual pain tracking app? Use PainTracker free. No account required.',
         'Most healthcare PWA tutorials start from the same premise: the user has reliable internet, a charged device, uninterrupted time, and the cognitive headroom to navigate an unfamiliar interface. For general productivity apps that assumption is approximately correct. For chronic pain tracking it is almost entirely wrong.',
         'Patients logging pain entries are, by definition, experiencing pain. They may be exhausted, cognitively impaired by medication, sitting in a clinic waiting room with weak signal, or interrupted mid-entry by the very thing they are trying to document. Building a healthcare PWA that actually works means building for those conditions first, not as edge cases but as the primary operating environment.',
       ],

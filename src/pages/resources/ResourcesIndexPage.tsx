@@ -333,12 +333,12 @@ export const ResourcesIndexPage: React.FC = () => {
     }
   }, [isPlaceholderSearch, navigate]);
 
-  useRobotsMeta(searchQuery ? 'noindex, follow' : null);
+  useRobotsMeta(searchQuery ? 'noindex,follow' : null);
 
   useEffect(() => {
     return applyPageMetadata({
-      title: 'Free Pain Tracking Printables, Guides, and Appointment Prep | PainTracker.ca',
-      description: 'Free downloadable pain diary templates, printable pain logs, symptom trackers, and guides for appointments, disability documentation, and WorkSafeBC workflows.',
+      title: 'Pain Tracker Resources: Free Printables, Pain Journal Templates, and Privacy Guides',
+      description: 'Browse free pain tracker printables, pain journal templates, symptom logs, and privacy-first guides for documenting pain without an account.',
       canonicalUrl: 'https://www.paintracker.ca/resources',
     });
   }, []);
@@ -473,11 +473,11 @@ export const ResourcesIndexPage: React.FC = () => {
             </div>
             
             <h1 className="landing-headline landing-headline-lg text-white mb-6">
-              Start with the pain tracking help you need today
+              Free pain tracker printables and privacy-first guides
             </h1>
             
             <p className="landing-subhead text-lg sm:text-xl max-w-2xl mx-auto">
-              Download a printable, prepare records for appointments, or work toward disability and WorkSafeBC documentation without having to sort through builder content first.
+              Start with the template you need now: daily, weekly, monthly, symptom, medication, flare-up, and doctor-visit formats.
             </p>
           </div>
         </section>
@@ -485,7 +485,10 @@ export const ResourcesIndexPage: React.FC = () => {
         {/* Templates Section */}
         <section className="py-16 bg-slate-900">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-2xl font-bold text-white mb-8">Printable Templates</h2>
+            <h2 className="text-2xl font-bold text-white mb-3">Free Pain Tracker Printables</h2>
+            <p className="text-slate-300 mb-8 max-w-3xl">
+              Use the printable hub to pick your format, then move to the app whenever you want faster logging and local-first exports.
+            </p>
             
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {templates.map(renderResourceCard)}

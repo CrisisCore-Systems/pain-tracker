@@ -673,7 +673,7 @@
       "destination": "/resources/:slug/index.html"
     },
     {
-      "source": "/:route(pricing|download|privacy|pain-tracker-app|pain-tracking-app|pain-management-tracker|pain-locator-app|share-pain-records-with-doctor-without-giving-an-app-your-data|pain-diary-template|pain-tracking-apps-comparison|privacy-offline-first-pain-tracker|tracking-data-policy|whitepaper|overton-framework|cnet-download|demo|submit-story|resources)",
+      "source": "/:route(pricing|download|privacy|privacy-architecture|pain-tracker-app|pain-tracking-app|pain-management-tracker|pain-locator-app|share-pain-records-with-doctor-without-giving-an-app-your-data|pain-diary-template|pain-tracking-apps-comparison|privacy-offline-first-pain-tracker|tracking-data-policy|whitepaper|overton-framework|cnet-download|demo|submit-story|resources)",
       "destination": "/:route/index.html"
     },
     {
@@ -721,3 +721,4 @@
     }
   ]
 }
+

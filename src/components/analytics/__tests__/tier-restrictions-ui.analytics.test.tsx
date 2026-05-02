@@ -9,26 +9,56 @@ import PredictivePanel from '../../PredictivePanel';
 
 let currentUserId = 'ui-tier-user';
 
+// Controllable per-test — see beforeEach for default
+const mockHasEntitlement = vi.fn();
+
 vi.mock('../../../utils/user-identity', () => ({
   getLocalUserId: () => currentUserId,
 }));
 
-vi.mock('../../../stores/pain-tracker-store', () => ({
-  usePainTrackerStore: () => ({
-    entries: [
-      {
-        id: 'entry-1',
-        timestamp: '2026-04-01T00:00:00.000Z',
-        baselineData: {
-          pain: 6,
-          locations: ['Back'],
-          symptoms: ['Aching'],
-        },
+// Stable references to avoid triggering useEffect re-runs on every render
+vi.mock('../../../stores/pain-tracker-store', () => {
+  const entries = Object.freeze([
+    {
+      id: 'entry-1',
+      timestamp: '2026-04-01T00:00:00.000Z',
+      baselineData: {
+        pain: 6,
+        locations: ['Back'],
+        symptoms: ['Aching'],
       },
-    ],
-    moodEntries: [],
-  }),
+    },
+  ]);
+  const moodEntries = Object.freeze([]);
+  return {
+    usePainTrackerStore: () => ({ entries, moodEntries }),
+  };
+});
+
+// hasEntitlement is set per-test in beforeEach; default is true so the dashboard renders tabs
+vi.mock('../../../services/EntitlementService', () => ({
+  entitlementService: {
+    hasEntitlement: (...args: unknown[]) => mockHasEntitlement(...args),
+    listEntitlements: () => [],
+  },
 }));
+
+// Avoid heavy AdvancedAnalyticsEngine computation in unit tests
+vi.mock('../../../services/AdvancedAnalyticsEngine', () => {
+  class AdvancedAnalyticsEngine {
+    calculateCorrelationMatrix() { return []; }
+    scoreInterventions() { return []; }
+    detectTriggerPatterns() { return []; }
+    identifyPredictiveIndicators() { return []; }
+    generateWeeklyClinicalBrief() { return null; }
+  }
+  return { AdvancedAnalyticsEngine };
+});
+
+// Override the global setup.ts mock so we can test PredictivePanel's own gating logic
+vi.mock('../../../components/PredictivePanel', async (importOriginal) => {
+  return importOriginal<typeof import('../../../components/PredictivePanel')>();
+});
 
 vi.mock('../../../analytics/ga4-events', () => ({
   trackAnalyticsTabViewed: vi.fn(),
@@ -70,6 +100,9 @@ function renderWithSubscription(userId: string, ui: React.ReactElement) {
 describe('tier restriction UI analytics', () => {
   beforeEach(() => {
     vi.restoreAllMocks();
+    // Default: unlock the dashboard so tests can inspect tab-level gating.
+    // Tests that need a different entitlement state override this explicitly.
+    mockHasEntitlement.mockReturnValue(true);
     vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('offline')));
     currentUserId = `ui-tier-user-${Math.random().toString(36).slice(2)}`;
   });

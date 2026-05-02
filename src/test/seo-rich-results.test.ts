@@ -17,7 +17,7 @@ describe('SEO rich-result coverage', () => {
     const homeRoute = publicRouteMetadataByPath.get('/');
 
     expect(landingPage).toContain('generateFAQSchema');
-    expect(landingPage).toContain('landingFaqs');
+    expect(landingPage).toContain('homepageFaqs');
     expect(landingFaq).toContain('export const landingFaqs');
     expect(homeRoute?.structuredData.some((item: Record<string, unknown>) => item['@type'] === 'FAQPage')).toBe(false);
   });

@@ -5,9 +5,9 @@ const pageContent: SEOPageContent = {
   slug: 'pain-diary-template',
   canonicalPath: '/pain-diary-template',
   title: 'Pain Diary Template',
-  metaTitle: 'Free Pain Diary Template and Printable Pain Log | Pain Tracker',
+  metaTitle: 'Pain Diary Template: Daily, Weekly, and Monthly Printable Logs (Free)',
   metaDescription:
-    'Download a free pain diary template and printable pain log, then compare paper tracking with Pain Tracker for daily symptom logging and clinician-friendly records.',
+    'Download free pain diary templates for daily, weekly, and monthly tracking. Includes pain level, location, triggers, medication, sleep, and function notes.',
   keywords: [
     'pain diary template',
     'free printable pain diary template',
@@ -21,7 +21,7 @@ const pageContent: SEOPageContent = {
   badge: 'Printable Template',
   headline: 'Free Pain Diary Template and Printable Pain Log',
   subheadline:
-    'Start with a printable pain diary template if paper is the easiest way to begin. Use it on its own or as the bridge into Pain Tracker when you want search, structure, and clinician-friendly exports.',
+    'Start with printable pain diary templates if paper is easiest now. Move to the app later when you want searchable records and local-first exports.',
   primaryCTA: {
     text: 'Download Free PDF',
     href: '/assets/pain-diary-template.pdf',
