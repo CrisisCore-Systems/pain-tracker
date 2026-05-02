@@ -37,10 +37,10 @@ if (tscResult.status !== 0) {
   process.exit(tscResult.status ?? 1);
 }
 
-const npmCommand = process.platform === 'win32' ? 'npm.cmd' : 'npm';
-const buildResult = spawnSync(npmCommand, ['run', '-s', 'build'], {
-  stdio: 'inherit',
-  shell: process.platform === 'win32'
-});
+const buildResult = spawnSync(
+  process.execPath,
+  ['./node_modules/npm/bin/npm-cli.js', 'run', '-s', 'build'],
+  { stdio: 'inherit' }
+);
 
 process.exit(buildResult.status ?? 1);

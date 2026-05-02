@@ -114,19 +114,19 @@ async function loadApiRoutes() {
   
   // Load clinic auth routes
   await loadHandler(
-    join(apiDir, 'clinic', 'auth', 'login.ts'),
+    join(apiDir, 'clinic', 'auth', '[action].ts'),
     '/api/clinic/auth/login'
   );
   await loadHandler(
-    join(apiDir, 'clinic', 'auth', 'logout.ts'),
+    join(apiDir, 'clinic', 'auth', '[action].ts'),
     '/api/clinic/auth/logout'
   );
   await loadHandler(
-    join(apiDir, 'clinic', 'auth', 'refresh.ts'),
+    join(apiDir, 'clinic', 'auth', '[action].ts'),
     '/api/clinic/auth/refresh'
   );
   await loadHandler(
-    join(apiDir, 'clinic', 'auth', 'verify.ts'),
+    join(apiDir, 'clinic', 'auth', '[action].ts'),
     '/api/clinic/auth/verify'
   );
   await loadHandler(

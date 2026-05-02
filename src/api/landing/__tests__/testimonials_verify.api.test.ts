@@ -1,4 +1,4 @@
-import handler from '../../../../api/landing/testimonials_verify';
+import handler from '../../../../api/landing/[...route]';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { db } from '../../../../src/lib/database';
 
@@ -53,7 +53,7 @@ describe('POST /api/landing/testimonials_verify', () => {
   it('returns 401 if unauthorized', async () => {
     const req: MockReq = { method: 'POST', headers: {}, body: {} };
     const res = createMockRes();
-    await handler(req as unknown as Parameters<Handler>[0], res as unknown as Parameters<Handler>[1]);
+    await handler({ ...req, query: { route: ['testimonials_verify'] }, url: '/api/landing/testimonials_verify' } as unknown as Parameters<Handler>[0], res as unknown as Parameters<Handler>[1]);
     expect(res._status).toBe(401);
     expect(res._body).toMatchObject({ ok: false });
   });
@@ -62,7 +62,7 @@ describe('POST /api/landing/testimonials_verify', () => {
     const req: MockReq = { method: 'POST', headers: { ...authHeaders }, body: {} };
     const res = createMockRes();
     fetchMock.mockResolvedValueOnce({ ok: true, json: async () => ({ user: { role: 'admin' } }) });
-    await handler(req as unknown as Parameters<Handler>[0], res as unknown as Parameters<Handler>[1]);
+    await handler({ ...req, query: { route: ['testimonials_verify'] }, url: '/api/landing/testimonials_verify' } as unknown as Parameters<Handler>[0], res as unknown as Parameters<Handler>[1]);
     expect(res._status).toBe(400);
   });
 
@@ -78,7 +78,7 @@ describe('POST /api/landing/testimonials_verify', () => {
     const res = createMockRes();
     fetchMock.mockResolvedValueOnce({ ok: true, json: async () => ({ user: { role: 'admin' } }) });
 
-    await handler(req as unknown as Parameters<Handler>[0], res as unknown as Parameters<Handler>[1]);
+    await handler({ ...req, query: { route: ['testimonials_verify'] }, url: '/api/landing/testimonials_verify' } as unknown as Parameters<Handler>[0], res as unknown as Parameters<Handler>[1]);
 
     expect(res._status).toBe(403);
     expect(res._body).toMatchObject({ error: 'Missing CSRF token' });
@@ -96,7 +96,7 @@ describe('POST /api/landing/testimonials_verify', () => {
     const res = createMockRes();
     fetchMock.mockResolvedValueOnce({ ok: true, json: async () => ({ user: { role: 'admin' } }) });
 
-    await handler(req as unknown as Parameters<Handler>[0], res as unknown as Parameters<Handler>[1]);
+    await handler({ ...req, query: { route: ['testimonials_verify'] }, url: '/api/landing/testimonials_verify' } as unknown as Parameters<Handler>[0], res as unknown as Parameters<Handler>[1]);
 
     expect(res._status).toBe(403);
     expect(res._body).toMatchObject({ error: 'Invalid CSRF token' });
@@ -114,7 +114,7 @@ describe('POST /api/landing/testimonials_verify', () => {
     const res = createMockRes();
     fetchMock.mockResolvedValueOnce({ ok: true, json: async () => ({ user: { role: 'admin' } }) });
 
-    await handler(req as unknown as Parameters<Handler>[0], res as unknown as Parameters<Handler>[1]);
+    await handler({ ...req, query: { route: ['testimonials_verify'] }, url: '/api/landing/testimonials_verify' } as unknown as Parameters<Handler>[0], res as unknown as Parameters<Handler>[1]);
 
     expect(res._status).toBe(403);
     expect(res._body).toMatchObject({ error: 'Invalid request origin' });
@@ -136,7 +136,7 @@ describe('POST /api/landing/testimonials_verify', () => {
     };
     const res = createMockRes();
     fetchMock.mockResolvedValueOnce({ ok: true, json: async () => ({ user: { role: 'admin' } }) });
-    await handler(req as unknown as Parameters<Handler>[0], res as unknown as Parameters<Handler>[1]);
+    await handler({ ...req, query: { route: ['testimonials_verify'] }, url: '/api/landing/testimonials_verify' } as unknown as Parameters<Handler>[0], res as unknown as Parameters<Handler>[1]);
     expect(res._status).toBe(200);
     expect(querySpy).toHaveBeenCalled();
     // audit insert should be the second call and include testimonials_audit
