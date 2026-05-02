@@ -21,7 +21,23 @@ for (const pathToRemove of pathsToRemove) {
   rmSync(pathToRemove, { recursive: true, force: true });
 }
 
-const tscResult = spawnSync(
+function runCommand(command, args, options = {}) {
+  const result = spawnSync(command, args, {
+    stdio: 'inherit',
+    ...options
+  });
+
+  if (result.error) {
+    console.error(result.error);
+    process.exit(1);
+  }
+
+  if (result.status !== 0) {
+    process.exit(result.status ?? 1);
+  }
+}
+
+runCommand(
   process.execPath,
   [
     './node_modules/typescript/bin/tsc',
@@ -29,18 +45,11 @@ const tscResult = spawnSync(
     'packages/design-system',
     'packages/services',
     'packages/utils'
-  ],
-  { stdio: 'inherit' }
+  ]
 );
 
-if (tscResult.status !== 0) {
-  process.exit(tscResult.status ?? 1);
-}
-
-const buildResult = spawnSync(
-  process.execPath,
-  ['./node_modules/npm/bin/npm-cli.js', 'run', '-s', 'build'],
-  { stdio: 'inherit' }
-);
-
-process.exit(buildResult.status ?? 1);
+runCommand(process.execPath, ['./scripts/check-env.mjs']);
+runCommand(process.execPath, ['./scripts/validate-trust-claims.js']);
+runCommand(process.execPath, ['./scripts/validate-clinic-auth-env.js']);
+runCommand(process.execPath, ['./node_modules/vite/bin/vite.js', 'build']);
+runCommand(process.execPath, ['./scripts/seo/prerender-public-routes.mjs']);
