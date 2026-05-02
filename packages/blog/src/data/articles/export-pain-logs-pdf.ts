@@ -4,8 +4,8 @@ const article: ArticleData = {
   slug: 'export-pain-logs-pdf',
   title: 'Export Pain Logs to PDF: Share Clinical Data on Your Terms',
   description:
-    'Export your pain tracking data as professional PDF reports for doctors, physiotherapists, and insurance claims. User-controlled, private, and formatted for clinical use.',
-  h1: 'Export Pain Logs to PDF: Clinical Reports You Control',
+    'Export your pain tracking data as PDF reports for doctors, physiotherapists, and claim-related discussions. User-controlled, private, and structured for review.',
+  h1: 'Export Pain Logs to PDF: Structured Reports You Control',
   cluster: 'clinical',
   isPillar: false,
   schemaTypes: ['Article'],
@@ -14,7 +14,7 @@ const article: ArticleData = {
       h2: 'A log that cannot be shared is just a journal',
       paragraphs: [
         'A pain log that cannot be shared is a personal journal. Valuable for self-awareness, limited in clinical impact. The ability to export structured pain data as a professional PDF report transforms your diary into a communication tool between you and your healthcare providers, insurance reviewers, and legal advocates.',
-        'PDF is the universally accepted document format in healthcare. It prints cleanly, displays consistently across devices, can be attached to medical records, and is accepted by insurance companies and legal proceedings. Unlike screenshots or proprietary app formats, a PDF export is a self-contained, professional document that stands on its own.',
+        'PDF is a common document format in healthcare. It prints cleanly, displays consistently across devices, and can be brought into appointments or claim-related discussions. Unlike screenshots or proprietary app formats, a PDF export is a self-contained document that stands on its own.',
       ],
     },
     {
@@ -41,8 +41,8 @@ const article: ArticleData = {
     {
       h2: 'WorkSafeBC-specific exports',
       paragraphs: [
-        'Workers\' compensation claims in British Columbia require specific documentation that demonstrates the relationship between a workplace injury and ongoing symptoms. Pain Tracker includes a WorkSafeBC export template that structures your pain data according to the documentation expectations of WCB adjudicators.',
-        'The template emphasises timeline evidence linking injury dates to symptom onset, consistent documentation of pain levels and functional limitations, medication management records, and treatment compliance evidence. This structured approach helps ensure your claim is supported by the kind of documentation reviewers expect.',
+        'Workers\' compensation claims in British Columbia often involve documentation showing the relationship between a workplace injury and ongoing symptoms. Pain Tracker includes a WorkSafeBC export template that structures your pain data into a timeline of symptoms, functional limitations, medication records, and treatment notes.',
+        'The template emphasizes timeline details linking injury dates to symptom onset, pain levels and functional limitations, medication management records, and treatment compliance notes. This structured approach can help organize records for WorkSafeBC-related documentation without guaranteeing acceptance, approval, or outcome.',
       ],
     },
     {

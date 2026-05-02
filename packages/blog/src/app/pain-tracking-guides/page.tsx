@@ -78,7 +78,7 @@ const pillarCards = [
   },
   {
     title: PILLAR_LABELS.clinical,
-    description: 'Clinical-grade exports for doctors, specialists, and WorkSafeBC claims.',
+    description: 'Structured exports for doctors, specialists, and WorkSafeBC-related documentation.',
     url: PILLAR_URLS.clinical,
     icon: '🩺',
   },

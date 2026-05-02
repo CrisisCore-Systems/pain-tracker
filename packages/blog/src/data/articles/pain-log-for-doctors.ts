@@ -2,7 +2,7 @@ import type { ArticleData } from './types';
 
 const article: ArticleData = {
   slug: 'pain-log-for-doctors',
-  title: 'Pain Log for Doctors: Clinical Documentation That Actually Gets Used',
+  title: 'Pain Log for Doctors: Structured Documentation That Actually Gets Used',
   description:
     'A structured pain log your doctor can actually read, trust, and act on. Export timestamped PDF and CSV reports with pain intensity, medications, and real functional data.',
   h1: 'Pain Log for Doctors: Documentation Your Clinician Will Actually Use',
@@ -27,9 +27,9 @@ const article: ArticleData = {
       ],
     },
     {
-      h2: 'Creating clinical-grade exports',
+      h2: 'Creating structured exports',
       paragraphs: [
-        'Pain Tracker\'s export system is designed around the actual needs of Canadian healthcare providers and insurance reviewers. PDF reports include summary statistics, trend charts, medication logs, and individual entry details in a clean professional layout. The format is modelled on documentation standards familiar to physiotherapists and occupational health professionals, because if the doctor does not recognize the format, they may not trust the data.',
+        'Pain Tracker\'s export system is designed around the actual needs of Canadian healthcare providers and insurance reviewers. PDF reports include summary statistics, trend charts, medication logs, and individual entry details in a clean professional layout. The format follows documentation conventions familiar to physiotherapists and occupational health professionals so the records are easier to review.',
         'CSV exports provide raw tabular data for clinicians who want to examine patterns themselves or integrate your data into their own tracking systems. Each row is one entry, with standardised column headers, consistent date-time formatting, and values that can be sorted, filtered, or graphed.',
         'Every export is user-initiated and user-controlled. You select the date range, choose which fields appear, decide the format. Nothing is automatic. This control is not just privacy, it ensures that the data you share with each provider is relevant to that context, not everything you have ever recorded.',
       ],
@@ -37,8 +37,8 @@ const article: ArticleData = {
     {
       h2: 'WorkSafeBC and insurance documentation',
       paragraphs: [
-        'Workers\' compensation claims live or die on documentation. A claim without structured, consistent symptom records gives adjudicators very little to work with. Generic pain logs often lack the structure WorkSafeBC reviewers expect, which leads to delays, requests for more information, or rejections that could have been avoided.',
-        'Pain Tracker includes a WorkSafeBC-specific export template. The report captures pain intensity trends, medication logs, functional limitation descriptions, and a timeline that maps symptom progression to injury dates. This structured approach gives reviewers the objective evidence they need without requiring them to interpret your free-text narrative.',
+        'Workers\' compensation claims often depend heavily on documentation. A file without structured, consistent symptom records can be harder to review. Generic pain logs often lack the structure that makes WorkSafeBC-related documentation easier to follow.',
+        'Pain Tracker includes a WorkSafeBC-specific export template. The report captures pain intensity trends, medication logs, functional limitation descriptions, and a timeline that maps symptom progression to injury dates. This structured approach can help organize records without requiring reviewers to interpret long free-text narratives, but it does not guarantee acceptance, approval, or outcome.',
         'Insurance documentation requires balance: thorough enough to support the claim, but selective enough that irrelevant personal information does not enter the file. Pain Tracker\'s export controls let you include clinically relevant data while excluding private notes or entries unrelated to the claim period.',
       ],
     },
@@ -69,7 +69,7 @@ const article: ArticleData = {
     {
       question: 'What format should I use when sharing my pain log with a doctor?',
       answer:
-        'PDF is the most universally accepted format for clinical appointments. It prints cleanly and can be added to your medical file. CSV is useful if your provider wants to analyse the data. JSON is available for technical integration.',
+        'PDF is a familiar, easy-to-share format for clinical appointments. It prints cleanly and can be added to your medical file. CSV is useful if your provider wants to analyse the data. JSON is available for technical integration.',
     },
     {
       question: 'How far back should my pain log cover for a medical appointment?',

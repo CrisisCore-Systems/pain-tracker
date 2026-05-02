@@ -46,7 +46,7 @@ const article: ArticleData = {
       paragraphs: [
         'Pain Tracker is a Progressive Web App. No app store. No account. Install it from your browser at paintracker.ca/start, tap "Add to Home Screen" on mobile, and your entries are encrypted on-device from the first one. The whole setup takes under a minute.',
         'The entry interface is built for the days when you have very little left to give. Slide to set intensity, tap the body map, pick descriptors, add a note if you have capacity. Under sixty seconds even during a flare. Structured inputs instead of typing, the words do not have to come from you. When you are ready to share with a clinician, the export is user-initiated. Nothing leaves your device until you decide.',
-        'For WorkSafeBC claims, there is a dedicated export template that aligns with what reviewers expect. You control the date range, the format, the level of detail. No surprises.',
+        'For WorkSafeBC claims, there is a dedicated export template that helps organize records for review and claim-related discussions. You control the date range, the format, the level of detail. No surprises.',
       ],
     },
     {

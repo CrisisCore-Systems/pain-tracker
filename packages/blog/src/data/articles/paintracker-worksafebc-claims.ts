@@ -4,8 +4,8 @@ const article: ArticleData = {
   slug: 'paintracker-worksafebc-claims',
   title: 'Pain Tracker for WorkSafeBC Claims: Document Your Workplace Injury',
   description:
-    'WorkSafeBC claims depend on documented evidence. Here is what to track, when to start, and how to use structured pain data to build a case that reviewers can actually evaluate.',
-  h1: 'Pain Tracker for WorkSafeBC Claims: Building Your Evidence',
+    'WorkSafeBC claims often involve detailed documentation. Here is what to track, when to start, and how to use structured pain data to organize records for claim-related discussions.',
+  h1: 'Pain Tracker for WorkSafeBC Claims: Organizing Your Records',
   cluster: 'utility',
   isPillar: false,
   schemaTypes: ['WebPage', 'FAQPage'],
@@ -13,8 +13,8 @@ const article: ArticleData = {
     {
       h2: 'The system does not move without documentation',
       paragraphs: [
-        'WorkSafeBC claims depend on documented evidence linking a workplace injury to ongoing symptoms and functional limitations. Without structured, consistent documentation, claims reviewers have only sporadic medical records and verbal statements to work with. A structured pain diary tracking daily symptoms from the date of injury provides the continuous timeline evidence that strengthens claims and gives adjudicators something concrete to evaluate.',
-        'Claims that include structured symptom documentation alongside medical records are easier for adjudicators to process. The documentation shows symptoms are ongoing, that you are actively managing your condition, and that the functional limitations you report are consistent with what you have been tracking daily.',
+        'WorkSafeBC claims often involve documentation linking a workplace injury to ongoing symptoms and functional limitations. Without structured, consistent records, claim-related discussions can rely on sporadic medical records and memory. A structured pain diary tracking daily symptoms from the date of injury can help preserve a clearer timeline for later review.',
+        'Structured symptom documentation alongside medical records can make claim-related discussions easier to follow. The documentation shows symptoms are ongoing, that you are actively managing your condition, and that the functional limitations you report are consistent with what you have been tracking daily.',
       ],
     },
     {
@@ -34,8 +34,8 @@ const article: ArticleData = {
     {
       h2: 'Using Pain Tracker exports for your claim',
       paragraphs: [
-        'Pain Tracker includes export templates designed for WorkSafeBC documentation requirements. The export organises your data into a timeline showing symptom progression from injury date, consistent documentation of pain levels and functional limitations, medication management records, and treatment compliance evidence.',
-        'Share exports with your claim representative, your treating physician, and any specialists involved in your care. Each can incorporate Pain Tracker\'s structured data into their own documentation, creating a consistent narrative across all the records associated with your claim.',
+        'Pain Tracker includes export templates designed for WorkSafeBC-related documentation. The export organizes your data into a timeline showing symptom progression from injury date, pain levels and functional limitations, medication records, and treatment compliance notes.',
+        'Share exports with your claim representative, your treating physician, and any specialists involved in your care when it makes sense for your situation. Pain Tracker\'s structured data can help keep records more consistent across appointments and claim-related discussions, but it does not guarantee acceptance, approval, or outcome.',
       ],
     },
     {
@@ -48,9 +48,9 @@ const article: ArticleData = {
   ],
   faqs: [
     {
-      question: 'Will WorkSafeBC accept Pain Tracker reports as evidence?',
+      question: 'Can Pain Tracker reports help with WorkSafeBC-related documentation?',
       answer:
-        'Pain Tracker exports provide structured, timestamped documentation that supports your claim alongside medical records. The data format aligns with what WorkSafeBC reviewers expect to see in symptom documentation.',
+        'Pain Tracker exports provide structured, timestamped documentation you can bring alongside medical records. They may help organize WorkSafeBC-related documentation, but they do not guarantee acceptance, approval, or outcome.',
     },
     {
       question: 'Can my employer access my Pain Tracker data?',
@@ -60,7 +60,7 @@ const article: ArticleData = {
     {
       question: 'How far back should I track for a WorkSafeBC claim?',
       answer:
-        'Start tracking from the date of injury and continue throughout your claim and recovery. Continuous documentation from injury date forward provides the strongest evidence of ongoing symptoms and functional limitations.',
+        'Start tracking from the date of injury and continue throughout your claim and recovery. Continuous documentation from injury date forward can help preserve a clearer record of ongoing symptoms and functional limitations.',
     },
   ],
 };

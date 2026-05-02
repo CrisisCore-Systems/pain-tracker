@@ -20,8 +20,8 @@ Start here if you want local-first architecture, reliability patterns, and imple
 
 ## WorkSafeBC
 
-Start here if your goal is WorkSafeBC-ready documentation using structured pain records.
+Start here if your goal is WorkSafeBC-related documentation using structured pain records.
 
-- [Generate WorkSafeBC-Ready Documentation with Pain Tracker](https://blog.paintracker.ca/stop-filling-worksafebc-forms-manually-this-auto-generates-them-for-free)
+- [Organize WorkSafeBC-Related Documentation with Pain Tracker](https://blog.paintracker.ca/stop-filling-worksafebc-forms-manually-this-auto-generates-them-for-free)
 - [WorkSafeBC Claims Case Study: Faster Documentation](https://blog.paintracker.ca/how-pain-tracker-pro-streamlines-worksafebc-claims-a-composite-case-study)
 - [WorkSafeBC Hub](https://blog.paintracker.ca/worksafebc)

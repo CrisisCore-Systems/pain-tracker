@@ -55,7 +55,7 @@ export function softwareApplicationJsonLd() {
     applicationCategory: 'HealthApplication',
     operatingSystem: 'Web',
     description:
-      'A privacy-first, offline-capable chronic pain tracking app with clinical-grade exports, built for autonomy and psychological safety.',
+      'A privacy-first, offline-capable chronic pain tracking app with structured exports, built for autonomy and psychological safety.',
     offers: {
       '@type': 'Offer',
       price: '0',
