@@ -15,7 +15,7 @@ const testimonials = [
     role: 'Pain Management',
     avatar: '👨‍⚕️',
     rating: 5,
-    quote: 'The export workflow saves me time. Pattern insights and WorkSafeBC-ready reports streamline documentation.',
+    quote: 'The export workflow saves me time. Pattern insights and WorkSafeBC-related reports help streamline documentation.',
     highlight: 'Streamlined workflow',
   },
   {
@@ -23,8 +23,8 @@ const testimonials = [
     role: 'WorkSafe BC Claimant',
     avatar: '🦾',
     rating: 5,
-    quote: 'The WorkSafeBC reporting tools are a relief. What used to take me days of paperwork now takes minutes.',
-    highlight: 'One-click WCB reports',
+    quote: 'The WorkSafeBC documentation tools are a relief. They make it easier to organize records for appointments and claim-related conversations.',
+    highlight: 'Claim-related summaries',
   },
   {
     name: 'Clinician',

@@ -81,10 +81,22 @@
       /* Loading state styles */
       .initial-loading { 
         display: flex; 
+        flex-direction: column;
         align-items: center; 
         justify-content: center; 
+        gap: 1rem;
         min-height: 100vh;
         background: var(--bg-color);
+        padding: 1.5rem;
+        text-align: center;
+      }
+      .initial-route-heading {
+        margin: 0;
+        max-width: 24ch;
+        color: var(--text-color);
+        font-size: clamp(1.75rem, 5vw, 3rem);
+        font-weight: 700;
+        line-height: 1.1;
       }
       .loading-spinner {
         width: 40px; height: 40px;
@@ -99,10 +111,10 @@
   <body class="bg-background">
     <!-- Theme loader script - extracted for CSP compliance -->
     <script src="/theme-loader.js"></script>
-    <h1 class="visually-hidden">Pain Tracker - private offline pain tracking app</h1>
     <div id='root'>
       <!-- Initial loading state before React hydrates -->
       <div class="initial-loading" id="initial-loader">
+        <h1 class="initial-route-heading">Pain Tracker</h1>
         <div class="loading-spinner"></div>
       </div>
     </div>

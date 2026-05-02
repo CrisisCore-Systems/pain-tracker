@@ -139,7 +139,7 @@ const chronicPainStats: StatItem[] = [
 const pageContent: SEOPageContent = {
   slug: 'chronic-pain-diary-template',
   title: 'Chronic Pain Diary Template (Free)',
-  metaTitle: 'Chronic Pain Diary Template — Free Long-Term Pain Tracker for Flares, Baseline & Trends | Pain Tracker',
+  metaTitle: 'Chronic Pain Diary Template — Free Long-Term Pain Tracker for Flares, Baseline & Trends | PainTracker.ca',
   metaDescription: 'Download a free 6-page chronic pain diary template with baseline/flare tracking, trigger identification, treatment logs, and monthly trend reviews for long-term pain management.',
   keywords: [
     'chronic pain diary template', 'chronic pain tracker template',

@@ -136,7 +136,7 @@ const backPainStats: StatItem[] = [
 const pageContent: SEOPageContent = {
   slug: 'chronic-back-pain-diary',
   title: 'Chronic Back Pain Diary (Free)',
-  metaTitle: 'Chronic Back Pain Diary — Free 6-Page Back Pain Tracker | Pain Tracker',
+  metaTitle: 'Chronic Back Pain Diary — Free 6-Page Back Pain Tracker | PainTracker.ca',
   metaDescription: 'Download a free chronic back pain diary designed for spine-specific tracking. Document pain location, radiation patterns, activity triggers, posture, and PT exercises for better treatment outcomes.',
   keywords: [
     'chronic back pain diary', 'back pain tracker', 'spine pain journal',

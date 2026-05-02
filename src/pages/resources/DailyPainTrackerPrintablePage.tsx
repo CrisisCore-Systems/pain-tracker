@@ -30,7 +30,6 @@ import {
   ChevronDown,
   Sparkles,
   Lock,
-  AlertCircle,
   Zap,
   Smile,
   BarChart3,
@@ -57,9 +56,9 @@ const SEO = {
   slug: 'daily-pain-tracker-printable',
   title: 'Daily Pain Tracker Printable (Free)',
   metaTitle:
-    'Daily Pain Tracker Printable PDF Free | PainTracker',
+    'Free Daily Pain Tracker Printable PDF | PainTracker.ca',
   metaDescription:
-    'Download a free daily pain tracker printable PDF to record pain levels, medications, flare ups, triggers, daily limits, mood, and notes for doctor visits.',
+    'Download the free PainTracker.ca daily pain tracker printable PDF to record pain levels, medications, flare ups, triggers, daily limits, mood, and notes for doctor visits.',
   keywords: [
     'daily pain tracker printable',
     'daily pain log',
@@ -519,7 +518,7 @@ export const DailyPainTrackerPrintablePage: React.FC = () => {
               id="hero-heading"
               className="landing-headline landing-headline-lg text-white mb-6"
             >
-              Free daily pain tracker printable PDF
+              Free Daily Pain Tracker Printable PDF
             </h1>
 
             <p className="landing-subhead text-lg sm:text-xl max-w-2xl mx-auto mb-4">
@@ -780,7 +779,7 @@ export const DailyPainTrackerPrintablePage: React.FC = () => {
                 <div>
                   <h3 className="font-semibold text-white mb-1">Claims-Ready Format</h3>
                   <p className="text-sm text-slate-400">
-                    Accepted for WorkSafeBC, ICBC, CPP-D, private insurance, and medical appointments. Daily timestamps make records defensible.
+                    Useful for appointments or claim-related discussions with WorkSafeBC, ICBC, CPP-D, or private insurers. This PDF is a documentation aid, not an official decision document. Approval depends on the reviewer, medical evidence, policy, and case context.
                   </p>
                 </div>
               </div>

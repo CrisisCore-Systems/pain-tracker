@@ -57,7 +57,7 @@ const SEO = {
   slug: 'symptom-tracker-printable',
   title: 'Symptom Tracker Printable (Free)',
   metaTitle:
-    'Symptom Tracker Printable — Free Comprehensive Daily Symptom Log | Pain Tracker',
+    'Symptom Tracker Printable — Free Comprehensive Daily Symptom Log | PainTracker.ca',
   metaDescription:
     'Download a free symptom tracker printable. Track fatigue, sleep quality, mood, brain fog, energy, and more alongside pain — the complete picture your doctor needs for chronic illness management.',
   keywords: [

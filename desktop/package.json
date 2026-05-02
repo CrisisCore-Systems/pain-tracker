@@ -13,8 +13,8 @@
     "express": "^4.19.2"
   },
   "devDependencies": {
-    "electron": "^40.6.0",
-    "electron-builder": "^26.8.1"
+    "electron": "^40.9.3",
+    "electron-builder": "^26.9.0"
   },
   "build": {
     "appId": "ca.paintracker.desktop",
@@ -60,6 +60,7 @@
     "publish": null
   },
   "overrides": {
-    "minimatch": "10.2.2"
+    "@electron/universal": "3.0.4",
+    "minimatch": "10.2.5"
   }
 }

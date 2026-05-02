@@ -129,8 +129,8 @@ const journalStats: StatItem[] = [
 const pageContent: SEOPageContent = {
   slug: 'what-to-include-in-pain-journal',
   title: 'What to Include in a Pain Journal',
-  metaTitle: 'Pain Journal Checklist for Doctor Visits | PainTracker',
-  metaDescription: 'Learn what to include in a pain journal so your notes are useful at doctor visits. Track pain levels, medications, triggers, sleep, and daily function with a simple checklist.',
+  metaTitle: 'Pain Journal Checklist for Doctor Visits | PainTracker.ca',
+  metaDescription: 'Use the PainTracker.ca pain journal checklist to learn what to include in a pain journal so your notes are useful at doctor visits. Track pain levels, medications, triggers, sleep, and daily function with a simple checklist.',
   keywords: [
     'what to include in pain journal', 'pain journal content guide',
     'pain diary what to write', 'pain journal template content',
@@ -141,7 +141,7 @@ const pageContent: SEOPageContent = {
     'what to write in pain diary', 'pain journal best practices'
   ],
   badge: 'Guide',
-  headline: 'What to Include in a Pain Journal',
+  headline: 'Pain Journal Checklist for Doctor Visits',
   subheadline: 'A simple checklist for keeping notes that are actually useful during doctor visits.',
   primaryCTA: { text: 'Get the pain journal checklist', href: '/resources/what-to-include-in-pain-journal' },
   secondaryCTA: { text: 'Use the free pain tracker', href: '/start' },

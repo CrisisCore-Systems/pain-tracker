@@ -7,12 +7,19 @@
 
 import React from 'react';
 import {
-  ArrowRight, Activity, CheckCircle, Clock, TrendingUp,
+  Activity, CheckCircle, TrendingUp,
   Users, FileText, Home, Briefcase, Heart,
-  MonitorSmartphone, AlertTriangle, UserCheck
+  MonitorSmartphone, UserCheck
 } from 'lucide-react';
-import { SEOPageLayout, type SEOPageContent, StatsBanner, BottomCTACallout, PdfContentsPreview } from '../../components/seo';
-import type { StatItem, PdfPage } from '../../components/seo';
+import {
+  SEOPageLayout,
+  type SEOPageContent,
+  StatsBanner,
+  BottomCTACallout,
+  PdfContentsPreview,
+  type StatItem,
+  type PdfPage,
+} from '../../components/seo';
 
 /* ── Custom Visual Components ─────────────────────────────────────────────── */
 
@@ -130,8 +137,8 @@ const functioningStats: StatItem[] = [
 const pageContent: SEOPageContent = {
   slug: 'daily-functioning-log-for-disability',
   title: 'Daily Functioning Log for Disability (Free)',
-  metaTitle: 'Daily Functioning Log for Disability — Free Functional Capacity Tracker | Pain Tracker',
-  metaDescription: 'Download a free daily functioning log designed for disability claims. Track self-care, household, work, social, and physical activities with capacity ratings evaluators use.',
+  metaTitle: 'Daily Functioning Log for Disability | PainTracker.ca',
+  metaDescription: 'Download the free PainTracker.ca daily functioning log designed for disability claims. Track self-care, household, work, social, and physical activities with capacity ratings evaluators use.',
   keywords: [
     'daily functioning log for disability', 'functional capacity log',
     'disability functioning diary', 'ADL tracking for disability',
@@ -147,7 +154,7 @@ const pageContent: SEOPageContent = {
   primaryCTA: { text: 'Download Free PDF (6 Pages)', href: '/assets/daily-functioning-log.pdf', download: true },
   secondaryCTA: { text: 'Start Digital Tracking', href: '/start' },
   utilityBlock: { type: 'download', downloadUrl: '/assets/daily-functioning-log.pdf', downloadFileName: 'daily-functioning-log.pdf' },
-  whatIsThis: 'A daily functioning log that documents what you CAN and CAN\'T do — the evidence that actually determines disability claim outcomes. Pain levels matter, but functional limitations are what evaluators use to decide your claim. This 6-page log tracks 20+ daily activities across four domains (self-care, household/work, social, physical), uses a standardized 0-5 capacity scale, and formats weekly/monthly summaries for evaluators, attorneys, and physicians. It turns your daily reality into the structured evidence that wins claims.',
+  whatIsThis: 'A daily functioning log that documents what you CAN and CAN\'T do in a way that is easier to review later. Pain levels matter, but functional limitations are often the details evaluators look for when assessing daily impact. This 6-page log tracks 20+ daily activities across four domains (self-care, household/work, social, physical), uses a standardized 0-5 capacity scale, and formats weekly/monthly summaries for evaluators, attorneys, and physicians. It helps organize records for appointments or claim-related discussions.',
   whoShouldUse: [
     'Anyone filing for disability benefits (SSDI, SSI, LTD, WCB) where pain limits function',
     'People whose disability claim was denied for "insufficient functional evidence"',
@@ -165,15 +172,15 @@ const pageContent: SEOPageContent = {
     { step: 4, title: 'Document what you didn\'t do', description: 'Activities NOT attempted are evidence too. "Didn\'t attempt laundry — couldn\'t bend" is a functional limitation. "Cancelled dinner plans — too fatigued to drive" shows social impact. Record absences, not just attempts.' },
     { step: 5, title: 'Complete weekly summaries', description: 'At week\'s end: total active hours, number of activities abandoned, help received, best and worst days. This summary is what evaluators actually read first.' }
   ],
-  whyItMatters: 'Disability claims are won or lost on functional evidence. An evaluator asking "can you work?" isn\'t asking about your pain level — they\'re asking whether you can sit for 6 hours, stand for 2, lift 10 pounds, concentrate for sustained periods. Your functioning log provides the daily, systematic evidence that answers these exact questions. Medical records say what your condition IS. Your functioning log shows what your condition DOES to your daily life.',
+  whyItMatters: 'Functional evidence often carries more weight than pain ratings alone. When an evaluator asks "can you work?" they are usually looking for specifics such as sitting tolerance, standing tolerance, lifting ability, and sustained concentration. A functioning log helps capture those day-to-day details in one place. Medical records show what your condition IS. A functioning log helps show what your condition DOES to daily life.',
   trustSignals: {
     medicalNote: 'Uses the same functional capacity domains assessed in clinical Functional Capacity Evaluations (FCE) and Activities of Daily Living (ADL) assessments used by disability evaluators.',
     privacyNote: 'Your functioning data stays completely private on your device until you choose to share it with your attorney, physician, or evaluator.',
-    legalNote: 'Formatted for SSDI, SSI, LTD, and workers\' compensation evaluation standards. Not legal advice — consult a disability attorney for claim-specific guidance.'
+    legalNote: 'Formatted for SSDI, SSI, LTD, and workers\' compensation documentation. This is a documentation aid, not legal advice or an official decision document.'
   },
   faqs: [
     { question: 'Why is functional logging more important than pain tracking?', answer: 'Pain is subjective — evaluators can\'t verify it independently. Functional limitations are observable and testable. "Can\'t lift more than 5 pounds" is a fact that can be confirmed in an evaluation. "Pain is 8/10" is your report alone. Functional evidence gives evaluators confidence in your claim.' },
-    { question: 'How is this different from a pain diary?', answer: 'A pain diary tracks pain levels, medications, and symptoms. This functioning log tracks what you can and can\'t DO. "Pain 7/10" tells evaluators you hurt. "Couldn\'t load dishwasher, sat during child\'s soccer game, spouse drove me to pharmacy" tells them you\'re disabled. Both are useful; this log addresses the #1 reason claims get denied.' },
+    { question: 'How is this different from a pain diary?', answer: 'A pain diary tracks pain levels, medications, and symptoms. This functioning log tracks what you can and can\'t DO. Both are useful. This log adds the day-to-day functional detail that is often easier for evaluators and clinicians to review.' },
     { question: 'What if my functioning varies day to day?', answer: 'That variability IS the evidence. Log both good days (capacity 4-5 on some tasks) and bad days (capacity 1-2). The pattern of fluctuation — and the average — is exactly what evaluators need to assess your overall functional capacity.' },
     { question: 'Should I attempt activities even if I know they\'ll cause pain?', answer: 'Only if it\'s safe to do so. Don\'t injure yourself for documentation purposes. If you attempt an activity and have to stop, that\'s powerful evidence. If you know you can\'t do it and don\'t attempt it, document that too with the reason why.' },
     { question: 'How does this work with a Functional Capacity Evaluation?', answer: 'Your daily log provides context for the FCE. The FCE is a 4-6 hour snapshot; your log shows what daily life actually looks like over weeks and months. Evaluators use both — and if they align, your credibility is very strong.' },
@@ -181,7 +188,7 @@ const pageContent: SEOPageContent = {
     { question: 'Should I include activities I can still do?', answer: 'Absolutely. "Made the bed (rating 4, minor stiffness)" shows you\'re being honest. Claims with ONLY limitations look exaggerated. A mix of things you can do, things you struggle with, and things you can\'t do is the most credible pattern.' },
     { question: 'What if I need help with activities?', answer: 'Document exactly what help you need and from whom. "Spouse carried groceries from car." "Daughter helped with laundry." "Used a reacher tool for items above waist height." Needed assistance is strong functional limitation evidence.' },
     { question: 'Can physical therapists use this?', answer: 'Yes — many PTs and OTs ask patients to keep functioning logs between sessions. This template provides structure. Sharing the log with your therapist also helps them document your progress (or lack thereof) in their clinical notes, which supports your case.' },
-    { question: 'How does this help with appeal after denial?', answer: 'Denial letters typically cite "insufficient evidence of functional limitations." This log directly addresses that gap. Daily functioning evidence is often what distinguishes successful appeals from unsuccessful ones — it fills the exact evidence gap the denial identified.' }
+    { question: 'How does this help with appeal after denial?', answer: 'Denial letters often cite insufficient evidence of functional limitations. This log helps fill that gap by turning daily activity limits into a clearer record you can bring into appeal-related discussions.' }
   ],
   relatedLinks: [
     { title: 'Documenting Pain for Disability', description: 'Complete evidence-building guide', href: '/resources/documenting-pain-for-disability-claim' },

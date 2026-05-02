@@ -6,9 +6,9 @@ const pageContent: SEOPageContent = {
   slug: 'pain-tracking-app',
   canonicalPath: '/pain-tracking-app',
   title: 'Pain Tracking App',
-  metaTitle: 'Pain Tracking App That Works Offline and Keeps Records Private | Pain Tracker',
+  metaTitle: 'Private Offline Pain Tracking App | PainTracker.ca',
   metaDescription:
-    'Looking for a pain tracking app? Pain Tracker lets you track pain privately, works offline, requires no account, and helps you bring better records to appointments.',
+    'Looking for a pain tracking app? PainTracker.ca lets you track pain privately, works offline, requires no account, and helps you bring better records to appointments.',
   keywords: [
     'pain tracking app',
     'pain tracker app',
@@ -18,9 +18,9 @@ const pageContent: SEOPageContent = {
     'offline pain tracking app',
   ],
   badge: 'Pain Tracking App',
-  headline: 'Pain Tracking App for Daily Use, Not Just Good Days',
+  headline: 'Private Offline Pain Tracking App',
   subheadline:
-    'Track pain privately. No account. Works offline. Bring better records to appointments. Pain Tracker is built for the people who actually have to use the app while tired, hurting, or interrupted.',
+    'Track pain privately. No account. Works offline. Bring better records to appointments. PainTracker.ca is built for people who have to use the app while tired, hurting, or interrupted.',
   primaryCTA: {
     text: 'Use the app free',
     href: '/start',

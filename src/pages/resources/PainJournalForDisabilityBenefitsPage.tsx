@@ -134,7 +134,7 @@ const benefitsStats: StatItem[] = [
 const pageContent: SEOPageContent = {
   slug: 'pain-journal-for-disability-benefits',
   title: 'Pain Journal for Disability Benefits (Free)',
-  metaTitle: 'Pain Journal for Disability Benefits — Free Benefits-Ready Template | Pain Tracker',
+  metaTitle: 'Pain Journal for Disability Benefits — Free Benefits-Ready Template | PainTracker.ca',
   metaDescription: 'Download a free pain journal template designed specifically for disability benefits applications. Covers SSDI, LTD, WorkSafeBC. Includes functional limitation tracking and evidence-ready formatting.',
   keywords: [
     'pain journal for disability benefits', 'disability pain journal',
@@ -147,11 +147,11 @@ const pageContent: SEOPageContent = {
   ],
   badge: 'Free Download',
   headline: 'Pain Journal for Disability Benefits',
-  subheadline: 'A journal template built for disability evaluators: SSDI, SSI, LTD insurance, and workers\' compensation. Captures the functional limitations, treatment compliance, and daily impact that actually determine claim outcomes.',
+  subheadline: 'A journal template built for disability evaluators: SSDI, SSI, LTD insurance, and workers\' compensation. It captures functional limits, treatment history, and daily impact in a format that is easier to review later.',
   primaryCTA: { text: 'Download Free Journal PDF', href: '/assets/disability-pain-journal-guide.pdf', download: true },
   secondaryCTA: { text: 'Start Digital Tracking', href: '/start' },
   utilityBlock: { type: 'download', downloadUrl: '/assets/disability-pain-journal-guide.pdf', downloadFileName: 'disability-pain-journal-guide.pdf' },
-  whatIsThis: 'A pain journal template specifically formatted for disability benefits applications. This isn\'t a generic pain diary — every section is designed to produce the exact evidence that disability evaluators weigh when making decisions. It covers functional limitations (what you can\'t do), treatment compliance (what you\'re doing about it), and daily impact patterns (how consistent and credible your documentation is). Whether you\'re applying for SSDI, SSI, long-term disability insurance, or workers\' compensation, this journal captures what each program needs to see.',
+  whatIsThis: 'A pain journal template specifically formatted for disability benefits applications. It is not a generic pain diary. Each section focuses on functional limitations, treatment history, and daily impact patterns so your records are easier to use in benefits applications, appointments, or claim-related discussions. Whether you\'re applying for SSDI, SSI, long-term disability insurance, or workers\' compensation, it helps organize the details reviewers commonly look for.',
   whoShouldUse: [
     'Anyone applying for SSDI or SSI disability benefits due to chronic pain',
     'People with long-term disability insurance claims for pain conditions',
@@ -169,20 +169,20 @@ const pageContent: SEOPageContent = {
     { step: 4, title: 'Complete weekly summaries for easy reference', description: 'Evaluators don\'t read 90 daily entries — they skim weekly summaries. Track total days affected, productive hours, missed activities, and pattern changes each week.' },
     { step: 5, title: 'Bring monthly evidence summaries to appointments', description: 'Use the monthly summary page to keep your doctor informed. When your medical records align with your journal, evaluators see a consistent, credible picture.' }
   ],
-  whyItMatters: 'Disability evaluators see hundreds of applications — most with inadequate documentation. The claims that succeed have one thing in common: systematic, daily evidence of functional limitations that corroborates medical records. A benefits-ready pain journal doesn\'t just track pain — it builds a case. The functional limitation sections, treatment compliance documentation, and weekly summaries are specifically what evaluators review when making approval decisions.',
+  whyItMatters: 'Disability evaluators see hundreds of applications, and many files are thin on day-to-day detail. Systematic tracking of functional limitations can help corroborate medical records. A benefits-ready pain journal does more than track pain. It helps organize a clearer record. Approval depends on the reviewer, medical evidence, policy, and case context, but weekly summaries and functional notes make the file easier to follow.',
   trustSignals: {
     medicalNote: 'Journal structure aligns with the functional capacity assessment framework used by disability evaluators for SSDI, SSI, and LTD programs.',
     privacyNote: 'Your journal is private. All data stays on your device until YOU choose to share it with your attorney, doctor, or evaluator.',
-    legalNote: 'Structured for major disability programs (SSDI, SSI, LTD, WCB). Not legal advice — consult a disability attorney for your specific claim.'
+    legalNote: 'Structured for major disability programs (SSDI, SSI, LTD, WCB). This is a documentation aid, not legal advice or an official decision document.'
   },
   faqs: [
     { question: 'Which disability program should I use this for?', answer: 'This template works for all major programs: SSDI, SSI, long-term disability insurance, and workers\' compensation. Each section captures evidence relevant across programs. The first page helps you identify what YOUR specific program prioritizes.' },
-    { question: 'How is this different from a regular pain diary?', answer: 'Regular pain diaries focus on pain levels. This journal focuses on functional limitations — because that\'s what evaluators actually use to determine disability. Every section is designed to produce evidence that evaluators can review, not just personal tracking notes.' },
+    { question: 'How is this different from a regular pain diary?', answer: 'Regular pain diaries focus on pain levels. This journal adds functional limitations, treatment history, and weekly summaries so the record is easier for evaluators and clinicians to review.' },
     { question: 'How long should I journal before applying?', answer: 'Minimum 30 days. Ideal is 60-90 days. For appeals of denied claims, continue journaling throughout the entire appeals process. The journal accumulates evidence — more time = stronger documentation.' },
     { question: 'What if I miss some days?', answer: 'That\'s okay — document the gap honestly. Don\'t backfill entries. Evaluators know chronic pain causes bad days where journaling is impossible. A gap with a note saying "too much pain to write" is more credible than perfect attendance.' },
-    { question: 'Should my doctor see my journal?', answer: 'Yes. Bring your weekly or monthly summaries to every appointment. When your doctor\'s notes align with your journal entries, evaluators see corroborated evidence from two independent sources — this is extremely powerful.' },
+    { question: 'Should my doctor see my journal?', answer: 'Yes. Bring your weekly or monthly summaries to appointments. Use the journal alongside clinical records so your doctor has a clearer picture of your daily patterns.' },
     { question: 'Can I use the digital version for my claim?', answer: 'Yes. Digital or paper both work. Many attorneys recommend printing reports from the digital version — it looks professional and systematic. The key is consistency, not format.' },
-    { question: 'What if my claim was already denied?', answer: 'Start journaling immediately for your appeal. The denial letter tells you what evidence was missing — your journal can fill those gaps. Appeals with new, systematic daily documentation frequently succeed where initial applications failed.' },
+    { question: 'What if my claim was already denied?', answer: 'Start journaling immediately for your appeal. The denial letter usually points to missing evidence, and your journal can help fill those gaps with more systematic daily documentation.' },
     { question: 'Is pain alone enough for disability?', answer: 'Pain must cause functional limitations that prevent substantial gainful activity (for SSDI/SSI) or performance of your occupation (for LTD). Your journal documents those functional limitations — the bridge between "I have pain" and "I cannot work."' },
     { question: 'What about medication side effects?', answer: 'Document every side effect: drowsiness, cognitive fog, nausea, dizziness. Medication side effects can independently contribute to functional limitations. "Pain medication makes me too drowsy to drive safely" is valid disability evidence.' },
     { question: 'Do evaluators actually read pain journals?', answer: 'Yes — but they skim, not read word-by-word. They look at: consistency of entries, credibility (pain fluctuates, good days included), functional limitations, and treatment compliance. The weekly and monthly summary pages make their job easier — which helps your case.' }

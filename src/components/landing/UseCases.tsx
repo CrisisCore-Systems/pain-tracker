@@ -34,8 +34,8 @@ const patientUseCases = [
   {
     icon: FileText,
     title: 'Export Reports',
-    description: 'Generate professional reports for healthcare providers, WorkSafe BC, or insurance claims.',
-    features: ['One-click WCB export', 'PDF & clinical summaries', 'CSV/JSON exports'],
+    description: 'Generate structured reports for healthcare providers, appointments, and claim-related documentation.',
+    features: ['WorkSafeBC-oriented summaries', 'PDF & clinical summaries', 'CSV/JSON exports'],
     gradient: 'from-amber-500 to-orange-500',
     glow: 'amber',
   },
@@ -61,7 +61,7 @@ const clinicianUseCases = [
   {
     icon: FileText,
     title: 'Automated Reports',
-    description: 'One-click generation of WorkSafe BC, insurance, and progress reports with clinical summaries.',
+    description: 'Generate structured summaries for WorkSafeBC-related documentation, insurance paperwork, and progress reviews.',
     features: ['SOAP format notes', 'Work capacity assessment', 'Treatment timelines'],
     gradient: 'from-indigo-500 to-blue-500',
     glow: 'indigo',

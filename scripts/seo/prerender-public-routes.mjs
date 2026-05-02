@@ -33,6 +33,16 @@ function stripManagedJsonLd(html) {
   return html.replaceAll(/\s*<script type="application\/ld\+json" data-prerender="managed">[\s\S]*?<\/script>/gi, '');
 }
 
+function stripSiteSuffix(title) {
+  return title
+    .replace(/\s+\|\s+Pain Tracker$/u, '')
+    .replace(/\s+\|\s+PainTracker\.ca$/u, '');
+}
+
+function derivePrerenderHeading(route) {
+  return route.prerenderHeading ?? stripSiteSuffix(route.title);
+}
+
 function injectStructuredData(html, route) {
   const blocks = Array.isArray(route.structuredData) ? route.structuredData : [];
   if (blocks.length === 0) {
@@ -54,6 +64,7 @@ function injectRouteMetadata(template, route) {
   const description = escapeHtml(route.description);
   const canonicalUrl = escapeHtml(route.canonicalUrl);
   const ogImage = escapeHtml(route.ogImage);
+  const prerenderHeading = escapeHtml(derivePrerenderHeading(route));
   const robotsContent = route.noindex ? 'noindex,follow' : null;
 
   let html = template;
@@ -73,6 +84,7 @@ function injectRouteMetadata(template, route) {
   html = robotsContent
     ? upsertTag(html, /<meta\s+name=["']googlebot["']\s+content=["'][^"']*["']\s*\/?>(?:\s*)/i, `<meta name="googlebot" content="${robotsContent}" />`)
     : html.replace(/\s*<meta\s+name=["']googlebot["']\s+content=["'][^"']*["']\s*\/?>(?:\s*)/i, '\n');
+  html = replaceTag(html, /<h1\s+class=["']initial-route-heading["']>[\s\S]*?<\/h1>/i, `<h1 class="initial-route-heading">${prerenderHeading}</h1>`, 'initial route heading');
   html = injectStructuredData(html, route);
 
   return html;

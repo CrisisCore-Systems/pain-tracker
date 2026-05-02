@@ -131,7 +131,7 @@ const crpsStats: StatItem[] = [
 const pageContent: SEOPageContent = {
   slug: 'crps-pain-diary-template',
   title: 'CRPS Pain Diary Template (Free)',
-  metaTitle: 'CRPS Pain Diary Template — Free Complex Regional Pain Syndrome Tracker | Pain Tracker',
+  metaTitle: 'CRPS Pain Diary Template — Free Complex Regional Pain Syndrome Tracker | PainTracker.ca',
   metaDescription: 'Download a free CRPS pain diary tracking burning pain, allodynia, color/temperature changes, swelling, motor symptoms, and limb comparison. Aligned with Budapest diagnostic criteria.',
   keywords: [
     'crps pain diary', 'complex regional pain syndrome tracker', 'CRPS symptom log',

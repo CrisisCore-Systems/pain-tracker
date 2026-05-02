@@ -56,7 +56,7 @@ const SEO = {
   slug: 'monthly-pain-tracker-printable',
   title: 'Monthly Pain Tracker Printable (Free)',
   metaTitle:
-    'Monthly Pain Tracker Printable — Free 30-Day Template | Pain Tracker',
+    'Monthly Pain Tracker Printable — Free 30-Day Template | PainTracker.ca',
   metaDescription:
     'Download a free monthly pain tracker printable. 8-section 30-day template tracks daily pain calendar, sleep, medications, functional impact, triggers, mood, and monthly summary — ideal for treatment reviews and disability claims.',
   keywords: [
@@ -786,7 +786,7 @@ export const MonthlyPainTrackerPrintablePage: React.FC = () => {
                 <div>
                   <h3 className="font-semibold text-white mb-1">Claims-Ready Format</h3>
                   <p className="text-sm text-slate-400">
-                    Accepted for WorkSafeBC, ICBC, CPP-D, private insurance, and medical appointments. Monthly consistency builds a powerful case.
+                    Useful for appointments or claim-related discussions with WorkSafeBC, ICBC, CPP-D, or private insurers. This PDF is a documentation aid, not an official decision document. Approval depends on the reviewer, medical evidence, policy, and case context.
                   </p>
                 </div>
               </div>

@@ -126,7 +126,7 @@ const nerveStats: StatItem[] = [
 const pageContent: SEOPageContent = {
   slug: 'nerve-pain-symptom-log',
   title: 'Nerve Pain Symptom Log (Free)',
-  metaTitle: 'Nerve Pain Symptom Log — Free 6-Page Neuropathy Tracker | Pain Tracker',
+  metaTitle: 'Nerve Pain Symptom Log — Free 6-Page Neuropathy Tracker | PainTracker.ca',
   metaDescription: 'Download a free nerve pain symptom log for neuropathy, sciatica, and neurological pain. Track burning, tingling, numbness, shooting pain, progression, and treatment response.',
   keywords: [
     'nerve pain symptom log', 'neuropathy tracker', 'nerve pain diary',

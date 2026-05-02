@@ -135,7 +135,7 @@ const neuropathyStats: StatItem[] = [
 const pageContent: SEOPageContent = {
   slug: 'neuropathy-symptom-tracker',
   title: 'Neuropathy Symptom Tracker (Free)',
-  metaTitle: 'Neuropathy Symptom Tracker — Free Peripheral Neuropathy Tracker PDF | Pain Tracker',
+  metaTitle: 'Neuropathy Symptom Tracker — Free Peripheral Neuropathy Tracker PDF | PainTracker.ca',
   metaDescription: 'Download a free neuropathy symptom tracker covering sensory, motor, autonomic, and balance symptoms. Track progression, falls, and treatment response for neurologist visits.',
   keywords: [
     'neuropathy symptom tracker', 'peripheral neuropathy tracker', 'diabetic neuropathy log',

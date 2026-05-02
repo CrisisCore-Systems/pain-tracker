@@ -240,7 +240,7 @@ const pageContent: SEOPageContent = {
   // Meta & SEO
   slug: 'migraine-pain-diary-printable',
   title: 'Migraine Pain Diary Printable (Free)',
-  metaTitle: 'Migraine Pain Diary Printable - Free Headache Tracker Template (2026) | Pain Tracker',
+  metaTitle: 'Migraine Pain Diary Printable - Free Headache Tracker Template (2026) | PainTracker.ca',
   metaDescription: 'Download our free 6-page migraine diary PDF. Track all 4 migraine phases, auras, 30+ common triggers, medications, and monthly patterns. Recommended by the American Headache Society tracking framework.',
   keywords: [
     'migraine pain diary printable',
@@ -328,7 +328,7 @@ const pageContent: SEOPageContent = {
   trustSignals: {
     medicalNote: 'Structured around the American Headache Society and International Headache Society recommended data points for migraine tracking.',
     privacyNote: 'Paper format — your migraine history, medication details, and hormonal data never leave your hands.',
-    legalNote: 'Accepted format for FMLA, ADA accommodation, SSDI, and insurance prior authorization documentation.',
+    legalNote: 'Useful for FMLA, ADA accommodation, SSDI, and insurance prior authorization discussions. This diary is a documentation aid, not an official decision document. Approval depends on the reviewer, medical evidence, policy, and case context.',
   },
   
   // FAQ

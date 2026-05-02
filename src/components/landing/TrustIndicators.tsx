@@ -1,18 +1,77 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Shield, Lock, Eye, Code, FileCheck, Users, ArrowRight } from 'lucide-react';
 
-const trustBadges = [
-  { icon: Shield, title: 'AES-256', description: 'At-rest encryption', colorClass: 'icon-emerald' },
-  { icon: Lock, title: 'Privacy-aligned', description: 'Controls-focused', colorClass: 'icon-sky' },
-  { icon: Eye, title: 'Zero Tracking', description: 'No analytics', colorClass: 'icon-purple' },
-  { icon: Code, title: 'Open Source', description: 'Transparent code', colorClass: 'icon-pink' },
-  { icon: FileCheck, title: 'WCAG 2.2 AA', description: 'Target', colorClass: 'icon-amber' },
-  { icon: Users, title: 'Community', description: 'User-driven', colorClass: 'icon-indigo' },
+const privacyProofCards = [
+  {
+    icon: Users,
+    title: 'No account',
+    description: 'No email, login, password reset, or profile is required before you can start tracking.',
+    colorClass: 'icon-indigo',
+  },
+  {
+    icon: Shield,
+    title: 'Local-first storage',
+    description: 'Routine pain records stay on your device by default instead of being pushed into a central database.',
+    colorClass: 'icon-emerald',
+  },
+  {
+    icon: Lock,
+    title: 'Protected entries',
+    description: 'Sensitive records are protected locally, with sharing and export left to deliberate user action.',
+    colorClass: 'icon-sky',
+  },
+  {
+    icon: Eye,
+    title: 'No central health database',
+    description: 'There is no backend database collecting your day-to-day pain history as a default operating model.',
+    colorClass: 'icon-purple',
+  },
+  {
+    icon: FileCheck,
+    title: 'User-controlled exports',
+    description: 'PDF, CSV, and JSON files are created only when you ask for them.',
+    colorClass: 'icon-amber',
+  },
+  {
+    icon: Code,
+    title: 'Open source proof',
+    description: 'The codebase is public so the privacy story can be inspected instead of taken on faith.',
+    colorClass: 'icon-pink',
+  },
+];
+
+const localDataRows = [
+  {
+    label: 'Pain entries',
+    location: 'Your device',
+    access: 'You',
+  },
+  {
+    label: 'Passphrase',
+    location: 'Your device',
+    access: 'You',
+  },
+  {
+    label: 'Exports',
+    location: 'Created only when requested',
+    access: 'Whoever you share them with',
+  },
+  {
+    label: 'Cloud account',
+    location: 'None',
+    access: 'Nobody',
+  },
+  {
+    label: 'Central health database',
+    location: 'None',
+    access: 'Nobody',
+  },
 ];
 
 export const TrustIndicators: React.FC = () => {
   return (
-    <section className="landing-always-dark relative py-20 lg:py-28 overflow-hidden">
+    <section id="trust-proof" className="landing-always-dark relative py-20 lg:py-28 overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900" />
       
@@ -23,17 +82,17 @@ export const TrustIndicators: React.FC = () => {
         {/* Section Header */}
         <div className="text-center mb-14 lg:mb-16 max-w-3xl mx-auto stagger-fade-up">
           <h2 className="landing-headline text-3xl sm:text-4xl lg:text-5xl mb-4">
-            <span className="text-white">Security & Trust </span>
-            <span className="gradient-text-animated">You Can Verify</span>
+            <span className="text-white">Privacy is not a setting. </span>
+            <span className="gradient-text-animated">It is the architecture.</span>
           </h2>
           <p className="landing-subhead text-lg">
-            Security posture you can inspect in code and tests
+            The homepage should make the trust model legible fast: what stays local, what is never collected by default, and what only exists when you export it.
           </p>
         </div>
 
-        {/* Trust Badges Grid */}
+        {/* Privacy Proof Grid */}
         <div className="grid grid-cols-3 md:grid-cols-6 gap-4 lg:gap-6 max-w-5xl mx-auto mb-14 stagger-fade-up">
-          {trustBadges.map((badge) => {
+          {privacyProofCards.map((badge) => {
             const Icon = badge.icon;
             return (
               <div
@@ -54,23 +113,62 @@ export const TrustIndicators: React.FC = () => {
           })}
         </div>
 
+        <div className="max-w-5xl mx-auto mb-10">
+          <div className="glass-card-premium overflow-hidden">
+            <div className="border-b border-white/10 px-6 py-5 text-left">
+              <h3 className="text-xl font-semibold text-white">What stays on your device unless you export it</h3>
+              <p className="mt-2 text-sm leading-relaxed text-slate-400">
+                The privacy claim is strongest when the storage boundary is visible: what lives locally, what only exists after an export, and what simply does not exist at all.
+              </p>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="min-w-full text-left">
+                <thead>
+                  <tr className="border-b border-white/10 text-sm uppercase tracking-[0.18em] text-sky-300">
+                    <th className="px-6 py-4 font-medium">Data</th>
+                    <th className="px-6 py-4 font-medium">Where it lives</th>
+                    <th className="px-6 py-4 font-medium">Who can access it</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {localDataRows.map((row) => (
+                    <tr key={row.label} className="border-b border-white/5 last:border-b-0">
+                      <td className="px-6 py-4 text-white font-medium">{row.label}</td>
+                      <td className="px-6 py-4 text-slate-300">{row.location}</td>
+                      <td className="px-6 py-4 text-slate-400">{row.access}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
         {/* Bottom Note */}
-        <div className="max-w-2xl mx-auto text-center">
+        <div className="max-w-3xl mx-auto text-center">
           <div className="glass-card-premium p-6 lg:p-8">
-            <p className="text-slate-400 text-sm lg:text-base leading-relaxed">
-              <strong className="text-white font-semibold">Your data, your device.</strong>{' '}
-              We use local-first architecture with IndexedDB storage. Core tracking works on-device; optional network actions are explicit.{' '}
-              Install it like an app (PWA) on desktop or mobile—no app store required.{" "}
-              <a
-                href="https://github.com/CrisisCore-Systems/pain-tracker"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-sky-400 hover:text-sky-300 transition-colors font-medium group/link"
-              >
-                View source code
-                <ArrowRight className="h-4 w-4 group-hover/link:translate-x-0.5 transition-transform" />
-              </a>
+            <p className="text-slate-400 text-sm lg:text-base leading-relaxed mb-4">
+              <strong className="text-white font-semibold">Important:</strong>{' '}
+              local-first storage reduces exposure, but it also means browser-data cleanup, device loss, or forgotten passphrases can make records unrecoverable. Export backups regularly.
             </p>
+            <div className="mb-4">
+              <Link
+                to="/privacy-architecture"
+                className="inline-flex items-center gap-1.5 text-sm font-medium text-sky-300 hover:text-sky-200 transition-colors"
+              >
+                Read the privacy architecture
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+            <a
+              href="https://github.com/CrisisCore-Systems/pain-tracker"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-sky-400 hover:text-sky-300 transition-colors font-medium group/link"
+            >
+              View source code
+              <ArrowRight className="h-4 w-4 group-hover/link:translate-x-0.5 transition-transform" />
+            </a>
           </div>
         </div>
       </div>

@@ -54,7 +54,7 @@ const SEO = {
   slug: 'pain-diary-template-pdf',
   title: 'Printable Pain Diary Template (Free PDF)',
   metaTitle:
-    'Pain Diary Template PDF — Free Clinician-Designed Printable | Pain Tracker',
+    'Pain Diary Template PDF — Free Clinician-Designed Printable | PainTracker.ca',
   metaDescription:
     'Download a free, clinician-designed pain diary template PDF. Tracks pain intensity, location, medications, triggers, sleep, and mood — ready for doctor appointments, WorkSafeBC claims, and disability documentation.',
   keywords: [
@@ -767,7 +767,7 @@ export const PainDiaryTemplatePdfPage: React.FC = () => {
                 <div>
                   <h3 className="font-semibold text-white mb-1">Claims-Ready Format</h3>
                   <p className="text-sm text-slate-400">
-                    Accepted for medical appointments, WorkSafeBC, ICBC, CPP-D disability benefits, and private insurance documentation.
+                    Useful for appointments or claim-related discussions with WorkSafeBC, ICBC, CPP-D disability, or private insurers. This PDF is a documentation aid, not an official decision document. Approval depends on the reviewer, medical evidence, policy, and case context.
                   </p>
                 </div>
               </div>

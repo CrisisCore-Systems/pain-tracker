@@ -115,7 +115,7 @@ const painLogStats: StatItem[] = [
 const pageContent: SEOPageContent = {
   slug: 'printable-pain-log-sheet',
   title: 'Printable Pain Log Sheet (Free)',
-  metaTitle: 'Printable Pain Log Sheet — Free Simple Daily Pain Tracker You Can Print Right Now | Pain Tracker',
+  metaTitle: 'Printable Pain Log Sheet — Free Simple Daily Pain Tracker You Can Print Right Now | PainTracker.ca',
   metaDescription: 'Download a free printable pain log sheet with daily pain ratings, symptom tracking, medication log, and notes section. Print and start tracking in under a minute.',
   keywords: [
     'printable pain log sheet', 'pain log printable',

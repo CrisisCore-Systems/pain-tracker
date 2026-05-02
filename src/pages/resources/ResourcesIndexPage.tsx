@@ -337,7 +337,7 @@ export const ResourcesIndexPage: React.FC = () => {
 
   useEffect(() => {
     return applyPageMetadata({
-      title: 'Free Pain Tracking Printables, Guides, and Appointment Prep | Pain Tracker',
+      title: 'Free Pain Tracking Printables, Guides, and Appointment Prep | PainTracker.ca',
       description: 'Free downloadable pain diary templates, printable pain logs, symptom trackers, and guides for appointments, disability documentation, and WorkSafeBC workflows.',
       canonicalUrl: 'https://www.paintracker.ca/resources',
     });

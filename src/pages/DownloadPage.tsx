@@ -43,9 +43,9 @@ export const DownloadPage: React.FC = () => {
 
   useEffect(() => {
     const meta = {
-      title: 'Free Pain Tracker App Download | Private and Offline | PainTracker',
+      title: 'Download PainTracker Free | Private Pain Tracker App for Offline Use',
       description:
-        'Use PainTracker free in your browser, install it for offline use, or self host it. Keep pain records private and available when you need them.',
+        'Download PainTracker free, install it for offline use, or run it in your browser. No account required. Records stay on your device until you choose to export them.',
       canonicalUrl: `${defaultSEOConfig.siteUrl}/download`,
     };
 
@@ -107,10 +107,10 @@ export const DownloadPage: React.FC = () => {
         {/* Header */}
         <header className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
-            Download the free pain tracker app
+            Download PainTracker free
           </h1>
           <p className="text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed">
-            Use it in your browser, install it for offline access, or self host it if you want full control.
+            Use it in your browser, install it for offline access, or self host it if you want full control over where the app runs.
           </p>
         </header>
 

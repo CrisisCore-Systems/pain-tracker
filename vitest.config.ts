@@ -6,7 +6,7 @@ const envCoverage = process.env.VITEST_COVERAGE;
 const coverageEnabled =
   process.argv.includes('--coverage') || envCoverage === 'true' || envCoverage === '1';
 const envMaxThreads = Number.parseInt(process.env.VITEST_MAX_THREADS || '', 10);
-let maxThreads = isCI ? 2 : 4;
+let maxThreads = isCI ? 2 : 1;
 
 if (Number.isFinite(envMaxThreads) && envMaxThreads > 0) {
   maxThreads = envMaxThreads;

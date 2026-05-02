@@ -33,6 +33,7 @@ const ClinicPortal = lazy(() => import('./pages/clinic/ClinicPortal').then(m => 
 const SubscriptionManagementPage = lazy(() => import('./pages/SubscriptionManagementPage').then(m => ({ default: m.SubscriptionManagementPage })));
 const SubmitStoryPage = lazy(() => import('./pages/SubmitStoryPage').then(m => ({ default: m.SubmitStoryPage })));
 const DownloadPage = lazy(() => import('./pages/DownloadPage').then(m => ({ default: m.DownloadPage })));
+const PrivacyArchitecturePage = lazy(() => import('./pages/PrivacyArchitecturePage').then(m => ({ default: m.PrivacyArchitecturePage })));
 const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage').then(m => ({ default: m.PrivacyPolicyPage })));
 const TrackingDataPolicyPage = lazy(() => import('./pages/TrackingDataPolicyPage').then(m => ({ default: m.TrackingDataPolicyPage })));
 const PainTrackerAppPage = lazy(() => import('./pages/PainTrackerAppPage').then(m => ({ default: m.PainTrackerAppPage })));
@@ -249,6 +250,9 @@ function App() {
 
                     {/* Download Page - Public */}
                     <Route path="/download" element={<DownloadPage />} />
+
+                    {/* Privacy Architecture - Public */}
+                    <Route path="/privacy-architecture" element={<PrivacyArchitecturePage />} />
 
                     {/* Privacy Policy - Public */}
                     <Route path="/privacy" element={<PrivacyPolicyPage />} />

@@ -115,7 +115,7 @@ const doctorStats: StatItem[] = [
 const pageContent: SEOPageContent = {
   slug: 'how-doctors-use-pain-diaries',
   title: 'How Doctors Use Pain Diaries',
-  metaTitle: 'How Doctors Use Pain Diaries — The Clinical Perspective | Pain Tracker',
+  metaTitle: 'How Doctors Use Pain Diaries — The Clinical Perspective | PainTracker.ca',
   metaDescription: 'Understand how doctors actually use pain diary data to make treatment decisions. 6 clinical uses, decision timeline, and how to make your tracking clinically useful.',
   keywords: [
     'how doctors use pain diaries', 'pain diary clinical use',
@@ -165,7 +165,7 @@ const pageContent: SEOPageContent = {
     { question: 'What if my diary contradicts what my doctor says?', answer: 'Your diary IS the data. If your doctor says "you seem fine" but your diary shows consistent 6-7/10 pain with significant functional limitations, the diary provides evidence for a second opinion or referral discussion. Data is powerful.' },
     { question: 'How do doctors use diaries for treatment evaluation?', answer: 'They compare pre-treatment and post-treatment data. If your average pain was 7 before starting a medication and is now 5, that\'s a clear response. If it hasn\'t changed after 6 weeks, it\'s time to try something else. Your diary provides the before/after comparison.' },
     { question: 'Do specialists use diaries differently than primary care?', answer: 'Yes. Pain specialists focus heavily on medication response and pain quality. Rheumatologists look at morning stiffness and joint patterns. Neurologists analyze pain descriptors and progression. Surgeons look at positional triggers. Know your audience.' },
-    { question: 'How does my diary help with insurance/prior auth?', answer: 'Insurance requires "medical necessity" for procedures, specialists, and expensive medications. Your diary documenting "failed conservative treatment for 6 weeks — pain unchanged at 7/10" is the evidence that gets prior authorizations approved.' },
+    { question: 'How does my diary help with insurance/prior auth?', answer: 'Insurance requires "medical necessity" for procedures, specialists, and expensive medications. Your diary documenting "failed conservative treatment for 6 weeks — pain unchanged at 7/10" can help organize the records often requested in prior authorization discussions.' },
     { question: 'Is there a "wrong" way to keep a pain diary?', answer: 'Yes: constant 10/10 with no variation looks unreliable. Not tracking medication response wastes the most useful data point. Very sporadic entries show no patterns. But honestly tracking — even imperfectly — is always better than not tracking at all.' }
   ],
   relatedLinks: [

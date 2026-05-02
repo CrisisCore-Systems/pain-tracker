@@ -14,7 +14,7 @@ const pageContent: SEOPageContent = {
   slug: 'pain-scale-chart-printable',
   title: 'Pain Scale Chart Printable (Free)',
   metaTitle:
-    'Pain Scale Chart Printable — Free 0-10 NRS Visual Reference | Pain Tracker',
+    'Pain Scale Chart Printable — Free 0-10 NRS Visual Reference | PainTracker.ca',
   metaDescription:
     'Download a free printable pain scale chart. Visual 0-10 Numeric Rating Scale with descriptors, faces, colors, and functional impact — the clinical standard for consistent pain reporting.',
   keywords: [

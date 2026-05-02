@@ -10,9 +10,39 @@ const preloadAppChunks = () => {
   import('../../components/security/VaultGate');
 };
 
+const trustStripItems = [
+  'No account required',
+  'Works offline after first load',
+  'Encrypted local storage',
+  'PDF/CSV/JSON export',
+  'Open source',
+];
+
+const screenshotHighlights = [
+  {
+    src: '/screenshots/marketing/pain-entry-interface.png',
+    alt: 'PainTracker quick pain entry interface',
+    label: 'Fast pain entry',
+  },
+  {
+    src: '/screenshots/marketing/body-map-interaction.png',
+    alt: 'PainTracker body map interaction',
+    label: 'Body location mapping',
+  },
+  {
+    src: '/screenshots/marketing/analytics-dashboard.png',
+    alt: 'PainTracker analytics dashboard',
+    label: 'Pattern review',
+  },
+  {
+    src: '/screenshots/marketing/export-process.png',
+    alt: 'PainTracker export options for reports and structured records',
+    label: 'Report exports',
+  },
+];
+
 export const Hero: React.FC = () => {
   const navigate = useNavigate();
-  const _env = (import.meta.env ?? {}) as Record<string, string | undefined>;
   const [scrolled, setScrolled] = useState(false);
   
   // Preload on user intent (hover or focus)
@@ -95,7 +125,7 @@ export const Hero: React.FC = () => {
                 className="btn-cta-primary flex items-center gap-2 text-sm px-5 py-2.5"
                 data-testid="nav-cta-start"
               >
-                Use the free pain tracker
+                <span>Start tracking free</span>
                 <ArrowRight className="h-4 w-4" />
               </button>
             </div>
@@ -115,28 +145,24 @@ export const Hero: React.FC = () => {
                   <Sparkles className="h-4 w-4" />
                   <span>Private by default</span>
                 </span>
-                <span className="hidden sm:flex items-center gap-2 text-sm text-slate-300">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  No Account Required
-                </span>
+                <div className="hidden sm:flex items-center gap-2 text-sm text-slate-300">
+                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  <span>No account required</span>
+                </div>
               </div>
 
               {/* Headline */}
               <h1 className="landing-headline landing-headline-xl">
-                <span className="text-white">A free pain tracker app</span>
+                <span className="text-white">Track chronic pain</span>
                 <br />
-                <span className="text-white">for private, offline</span>
+                <span className="text-white">privately, even</span>
                 <br />
-                <span className="text-white">symptom tracking</span>
+                <span className="text-white">offline</span>
               </h1>
 
               {/* Subheading */}
               <p className="landing-subhead text-lg lg:text-xl max-w-xl mx-auto lg:mx-0">
-                Log pain, flare ups, medications, triggers, and daily function without creating an account. Keep better records for yourself and for doctor visits.
-              </p>
-
-              <p className="text-sm text-slate-400 max-w-xl mx-auto lg:mx-0">
-                Daily tracking stays local by default unless you deliberately export a record.
+                PainTracker is a free local-first pain journal for logging pain, flare ups, medications, triggers, daily function, and appointment-ready reports. No account. No cloud database. Your records stay on your device.
               </p>
 
               {/* Feature Pills */}
@@ -151,7 +177,7 @@ export const Hero: React.FC = () => {
                 </div>
                 <div className="badge-glow-purple flex items-center gap-2 text-sm">
                   <FileText className="h-3.5 w-3.5" />
-                  <span>Doctor-ready records</span>
+                  <span>Doctor-ready reports</span>
                 </div>
               </div>
 
@@ -162,7 +188,7 @@ export const Hero: React.FC = () => {
                   className="btn-cta-primary text-lg px-8 py-4 flex items-center justify-center gap-3"
                   data-testid="hero-cta-start"
                 >
-                  <span>Use the free pain tracker</span>
+                  <span>Start tracking free</span>
                   <ArrowRight className="h-5 w-5" />
                 </button>
 
@@ -170,30 +196,31 @@ export const Hero: React.FC = () => {
                   onClick={() => navigate('/resources/pain-diary-template-pdf')}
                   className="btn-cta-outline text-lg px-8 py-4"
                 >
-                  <span className="inline-flex items-center gap-2"><Download className="h-5 w-5" />Get the printable PDF</span>
-                </button>
-
-                <button
-                  onClick={() => navigate('/share-pain-records-with-doctor-without-giving-an-app-your-data')}
-                  className="btn-cta-outline text-lg px-8 py-4"
-                >
-                  <span className="inline-flex items-center gap-2"><FileText className="h-5 w-5" />Prepare for doctor visits</span>
+                  <span className="inline-flex items-center gap-2"><Download className="h-5 w-5" />Download printable pain diary</span>
                 </button>
               </div>
 
               {/* Trust Line */}
               <div className="space-y-3 text-sm pt-4">
-                <p className="flex items-center gap-3 justify-center lg:justify-start text-slate-200">
-                  <span className="flex items-center gap-1.5 text-emerald-300">Use the free pain tracker</span>
-                  <span className="text-slate-400">•</span>
-                  <span>Get the printable PDF</span>
-                  <span className="text-slate-400">•</span>
-                  <span>Prepare for doctor visits</span>
+                <p className="text-sky-200/90 font-medium text-center lg:text-left">
+                  No account required · Works offline after first load · Encrypted local storage · PDF/CSV/JSON export · Open source
                 </p>
-                <p className="flex items-center gap-2 justify-center lg:justify-start text-slate-200">
-                  <span className="text-sky-300 font-medium">Patient-first hierarchy:</span>
-                  <span>Resources and appointment prep first. Builder and architecture content lower in the hierarchy.</span>
-                </p>
+                <div className="text-center lg:text-left">
+                  <a
+                    href="#trust-proof"
+                    className="text-sm font-medium text-sky-300 underline decoration-sky-400/40 underline-offset-4 transition-colors hover:text-sky-200"
+                  >
+                    See privacy proof
+                  </a>
+                </div>
+                <ul className="flex flex-wrap gap-x-4 gap-y-2 justify-center lg:justify-start text-slate-300">
+                  {trustStripItems.map((item) => (
+                    <li key={item} className="inline-flex items-center gap-2">
+                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" aria-hidden="true" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
             </div>
 
@@ -202,10 +229,10 @@ export const Hero: React.FC = () => {
               {/* Glow effect behind card */}
               <div className="absolute inset-0 bg-gradient-to-r from-sky-500/30 via-purple-500/20 to-emerald-500/20 blur-3xl scale-110 opacity-60" />
               
-              {/* Dashboard Card */}
-              <div className="glass-card-premium relative overflow-hidden">
+              {/* Screenshot Cluster */}
+              <div className="glass-card-premium relative overflow-hidden p-5 lg:p-6">
                 {/* Browser-like header */}
-                <div className="flex items-center gap-2 px-5 py-4 border-b border-white/10 bg-white/[0.02]">
+                <div className="flex items-center gap-2 px-1 pb-4 border-b border-white/10 bg-white/[0.02]">
                   <div className="flex gap-2">
                     <div className="w-3 h-3 rounded-full bg-red-500/80 shadow-lg shadow-red-500/30" />
                     <div className="w-3 h-3 rounded-full bg-yellow-500/80 shadow-lg shadow-yellow-500/30" />
@@ -214,21 +241,30 @@ export const Hero: React.FC = () => {
                   <div className="flex-1 text-center">
                     <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/5 rounded-full">
                       <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                      <span className="text-xs text-slate-300 font-mono">paintracker.app/dashboard</span>
+                      <span className="text-xs text-slate-300 font-mono">paintracker.ca/start</span>
                     </div>
                   </div>
                 </div>
                 
-                {/* Screenshot */}
-                <div className="p-4 lg:p-6">
-                  <img
-                    src={_env.VITE_LANDING_SCREENSHOT || '/screenshots/marketing/analytics-dashboard.png'}
-                    alt="PainTracker Dashboard"
-                    width="1200"
-                    height="800"
-                    className="rounded-xl w-full h-auto shadow-2xl"
-                    loading="lazy"
-                  />
+                <div className="pt-5 space-y-4">
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    {screenshotHighlights.map((shot) => (
+                      <figure key={shot.src} className="rounded-2xl overflow-hidden border border-white/10 bg-slate-950/40">
+                        <img
+                          src={shot.src}
+                          alt={shot.alt}
+                          width="1200"
+                          height="800"
+                          className="w-full h-auto"
+                          loading="lazy"
+                        />
+                        <figcaption className="px-4 py-3 text-sm text-slate-200">{shot.label}</figcaption>
+                      </figure>
+                    ))}
+                  </div>
+                  <p className="text-sm text-slate-300 leading-relaxed">
+                    Log pain, map where it shows up, review patterns, and export structured reports without turning routine tracking into a cloud account problem.
+                  </p>
                 </div>
               </div>
 

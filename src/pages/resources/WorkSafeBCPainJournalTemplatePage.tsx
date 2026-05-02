@@ -346,8 +346,8 @@ const pageContent: SEOPageContent = {
   // Meta & SEO
   slug: 'worksafebc-pain-journal-template',
   title: 'WorkSafeBC Pain Journal Template (Free)',
-  metaTitle: 'WorkSafeBC Pain Journal Template - Free BC Workers Comp Pain Diary (2026) | Pain Tracker',
-  metaDescription: 'Download our free 6-page WorkSafeBC pain journal PDF. Designed for BC workplace injury claims — tracks work-related pain, functional capacity, treatment compliance, and return-to-work readiness in the format case managers need.',
+  metaTitle: 'WorkSafeBC Pain Journal Template | PainTracker.ca',
+  metaDescription: 'Download the free PainTracker.ca WorkSafeBC pain journal template for BC workplace injury documentation. Track work-related pain, functional capacity, treatment compliance, and return-to-work notes for appointments and claim-related discussions.',
   keywords: [
     'worksafebc pain journal template',
     'wcb pain diary',
@@ -368,7 +368,7 @@ const pageContent: SEOPageContent = {
   // Above-the-fold
   badge: 'Free 6-Page PDF',
   headline: 'WorkSafeBC Pain Journal Template',
-  subheadline: 'Document your workplace injury pain in the exact format WorkSafeBC case managers and medical advisors evaluate. Track work-related symptoms, functional capacity, treatment compliance, and return-to-work readiness — all aligned with Form 8 documentation standards.',
+  subheadline: 'Document workplace injury pain with a structured template for symptoms, functional capacity, treatment compliance, and return-to-work notes. Built to support WorkSafeBC-related documentation without promising claim acceptance or legal outcomes.',
   primaryCTA: {
     text: 'Download Free PDF (6 Pages)',
     href: '/assets/worksafebc-pain-journal.pdf',
@@ -387,7 +387,7 @@ const pageContent: SEOPageContent = {
   },
   
   // Content sections
-  whatIsThis: 'This is a 6-page pain journal template designed specifically for British Columbia workers with active or pending WorkSafeBC (WCB) claims. Unlike general pain diaries, every section emphasizes the connection between your pain and your workplace injury — the single most important factor in WCB claim decisions. It includes dedicated tracking for: daily work-related pain with job duty linkage, functional capacity measurements (sitting, standing, lifting tolerances), treatment and rehabilitation compliance, weekly work impact summaries, and a monthly summary page formatted for case manager review. The template aligns with the documentation standards used by WorkSafeBC medical advisors when evaluating Form 8 physician reports and chronic pain claims.',
+  whatIsThis: 'This is a 6-page pain journal template for British Columbia workers with active or pending WorkSafeBC (WCB) claims. Unlike a general pain diary, it keeps the focus on work-related symptoms, job demands, functional limits, treatment history, and weekly work impact so your records stay organized around the claim context. It includes daily pain entries with job duty linkage, functional capacity measurements (sitting, standing, lifting tolerances), treatment and rehabilitation tracking, weekly summaries, and a monthly overview page for appointments or claim-related discussions. It is a documentation aid, not an official decision document.',
   
   whoShouldUse: [
     'BC workers with workplace injuries resulting in chronic or ongoing pain',
@@ -409,7 +409,7 @@ const pageContent: SEOPageContent = {
     {
       step: 2,
       title: 'Connect every symptom to your work',
-      description: 'This is the most critical habit. Every diary entry must link your pain to your workplace injury and job duties. Don\'t write "back hurts." Write: "L4-L5 pain increased to 7/10 after sitting at workstation for 90 minutes — had to leave desk and lie down. Could not complete the afternoon shift." This specificity is what case managers need to justify ongoing benefits.',
+      description: 'This is the most critical habit. Every diary entry should link your pain to your workplace injury and job duties. Don\'t write "back hurts." Write: "L4-L5 pain increased to 7/10 after sitting at workstation for 90 minutes — had to leave desk and lie down. Could not complete the afternoon shift." This specificity helps keep your documentation concrete and easier to review.',
     },
     {
       step: 3,
@@ -419,37 +419,37 @@ const pageContent: SEOPageContent = {
     {
       step: 4,
       title: 'Log every treatment and appointment without exception',
-      description: 'WCB evaluates treatment compliance heavily. Record every medical appointment, physiotherapy session, prescribed home exercise, and medication. If you miss a session, document why. Track effectiveness too: "Physio session #14 — dry needling on shoulder. Pain reduced from 7 to 4 for ~6 hours."',
+      description: 'Treatment history is often part of claim documentation. Record every medical appointment, physiotherapy session, prescribed home exercise, and medication. If you miss a session, document why. Track effectiveness too: "Physio session #14 — dry needling on shoulder. Pain reduced from 7 to 4 for ~6 hours."',
     },
     {
       step: 5,
       title: 'Complete the monthly summary and share with your case manager',
-      description: 'At month-end, fill in the summary page: total work days missed, average pain level, treatment attendance rate, functional capacity changes, and return-to-work readiness. Bring this page to WCB appointments, medical exams, and vocational assessments. One organized summary page is more persuasive than a stack of unstructured notes.',
+      description: 'At month-end, fill in the summary page: total work days missed, average pain level, treatment attendance rate, functional capacity changes, and return-to-work readiness. Bring this page to WorkSafeBC-related appointments, medical exams, and vocational assessments. One organized summary page is easier to review than a stack of unstructured notes.',
     },
   ],
   
-  whyItMatters: 'WorkSafeBC processes over 200,000 claims annually. Case managers have limited time to review each one — claims with structured, consistent, work-focused documentation are resolved faster and approved more often. A 2022 review found that claims with structured pain diaries were resolved an average of 3 weeks faster than those without. For chronic pain claims specifically, documentation quality is often the deciding factor between approval and denial. The Workers\' Compensation Appeal Tribunal (WCAT) regularly overturns denials when workers present organized daily records that the original case manager didn\'t have. Your pain diary is not just a tracking tool — it\'s your primary evidence.',
+  whyItMatters: 'WorkSafeBC claims often depend on whether the record clearly shows how symptoms, work demands, treatment history, and functional limits fit together over time. A structured diary helps you preserve those details while they are fresh instead of reconstructing them later from memory. For chronic pain claims and appeals especially, organized daily records can make conversations with clinicians, advocates, and adjudicators more concrete. Approval depends on the reviewer, medical evidence, policy, and case context, but good records make the discussion easier to follow.',
   
   // Trust signals
   trustSignals: {
-    medicalNote: 'Aligned with WorkSafeBC Form 8 documentation standards and medical advisor evaluation criteria.',
+    medicalNote: 'Built to support work-related symptom, function, and treatment notes that can be brought to clinicians preparing Form 8 or related documentation.',
     privacyNote: 'Your workers\' compensation records stay private until you choose to share them with WCB or your advocate.',
-    legalNote: 'Accepted format for Review Division appeals, WCAT proceedings, and Independent Medical Exams.',
+    legalNote: 'Helpful for Review Division appeals, WCAT preparation, and Independent Medical Exams. This is a documentation aid, not an official WorkSafeBC form or legal advice.',
   },
   
   // FAQ
   faqs: [
     {
       question: 'Does WorkSafeBC require a pain diary for claims?',
-      answer: 'Not officially required, but strongly recommended — especially for chronic pain claims. WCB case managers and medical advisors rely on physician reports (Form 8), but these only capture snapshots from appointments. A daily pain diary fills the gaps between medical visits and demonstrates the persistent, daily reality of your condition. Claims with structured documentation are consistently resolved faster and more favorably.',
+      answer: 'No. A pain diary is not an official WorkSafeBC requirement. Physician reports such as Form 8 remain central, but a daily pain diary helps organize records between appointments and show how symptoms and limitations change over time.',
     },
     {
       question: 'What is Form 8 and how does my diary relate to it?',
-      answer: 'Form 8 is the physician\'s report to WorkSafeBC — your doctor fills it out after their examination. It includes diagnosis, treatment plan, and functional capacity assessment. Your pain diary doesn\'t replace Form 8, but it powerfully supports it. When your diary matches what your doctor reports, it reinforces credibility. Bring your diary to appointments so your doctor can reference your daily patterns when completing Form 8.',
+      answer: 'Form 8 is the physician\'s report to WorkSafeBC — your doctor fills it out after their examination. It includes diagnosis, treatment plan, and functional capacity assessment. Your pain diary does not replace Form 8. Use it alongside clinical records so your doctor can reference your daily patterns when completing related documentation.',
     },
     {
       question: 'What if my claim has already been denied?',
-      answer: 'Start documenting now. Pain diaries are valuable evidence for Review Division reconsiderations and WCAT appeals. The appeal process allows new evidence that wasn\'t available during the original decision. A structured diary showing persistent, work-related symptoms, treatment compliance, and ongoing functional limitations can be the difference in overturning a denial. Many workers\' advocates specifically recommend starting a diary before filing an appeal.',
+      answer: 'Start documenting now. Pain diaries can still be useful for Review Division reconsiderations and WCAT appeals because they help organize ongoing symptoms, treatment history, and functional limitations. Use them as part of the evidence record, not instead of medical or legal guidance.',
     },
     {
       question: 'How does this differ from a regular pain diary?',
@@ -457,7 +457,7 @@ const pageContent: SEOPageContent = {
     },
     {
       question: 'Should I share my diary with my WCB case manager?',
-      answer: 'Yes, strategically. Share monthly summaries at key decision points: before medical examinations (especially IMEs), during vocational rehabilitation assessments, when benefits are under review, or when requesting extended treatment coverage. You don\'t need to submit every daily entry. The monthly summary page is specifically designed for case manager consumption — one page that captures the full picture.',
+      answer: 'You can share summaries strategically when they are relevant to medical examinations, vocational rehabilitation assessments, benefit reviews, or treatment discussions. You do not need to submit every daily entry. The monthly summary page is designed to make the record easier to review.',
     },
     {
       question: 'What if I\'m back at work but still have pain?',
@@ -469,11 +469,11 @@ const pageContent: SEOPageContent = {
     },
     {
       question: 'Can I use the digital version in Pain Tracker for my WCB claim?',
-      answer: 'Yes. Pain Tracker generates WorkSafeBC-specific reports in PDF format, aligned with Form 8 documentation. The digital version adds automatic pain trend analysis, work impact calculations, treatment compliance tracking, and one-click PDF export. Each export includes a SHA-256 integrity hash for verifiability. Many users combine both: the paper diary for daily quick entries (especially at work) and the digital version for analysis, reporting, and export.',
+      answer: 'Yes. PainTracker.ca can generate WorkSafeBC-oriented PDF reports from your records. The digital version adds pain trend analysis, work impact calculations, treatment compliance tracking, and one-click PDF export. Many people combine both: the paper diary for quick daily entries and the digital version for summaries and exports.',
     },
     {
       question: 'What about the Workers\' Compensation Appeal Tribunal (WCAT)?',
-      answer: 'WCAT is the final level of appeal for denied WorkSafeBC claims. WCAT decisions are based on the evidence record, and panels regularly cite the quality of worker self-documentation in their decisions. A structured pain diary with daily entries, consistent work connection, treatment compliance records, and functional capacity measurements is exactly the type of evidence WCAT panels find persuasive. If you\'re heading to WCAT, organize your diary entries into a chronological summary with the monthly overview pages.',
+      answer: 'WCAT is the final level of appeal for denied WorkSafeBC claims. If you\'re heading to WCAT, organize your diary entries into a chronological summary with the monthly overview pages so your documentation is easier to follow alongside the rest of the evidence record.',
     },
     {
       question: 'I work in construction / trades — is this relevant for physical jobs?',

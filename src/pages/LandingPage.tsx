@@ -37,10 +37,10 @@ export const LandingPage: React.FC = () => {
 
   useEffect(() => {
     const meta = {
-      title: 'Free Pain Tracker App That Works Offline and Keeps Data Private | PainTracker',
-      description: 'Track pain, symptoms, medications, and triggers with a free pain tracker app that works offline and keeps your records private. No account required.',
+      title: 'PainTracker.ca - Free Private Pain Tracker App That Works Offline',
+      description: 'Track pain, flares, medications, triggers, and daily function privately. PainTracker.ca works offline, needs no account, stores records on your device, and supports appointment-ready exports.',
       keywords:
-        'free pain tracker app, pain tracker app, pain tracker, private pain tracker, offline pain tracker, pain diary template, symptom tracker printable, doctor visit records',
+        'free pain tracker app, pain tracker app, pain tracker, private pain tracker, offline pain tracker, pain diary template, symptom tracker printable, doctor visit records, worksafebc pain journal',
     };
 
     document.title = meta.title;
@@ -68,7 +68,7 @@ export const LandingPage: React.FC = () => {
 
     // Announce page to screen readers
     const announcement =
-      'Welcome to PainTracker. Use a free pain tracker app for private offline symptom tracking and clearer doctor visit records.';
+      'Welcome to PainTracker. Track chronic pain privately, even offline, with no account required and export records only when you choose.';
     const ariaLive = document.createElement('div');
     ariaLive.setAttribute('role', 'status');
     ariaLive.setAttribute('aria-live', 'polite');
@@ -89,24 +89,25 @@ export const LandingPage: React.FC = () => {
 
   const intentPages = [
     {
-      title: 'Use the free pain tracker',
-      description: 'Start daily pain tracking in the app with no account required and private local-first records by default.',
+      eyebrow: 'Daily pain tracking',
+      title: 'Track pain privately on bad days too',
+      description: 'Log pain intensity, body location, symptoms, medication, triggers, and notes in under a minute. Built for brain fog, low energy, and interrupted days.',
       href: '/start',
+      cta: 'Start tracking free',
     },
     {
-      title: 'Get the printable PDF',
-      description: 'Get a pain journal template, daily pain tracker, or symptom log you can print today.',
-      href: '/resources/pain-diary-template-pdf',
-    },
-    {
-      title: 'Prepare for doctor visits',
-      description: 'Use the record-sharing workflow to bring clearer pain records to a doctor without handing an app your day-to-day data.',
+      eyebrow: 'Appointments and documentation',
+      title: 'Bring structured records to doctors and claims',
+      description: 'Turn scattered symptoms into usable records for doctors, physiotherapy, disability paperwork, or WorkSafeBC-related documentation conversations.',
       href: '/share-pain-records-with-doctor-without-giving-an-app-your-data',
+      cta: 'Prepare records',
     },
     {
-      title: 'Prepare documentation',
-      description: 'Build records for disability, insurance, or WorkSafeBC workflows using the patient-first resource funnel.',
-      href: '/resources/documenting-pain-for-disability-claim',
+      eyebrow: 'Printable backup lane',
+      title: 'Download a printable pain diary today',
+      description: 'Start with a printable pain journal, daily pain tracker, or symptom log if paper feels safer or easier right now.',
+      href: '/resources/pain-diary-template-pdf',
+      cta: 'Download printable pain diary',
     },
   ];
 
@@ -134,24 +135,32 @@ export const LandingPage: React.FC = () => {
           <div className="relative container mx-auto px-4">
             <div className="text-center mb-10 max-w-3xl mx-auto stagger-fade-up">
               <h2 className="landing-headline landing-headline-md mb-4">
-                <span className="text-white">Start with the patient lane, </span>
-                <span className="gradient-text-animated">not the doctrine lane</span>
+                <span className="text-white">Choose the next useful step </span>
+                <span className="gradient-text-animated">without hunting for it</span>
               </h2>
               <p className="landing-subhead text-lg">
-                The public front door should help people in pain do the next useful thing fast: use the app, print a tracker, or prepare records for appointments and documentation.
+                PainTracker works best when the homepage acts like triage: start tracking, get records ready, or take the printable route if digital feels like too much today.
               </p>
             </div>
-            <div className="grid gap-6 md:grid-cols-2 stagger-fade-up">
+            <div className="grid gap-6 md:grid-cols-3 stagger-fade-up">
               {intentPages.map((page) => (
                 <Link
                   key={page.href}
                   to={page.href}
                   className="glass-card-premium rounded-2xl p-6 border border-white/10 hover:border-sky-400/40 transition-all"
                 >
+                  <p className="text-sm font-medium uppercase tracking-[0.18em] text-sky-300 mb-3">{page.eyebrow}</p>
                   <h3 className="text-white font-semibold text-xl mb-2">{page.title}</h3>
-                  <p className="text-slate-400 leading-relaxed">{page.description}</p>
+                  <p className="text-slate-400 leading-relaxed mb-5">{page.description}</p>
+                  <span className="text-sm font-medium text-emerald-300">{page.cta} -&gt;</span>
                 </Link>
               ))}
+            </div>
+            <div className="max-w-4xl mx-auto mt-8 rounded-2xl border border-amber-400/20 bg-amber-500/5 p-6 stagger-fade-up">
+              <h3 className="text-lg font-semibold text-white mb-2">Local-first means you control the backup too</h3>
+              <p className="text-slate-300 leading-relaxed">
+                If you clear browser storage, lose your device, or forget your passphrase, your local records may not be recoverable. Export backups regularly before risky changes or device cleanup.
+              </p>
             </div>
           </div>
         </section>

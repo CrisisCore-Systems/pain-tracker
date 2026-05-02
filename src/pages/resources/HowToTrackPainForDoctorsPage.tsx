@@ -114,7 +114,7 @@ const trackingStats: StatItem[] = [
 const pageContent: SEOPageContent = {
   slug: 'how-to-track-pain-for-doctors',
   title: 'How to Track Pain for Doctors',
-  metaTitle: 'How to Track Pain for Doctors — What Your Doctor Actually Needs | Pain Tracker',
+  metaTitle: 'How to Track Pain for Doctors — What Your Doctor Actually Needs | PainTracker.ca',
   metaDescription: 'Learn exactly what to track and how to present pain data to your doctor in 15-minute appointments. 7 key data points, appointment prep checklist, and free tracking templates.',
   keywords: [
     'how to track pain for doctors', 'pain tracking for doctor appointment',

@@ -56,7 +56,7 @@ const SEO = {
   slug: 'weekly-pain-log-pdf',
   title: 'Weekly Pain Log PDF (Free 7-Day Template)',
   metaTitle:
-    'Weekly Pain Log PDF — Free 7-Day Pain Tracker Template | Pain Tracker',
+    'Weekly Pain Log PDF — Free 7-Day Pain Tracker Template | PainTracker.ca',
   metaDescription:
     'Download a free weekly pain log PDF. 8-section 7-day spread tracks daily pain, sleep, medications, activity, mood, triggers, and weekly patterns — ideal for appointments and disability claims.',
   keywords: [
@@ -786,7 +786,7 @@ export const WeeklyPainLogPdfPage: React.FC = () => {
                 <div>
                   <h3 className="font-semibold text-white mb-1">Claims-Ready Format</h3>
                   <p className="text-sm text-slate-400">
-                    Accepted for WorkSafeBC, ICBC, CPP-D, private insurance, and medical appointments. Weekly consistency strengthens your case.
+                    Useful for appointments or claim-related discussions with WorkSafeBC, ICBC, CPP-D, or private insurers. This PDF is a documentation aid, not an official decision document. Approval depends on the reviewer, medical evidence, policy, and case context.
                   </p>
                 </div>
               </div>
