@@ -1,5 +1,6 @@
 # Normalize line endings for generated badge artifacts.
 # This prevents Windows CRLF/LF churn from blocking the pre-push hook.
 badges/*.json text eol=lf
+.husky/* text eol=lf
 
 *.pdf binary
