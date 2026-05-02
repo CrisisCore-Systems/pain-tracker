@@ -9,6 +9,11 @@ import type { VercelRequest, VercelResponse } from '../../src/types/vercel';
 import Stripe from 'stripe';
 import { z } from 'zod';
 import { enforceRateLimit, getClientIp, isAllowedReturnUrl, logError } from '../../api-lib/http';
+import {
+  issueSubscriptionOwnerCookie,
+  isSubscriptionOwnershipConfigured,
+  readSubscriptionOwner,
+} from '../../api-lib/subscriptionOwnership';
 
 // Price IDs from Stripe dashboard (set these in environment variables)
 const PRICE_IDS = {
@@ -63,6 +68,11 @@ export default async function handler(
     return;
   }
 
+  if (!isSubscriptionOwnershipConfigured()) {
+    res.status(503).json({ error: 'Subscription ownership is not configured' });
+    return;
+  }
+
   // Re-initialize Stripe with the current env var
   const stripe = new Stripe(rawKey, { apiVersion: '2025-10-29.clover' });
 
@@ -74,6 +84,12 @@ export default async function handler(
     }
 
     const { userId, tier, interval, successUrl, cancelUrl, email } = parsed.data;
+
+    const existingOwner = readSubscriptionOwner(req);
+    if (existingOwner && existingOwner !== userId) {
+      res.status(409).json({ error: 'Subscription owner mismatch' });
+      return;
+    }
 
     if (!isAllowedReturnUrl(req, successUrl) || !isAllowedReturnUrl(req, cancelUrl)) {
       res.status(400).json({ error: 'Invalid return URL' });
@@ -126,6 +142,8 @@ export default async function handler(
       sessionId: session.id,
       url: session.url || '',
     };
+
+    issueSubscriptionOwnerCookie(res, req, userId);
 
     res.status(200).json(response);
 

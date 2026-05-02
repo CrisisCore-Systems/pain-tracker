@@ -19,6 +19,13 @@ import type { PainEntry } from '../../types';
 import { exportToCSV, exportToJSON, exportToPDF, downloadData } from '../../utils/pain-tracker/export';
 import { downloadWorkSafeBCPDF } from '../../utils/pain-tracker/wcb-export';
 import { useToast } from '../feedback';
+import { entitlementService } from '../../services/EntitlementService';
+import { useSubscription } from '../../contexts/SubscriptionContext';
+import {
+  buildExportDownloadedMessage,
+  buildExportFailedMessage,
+  buildExportNoDataMessage,
+} from '../export/exportCopy';
 
 interface ReportsPageProps {
   entries: PainEntry[];
@@ -41,11 +48,16 @@ interface QuickStat {
   trend?: 'up' | 'down' | 'neutral';
 }
 
-export function ReportsPage({ entries }: ReportsPageProps) {
+export function ReportsPage({ entries }: Readonly<ReportsPageProps>) {
   const toast = useToast();
+  const { currentTier } = useSubscription();
   const [isExporting, setIsExporting] = useState<string | null>(null);
   const [dateRange, setDateRange] = useState<'all' | '7d' | '30d' | '90d'>('7d');
   const [showExportPreview, setShowExportPreview] = useState(false);
+  const hasWcbReports = entitlementService.hasEntitlement('reports_wcb_forms');
+
+  const buildNotOpenYetMessage = (label: string) =>
+    `${label} is not open in this build yet. It will arrive in a future update.`;
 
   // Filter entries based on date range
   const filteredEntries = useMemo(() => {
@@ -91,7 +103,7 @@ export function ReportsPage({ entries }: ReportsPageProps) {
       new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
     );
     const startDate = new Date(sortedEntries[0].timestamp).toLocaleDateString();
-    const endDate = new Date(sortedEntries[sortedEntries.length - 1].timestamp).toLocaleDateString();
+    const endDate = new Date(sortedEntries.at(-1)?.timestamp || sortedEntries[0].timestamp).toLocaleDateString();
 
     return [
       { label: 'Total Entries', value: filteredEntries.length, icon: FileText },
@@ -100,22 +112,28 @@ export function ReportsPage({ entries }: ReportsPageProps) {
     ];
   }, [filteredEntries]);
 
-  const handleExport = async (type: string, exportFn: () => string | Promise<string>, filename: string, mimeType: string) => {
+  const handleExport = async (
+    exportId: string,
+    label: string,
+    exportFn: () => string | Promise<string>,
+    filename: string,
+    mimeType: string
+  ) => {
     if (filteredEntries.length === 0) {
-      toast.error('No Data', 'There are no entries to export for the selected date range.');
+      toast.error('No Data', buildExportNoDataMessage('report'));
       return;
     }
 
-    setIsExporting(type);
+    setIsExporting(exportId);
     try {
       // Small delay for UI feedback
       await new Promise(resolve => setTimeout(resolve, 300));
       const data = await exportFn();
       downloadData(data, filename, mimeType);
-      toast.success('Export Complete', `Your ${type.toUpperCase()} report has been downloaded.`);
+      toast.success('Export Complete', buildExportDownloadedMessage(label));
     } catch (error) {
       console.error('Export error:', error);
-      toast.error('Export Failed', 'Unable to generate the report. Please try again.');
+      toast.error('Export Failed', buildExportFailedMessage(label));
     } finally {
       setIsExporting(null);
     }
@@ -123,7 +141,7 @@ export function ReportsPage({ entries }: ReportsPageProps) {
 
   const handleWorkSafeBCExport = async () => {
     if (filteredEntries.length === 0) {
-      toast.error('No Data', 'There are no entries to include in the report.');
+      toast.error('No Data', buildExportNoDataMessage('entries'));
       return;
     }
 
@@ -134,17 +152,17 @@ export function ReportsPage({ entries }: ReportsPageProps) {
         (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
       );
       const startDate = new Date(sorted[0].timestamp);
-      const endDate = new Date(sorted[sorted.length - 1].timestamp);
+      const endDate = new Date(sorted.at(-1)?.timestamp || sorted[0].timestamp);
 
       await downloadWorkSafeBCPDF(filteredEntries, {
         startDate,
         endDate,
         includeDetailedEntries: true,
       });
-      toast.success('Export Complete', 'Your WorkSafe BC report has been downloaded.');
+      toast.success('Export Complete', buildExportDownloadedMessage('WorkSafe BC report'));
     } catch (error) {
       console.error('WCB export error:', error);
-      toast.error('Export Failed', 'Unable to generate the WorkSafe BC report. Please try again.');
+      toast.error('Export Failed', buildExportFailedMessage('WorkSafe BC report'));
     } finally {
       setIsExporting(null);
     }
@@ -160,6 +178,7 @@ export function ReportsPage({ entries }: ReportsPageProps) {
       color: 'emerald',
       action: () => handleExport(
         'csv',
+        'CSV spreadsheet',
         () => exportToCSV(filteredEntries),
         `pain-tracker-export-${new Date().toISOString().split('T')[0]}.csv`,
         'text/csv'
@@ -174,6 +193,7 @@ export function ReportsPage({ entries }: ReportsPageProps) {
       color: 'amber',
       action: () => handleExport(
         'json',
+        'JSON export',
         () => exportToJSON(filteredEntries),
         `pain-tracker-export-${new Date().toISOString().split('T')[0]}.json`,
         'application/json'
@@ -188,6 +208,7 @@ export function ReportsPage({ entries }: ReportsPageProps) {
       color: 'rose',
       action: () => handleExport(
         'pdf',
+        'PDF report',
         () => exportToPDF(filteredEntries),
         `pain-tracker-report-${new Date().toISOString().split('T')[0]}.pdf`,
         'application/pdf'
@@ -199,25 +220,27 @@ export function ReportsPage({ entries }: ReportsPageProps) {
     {
       id: 'worksafe-bc',
       name: 'WorkSafe BC Report',
-      description: 'For WorkSafeBC claims in British Columbia (Canada). Includes a structured clinical summary and pain trends (not affiliated with WorkSafeBC).',
+      description: hasWcbReports
+        ? 'For WorkSafeBC claims in British Columbia (Canada). Includes a structured clinical summary and pain trends (not affiliated with WorkSafeBC).'
+        : `This report is clipped on ${currentTier}. Upgrade to Basic or higher for WorkSafeBC export workflows.`,
       icon: Shield,
-      badge: 'WCB',
-      available: true,
+      badge: hasWcbReports ? 'WCB' : 'Basic+',
+      available: hasWcbReports,
     },
     {
       id: 'insurance',
       name: 'Insurance Report',
-      description: 'Create a comprehensive report for insurance claims with medical documentation support.',
+      description: buildNotOpenYetMessage('Insurance Report'),
       icon: FileText,
-      badge: 'Coming soon',
+      badge: 'Not open yet',
       available: false,
     },
     {
       id: 'clinical',
       name: 'Clinical Summary',
-      description: 'Generate a clinical summary for healthcare providers with a clear timeline and symptom overview.',
+      description: buildNotOpenYetMessage('Clinical Summary'),
       icon: TrendingUp,
-      badge: 'Coming soon',
+      badge: 'Not open yet',
       available: false,
     },
   ];
@@ -242,7 +265,7 @@ export function ReportsPage({ entries }: ReportsPageProps) {
             <div>
               <h1 className="text-2xl font-bold tracking-tight text-foreground">Reports & Export</h1>
               <p className="text-sm text-muted-foreground mt-0.5">
-                Export your pain tracking data or generate specialized reports
+                Export your pain tracking data and review which report workflows are open on this plan.
               </p>
             </div>
           </div>
@@ -354,7 +377,7 @@ export function ReportsPage({ entries }: ReportsPageProps) {
           };
           const c = colorMap[color];
           return (
-            <div key={index} className={cn('rounded-2xl border border-border/60 bg-card/50 p-4 border-l-4', c.border)}>
+            <div key={stat.label} className={cn('rounded-2xl border border-border/60 bg-card/50 p-4 border-l-4', c.border)}>
               <div className="flex items-center gap-3">
                 <div className={cn('flex h-8 w-8 items-center justify-center rounded-lg ring-1', c.bg, c.ring)}>
                   <stat.icon className={cn('h-4 w-4', c.text)} />
@@ -465,15 +488,22 @@ export function ReportsPage({ entries }: ReportsPageProps) {
                     return;
                   }
                   if (report.id === 'worksafe-bc') {
+                    if (!hasWcbReports) {
+                      toast.info(
+                        'Upgrade Required',
+                        'WorkSafeBC export stays closed on your current plan. Upgrade to Basic or higher to unlock it.'
+                      );
+                      return;
+                    }
                     void handleWorkSafeBCExport();
                     return;
                   }
                   if (!report.available) {
-                    toast.info('Coming Soon', `${report.name} generation is coming in a future update.`);
+                    toast.info('Not Open Yet', buildNotOpenYetMessage(report.name));
                     return;
                   }
 
-                  toast.info('Coming Soon', `${report.name} generation is coming in a future update.`);
+                  toast.info('Not Open Yet', buildNotOpenYetMessage(report.name));
                 }}
                 disabled={filteredEntries.length === 0}
                 className={cn(
@@ -521,12 +551,17 @@ export function ReportsPage({ entries }: ReportsPageProps) {
             </div>
             <h3 className="font-medium text-foreground mb-2">No Scheduled Reports</h3>
             <p className="text-sm text-muted-foreground mb-4">
-              Set up automated reports to be generated on a schedule.
+              Scheduled reports are not open in this build yet. They will arrive in a future update.
             </p>
             <Button
               variant="outline"
               className="rounded-xl"
-              onClick={() => toast.info('Coming Soon', 'Scheduled reports will be available in a future update.')}
+              onClick={() =>
+                toast.info(
+                  'Not Open Yet',
+                  'Scheduled reports are not open in this build yet. They will arrive in a future update.'
+                )
+              }
             >
               <Calendar className="h-4 w-4 mr-2" />
               Schedule a Report

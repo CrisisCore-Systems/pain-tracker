@@ -11,8 +11,13 @@ import { maybeCaptureWeatherForNewEntry } from '../services/weatherAutoCapture';
 import { EmptyStatePanel } from '../components/widgets/EmptyStatePanel';
 import { BrandedLoadingScreen } from '../components/branding/BrandedLoadingScreen';
 import { HistoryPage } from '../components/history/HistoryPage';
+import { subscriptionService } from '../services/SubscriptionService';
+import { getLocalUserId } from '../utils/user-identity';
 
 // Lazy load heavy components for faster initial load (mobile optimization)
+const AnalyticsDashboard = lazy(() =>
+  import('../components/analytics/AnalyticsDashboard').then(m => ({ default: m.AnalyticsDashboard }))
+);
 const PremiumAnalyticsDashboard = lazy(() =>
   import('../components/analytics/PremiumAnalyticsDashboard').then(m => ({ default: m.PremiumAnalyticsDashboard }))
 );
@@ -424,11 +429,18 @@ export function PainTrackerContainer({ initialView }: { initialView?: string } =
         );
 
       case 'analytics':
+        {
+          const analyticsTier = subscriptionService.getUserTier(getLocalUserId());
+          const AnalyticsView = analyticsTier === 'pro' || analyticsTier === 'enterprise'
+            ? PremiumAnalyticsDashboard
+            : AnalyticsDashboard;
+
         return (
           <Suspense fallback={<ViewLoadingFallback />}>
-            <PremiumAnalyticsDashboard entries={entries} />
+            <AnalyticsView entries={entries} />
           </Suspense>
         );
+        }
 
       case 'body-map':
         return (

@@ -1,4 +1,4 @@
-import type { ModuleId } from '../../config/modules';
+import { MODULES, type ModuleId } from '../../config/modules';
 import type { EntitlementProvider } from './EntitlementProvider';
 import { subscriptionService } from '../SubscriptionService';
 import { getLocalUserId } from '../../utils/user-identity';
@@ -10,6 +10,13 @@ import { getLocalUserId } from '../../utils/user-identity';
  * Keep it isolated here so pricing/bundles can change without touching feature code.
  */
 export class TierEntitlementsProvider implements EntitlementProvider {
+  private readonly tierRank = {
+    free: 0,
+    basic: 1,
+    pro: 2,
+    enterprise: 3,
+  } as const;
+
   private currentTierId(): string {
     // Local-only identity; NOT auth. Used purely for local tier state.
     const userId = getLocalUserId();
@@ -17,19 +24,22 @@ export class TierEntitlementsProvider implements EntitlementProvider {
   }
 
   private tierModules(tierId: string | null | undefined): Set<ModuleId> {
-    switch (tierId) {
-      case 'pro':
-        return new Set<ModuleId>([
-          'reports_clinical_pdf',
-          'reports_wcb_forms',
-          'analytics_advanced',
-          // sync intentionally separate (ongoing cost)
-        ]);
-      case 'basic':
-        return new Set<ModuleId>(['reports_clinical_pdf']);
-      default:
-        return new Set<ModuleId>([]);
-    }
+    const resolvedTier =
+      tierId === 'basic' || tierId === 'pro' || tierId === 'enterprise' || tierId === 'free'
+        ? tierId
+        : 'free';
+
+    return new Set<ModuleId>(
+      Object.entries(MODULES)
+        .filter(([, moduleDefinition]) => {
+          if (!moduleDefinition.includedInTier) {
+            return false;
+          }
+
+          return this.tierRank[resolvedTier] >= this.tierRank[moduleDefinition.includedInTier];
+        })
+        .map(([moduleId]) => moduleId as ModuleId)
+    );
   }
 
   listEntitledModules(): ModuleId[] {

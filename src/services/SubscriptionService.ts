@@ -19,14 +19,25 @@ import {
   UPGRADE_PATHS,
 } from '../config/subscription-tiers';
 import { securityService } from './SecurityService';
+import {
+  buildMissingSubscriptionReason,
+  buildSubscriptionManagementReason,
+  buildQuotaExceededReason,
+  getPlanRestrictionReason,
+} from '../lib/subscriptionAccessCopy';
 
 /**
  * Subscription Service
  * Core service for managing user subscriptions and feature access
  */
 export class SubscriptionService {
-  private subscriptions = new Map<string, UserSubscription>();
-  private billingEvents: BillingEvent[] = [];
+  private readonly subscriptions = new Map<string, UserSubscription>();
+  private readonly billingEvents: BillingEvent[] = [];
+
+  setSubscription(subscription: UserSubscription): UserSubscription {
+    this.subscriptions.set(subscription.userId, subscription);
+    return subscription;
+  }
 
   /**
    * Initialize a new subscription
@@ -80,7 +91,7 @@ export class SubscriptionService {
       metadata: { billingInterval, isTrial, tier },
     });
 
-    await securityService.logSecurityEvent({
+    securityService.logSecurityEvent({
       type: 'audit',
       level: 'info',
       message: `Subscription created: ${tier} tier for user ${userId}`,
@@ -126,12 +137,12 @@ export class SubscriptionService {
 
     // Check if feature is enabled for this tier
     if (typeof feature === 'boolean') {
+      const upgradeRequired = this.getMinimumTierForFeature(featureName);
+
       return {
         hasAccess: feature,
-        reason: feature
-          ? 'Feature included in your plan'
-          : `Feature requires ${this.getMinimumTierForFeature(featureName)} plan`,
-        upgradeRequired: feature ? undefined : this.getMinimumTierForFeature(featureName),
+        reason: feature ? 'Included in your current plan.' : getPlanRestrictionReason(upgradeRequired),
+        upgradeRequired: feature ? undefined : upgradeRequired,
       };
     }
 
@@ -141,18 +152,22 @@ export class SubscriptionService {
       if (!subscription) {
         return {
           hasAccess: false,
-          reason: 'No active subscription',
+          reason: buildMissingSubscriptionReason(),
           upgradeRequired: 'basic',
         };
       }
 
       const quota = await this.getFeatureQuota(userId, featureName);
+      const hasAccess = quota.remaining > 0 || feature === -1;
+      const upgradeRequired = hasAccess ? undefined : this.getNextTier(tier);
 
       return {
-        hasAccess: quota.remaining > 0 || feature === -1,
-        reason: quota.remaining > 0 ? 'Quota available' : 'Quota exceeded',
+        hasAccess,
+        reason: hasAccess
+          ? 'Quota available'
+          : buildQuotaExceededReason(String(featureName), upgradeRequired),
         quota,
-        upgradeRequired: quota.remaining <= 0 ? this.getNextTier(tier) : undefined,
+        upgradeRequired,
       };
     }
 
@@ -246,13 +261,13 @@ export class SubscriptionService {
     // Check if approaching limit (for warnings)
     const tier = this.getUserTier(userId);
     const limits = USAGE_LIMITS[tier as keyof typeof USAGE_LIMITS];
-    if (limits && limits[usageType as keyof typeof limits]) {
+    if (limits?.[usageType as keyof typeof limits]) {
       const limit = limits[usageType as keyof typeof limits] as {
         limit: number;
         warningAt: number;
       };
       if (subscription.usage[usageType] >= limit.warningAt) {
-        await securityService.logSecurityEvent({
+        securityService.logSecurityEvent({
           type: 'audit',
           level: 'warning',
           message: `User approaching ${usageType} limit: ${subscription.usage[usageType]}/${limit.limit}`,
@@ -275,7 +290,7 @@ export class SubscriptionService {
   ): Promise<TierChangeOption> {
     const subscription = this.getSubscription(userId);
     if (!subscription) {
-      throw new Error('No active subscription found');
+      throw new Error(buildSubscriptionManagementReason());
     }
 
     const currentTier = subscription.tier;
@@ -293,7 +308,7 @@ export class SubscriptionService {
         metadata: { fromTier: currentTier, toTier: newTier },
       });
 
-      await securityService.logSecurityEvent({
+      securityService.logSecurityEvent({
         type: 'audit',
         level: 'info',
         message: `Subscription upgraded: ${currentTier} → ${newTier}`,
@@ -318,7 +333,7 @@ export class SubscriptionService {
   async downgradeTier(userId: string, newTier: SubscriptionTier): Promise<TierChangeOption> {
     const subscription = this.getSubscription(userId);
     if (!subscription) {
-      throw new Error('No active subscription found');
+      throw new Error(buildSubscriptionManagementReason());
     }
 
     const currentTier = subscription.tier;
@@ -352,7 +367,7 @@ export class SubscriptionService {
   async cancelSubscription(userId: string, immediate: boolean = false): Promise<UserSubscription> {
     const subscription = this.getSubscription(userId);
     if (!subscription) {
-      throw new Error('No active subscription found');
+      throw new Error(buildSubscriptionManagementReason());
     }
 
     if (immediate) {
@@ -375,7 +390,7 @@ export class SubscriptionService {
       },
     });
 
-    await securityService.logSecurityEvent({
+    securityService.logSecurityEvent({
       type: 'audit',
       level: 'info',
       message: `Subscription canceled${immediate ? ' (immediate)' : ' (at period end)'}`,
@@ -392,7 +407,7 @@ export class SubscriptionService {
   async reactivateSubscription(userId: string): Promise<UserSubscription> {
     const subscription = this.getSubscription(userId);
     if (!subscription) {
-      throw new Error('No subscription found');
+      throw new Error(buildSubscriptionManagementReason());
     }
 
     if (subscription.status !== 'canceled' || !subscription.cancelAtPeriodEnd) {
@@ -403,7 +418,7 @@ export class SubscriptionService {
     subscription.status = 'active';
     subscription.updatedAt = new Date().toISOString();
 
-    await securityService.logSecurityEvent({
+    securityService.logSecurityEvent({
       type: 'audit',
       level: 'info',
       message: 'Subscription reactivated',
@@ -626,7 +641,7 @@ export class SubscriptionService {
    * Helper: Generate subscription ID
    */
   private generateSubscriptionId(): string {
-    return `sub_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    return `sub_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
   }
 
   /**
@@ -634,7 +649,7 @@ export class SubscriptionService {
    */
   private async logBillingEvent(event: Partial<BillingEvent>): Promise<void> {
     const billingEvent: BillingEvent = {
-      id: `evt_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      id: `evt_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`,
       type: event.type!,
       subscriptionId: event.subscriptionId!,
       userId: event.userId!,

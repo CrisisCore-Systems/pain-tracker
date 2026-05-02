@@ -7,6 +7,7 @@ import React, { ReactNode } from 'react';
 import { AlertCircle, Lock, TrendingUp, Crown } from 'lucide-react';
 import { useSubscription, useFeatureAccess, useHasTier } from '../../contexts/SubscriptionContext';
 import type { SubscriptionTier, TierFeatures } from '../../types/subscription';
+import { getPlanRestrictionReason, getPlanRestrictionSummary } from './planRestrictionCopy';
 
 /**
  * Props for FeatureGate component
@@ -48,12 +49,16 @@ export const FeatureGate: React.FC<FeatureGateProps> = ({
   }
 
   if (showUpgradePrompt && access.upgradeRequired) {
+    const promptReason = access.quota
+      ? access.reason
+      : getPlanRestrictionReason(access.upgradeRequired);
+
     return (
       <UpgradePrompt
         feature={feature}
         requiredTier={access.upgradeRequired}
         currentTier={currentTier}
-        reason={access.reason}
+        reason={promptReason}
       />
     );
   }
@@ -97,7 +102,7 @@ export const TierGate: React.FC<TierGateProps> = ({
       <UpgradePrompt
         requiredTier={requiredTier}
         currentTier={currentTier}
-        reason={`This feature requires ${requiredTier} tier or higher`}
+        reason={getPlanRestrictionReason(requiredTier)}
       />
     );
   }
@@ -123,7 +128,7 @@ interface UpgradePromptProps {
 export const UpgradePrompt: React.FC<UpgradePromptProps> = ({
   feature,
   requiredTier,
-  currentTier: _currentTier,
+  currentTier,
   reason,
   onUpgrade,
 }) => {
@@ -141,6 +146,8 @@ export const UpgradePrompt: React.FC<UpgradePromptProps> = ({
     enterprise: 'bg-amber-50 border-amber-300 text-amber-700',
   };
 
+  const restrictionSummary = getPlanRestrictionSummary(currentTier, requiredTier);
+
   return (
     <div className={`border-2 rounded-lg p-6 ${tierColors[requiredTier]}`}>
       <div className="flex items-start gap-4">
@@ -155,8 +162,10 @@ export const UpgradePrompt: React.FC<UpgradePromptProps> = ({
           </h3>
 
           <p className="text-sm mb-4">
-            {reason || `This feature is available in the ${requiredTier} plan.`}
+            {reason || getPlanRestrictionReason(requiredTier)}
           </p>
+
+          <p className="text-sm mb-4 font-medium">{restrictionSummary}</p>
 
           {feature && (
             <p className="text-xs mb-4 opacity-75">
@@ -166,7 +175,7 @@ export const UpgradePrompt: React.FC<UpgradePromptProps> = ({
 
           <div className="flex items-center gap-3">
             <button
-              onClick={onUpgrade || (() => (window.location.href = '/pricing'))}
+              onClick={onUpgrade || (() => (globalThis.location.href = '/pricing'))}
               className="bg-white px-4 py-2 rounded-md font-medium hover:shadow-md transition-shadow flex items-center gap-2"
             >
               <TrendingUp className="w-4 h-4" />
@@ -210,17 +219,15 @@ export const UsageWarning: React.FC<UsageWarningProps> = ({ feature, threshold =
 
   const isAtLimit = remaining === 0;
   const isNearLimit = percentage >= 90;
+  let warningClasses = 'bg-yellow-50 border-2 border-yellow-300 text-yellow-700';
+  if (isAtLimit) {
+    warningClasses = 'bg-red-50 border-2 border-red-300 text-red-700';
+  } else if (isNearLimit) {
+    warningClasses = 'bg-orange-50 border-2 border-orange-300 text-orange-700';
+  }
 
   return (
-    <div
-      className={`rounded-lg p-4 mb-4 ${
-        isAtLimit
-          ? 'bg-red-50 border-2 border-red-300 text-red-700'
-          : isNearLimit
-            ? 'bg-orange-50 border-2 border-orange-300 text-orange-700'
-            : 'bg-yellow-50 border-2 border-yellow-300 text-yellow-700'
-      }`}
-    >
+    <div className={`rounded-lg p-4 mb-4 ${warningClasses}`}>
       <div className="flex items-start gap-3">
         <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
 
@@ -238,7 +245,7 @@ export const UsageWarning: React.FC<UsageWarningProps> = ({ feature, threshold =
           {remaining > 0 && <p className="text-xs opacity-75 mb-3">{remaining} remaining</p>}
 
           <button
-            onClick={() => (window.location.href = '/pricing')}
+            onClick={() => (globalThis.location.href = '/pricing')}
             className="text-sm font-medium underline hover:no-underline"
           >
             {isAtLimit ? 'Upgrade now' : 'Upgrade for more'}
@@ -268,7 +275,7 @@ export const TierBadge: React.FC<TierBadgeProps> = ({
   showIcon = true,
 }) => {
   const { currentTier } = useSubscription();
-  const tier: SubscriptionTier = (propTier || currentTier) as SubscriptionTier;
+  const tier = propTier || currentTier;
 
   const sizeClasses = {
     sm: 'text-xs px-2 py-1',
@@ -325,7 +332,7 @@ interface TrialBannerProps {
 export const TrialBanner: React.FC<TrialBannerProps> = ({ onUpgrade }) => {
   const { subscription } = useSubscription();
 
-  if (!subscription || subscription.status !== 'trialing' || !subscription.trialEnd) {
+  if (subscription?.status !== 'trialing' || !subscription.trialEnd) {
     return null;
   }
 
@@ -349,7 +356,7 @@ export const TrialBanner: React.FC<TrialBannerProps> = ({ onUpgrade }) => {
         </div>
 
         <button
-          onClick={onUpgrade || (() => (window.location.href = '/pricing'))}
+          onClick={onUpgrade || (() => (globalThis.location.href = '/pricing'))}
           className="bg-white text-purple-600 px-6 py-2 rounded-md font-semibold hover:shadow-lg transition-shadow"
         >
           Subscribe Now
@@ -371,19 +378,19 @@ interface CanceledBannerProps {
  * Displays cancellation notice
  */
 export const CanceledBanner: React.FC<CanceledBannerProps> = ({ onReactivate }) => {
-  const { subscription, reactivateSubscription } = useSubscription();
+  const { subscription } = useSubscription();
 
-  if (!subscription || !subscription.cancelAtPeriodEnd) {
+  if (!subscription?.cancelAtPeriodEnd) {
     return null;
   }
 
-  const handleReactivate = async () => {
-    try {
-      await reactivateSubscription();
-      if (onReactivate) onReactivate();
-    } catch (err) {
-      console.error('Failed to reactivate subscription:', err);
+  const handleReviewBilling = () => {
+    if (onReactivate) {
+      onReactivate();
+      return;
     }
+
+    globalThis.location.href = '/subscription';
   };
 
   const daysRemaining = Math.ceil(
@@ -399,16 +406,16 @@ export const CanceledBanner: React.FC<CanceledBannerProps> = ({ onReactivate }) 
             <h3 className="font-semibold">Subscription Canceled</h3>
             <p className="text-sm">
               Your subscription will end in {daysRemaining} {daysRemaining === 1 ? 'day' : 'days'}.
-              You'll lose access to premium features.
+              You&apos;ll lose access to premium features.
             </p>
           </div>
         </div>
 
         <button
-          onClick={handleReactivate}
+          onClick={handleReviewBilling}
           className="bg-red-600 text-white px-6 py-2 rounded-md font-semibold hover:bg-red-700 transition-colors"
         >
-          Reactivate
+          Review Billing
         </button>
       </div>
     </div>

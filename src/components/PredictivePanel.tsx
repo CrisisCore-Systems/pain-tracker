@@ -2,6 +2,9 @@ import { pickVariant } from '@pain-tracker/utils';
 import { Card, CardHeader, CardTitle, CardContent } from '../design-system/components/Card';
 import type { PainEntry } from '../types';
 import TrendChart from './TrendChart';
+import { useFeatureAccess, useSubscription } from '../contexts/SubscriptionContext';
+import { UpgradePrompt } from './subscription/FeatureGates';
+import { getPlanRestrictionReason } from './subscription/planRestrictionCopy';
 
 // Mock implementations for predictive services
 
@@ -9,7 +12,7 @@ const predictFlareUp = (entries: PainEntry[]) => {
   if (!entries || entries.length === 0) return { score: 0, reason: 'No data available' };
   const recent = entries.slice(-7).map(e => e.baselineData.pain);
   const avg = recent.reduce((s, v) => s + v, 0) / recent.length;
-  const last = recent[recent.length - 1];
+  const last = recent.at(-1) ?? 0;
   const max = Math.max(...recent);
 
   // Simple, deterministic heuristic
@@ -33,12 +36,14 @@ const predictFlareUp = (entries: PainEntry[]) => {
     'No strong risk signal detected from pain level alone over the last week.',
   ]);
 
-  const reason =
-    score > 0.6
-      ? `${highPrefix}: ${factors.join(', ')}.`
-      : score > 0.3
-        ? `${medPrefix}: ${factors.length ? factors.join(', ') : 'a mild upward drift'}.`
-        : lowMessage;
+  let reason = lowMessage;
+
+  if (score > 0.6) {
+    reason = `${highPrefix}: ${factors.join(', ')}.`;
+  } else if (score > 0.3) {
+    const mediumDetail = factors.length ? factors.join(', ') : 'a mild upward drift';
+    reason = `${medPrefix}: ${mediumDetail}.`;
+  }
 
   return { score, reason };
 };
@@ -72,14 +77,43 @@ const analyzeTriggers = (_entries: PainEntry[], _days: number) => {
   ];
 };
 
-// import { predictFlareUp, suggestCopingStrategies, riskTrendOverDays } from '@pain-tracker/services/predictions';
-// import { analyzeTriggers } from '@pain-tracker/services/triggerAnalysis';
+export default function PredictivePanel({ entries }: Readonly<{ entries: PainEntry[] }>) {
+  const predictiveAccess = useFeatureAccess('predictiveInsights');
+  const { currentTier } = useSubscription();
 
-export default function PredictivePanel({ entries }: { entries: PainEntry[] }) {
+  if (predictiveAccess.loading) {
+    return (
+      <div className="animate-pulse bg-gray-200 dark:bg-gray-700 rounded p-4">
+        <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded w-3/4"></div>
+      </div>
+    );
+  }
+
+  if (!predictiveAccess.hasAccess) {
+    const requiredTier = predictiveAccess.upgradeRequired || 'pro';
+
+    return (
+      <UpgradePrompt
+        requiredTier={requiredTier}
+        currentTier={currentTier}
+        reason={
+          predictiveAccess.quota ? predictiveAccess.reason : getPlanRestrictionReason(requiredTier)
+        }
+      />
+    );
+  }
+
   const { score, reason } = predictFlareUp(entries);
   const strategies = suggestCopingStrategies(score);
   const trend = riskTrendOverDays(entries, 7);
   const triggers = analyzeTriggers(entries, 30).slice(0, 2);
+  let riskGradient = 'linear-gradient(90deg,#34d399,#10b981)';
+
+  if (score >= 0.7) {
+    riskGradient = 'linear-gradient(90deg,#fb7185,#ef4444)';
+  } else if (score >= 0.4) {
+    riskGradient = 'linear-gradient(90deg,#f59e0b,#f97316)';
+  }
 
   return (
     <div className="mb-4">
@@ -100,12 +134,7 @@ export default function PredictivePanel({ entries }: { entries: PainEntry[] }) {
                     className={`h-3 rounded`}
                     style={{
                       width: `${Math.round(score * 100)}%`,
-                      background:
-                        score < 0.4
-                          ? 'linear-gradient(90deg,#34d399,#10b981)'
-                          : score < 0.7
-                            ? 'linear-gradient(90deg,#f59e0b,#f97316)'
-                            : 'linear-gradient(90deg,#fb7185,#ef4444)',
+                      background: riskGradient,
                     }}
                   />
                 </div>

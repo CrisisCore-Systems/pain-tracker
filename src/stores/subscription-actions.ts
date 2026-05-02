@@ -6,6 +6,8 @@
 import type { PainEntry, ActivityLogEntry } from '../types';
 import type { MoodEntry } from '../types/quantified-empathy';
 import { subscriptionService } from '../services/SubscriptionService';
+import { buildExportLimitMessage } from '../components/export/exportCopy';
+import { buildQuotaExceededReason, getPlanRestrictionReason } from '../lib/subscriptionAccessCopy';
 
 /**
  * Subscription-aware action result
@@ -28,7 +30,7 @@ export async function checkPainEntryQuota(userId: string): Promise<SubscriptionA
     if (!access.hasAccess) {
       return {
         success: false,
-        error: access.reason || 'Quota exceeded',
+        error: access.reason || buildQuotaExceededReason('maxPainEntries', access.upgradeRequired),
         quotaExceeded: true,
         upgradeRequired: access.upgradeRequired,
       };
@@ -65,7 +67,7 @@ export async function checkMoodEntryQuota(userId: string): Promise<SubscriptionA
     if (!access.hasAccess) {
       return {
         success: false,
-        error: access.reason || 'Quota exceeded',
+        error: access.reason || buildQuotaExceededReason('maxMoodEntries', access.upgradeRequired),
         quotaExceeded: true,
         upgradeRequired: access.upgradeRequired,
       };
@@ -101,7 +103,7 @@ export async function checkActivityLogQuota(userId: string): Promise<Subscriptio
     if (!access.hasAccess) {
       return {
         success: false,
-        error: access.reason || 'Quota exceeded',
+        error: access.reason || buildQuotaExceededReason('maxActivityLogs', access.upgradeRequired),
         quotaExceeded: true,
         upgradeRequired: access.upgradeRequired,
       };
@@ -135,12 +137,27 @@ export async function checkExportQuota(userId: string): Promise<SubscriptionActi
     // Check if export feature is available for user's tier
     const csvAccess = await subscriptionService.checkFeatureAccess(userId, 'csvExport');
     const pdfAccess = await subscriptionService.checkFeatureAccess(userId, 'pdfReports');
+    const exportQuotaAccess = await subscriptionService.checkFeatureAccess(userId, 'maxExportsPerMonth');
 
     if (!csvAccess.hasAccess && !pdfAccess.hasAccess) {
+      const upgradeRequired = csvAccess.upgradeRequired || pdfAccess.upgradeRequired || 'basic';
+
       return {
         success: false,
-        error: 'Export feature not available in your plan',
-        upgradeRequired: csvAccess.upgradeRequired,
+        error: csvAccess.reason || pdfAccess.reason || getPlanRestrictionReason(upgradeRequired),
+        upgradeRequired,
+      };
+    }
+
+    if (!exportQuotaAccess.hasAccess) {
+      const upgradeRequired = exportQuotaAccess.upgradeRequired;
+      const upgradeMessage = buildExportLimitMessage(upgradeRequired);
+
+      return {
+        success: false,
+        error: exportQuotaAccess.reason || upgradeMessage,
+        quotaExceeded: true,
+        upgradeRequired,
       };
     }
 
@@ -168,7 +185,7 @@ export async function trackExportUsage(userId: string): Promise<void> {
  * Subscription-aware wrapper for store actions
  */
 export class SubscriptionAwareActions {
-  constructor(private userId: string) {}
+  constructor(private readonly userId: string) {}
 
   /**
    * Add pain entry with quota check
@@ -212,7 +229,7 @@ export class SubscriptionAwareActions {
     }
 
     try {
-    storeAction(entry as Omit<MoodEntry, 'id' | 'timestamp'>);
+      storeAction(entry);
       void trackMoodEntryUsage(this.userId);
       return { success: true };
     } catch (err) {

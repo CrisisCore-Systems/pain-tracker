@@ -43,6 +43,7 @@ Complete backend infrastructure for subscription management, including Stripe AP
 
 **Environment Variables Required**:
 - `STRIPE_SECRET_KEY` - Stripe API secret key
+- `SUBSCRIPTION_OWNER_SECRET` - Server-side signing secret for checkout ownership and subscription lookups
 - `STRIPE_PRICE_BASIC_MONTHLY` - Price ID for Basic monthly plan
 - `STRIPE_PRICE_BASIC_YEARLY` - Price ID for Basic yearly plan
 - `STRIPE_PRICE_PRO_MONTHLY` - Price ID for Pro monthly plan
@@ -57,6 +58,25 @@ Complete backend infrastructure for subscription management, including Stripe AP
 - Signature verification for security
 - Database integration for all webhook events
 - Comprehensive event handling:
+
+#### 3. Stripe Billing Portal Session Creation
+**File**: `api/stripe/create-portal-session.ts`
+
+**Endpoint**: `POST /api/stripe/create-portal-session`
+
+**Request Body**:
+```json
+{
+  "userId": "user_123",
+  "returnUrl": "https://yourapp.com/subscription"
+}
+```
+
+**Features**:
+- Creates Stripe-hosted billing portal sessions for the browser profile that owns the subscription
+- Reuses the signed subscription ownership cookie set during checkout
+- Rejects cross-profile billing access attempts
+- Returns a hosted Stripe URL for payment method updates, cancellation, and plan changes
   * `checkout.session.completed` → Create subscription
   * `customer.subscription.created` → Store subscription details
   * `customer.subscription.updated` → Update subscription status
@@ -67,12 +87,14 @@ Complete backend infrastructure for subscription management, including Stripe AP
 
 **Security**:
 - Webhook signature validation using `STRIPE_WEBHOOK_SECRET`
+- Server-signed ownership cookie enforcement for checkout-originated subscription access
 - Raw body parsing for signature verification
 - Error handling with appropriate HTTP status codes
 
 **Environment Variables Required**:
 - `STRIPE_SECRET_KEY` - Stripe API secret key
 - `STRIPE_WEBHOOK_SECRET` - Webhook signing secret from Stripe dashboard
+- `SUBSCRIPTION_OWNER_SECRET` - Server-side signing secret for browser ownership binding
 
 ### Database Layer
 

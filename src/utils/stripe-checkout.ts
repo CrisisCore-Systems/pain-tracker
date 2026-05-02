@@ -24,7 +24,7 @@ export async function createCheckoutSession(options: CheckoutOptions): Promise<v
   const { userId, tier, interval, email } = options;
 
   // Determine success and cancel URLs
-  const baseUrl = window.location.origin;
+  const baseUrl = globalThis.location.origin;
   const successUrl = `${baseUrl}/app?checkout=success&session_id={CHECKOUT_SESSION_ID}`;
   const cancelUrl = `${baseUrl}/pricing?checkout=canceled`;
 
@@ -32,6 +32,7 @@ export async function createCheckoutSession(options: CheckoutOptions): Promise<v
     // Call API to create checkout session
     const response = await fetch('/api/stripe/create-checkout-session', {
       method: 'POST',
+      credentials: 'same-origin',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -54,7 +55,7 @@ export async function createCheckoutSession(options: CheckoutOptions): Promise<v
 
     // Redirect to Stripe Checkout
     if (data.url) {
-      window.location.href = data.url;
+      globalThis.location.href = data.url;
     } else {
       throw new Error('No checkout URL received');
     }

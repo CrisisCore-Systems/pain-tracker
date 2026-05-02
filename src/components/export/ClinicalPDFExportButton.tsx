@@ -8,6 +8,12 @@ import { hipaaComplianceService } from '../../services/HIPAACompliance';
 import type { AuditTrail } from '../../services/HIPAACompliance';
 import { entitlementService } from '../../services/EntitlementService';
 import { UpgradeCard } from '../UpgradeCard';
+import { useToast } from '../feedback';
+import {
+  buildClinicalExportNoEntriesMessage,
+  buildExportDownloadedMessage,
+  buildExportFailedMessage,
+} from './exportCopy';
 
 type AuditActionType = AuditTrail['actionType'];
 type AuditOutcome = AuditTrail['outcome'];
@@ -32,6 +38,7 @@ export const ClinicalPDFExportButton: React.FC<ClinicalPDFExportButtonProps> = (
   variant = 'button',
 }) => {
   const canExport = entitlementService.hasEntitlement('reports_clinical_pdf');
+  const toast = useToast();
   const [showModal, setShowModal] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -75,7 +82,9 @@ export const ClinicalPDFExportButton: React.FC<ClinicalPDFExportButtonProps> = (
     }
 
     if (entries.length === 0) {
-      setError('No pain entries to export');
+      const message = buildClinicalExportNoEntriesMessage();
+      setError(message);
+      toast.error('No Data', message);
       void logPdfAudit({
         action: 'clinical-pdf-export',
         outcome: 'failure',
@@ -135,6 +144,7 @@ export const ClinicalPDFExportButton: React.FC<ClinicalPDFExportButtonProps> = (
       if ('vibrate' in navigator) {
         navigator.vibrate([100, 50, 100]);
       }
+      toast.success('Export Complete', buildExportDownloadedMessage('clinical PDF report'));
       await logPdfAudit({
         action: 'clinical-pdf-export',
         details: {
@@ -144,7 +154,9 @@ export const ClinicalPDFExportButton: React.FC<ClinicalPDFExportButtonProps> = (
       });
     } catch (err) {
       console.error('PDF export failed:', err);
-      setError('Failed to generate PDF. Please try again.');
+      const message = buildExportFailedMessage('clinical PDF report');
+      setError(message);
+      toast.error('Export Failed', message);
       await logPdfAudit({
         action: 'clinical-pdf-export',
         outcome: 'failure',
@@ -227,7 +239,7 @@ export const ClinicalPDFExportButton: React.FC<ClinicalPDFExportButtonProps> = (
 
       {entries.length === 0 && (
         <p className="mt-4 text-sm text-gray-600 dark:text-gray-400 text-center">
-          Start tracking your pain to generate clinical reports
+          Start tracking your pain to generate clinical reports.
         </p>
       )}
 

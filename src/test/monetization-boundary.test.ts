@@ -118,6 +118,38 @@ describe('monetization boundary guardrails', () => {
     expect(vi.mocked(globalThis.fetch)).not.toHaveBeenCalled();
   });
 
+  it('maps Basic tier to analytics and WCB modules but not clinical export', async () => {
+    const { entitlementService } = await import('../services/EntitlementService');
+    const { subscriptionService } = await import('../services/SubscriptionService');
+    const userIdentity = await import('../utils/user-identity');
+
+    entitlementService.clearLocal();
+
+    const userId = userIdentity.getLocalUserId();
+    await subscriptionService.createSubscription(userId, 'basic');
+
+    expect(entitlementService.hasEntitlement('analytics_advanced')).toBe(true);
+    expect(entitlementService.hasEntitlement('reports_wcb_forms')).toBe(true);
+    expect(entitlementService.hasEntitlement('reports_clinical_pdf')).toBe(false);
+    expect(entitlementService.listEntitlements()).not.toContain('sync_encrypted');
+  });
+
+  it('maps Enterprise tier to all tier-based premium modules', async () => {
+    const { entitlementService } = await import('../services/EntitlementService');
+    const { subscriptionService } = await import('../services/SubscriptionService');
+    const userIdentity = await import('../utils/user-identity');
+
+    entitlementService.clearLocal();
+
+    const userId = userIdentity.getLocalUserId();
+    await subscriptionService.createSubscription(userId, 'enterprise');
+
+    expect(entitlementService.hasEntitlement('analytics_advanced')).toBe(true);
+    expect(entitlementService.hasEntitlement('reports_wcb_forms')).toBe(true);
+    expect(entitlementService.hasEntitlement('reports_clinical_pdf')).toBe(true);
+    expect(entitlementService.hasEntitlement('sync_encrypted')).toBe(false);
+  });
+
   it('keeps core JSON export ungated and offline-capable', async () => {
     const React = (await import('react')).default;
     const { render, screen, fireEvent } = await import('@testing-library/react');

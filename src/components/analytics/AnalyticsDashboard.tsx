@@ -17,6 +17,9 @@ import { trackAnalyticsTabViewed } from '../../analytics/ga4-events';
 import { trackUsageEvent, incrementSessionAction } from '../../utils/usage-tracking';
 import { entitlementService } from '../../services/EntitlementService';
 import { UpgradeCard } from '../UpgradeCard';
+import { UpgradePrompt } from '../subscription/FeatureGates';
+import { useFeatureAccess, useSubscription } from '../../contexts/SubscriptionContext';
+import { getPlanRestrictionReason } from '../subscription/planRestrictionCopy';
 
 // Lazy load UsageAnalyticsDashboard to avoid circular dependencies
 const UsageAnalyticsDashboard = lazy(() =>
@@ -40,6 +43,8 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
 }) => {
   const { entries, moodEntries } = usePainTrackerStore();
   const hasAdvancedAnalytics = entitlementService.hasEntitlement('analytics_advanced');
+  const predictiveAccess = useFeatureAccess('predictiveInsights');
+  const { currentTier } = useSubscription();
   const [analytics, setAnalytics] = useState<{
     correlations: CorrelationResult[];
     interventions: InterventionScore[];
@@ -143,7 +148,11 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
     { id: 'correlations' as const, label: 'Correlations', icon: '🔗' },
     { id: 'interventions' as const, label: 'Interventions', icon: '💊' },
     { id: 'triggers' as const, label: 'Triggers', icon: '⚠️' },
-    { id: 'predictive' as const, label: 'Predictive', icon: '🔮' },
+    {
+      id: 'predictive' as const,
+      label: predictiveAccess.hasAccess ? 'Predictive' : 'Predictive Locked',
+      icon: predictiveAccess.hasAccess ? '🔮' : '🔒',
+    },
     { id: 'usage' as const, label: 'Usage', icon: '📈' },
   ];
 
@@ -270,7 +279,31 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
         {/* Predictive Tab */}
         {activeTab === 'predictive' && (
           <div role="tabpanel" id="predictive-panel" aria-labelledby="predictive-tab">
-            <PredictiveIndicatorPanel indicators={analytics.indicators} />
+            {(() => {
+              if (predictiveAccess.loading) {
+                return (
+                  <div className="animate-pulse bg-gray-200 dark:bg-gray-700 rounded p-4">
+                    <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded w-3/4"></div>
+                  </div>
+                );
+              }
+
+              if (predictiveAccess.hasAccess) {
+                return <PredictiveIndicatorPanel indicators={analytics.indicators} />;
+              }
+
+              return (
+                <UpgradePrompt
+                  requiredTier={predictiveAccess.upgradeRequired || 'pro'}
+                  currentTier={currentTier}
+                  reason={
+                    predictiveAccess.quota
+                      ? predictiveAccess.reason
+                      : getPlanRestrictionReason(predictiveAccess.upgradeRequired || 'pro')
+                  }
+                />
+              );
+            })()}
           </div>
         )}
 

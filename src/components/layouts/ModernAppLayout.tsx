@@ -28,6 +28,8 @@ import { Button, useTheme } from '../../design-system';
 import type { ThemeMode } from '../../design-system/theme';
 import { PanicMode } from '../accessibility/PanicMode';
 import CrisisBanner from '../crisis/CrisisBanner';
+import { subscriptionService } from '../../services/SubscriptionService';
+import { getLocalUserId } from '../../utils/user-identity';
 
 interface ModernAppLayoutProps {
   children: React.ReactNode;
@@ -60,7 +62,7 @@ const NAVIGATION_ITEMS: NavigationItem[] = [
   { id: 'history', name: 'History', icon: History, badge: null, color: 'sky' },
   { id: 'body-map', name: 'Body Map', icon: User, badge: null, color: 'violet' },
   { id: 'fibromyalgia', name: 'Fibromyalgia Hub', icon: Heart, badge: 'New', color: 'rose' },
-  { id: 'analytics', name: 'Analytics', icon: TrendingUp, badge: 'Pro', color: 'amber' },
+  { id: 'analytics', name: 'Analytics', icon: TrendingUp, badge: 'Basic+', color: 'amber' },
   { id: 'calendar', name: 'Calendar', icon: Calendar, badge: null, color: 'cyan' },
   { id: 'reports', name: 'Reports', icon: FileText, badge: null, color: 'indigo' },
   { id: 'blog-resources', name: 'Blog & Resources', icon: BookOpen, badge: null, color: 'sky' },
@@ -178,6 +180,7 @@ function QuickStats({
 
 function DesktopSidebar({
   currentView,
+  currentTier,
   isDark,
   onNavigate,
   bottomNavigation,
@@ -188,6 +191,7 @@ function DesktopSidebar({
   getBadgeTextColor,
 }: Readonly<{
   currentView: string;
+  currentTier: 'free' | 'basic' | 'pro' | 'enterprise';
   isDark: boolean;
   onNavigate?: (view: string) => void;
   bottomNavigation: BottomNavigationItem[];
@@ -197,6 +201,11 @@ function DesktopSidebar({
   inactiveBottomNavClass: string;
   getBadgeTextColor: (badge: string) => string;
 }>) {
+  const upgradeHeading = currentTier === 'basic' ? 'Basic stays limited here' : 'Free is limited here';
+  const upgradeDescription = currentTier === 'basic'
+    ? 'You are on Basic. Predictive insights and higher-tier analytics remain clipped until you move to Pro.'
+    : 'You are on Free. Advanced analytics and predictive insights stay clipped until you upgrade.';
+
   return (
     <aside className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:block lg:w-72 lg:pt-16">
       <div className="h-full px-4 py-6 bg-background/95 backdrop-blur-xl border-r border-border/20">
@@ -310,16 +319,21 @@ function DesktopSidebar({
         <div className={cn('mt-6 p-4 rounded-xl border', isDark ? 'bg-purple-500/10 border-purple-500/20' : 'bg-purple-50 border-purple-200')}>
           <div className="flex items-center gap-2 mb-2">
             <Sparkles className={cn('h-4 w-4', isDark ? 'text-purple-400' : 'text-purple-800')} />
-            <span className={cn('text-sm font-semibold', isDark ? 'text-purple-300' : 'text-purple-900')}>Upgrade to Pro</span>
+            <span className={cn('text-sm font-semibold', isDark ? 'text-purple-300' : 'text-purple-900')}>
+              {upgradeHeading}
+            </span>
           </div>
-          <p className={cn('text-xs mb-3', isDark ? 'text-slate-300' : 'text-slate-800')}>Unlock automated insights, advanced analytics & more</p>
+          <p className={cn('text-xs mb-3', isDark ? 'text-slate-300' : 'text-slate-800')}>
+            {upgradeDescription}
+          </p>
           <button
+            onClick={() => onNavigate?.('pricing')}
             className={cn(
               'w-full py-2 rounded-lg text-xs font-medium transition-colors border',
               isDark ? 'text-purple-200 border-purple-400/40 hover:bg-purple-500/20' : 'bg-white text-purple-900 border-purple-300 hover:bg-purple-100',
             )}
           >
-            Learn More
+            View Plans
           </button>
         </div>
       </div>
@@ -455,6 +469,7 @@ export function ModernAppLayout({
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [panicModeActive, setPanicModeActive] = useState(false);
   const { mode, toggleMode } = useTheme();
+  const currentTier = subscriptionService.getUserTier(getLocalUserId());
   const isDark = mode === 'dark';
   const themeClasses = getLayoutThemeClasses(isDark);
   const themeToggle = getThemeToggleProps(mode);
@@ -576,6 +591,7 @@ export function ModernAppLayout({
 
       <DesktopSidebar
         currentView={currentView}
+        currentTier={currentTier}
         isDark={isDark}
         onNavigate={onNavigate}
         bottomNavigation={BOTTOM_NAVIGATION_ITEMS}

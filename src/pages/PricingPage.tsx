@@ -45,10 +45,9 @@ export const PricingPage: React.FC = () => {
   const handleUpgrade = async (tier: SubscriptionTier) => {
     setIsUpgrading(true);
     try {
-      // Check if user is authenticated
+      // Checkout is tied to the current browser profile after vault unlock.
       if (vaultStatus.state !== 'unlocked') {
-        // Redirect to login/setup page
-        alert('Please sign in or create an account to subscribe.');
+        alert('Please unlock your vault on this device before starting checkout.');
         navigate('/start?redirect=/pricing');
         return;
       }
@@ -71,8 +70,7 @@ export const PricingPage: React.FC = () => {
         throw new Error('Invalid tier for checkout');
       }
 
-      // Local-only stable identifier for subscription + checkout linking.
-      // This is not an authentication system.
+      // Stable browser-profile identifier for ownership binding.
       const userId = getLocalUserId();
 
       // Redirect to Stripe Checkout

@@ -54,7 +54,10 @@ git push origin main
 STRIPE_SECRET_KEY=sk_live_YOUR_STRIPE_SECRET_KEY_HERE
 STRIPE_PUBLISHABLE_KEY=pk_live_YOUR_STRIPE_PUBLISHABLE_KEY_HERE
 STRIPE_WEBHOOK_SECRET=whsec_YOUR_WEBHOOK_SECRET_HERE
+SUBSCRIPTION_OWNER_SECRET=YOUR_LONG_RANDOM_SUBSCRIPTION_OWNER_SECRET_HERE
 ```
+
+`SUBSCRIPTION_OWNER_SECRET` is required for the server-signed checkout ownership cookie. If it is missing, checkout session creation and server-side subscription status lookups fail closed.
 
 #### Stripe Price IDs
 ```
@@ -126,7 +129,8 @@ VITE_APP_ENVIRONMENT=production
 2. **Verify you can:**
    - ✅ See current subscription details
    - ✅ Access customer portal
-   - ✅ Cancel/upgrade subscription
+   - ✅ Open Stripe-hosted billing portal from the app
+   - ✅ Cancel/upgrade subscription inside Stripe portal
    - ✅ Update payment method
 
 ## 📊 Step 5: Monitor Webhooks
@@ -222,6 +226,7 @@ npm run doctor
 1. Verify webhook URL is correct in Stripe
 2. Check Vercel function logs for errors
 3. Ensure `STRIPE_WEBHOOK_SECRET` matches Stripe dashboard
+4. Ensure `SUBSCRIPTION_OWNER_SECRET` is present and does not reuse a public or client-side value
 4. Test with Stripe CLI: `stripe trigger checkout.session.completed`
 
 ### Payment Not Processing

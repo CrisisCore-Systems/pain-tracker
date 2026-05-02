@@ -1,10 +1,12 @@
 import React from 'react';
 import type { PainEntry } from '../../types';
 import { SavePanel } from '../pain-tracker/SavePanel';
-import { FeatureGate, UsageWarning } from './FeatureGates';
+import { TierGate, UsageWarning } from './FeatureGates';
 import { checkExportQuota, trackExportUsage } from '../../stores/subscription-actions';
 import { entitlementService } from '../../services/EntitlementService';
 import { UpgradeCard } from '../UpgradeCard';
+import { useToast } from '../feedback';
+import { buildExportLimitMessage, buildExportWorkspaceMessage } from '../export/exportCopy';
 
 interface GatedSavePanelProps {
   entries: PainEntry[];
@@ -19,13 +21,17 @@ interface GatedSavePanelProps {
  * - Enforces export quota limits
  */
 export const GatedSavePanel: React.FC<GatedSavePanelProps> = ({ entries, userId, onClearData }) => {
+  const toast = useToast();
+
   const handleExport = async (format: 'json' | 'csv') => {
     // Check quota before export
     const quotaCheck = await checkExportQuota(userId);
 
     if (!quotaCheck.success) {
-      // Quota exceeded - upgrade prompt will be shown by SavePanel wrapper
-      alert(quotaCheck.error || 'Export quota exceeded. Please upgrade your plan.');
+      toast.info(
+        'Export Limit Reached',
+        quotaCheck.error || buildExportLimitMessage(quotaCheck.upgradeRequired)
+      );
       return;
     }
 
@@ -117,6 +123,8 @@ interface GatedWCBReportProps {
  * Requires Basic tier or higher for WCB reports
  */
 export const GatedWCBReport: React.FC<GatedWCBReportProps> = ({ userId }) => {
+  const toast = useToast();
+
   if (!entitlementService.hasEntitlement('reports_wcb_forms')) {
     return <UpgradeCard moduleId="reports_wcb_forms" />;
   }
@@ -133,11 +141,17 @@ export const GatedWCBReport: React.FC<GatedWCBReportProps> = ({ userId }) => {
           // Check export quota
           const quotaCheck = await checkExportQuota(userId);
           if (!quotaCheck.success) {
-            alert(quotaCheck.error || 'Export quota exceeded.');
+            toast.info(
+              'Export Limit Reached',
+              quotaCheck.error || buildExportLimitMessage(quotaCheck.upgradeRequired)
+            );
             return;
           }
 
-          alert('WorkSafeBC report export is available in Reports & Export.');
+          toast.info(
+            'Open Reports & Export',
+            buildExportWorkspaceMessage('WorkSafeBC report export')
+          );
 
           // Track usage
           await trackExportUsage(userId);
@@ -155,8 +169,10 @@ export const GatedWCBReport: React.FC<GatedWCBReportProps> = ({ userId }) => {
  * Requires Basic tier or higher for PDF reports
  */
 export const GatedPDFReport: React.FC<GatedWCBReportProps> = ({ userId }) => {
+  const toast = useToast();
+
   return (
-    <FeatureGate feature="pdfReports" showUpgradePrompt>
+    <TierGate requiredTier="basic" showUpgradePrompt>
       <div className="p-6 bg-white rounded-lg shadow-md">
         <h3 className="text-lg font-semibold mb-4">PDF Report</h3>
         <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
@@ -167,11 +183,14 @@ export const GatedPDFReport: React.FC<GatedWCBReportProps> = ({ userId }) => {
             // Check export quota
             const quotaCheck = await checkExportQuota(userId);
             if (!quotaCheck.success) {
-              alert(quotaCheck.error || 'Export quota exceeded.');
+              toast.info(
+                'Export Limit Reached',
+                quotaCheck.error || buildExportLimitMessage(quotaCheck.upgradeRequired)
+              );
               return;
             }
 
-            alert('PDF export is available in Reports & Export.');
+            toast.info('Open Reports & Export', buildExportWorkspaceMessage('PDF export'));
 
             // Track usage
             await trackExportUsage(userId);
@@ -181,7 +200,7 @@ export const GatedPDFReport: React.FC<GatedWCBReportProps> = ({ userId }) => {
           Open Reports & Export
         </button>
       </div>
-    </FeatureGate>
+    </TierGate>
   );
 };
 
@@ -190,6 +209,8 @@ export const GatedPDFReport: React.FC<GatedWCBReportProps> = ({ userId }) => {
  * Requires Pro tier for clinic-ready clinical exports
  */
 export const GatedClinicalPDFExport: React.FC<GatedWCBReportProps> = ({ userId }) => {
+  const toast = useToast();
+
   if (!entitlementService.hasEntitlement('reports_clinical_pdf')) {
     return <UpgradeCard moduleId="reports_clinical_pdf" />;
   }
@@ -210,11 +231,17 @@ export const GatedClinicalPDFExport: React.FC<GatedWCBReportProps> = ({ userId }
           // Check export quota
           const quotaCheck = await checkExportQuota(userId);
           if (!quotaCheck.success) {
-            alert(quotaCheck.error || 'Export quota exceeded.');
+            toast.info(
+              'Export Limit Reached',
+              quotaCheck.error || buildExportLimitMessage(quotaCheck.upgradeRequired)
+            );
             return;
           }
 
-          alert('Clinical PDF export is available in Reports & Export.');
+          toast.info(
+            'Open Reports & Export',
+            buildExportWorkspaceMessage('Clinical PDF export')
+          );
 
           // Track usage
           await trackExportUsage(userId);

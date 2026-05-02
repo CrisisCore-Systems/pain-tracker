@@ -1,14 +1,26 @@
 import React from 'react';
-import { describe, it, expect, vi } from 'vitest';
+import { beforeEach, describe, it, expect, vi } from 'vitest';
 import { render, screen } from '../../../test/test-utils';
 import userEvent from '@testing-library/user-event';
 import { PremiumAnalyticsDashboard } from '../PremiumAnalyticsDashboard';
 import type { PainEntry } from '../../../types';
+import { subscriptionService } from '../../../services/SubscriptionService';
+
+let currentUserId = 'premium-analytics-export-user';
+
+vi.mock('../../../utils/user-identity', () => ({
+  getLocalUserId: () => currentUserId,
+}));
 
 // Minimal entries array - ExportView uses sorted entries and analytics snapshot
 const sampleEntries: PainEntry[] = [];
 
 describe('PremiumAnalyticsDashboard Export & Share copy', () => {
+  beforeEach(async () => {
+    currentUserId = `premium-analytics-export-${Math.random().toString(36).slice(2)}`;
+    await subscriptionService.createSubscription(currentUserId, 'pro');
+  });
+
   it('shows trauma-informed clipboard fallback messaging when copy fails', async () => {
     const user = userEvent.setup();
     render(<PremiumAnalyticsDashboard entries={sampleEntries} />);
@@ -56,5 +68,17 @@ describe('PremiumAnalyticsDashboard Export & Share copy', () => {
         configurable: true,
       });
     }
+  });
+
+  it('shows the upgrade prompt instead of premium analytics for Basic users', async () => {
+    currentUserId = `premium-analytics-basic-${Math.random().toString(36).slice(2)}`;
+    await subscriptionService.createSubscription(currentUserId, 'basic');
+
+    render(<PremiumAnalyticsDashboard entries={sampleEntries} />);
+
+    expect(
+      await screen.findByText(/you are on basic\. this part of the app stays intentionally limited/i)
+    ).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /Export & Share/i })).not.toBeInTheDocument();
   });
 });
