@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '../../src/types/vercel';
-import { db } from '../../src/lib/database';
-import verifyAdmin from '../../api-lib/adminAuth';
+import { db } from '../../src/lib/database.js';
+import verifyAdmin from '../../api-lib/adminAuth.js';
 import { z } from 'zod';
 import {
   enforceRateLimit,
@@ -8,8 +8,8 @@ import {
   logError,
   logWarn,
   parseBodyWithZod,
-} from '../../api-lib/http';
-import { validateCsrfForMutation } from '../../api-lib/csrf';
+} from '../../api-lib/http.js';
+import { validateCsrfForMutation } from '../../api-lib/csrf.js';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 

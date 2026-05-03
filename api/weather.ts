@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '../src/types/vercel';
-import { enforceRateLimit, getClientIp, logError } from '../api-lib/http';
+import { enforceRateLimit, getClientIp, logError } from '../api-lib/http.js';
 
 const WEATHER_UPSTREAM = 'https://api.open-meteo.com/v1/forecast';
 const ALLOWED_CURRENT = 'temperature_2m,relative_humidity_2m,weather_code,pressure_msl';

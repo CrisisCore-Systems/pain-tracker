@@ -4,8 +4,8 @@ import { db } from '../../api-lib/database.js';
 import {
   isSubscriptionOwnershipConfigured,
   readSubscriptionOwner,
-} from '../../api-lib/subscriptionOwnership';
-import { isAllowedReturnUrl } from '../../api-lib/http';
+} from '../../api-lib/subscriptionOwnership.js';
+import { isAllowedReturnUrl } from '../../api-lib/http.js';
 import type { VercelRequest, VercelResponse } from '../../src/types/vercel';
 
 const CreatePortalSessionSchema = z

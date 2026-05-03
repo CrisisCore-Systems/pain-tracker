@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '../src/types/vercel';
 import crypto from 'node:crypto';
 import type { ZodTypeAny } from 'zod';
-import rateLimiter from './rateLimiter';
+import rateLimiter from './rateLimiter.js';
 
 export function getClientIp(req: VercelRequest): string {
   const ipRaw =

@@ -1,5 +1,5 @@
 import type { VercelRequest } from '../src/types/vercel';
-import { getInternalOrigin, logWarn } from './http';
+import { getInternalOrigin, logWarn } from './http.js';
 
 type VerifyAdminResult =
   | { ok: true; user?: unknown }

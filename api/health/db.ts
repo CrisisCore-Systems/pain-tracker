@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '../../src/types/vercel';
 import { db } from '../../api-lib/database.js';
-import { enforceRateLimit, getClientIp, logError } from '../../api-lib/http';
+import { enforceRateLimit, getClientIp, logError } from '../../api-lib/http.js';
 
 /**
  * Simple DB health check

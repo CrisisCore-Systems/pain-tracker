@@ -1,14 +1,14 @@
 import type { VercelRequest, VercelResponse } from '../../../src/types/vercel';
 import crypto from 'node:crypto';
-import { enforceRateLimit, getClientIp } from '../../../api-lib/http';
+import { enforceRateLimit, getClientIp } from '../../../api-lib/http.js';
 import {
   buildDemoUser,
   clearClinicSession,
   issueClinicSession,
   isClinicAuthConfigured,
   readClinicSession,
-} from '../../../api-lib/clinicAuthSession';
-import { validateCsrfForMutation } from '../../../api-lib/csrf';
+} from '../../../api-lib/clinicAuthSession.js';
+import { validateCsrfForMutation } from '../../../api-lib/csrf.js';
 
 type LoginBody = {
   email?: string;

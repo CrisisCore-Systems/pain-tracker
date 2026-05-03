@@ -4,7 +4,7 @@ import type { SubscriptionRecord } from '../../api-lib/database.js';
 import {
   isSubscriptionOwnershipConfigured,
   readSubscriptionOwner,
-} from '../../api-lib/subscriptionOwnership';
+} from '../../api-lib/subscriptionOwnership.js';
 import type { VercelRequest, VercelResponse } from '../../src/types/vercel';
 import type { SubscriptionStatus, UserSubscription } from '../../src/types/subscription';
 

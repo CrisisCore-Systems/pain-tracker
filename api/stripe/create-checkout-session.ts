@@ -8,12 +8,12 @@
 import type { VercelRequest, VercelResponse } from '../../src/types/vercel';
 import Stripe from 'stripe';
 import { z } from 'zod';
-import { enforceRateLimit, getClientIp, isAllowedReturnUrl, logError } from '../../api-lib/http';
+import { enforceRateLimit, getClientIp, isAllowedReturnUrl, logError } from '../../api-lib/http.js';
 import {
   issueSubscriptionOwnerCookie,
   isSubscriptionOwnershipConfigured,
   readSubscriptionOwner,
-} from '../../api-lib/subscriptionOwnership';
+} from '../../api-lib/subscriptionOwnership.js';
 
 // Price IDs from Stripe dashboard (set these in environment variables)
 const PRICE_IDS = {
