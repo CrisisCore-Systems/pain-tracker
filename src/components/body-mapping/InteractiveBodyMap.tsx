@@ -1,5 +1,5 @@
 import { useState, useRef, useMemo, useCallback } from 'react';
-import { RotateCcw, Info, Maximize2, ZoomIn, ZoomOut, Download, User, Eye, HelpCircle } from 'lucide-react';
+import { RotateCcw, Info, Maximize2, ZoomIn, ZoomOut, Download, MapPin, Eye, HelpCircle, Layers } from 'lucide-react';
 import { formatNumber } from '../../utils/formatting';
 import type { PainEntry } from '../../types';
 import { getAllLocations } from '../../types/pain-entry';
@@ -487,38 +487,59 @@ export function InteractiveBodyMap({
   const getRegionColor = (regionId: string): string => {
     if (mode === 'selection') {
       if (selectedRegions.includes(regionId)) {
-        return '#ef4444'; // Red for selected
+        if (hoveredRegion === regionId) return '#dc2626'; // Deeper red on hover+selected
+        return '#f87171'; // Softer rose-red for selected
+      } else if (focusedRegion === regionId) {
+        return '#818cf8'; // Indigo for keyboard focus
       } else if (hoveredRegion === regionId) {
-        return '#60a5fa'; // Blue for hover
+        return '#93c5fd'; // Light blue for hover
       } else {
-        return '#d1d5db'; // Gray for unselected (higher contrast)
+        return '#cbd5e1'; // Slate for unselected
       }
     } else if (mode === 'heatmap') {
       const painData = regionPainMap.get(regionId);
-      if (!painData || painData.avg === 0) return '#f3f4f6';
+      if (!painData || painData.avg === 0) return '#e2e8f0';
 
-      // Enhanced color gradient based on average pain
+      // Perceptually distinct color ramp — always clearly visible
       const intensity = painData.avg / 10;
-      if (intensity < 0.25) return '#86efac'; // Light green (0-2.5)
-      if (intensity < 0.4) return '#4ade80'; // Green (2.5-4)
-      if (intensity < 0.6) return '#fbbf24'; // Yellow (4-6)
-      if (intensity < 0.75) return '#fb923c'; // Orange (6-7.5)
-      return '#ef4444'; // Red (7.5-10)
+      if (intensity < 0.2) return '#6ee7b7'; // Emerald-200 (0-2)
+      if (intensity < 0.35) return '#34d399'; // Emerald-400 (2-3.5)
+      if (intensity < 0.5) return '#fbbf24'; // Amber (3.5-5)
+      if (intensity < 0.65) return '#f97316'; // Orange (5-6.5)
+      if (intensity < 0.8) return '#ef4444'; // Red (6.5-8)
+      return '#b91c1c'; // Deep red (8-10)
     }
 
-    return '#e5e7eb';
+    return '#e2e8f0';
+  };
+
+  const getRegionStroke = (regionId: string): { color: string; width: string } => {
+    if (mode === 'selection') {
+      if (selectedRegions.includes(regionId)) {
+        return { color: hoveredRegion === regionId ? '#991b1b' : '#dc2626', width: '1.75' };
+      }
+      if (focusedRegion === regionId) return { color: '#4338ca', width: '2.25' };
+      if (hoveredRegion === regionId) return { color: '#1e40af', width: '1.75' };
+    } else if (mode === 'heatmap') {
+      const painData = regionPainMap.get(regionId);
+      if (painData && painData.avg > 0) {
+        if (hoveredRegion === regionId) return { color: '#111827', width: '2' };
+        return { color: '#6b7280', width: '0.75' };
+      }
+    }
+    return { color: hoveredRegion === regionId ? '#374151' : '#94a3b8', width: hoveredRegion === regionId ? '1.5' : '0.75' };
   };
 
   const getRegionOpacity = (regionId: string): number => {
     if (mode === 'heatmap') {
       const painData = regionPainMap.get(regionId);
-      if (!painData) return 0.2;
-      // Opacity based on frequency + intensity
-      const frequencyFactor = Math.min(painData.count / 10, 1); // More entries = more opaque
-      const intensityFactor = painData.avg / 10;
-      return 0.3 + frequencyFactor * 0.3 + intensityFactor * 0.4;
+      if (!painData) return 0.18;
+      // Perceptually uniform: opacity only varies modestly so color carries meaning
+      const frequencyFactor = Math.min(painData.count / 8, 1);
+      return 0.72 + frequencyFactor * 0.28;
     }
-    return hoveredRegion === regionId ? 0.95 : 0.85;
+    if (selectedRegions.includes(regionId)) return 0.92;
+    return hoveredRegion === regionId ? 0.88 : 0.72;
   };
 
   const getPainDataForRegion = (regionId: string) => {
@@ -682,105 +703,109 @@ export function InteractiveBodyMap({
 
       {/* Header Controls */}
       {!compact && (
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-700 p-3 sm:p-4 rounded-lg border border-blue-200 dark:border-gray-600">
-        <div className="flex items-center space-x-3">
-          <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg flex-shrink-0">
-            <User className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600 dark:text-blue-400" />
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-3 px-1">
+        {/* Title + count */}
+        <div className="flex items-center gap-2.5 min-w-0">
+          <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center
+            bg-gradient-to-br from-blue-500 to-indigo-600 shadow-sm">
+            {mode === 'heatmap'
+              ? <Layers className="h-4 w-4 text-white" />
+              : <MapPin className="h-4 w-4 text-white" />}
           </div>
-          <div>
-            <h3 className="font-semibold text-gray-900 dark:text-gray-100 text-sm sm:text-base">
+          <div className="min-w-0">
+            <h3 className="font-semibold text-gray-900 dark:text-gray-100 text-sm leading-tight">
               {mode === 'selection' ? 'Select Pain Locations' : 'Pain Heat Map'}
             </h3>
-            <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+            <p className="text-xs text-gray-500 dark:text-gray-400 leading-tight">
               {mode === 'selection'
                 ? `${selectedCount} region${selectedCount !== 1 ? 's' : ''} selected`
                 : `${affectedRegionsCount} region${affectedRegionsCount !== 1 ? 's' : ''} with recorded pain`}
             </p>
-            {mode === 'selection' && (
-              <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-                Tip: click/tap regions to toggle. Selected areas highlight in red.
-              </p>
-            )}
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
-          {/* Accessibility: List view toggle */}
-          {showAccessibilityFeatures && onRequestListView && (
-            <button
-              onClick={onRequestListView}
-              className="flex items-center justify-center space-x-1 px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-sm flex-1 sm:flex-none min-h-[44px]"
-              aria-label="Switch to accessible list view"
-            >
-              <Eye className="h-4 w-4" />
-              <span className="sm:inline">List</span>
-            </button>
-          )}
-
-          {/* Keyboard help button */}
-          {showAccessibilityFeatures && (
-            <button
-              onClick={() => setShowKeyboardHelp(true)}
-              className="p-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
-              aria-label="Show keyboard shortcuts"
-              title="Keyboard shortcuts (?)"
-            >
-              <HelpCircle className="h-4 w-4 text-gray-600 dark:text-gray-400" />
-            </button>
-          )}
+        {/* Controls row */}
+        <div className="flex items-center gap-1.5 flex-wrap">
+          {/* View Toggle — most prominent */}
+          <button
+            onClick={() => setShowFront(!showFront)}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-medium text-sm
+              bg-slate-100 hover:bg-slate-200 dark:bg-gray-700 dark:hover:bg-gray-600
+              text-slate-700 dark:text-slate-200 transition-colors border border-slate-200 dark:border-gray-600
+              min-h-[36px]"
+          >
+            <RotateCcw className="h-3.5 w-3.5" />
+            <span>{showFront ? 'Front' : 'Back'}</span>
+          </button>
 
           {/* Zoom Controls */}
-          <div className="flex items-center bg-white dark:bg-gray-800 rounded-md border border-gray-300 dark:border-gray-600 px-2 py-1 min-h-[44px]">
+          <div className="flex items-center bg-white dark:bg-gray-800 rounded-lg border border-slate-200 dark:border-gray-600 overflow-hidden min-h-[36px]">
             <button
               onClick={handleZoomOut}
-              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
+              className="px-2 py-1.5 hover:bg-slate-50 dark:hover:bg-gray-700 transition-colors"
               title="Zoom Out"
               aria-label="Zoom out"
             >
-              <ZoomOut className="h-4 w-4 text-gray-600 dark:text-gray-400" />
+              <ZoomOut className="h-3.5 w-3.5 text-slate-600 dark:text-slate-400" />
             </button>
-            <span className="text-xs text-gray-600 dark:text-gray-400 px-1 sm:px-2 min-w-[2.5rem] sm:min-w-[3rem] text-center" aria-live="polite">
+            <span className="text-xs text-slate-600 dark:text-slate-400 px-1.5 min-w-[2.5rem] text-center tabular-nums" aria-live="polite">
               {Math.round(zoomLevel * 100)}%
             </span>
             <button
               onClick={handleZoomIn}
-              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
+              className="px-2 py-1.5 hover:bg-slate-50 dark:hover:bg-gray-700 transition-colors"
               title="Zoom In"
               aria-label="Zoom in"
             >
-              <ZoomIn className="h-4 w-4 text-gray-600 dark:text-gray-400" />
+              <ZoomIn className="h-3.5 w-3.5 text-slate-600 dark:text-slate-400" />
             </button>
           </div>
 
-          {/* View Toggle */}
-          <button
-            onClick={() => setShowFront(!showFront)}
-            className="flex items-center justify-center space-x-1 sm:space-x-2 px-3 sm:px-4 py-2 bg-white border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:bg-gray-900 transition-colors flex-1 sm:flex-none min-h-[44px]"
-          >
-            <RotateCcw className="h-4 w-4" />
-            <span className="text-sm font-medium">{showFront ? 'Front' : 'Back'}</span>
-          </button>
+          {/* Secondary controls */}
+          <div className="flex items-center gap-1">
+            {showAccessibilityFeatures && onRequestListView && (
+              <button
+                onClick={onRequestListView}
+                className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-xs
+                  bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-600
+                  hover:bg-slate-50 dark:hover:bg-gray-700 transition-colors min-h-[36px]"
+                aria-label="Switch to accessible list view"
+              >
+                <Eye className="h-3.5 w-3.5 text-slate-500" />
+                <span className="text-slate-600 dark:text-slate-400">List</span>
+              </button>
+            )}
 
-          {/* Export and Fullscreen - Hidden on small portrait screens */}
-          <div className="hidden xs:flex items-center gap-2">
-            {/* Export Button */}
+            {showAccessibilityFeatures && (
+              <button
+                onClick={() => setShowKeyboardHelp(true)}
+                className="p-2 rounded-lg bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-600
+                  hover:bg-slate-50 dark:hover:bg-gray-700 transition-colors min-h-[36px] min-w-[36px] flex items-center justify-center"
+                aria-label="Show keyboard shortcuts"
+                title="Keyboard shortcuts (?)"
+              >
+                <HelpCircle className="h-3.5 w-3.5 text-slate-500 dark:text-slate-400" />
+              </button>
+            )}
+
             <button
               onClick={exportAsPNG}
-              className="p-2 bg-white border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:bg-gray-900 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+              className="p-2 rounded-lg bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-600
+                hover:bg-slate-50 dark:hover:bg-gray-700 transition-colors min-h-[36px] min-w-[36px] flex items-center justify-center"
               title="Export as PNG"
               aria-label="Export as PNG"
             >
-              <Download className="h-4 w-4" />
+              <Download className="h-3.5 w-3.5 text-slate-500 dark:text-slate-400" />
             </button>
 
-            {/* Fullscreen Toggle */}
             <button
               onClick={toggleFullscreen}
-              className="p-2 bg-white border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:bg-gray-900 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+              className="p-2 rounded-lg bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-600
+                hover:bg-slate-50 dark:hover:bg-gray-700 transition-colors min-h-[36px] min-w-[36px] flex items-center justify-center"
               title="Toggle Fullscreen"
               aria-label="Toggle fullscreen"
             >
-              <Maximize2 className="h-4 w-4" />
+              <Maximize2 className="h-3.5 w-3.5 text-slate-500 dark:text-slate-400" />
             </button>
           </div>
         </div>
@@ -821,33 +846,95 @@ export function InteractiveBodyMap({
       )}
 
       {/* Body Map SVG */}
-      <div className="relative bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-xl border-2 border-gray-200 dark:border-gray-700 p-3 sm:p-6 shadow-lg overflow-hidden">
-        {/* Background Grid Pattern */}
-        <div className="absolute inset-0 opacity-5">
-          <svg width="100%" height="100%">
-            <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
-              <path d="M 20 0 L 0 0 0 20" fill="none" stroke="gray" strokeWidth="0.5" />
-            </pattern>
-            <rect width="100%" height="100%" fill="url(#grid)" />
-          </svg>
-        </div>
+      <div className="relative rounded-2xl border border-slate-200 dark:border-gray-700
+        bg-gradient-to-b from-slate-50 via-white to-slate-50
+        dark:from-gray-900 dark:via-gray-850 dark:to-gray-900
+        shadow-[0_2px_16px_0_rgba(0,0,0,0.07)] overflow-hidden">
 
         <svg
           ref={svgRef}
           viewBox="0 0 300 530"
-          className="w-full mx-auto transition-transform duration-300 portrait:max-h-[60vh]"
+          className="w-full mx-auto transition-transform duration-300 portrait:max-h-[60vh] block"
           style={{
             maxHeight: compact ? '400px' : `${height}px`,
             maxWidth: compact ? '420px' : '520px',
             transform: `scale(${zoomLevel})`,
-            transformOrigin: 'center',
+            transformOrigin: 'center top',
           }}
         >
-          {/* Background */}
-          <rect x="0" y="0" width="300" height="530" fill="transparent" rx="15" />
+          <defs>
+            {/* Gradient fills for body regions */}
+            <linearGradient id="regionGradSelected" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="#fca5a5" />
+              <stop offset="100%" stopColor="#ef4444" />
+            </linearGradient>
+            <linearGradient id="regionGradHover" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="#bfdbfe" />
+              <stop offset="100%" stopColor="#60a5fa" />
+            </linearGradient>
+            <linearGradient id="regionGradIdle" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="#f1f5f9" />
+              <stop offset="100%" stopColor="#cbd5e1" />
+            </linearGradient>
+            {/* Silhouette fill */}
+            <linearGradient id="silhouetteGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#f8fafc" />
+              <stop offset="100%" stopColor="#e2e8f0" />
+            </linearGradient>
+            {/* Drop shadow filter */}
+            <filter id="regionShadow" x="-20%" y="-20%" width="140%" height="140%">
+              <feDropShadow dx="0" dy="1" stdDeviation="1.5" floodColor="#0f172a" floodOpacity="0.12" />
+            </filter>
+            <filter id="selectedGlow" x="-30%" y="-30%" width="160%" height="160%">
+              <feGaussianBlur stdDeviation="2.5" result="blur" />
+              <feComposite in="SourceGraphic" in2="blur" operator="over" />
+            </filter>
+          </defs>
 
-          {/* Body Outline Shadow */}
-          <ellipse cx="150" cy="510" rx="40" ry="8" fill="#000000" opacity="0.1" />
+          {/* Subtle body silhouette background — gives visual grounding */}
+          {showFront ? (
+            <path
+              d="M150 33 C163 33,176 43,176 60 C176 72,171 81,163 88
+                 L165 110 L178 110 C195 115,215 118,218 130
+                 L215 240 L175 240 L170 280
+                 C172 295,175 315,175 340
+                 L168 370 L172 385 L172 430
+                 L168 478 L184 478 L188 510 L162 510
+                 L158 478 L142 478 L138 510 L112 510
+                 L116 478 L132 478 L128 430
+                 L128 385 L132 370 L125 340
+                 C125 315,128 295,130 280
+                 L125 240 L85 240 L82 130
+                 C85 118,105 115,122 110 L137 110
+                 L137 88 C129 81,124 72,124 60
+                 C124 43,137 33,150 33 Z"
+              fill="url(#silhouetteGrad)"
+              stroke="#cbd5e1"
+              strokeWidth="1"
+              opacity="0.55"
+            />
+          ) : (
+            <path
+              d="M150 33 C163 33,176 43,176 60 C176 72,171 81,163 88
+                 L165 110 L178 110 C195 115,215 118,218 130
+                 L215 240 L175 240 L170 280
+                 C172 295,175 315,175 340
+                 L168 370 L172 385 L172 465
+                 L168 478 L184 478 L188 510 L162 510
+                 L158 478 L142 478 L138 510 L112 510
+                 L116 478 L132 478 L128 465
+                 L128 385 L132 370 L125 340
+                 C125 315,128 295,130 280
+                 L125 240 L85 240 L82 130
+                 C85 118,105 115,122 110 L137 110
+                 L137 88 C129 81,124 72,124 60
+                 C124 43,137 33,150 33 Z"
+              fill="url(#silhouetteGrad)"
+              stroke="#cbd5e1"
+              strokeWidth="1"
+              opacity="0.55"
+            />
+          )}
 
           {/* Body Regions */}
           {visibleRegions.map(region => {
@@ -855,21 +942,35 @@ export function InteractiveBodyMap({
             if (!path) return null;
 
             const painData = getPainDataForRegion(region.id);
-            const isActive =
-              mode === 'selection' ? selectedRegions.includes(region.id) : painData.avg > 0;
+            const isSelected = mode === 'selection' && selectedRegions.includes(region.id);
+            const isHovered = hoveredRegion === region.id;
+            const isFocused = focusedRegion === region.id;
+            const hasPain = mode === 'heatmap' && painData.avg > 0;
+            const stroke = getRegionStroke(region.id);
 
             return (
               <g key={region.id}>
-                {/* Glow effect for selected/affected regions */}
-                {isActive && (
+                {/* Selection highlight ring */}
+                {(isSelected || (isFocused && mode === 'selection')) && (
                   <path
                     d={path}
                     fill="none"
-                    stroke={mode === 'selection' ? '#ef4444' : '#fbbf24'}
+                    stroke={isFocused ? '#4338ca' : '#dc2626'}
                     strokeWidth="3"
-                    opacity="0.4"
-                    className="animate-pulse"
-                    filter="blur(4px)"
+                    opacity="0.35"
+                    strokeLinejoin="round"
+                  />
+                )}
+
+                {/* Heatmap glow for high pain */}
+                {hasPain && painData.avg >= 7 && (
+                  <path
+                    d={path}
+                    fill="#ef4444"
+                    stroke="none"
+                    opacity="0.18"
+                    strokeWidth="6"
+                    filter="url(#selectedGlow)"
                   />
                 )}
 
@@ -877,28 +978,58 @@ export function InteractiveBodyMap({
                 <path
                   d={path}
                   fill={getRegionColor(region.id)}
-                  stroke={hoveredRegion === region.id ? '#111827' : '#4b5563'}
-                  strokeWidth={hoveredRegion === region.id ? '2.25' : '1.25'}
+                  stroke={stroke.color}
+                  strokeWidth={stroke.width}
+                  strokeLinejoin="round"
                   opacity={getRegionOpacity(region.id)}
-                  className="cursor-pointer transition-all duration-200 hover:brightness-110"
+                  style={{ cursor: mode === 'selection' ? 'pointer' : 'default' }}
+                  className="transition-all duration-150"
                   onClick={() => handleRegionClick(region.id)}
                   onMouseEnter={() => setHoveredRegion(region.id)}
                   onMouseLeave={() => setHoveredRegion(null)}
+                  role={mode === 'selection' ? 'button' : undefined}
+                  aria-label={mode === 'selection' ? `${region.name}${isSelected ? ' (selected)' : ''}` : region.name}
+                  aria-pressed={mode === 'selection' ? isSelected : undefined}
                 />
 
-                {/* Pain level indicator for heatmap */}
-                {mode === 'heatmap' && painData.avg > 0 && (
+                {/* Pain level badge for heatmap — shown only on hover or high pain */}
+                {mode === 'heatmap' && painData.avg > 0 && (isHovered || painData.avg >= 6) && (
+                  <>
+                    <circle
+                      cx={region.center.x}
+                      cy={region.center.y}
+                      r="7"
+                      fill={painData.avg >= 7 ? '#b91c1c' : painData.avg >= 5 ? '#ea580c' : '#ca8a04'}
+                      opacity="0.9"
+                    />
+                    <text
+                      x={region.center.x}
+                      y={region.center.y + 0.5}
+                      textAnchor="middle"
+                      dominantBaseline="central"
+                      fontSize="6"
+                      fontWeight="700"
+                      fill="#ffffff"
+                      className="pointer-events-none select-none"
+                    >
+                      {Math.round(painData.avg)}
+                    </text>
+                  </>
+                )}
+
+                {/* Selection checkmark for selected regions */}
+                {isSelected && !isHovered && (
                   <text
                     x={region.center.x}
-                    y={region.center.y}
+                    y={region.center.y + 0.5}
                     textAnchor="middle"
                     dominantBaseline="central"
-                    className="text-xs font-bold pointer-events-none select-none"
-                    fill="#ffffff"
-                    stroke="#000000"
-                    strokeWidth="0.5"
+                    fontSize="8"
+                    fill="#991b1b"
+                    className="pointer-events-none select-none"
+                    opacity="0.8"
                   >
-                    {formatNumber(painData.avg, 1)}
+                    ✓
                   </text>
                 )}
               </g>
@@ -906,83 +1037,93 @@ export function InteractiveBodyMap({
           })}
 
           {/* View Label */}
-          <text x="150" y="20" textAnchor="middle" className="text-sm font-semibold" fill="#4b5563">
+          <text x="150" y="20" textAnchor="middle" fontSize="9" fontWeight="600"
+            letterSpacing="1.5" fill="#64748b">
             {showFront ? 'FRONT VIEW' : 'BACK VIEW'}
           </text>
         </svg>
 
-        {/* Hover Tooltip */}
-        {hoveredRegion && (
-          <div className="absolute top-8 right-8 bg-gray-900 dark:bg-gray-100 text-white px-4 py-3 rounded-lg shadow-xl pointer-events-none z-10 min-w-[200px]">
-            <div className="font-semibold text-base mb-1">
-              {BODY_REGIONS.find(r => r.id === hoveredRegion)?.name}
-            </div>
-            {mode === 'heatmap' &&
-              (() => {
-                const painData = getPainDataForRegion(hoveredRegion);
-                return painData.avg > 0 ? (
-                  <div className="text-sm space-y-1">
-                    <div className="flex justify-between">
-                      <span className="text-gray-300 dark:text-gray-600">Avg Pain:</span>
-                      <span className="font-medium">{formatNumber(painData.avg, 1)}/10</span>
+        {/* Tooltip — positioned contextually based on region center */}
+        {hoveredRegion && (() => {
+          const region = BODY_REGIONS.find(r => r.id === hoveredRegion);
+          const painData = getPainDataForRegion(hoveredRegion);
+          // Use region center to decide tooltip side (left half → show right, right half → show left)
+          const isLeftSide = (region?.center.x ?? 150) < 150;
+          return (
+            <div
+              className={`absolute bottom-4 ${
+                isLeftSide ? 'right-4' : 'left-4'
+              } bg-gray-900/95 dark:bg-gray-800/95 backdrop-blur-sm text-white
+              px-3.5 py-2.5 rounded-xl shadow-2xl pointer-events-none z-10 min-w-[160px] max-w-[220px]
+              border border-white/10 text-sm`}
+            >
+              <div className="font-semibold text-sm mb-1 leading-tight">
+                {region?.name}
+              </div>
+              {mode === 'heatmap' && (
+                painData.avg > 0 ? (
+                  <div className="space-y-0.5 text-xs">
+                    <div className="flex justify-between gap-4">
+                      <span className="text-gray-400">Avg</span>
+                      <span className="font-semibold tabular-nums">{formatNumber(painData.avg, 1)}/10</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-300 dark:text-gray-600">Max Pain:</span>
-                      <span className="font-medium">{painData.max}/10</span>
+                    <div className="flex justify-between gap-4">
+                      <span className="text-gray-400">Max</span>
+                      <span className="font-semibold tabular-nums">{painData.max}/10</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-300 dark:text-gray-600">Entries:</span>
-                      <span className="font-medium">{painData.count}</span>
+                    <div className="flex justify-between gap-4">
+                      <span className="text-gray-400">Entries</span>
+                      <span className="font-semibold tabular-nums">{painData.count}</span>
                     </div>
                   </div>
                 ) : (
-                  <div className="text-sm text-gray-400 dark:text-gray-500">No pain recorded</div>
-                );
-              })()}
-            {mode === 'selection' && (
-              <div className="text-sm text-gray-300 dark:text-gray-600">
-                Click to {selectedRegions.includes(hoveredRegion) ? 'deselect' : 'select'}
-              </div>
-            )}
-          </div>
-        )}
+                  <div className="text-xs text-gray-400">No pain recorded</div>
+                )
+              )}
+              {mode === 'selection' && (
+                <div className="text-xs text-gray-400 mt-0.5">
+                  {selectedRegions.includes(hoveredRegion) ? '✓ Selected — click to remove' : 'Click to select'}
+                </div>
+              )}
+            </div>
+          );
+        })()}
       </div>
 
       {/* Legend & Statistics */}
       <div className="mt-6 space-y-4">
         {/* Heatmap Legend */}
         {mode === 'heatmap' && (
-          <div className="bg-gradient-to-r from-green-50 via-yellow-50 to-red-50 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+          <div className="rounded-xl p-3.5 border border-slate-200 dark:border-gray-700
+            bg-white dark:bg-gray-900">
+            <div className="flex items-center justify-between mb-2.5">
+              <span className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
                 Pain Intensity Scale
               </span>
-              <Info className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+              <Info className="h-3.5 w-3.5 text-slate-400 dark:text-slate-500" />
             </div>
-            <div className="flex items-center space-x-4">
-              <div className="flex-1">
-                <div className="h-8 rounded-lg bg-gradient-to-r from-green-400 via-yellow-400 to-red-500 shadow-inner"></div>
-                <div className="flex justify-between text-xs text-gray-600 dark:text-gray-400 mt-1">
-                  <span>0</span>
-                  <span>2.5</span>
-                  <span>5</span>
-                  <span>7.5</span>
-                  <span>10</span>
-                </div>
-              </div>
+            <div className="relative h-4 rounded-lg overflow-hidden
+              bg-gradient-to-r from-emerald-300 via-amber-400 via-60% to-red-700 shadow-inner mb-1.5" />
+            <div className="flex justify-between text-xs text-slate-400 dark:text-slate-500 tabular-nums">
+              <span>0</span>
+              <span>2</span>
+              <span>4</span>
+              <span>6</span>
+              <span>8</span>
+              <span>10</span>
             </div>
-            <div className="grid grid-cols-3 gap-3 mt-4 text-xs">
-              <div className="flex items-center space-x-2">
-                <div className="w-3 h-3 rounded-full bg-green-400"></div>
-                <span className="text-gray-600 dark:text-gray-400">Mild (0-4)</span>
+            <div className="flex gap-3 mt-2.5 text-xs">
+              <div className="flex items-center gap-1.5">
+                <div className="w-2.5 h-2.5 rounded-full bg-emerald-400"></div>
+                <span className="text-slate-500 dark:text-slate-400">Mild (0–4)</span>
               </div>
-              <div className="flex items-center space-x-2">
-                <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
-                <span className="text-gray-600 dark:text-gray-400">Moderate (4-7)</span>
+              <div className="flex items-center gap-1.5">
+                <div className="w-2.5 h-2.5 rounded-full bg-amber-400"></div>
+                <span className="text-slate-500 dark:text-slate-400">Moderate (4–7)</span>
               </div>
-              <div className="flex items-center space-x-2">
-                <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                <span className="text-gray-600 dark:text-gray-400">Severe (7-10)</span>
+              <div className="flex items-center gap-1.5">
+                <div className="w-2.5 h-2.5 rounded-full bg-red-600"></div>
+                <span className="text-slate-500 dark:text-slate-400">Severe (7–10)</span>
               </div>
             </div>
           </div>
@@ -990,93 +1131,100 @@ export function InteractiveBodyMap({
 
         {/* Selection Mode: Selected Regions */}
         {mode === 'selection' && selectedRegions.length > 0 && (
-          <div className="bg-blue-50 rounded-lg p-4 border-2 border-blue-200">
-            <div className="text-sm font-semibold text-blue-900 mb-3">
-              Selected Locations ({selectedRegions.length})
+          <div className="rounded-xl p-3.5 border border-rose-200 dark:border-rose-900/40
+            bg-rose-50/50 dark:bg-rose-950/20">
+            <div className="flex items-center justify-between mb-2.5">
+              <span className="text-xs font-semibold uppercase tracking-wide text-rose-700 dark:text-rose-400">
+                Selected Locations ({selectedRegions.length})
+              </span>
+              <button
+                onClick={() => onRegionSelect?.([])}
+                className="text-xs text-rose-600 hover:text-rose-800 dark:text-rose-400 dark:hover:text-rose-300
+                  font-medium transition-colors px-1.5 py-0.5 rounded hover:bg-rose-100 dark:hover:bg-rose-900/30"
+              >
+                Clear All
+              </button>
             </div>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-1.5">
               {selectedRegions.map(regionId => {
                 const region = BODY_REGIONS.find(r => r.id === regionId);
                 const category = region?.category;
                 const categoryColors = {
-                  upper: 'bg-purple-100 text-purple-800 border-purple-300',
-                  core: 'bg-blue-100 text-blue-800 border-blue-300',
-                  lower: 'bg-green-100 text-green-800 border-green-300',
-                  extremities: 'bg-orange-100 text-orange-800 border-orange-300',
+                  upper: 'bg-violet-100 text-violet-800 border-violet-200 dark:bg-violet-900/30 dark:text-violet-300 dark:border-violet-800',
+                  core: 'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800',
+                  lower: 'bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800',
+                  extremities: 'bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800',
                 };
 
                 return (
                   <span
                     key={regionId}
-                    className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium border ${categoryColors[category || 'core']}`}
+                    className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border
+                      ${categoryColors[category ?? 'core']} transition-all hover:shadow-sm`}
                   >
                     {region?.name}
                     <button
                       onClick={() => handleRegionClick(regionId)}
-                      className="ml-2 hover:scale-125 transition-transform"
-                      title="Remove"
+                      className="hover:bg-black/10 dark:hover:bg-white/10 rounded-full p-0.5 leading-none transition-colors"
+                      aria-label={`Remove ${region?.name}`}
                     >
-                      ×
+                      <span aria-hidden>×</span>
                     </button>
                   </span>
                 );
               })}
             </div>
-            <button
-              onClick={() => onRegionSelect?.([])}
-              className="mt-3 text-sm text-blue-600 hover:text-blue-800 font-medium"
-            >
-              Clear All
-            </button>
           </div>
         )}
 
         {/* Statistics Panel for Heatmap */}
         {mode === 'heatmap' && affectedRegionsCount > 0 && (
-          <div className="grid grid-cols-1 xs:grid-cols-3 gap-3 sm:gap-4">
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-3 sm:p-4 border border-gray-200 dark:border-gray-700 shadow-sm">
-              <div className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">
-                Affected Regions
-              </div>
-              <div className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100">
+          <div className="grid grid-cols-3 gap-2">
+            <div className="rounded-xl p-3 border border-slate-200 dark:border-gray-700
+              bg-white dark:bg-gray-900 text-center">
+              <div className="text-xl font-bold text-slate-800 dark:text-slate-100 tabular-nums">
                 {affectedRegionsCount}
               </div>
-            </div>
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-3 sm:p-4 border border-gray-200 dark:border-gray-700 shadow-sm">
-              <div className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">
-                Highest Pain
+              <div className="text-[10px] font-medium uppercase tracking-wide text-slate-400 mt-0.5">
+                Regions
               </div>
-              <div className="text-xl sm:text-2xl font-bold text-red-600">
+            </div>
+            <div className="rounded-xl p-3 border border-red-200 dark:border-red-900/40
+              bg-red-50/50 dark:bg-red-950/20 text-center">
+              <div className="text-xl font-bold text-red-600 dark:text-red-400 tabular-nums">
                 {Math.max(...Array.from(regionPainMap.values()).map(d => d.max), 0)}/10
               </div>
-            </div>
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-3 sm:p-4 border border-gray-200 dark:border-gray-700 shadow-sm">
-              <div className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">
-                Avg Pain
+              <div className="text-[10px] font-medium uppercase tracking-wide text-red-400 mt-0.5">
+                Peak Pain
               </div>
-              <div className="text-xl sm:text-2xl font-bold text-orange-600">
+            </div>
+            <div className="rounded-xl p-3 border border-amber-200 dark:border-amber-900/40
+              bg-amber-50/50 dark:bg-amber-950/20 text-center">
+              <div className="text-xl font-bold text-amber-600 dark:text-amber-400 tabular-nums">
                 {formatNumber(
                   Array.from(regionPainMap.values()).reduce((sum, d) => sum + d.avg, 0) /
                     (affectedRegionsCount || 1),
                   1
-                )}
-                /10
+                )}/10
+              </div>
+              <div className="text-[10px] font-medium uppercase tracking-wide text-amber-400 mt-0.5">
+                Avg Pain
               </div>
             </div>
           </div>
         )}
 
         {/* Body Region Categories */}
-        <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-3 sm:p-4 border border-gray-200 dark:border-gray-700">
-          <div className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
-            Body Region Categories
+        <div className="rounded-xl p-3 border border-slate-200 dark:border-gray-700 bg-white dark:bg-gray-900">
+          <div className="text-[10px] font-semibold uppercase tracking-wide text-slate-400 dark:text-slate-500 mb-2">
+            By Region
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
+          <div className="grid grid-cols-4 gap-2">
             {[
-              { name: 'Upper Body', category: 'upper', color: 'purple', icon: '🧠' },
-              { name: 'Core/Torso', category: 'core', color: 'blue', icon: '🫀' },
-              { name: 'Lower Body', category: 'lower', color: 'green', icon: '🦵' },
-              { name: 'Arms/Hands', category: 'extremities', color: 'orange', icon: '💪' },
+              { name: 'Upper', category: 'upper', color: 'purple', icon: '🧠' },
+              { name: 'Core', category: 'core', color: 'blue', icon: '🫀' },
+              { name: 'Lower', category: 'lower', color: 'green', icon: '🦵' },
+              { name: 'Arms', category: 'extremities', color: 'orange', icon: '💪' },
             ].map(({ name, category, color, icon }) => {
               const count =
                 mode === 'selection'
@@ -1092,11 +1240,11 @@ export function InteractiveBodyMap({
               return (
                 <div
                   key={category}
-                  className={`${classes.bg} border ${classes.border} rounded-md p-2 text-center`}
+                  className={`${classes.bg} border ${classes.border} rounded-lg p-2 text-center transition-all`}
                 >
-                  <div className="text-xl sm:text-2xl mb-1">{icon}</div>
-                  <div className="text-xs font-medium text-gray-700 dark:text-gray-300 truncate">{name}</div>
-                  <div className={`text-sm font-bold ${classes.text} mt-1`}>{count}</div>
+                  <div className="text-lg mb-0.5 leading-tight">{icon}</div>
+                  <div className="text-[10px] font-medium text-slate-600 dark:text-slate-400 leading-tight">{name}</div>
+                  <div className={`text-sm font-bold ${classes.text} mt-0.5 tabular-nums`}>{count}</div>
                 </div>
               );
             })}

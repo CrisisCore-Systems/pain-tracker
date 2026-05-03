@@ -1,6 +1,46 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
+import { MapPin, Clock, Save, AlertCircle } from 'lucide-react';
 import { InteractiveBodyMap } from './InteractiveBodyMap';
 import { usePainTrackerStore } from '../../stores/pain-tracker-store';
+
+// Region display name lookup — mirrors BODY_REGIONS from InteractiveBodyMap
+const REGION_DISPLAY_NAMES: Record<string, string> = {
+  head: 'Head', neck: 'Neck',
+  'left-shoulder': 'Left Shoulder', 'right-shoulder': 'Right Shoulder',
+  'left-upper-arm': 'Left Upper Arm', 'right-upper-arm': 'Right Upper Arm',
+  'left-elbow': 'Left Elbow', 'right-elbow': 'Right Elbow',
+  'left-forearm': 'Left Forearm', 'right-forearm': 'Right Forearm',
+  'left-hand': 'Left Hand', 'right-hand': 'Right Hand',
+  chest: 'Chest', 'upper-back': 'Upper Back',
+  abdomen: 'Abdomen', 'lower-back': 'Lower Back',
+  'left-hip': 'Left Hip', 'right-hip': 'Right Hip',
+  'left-thigh-outer': 'Left Outer Thigh', 'left-thigh-inner': 'Left Inner Thigh',
+  'right-thigh-outer': 'Right Outer Thigh', 'right-thigh-inner': 'Right Inner Thigh',
+  'left-knee-outer': 'Left Outer Knee', 'left-knee-inner': 'Left Inner Knee',
+  'right-knee-outer': 'Right Outer Knee', 'right-knee-inner': 'Right Inner Knee',
+  'left-shin-outer': 'Left Outer Shin', 'left-shin-inner': 'Left Inner Shin',
+  'right-shin-outer': 'Right Outer Shin', 'right-shin-inner': 'Right Inner Shin',
+  'left-calf-outer': 'Left Outer Calf', 'left-calf-inner': 'Left Inner Calf',
+  'right-calf-outer': 'Right Outer Calf', 'right-calf-inner': 'Right Inner Calf',
+  'left-ankle': 'Left Ankle', 'right-ankle': 'Right Ankle',
+  'left-foot-lateral': 'Left Foot (Outer)', 'left-foot-medial': 'Left Foot (Inner)',
+  'right-foot-lateral': 'Right Foot (Outer)', 'right-foot-medial': 'Right Foot (Inner)',
+  'left-toes-lateral': 'Left Toes (Outer)', 'left-toes-medial': 'Left Toes (Inner)',
+  'right-toes-lateral': 'Right Toes (Outer)', 'right-toes-medial': 'Right Toes (Inner)',
+};
+
+function getDisplayName(regionId: string): string {
+  return REGION_DISPLAY_NAMES[regionId] ?? regionId.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+}
+
+// Pain level to color + label
+function getPainMeta(level: number): { color: string; label: string; trackColor: string } {
+  if (level <= 2) return { color: 'text-emerald-600', label: 'Minimal', trackColor: 'bg-emerald-400' };
+  if (level <= 4) return { color: 'text-yellow-600', label: 'Mild', trackColor: 'bg-yellow-400' };
+  if (level <= 6) return { color: 'text-amber-600', label: 'Moderate', trackColor: 'bg-amber-500' };
+  if (level <= 8) return { color: 'text-orange-600', label: 'Severe', trackColor: 'bg-orange-500' };
+  return { color: 'text-red-600', label: 'Very Severe', trackColor: 'bg-red-500' };
+}
 
 export function BodyMapPage() {
   const { entries, addEntry } = usePainTrackerStore();
@@ -8,214 +48,234 @@ export function BodyMapPage() {
   const [painLevel, setPainLevel] = useState<number>(5);
   const [notes, setNotes] = useState<string>('');
   const [isSaving, setIsSaving] = useState(false);
+  const [savedBanner, setSavedBanner] = useState(false);
 
-  // Get recent locations from entries
-  const recentLocations = entries
-    .slice(0, 5)
-    .flatMap(e => e.baselineData?.locations || [])
-    .filter((v, i, a) => a.indexOf(v) === i)
-    .slice(0, 3);
-
-  const handleSaveEntry = async () => {
-    if (selectedRegions.length === 0) {
-      return;
+  // Deduplicated recent region IDs from last 5 entries
+  const recentRegions = useMemo(() => {
+    const seen = new Set<string>();
+    const result: string[] = [];
+    for (const e of entries.slice(0, 5)) {
+      for (const loc of (e.baselineData?.locations ?? [])) {
+        if (!seen.has(loc)) { seen.add(loc); result.push(loc); }
+      }
+      if (result.length >= 5) break;
     }
+    return result;
+  }, [entries]);
+
+  const painMeta = getPainMeta(painLevel);
+
+  const handleSaveEntry = () => {
+    if (selectedRegions.length === 0) return;
 
     setIsSaving(true);
     try {
-      await addEntry({
-        baselineData: {
-          pain: painLevel,
-          locations: selectedRegions,
-          symptoms: [],
-        },
-        functionalImpact: {
-          limitedActivities: [],
-          assistanceNeeded: [],
-          mobilityAids: [],
-        },
-        medications: {
-          current: [],
-          changes: '',
-          effectiveness: '',
-        },
-        treatments: {
-          recent: [],
-          effectiveness: '',
-          planned: [],
-        },
-        qualityOfLife: {
-          sleepQuality: 0,
-          moodImpact: 0,
-          socialImpact: [],
-        },
-        workImpact: {
-          missedWork: 0,
-          modifiedDuties: [],
-          workLimitations: [],
-        },
-        comparison: {
-          worseningSince: '',
-          newLimitations: [],
-        },
+      void addEntry({
+        baselineData: { pain: painLevel, locations: selectedRegions, symptoms: [] },
+        functionalImpact: { limitedActivities: [], assistanceNeeded: [], mobilityAids: [] },
+        medications: { current: [], changes: '', effectiveness: '' },
+        treatments: { recent: [], effectiveness: '', planned: [] },
+        qualityOfLife: { sleepQuality: 0, moodImpact: 0, socialImpact: [] },
+        workImpact: { missedWork: 0, modifiedDuties: [], workLimitations: [] },
+        comparison: { worseningSince: '', newLimitations: [] },
         notes: notes || '',
       });
-
-      // Reset form
       setSelectedRegions([]);
       setPainLevel(5);
       setNotes('');
+      setSavedBanner(true);
+      setTimeout(() => setSavedBanner(false), 3000);
     } finally {
       setIsSaving(false);
     }
   };
 
   return (
-    <div className="max-w-6xl mx-auto p-4 space-y-6">
-      {/* Header */}
-      <div className="text-center space-y-2">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Body Map</h1>
-        <p className="text-gray-600 dark:text-gray-400">
-          Click on the body diagram to select pain locations
+    <div className="max-w-5xl mx-auto px-4 py-6 space-y-5">
+      {/* Page header */}
+      <div>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">Body Map</h1>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+          Tap body regions to mark pain locations, then record the intensity.
         </p>
       </div>
 
-      {/* Quick Access to Recent Locations */}
-      {recentLocations.length > 0 && (
-        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
-          <h3 className="text-sm font-semibold text-blue-900 dark:text-blue-100 mb-2">
-            Recent Locations
-          </h3>
-          <p className="text-xs text-blue-900/80 dark:text-blue-100/80 mb-3">
-            Tap a recent location to add it to your selection.
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {recentLocations.map((location, idx) => (
-              <button
-                key={idx}
-                onClick={() => {
-                  if (!selectedRegions.includes(location)) {
-                    setSelectedRegions([...selectedRegions, location]);
-                  }
-                }}
-                className="px-3 py-2 bg-white dark:bg-gray-800 border border-blue-300 dark:border-blue-700 rounded-md text-sm text-blue-900 dark:text-blue-100 hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500/50"
-              >
-                {location}
-              </button>
-            ))}
-          </div>
+      {/* Saved confirmation banner */}
+      {savedBanner && (
+        <div className="flex items-center gap-2.5 px-4 py-3 rounded-xl
+          bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800
+          text-emerald-700 dark:text-emerald-400 text-sm font-medium" role="status">
+          <Save className="h-4 w-4 flex-shrink-0" />
+          Entry saved successfully.
         </div>
       )}
 
-      {/* Interactive Body Map */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-6">
-        <div className="mb-3 text-sm text-gray-700 dark:text-gray-300">
-          Click or tap body regions to select them. Selected areas are highlighted.
-        </div>
-        <InteractiveBodyMap
-          selectedRegions={selectedRegions}
-          onRegionSelect={setSelectedRegions}
-          mode="selection"
-          height={720}
-        />
-      </div>
+      {/* Main layout: body map + sidebar */}
+      <div className="flex flex-col lg:flex-row gap-5 items-start">
 
-      {/* Selected Regions Display */}
-      {selectedRegions.length > 0 && (
-        <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-          <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">
-            Selected Areas ({selectedRegions.length})
-          </h3>
-          <div className="flex flex-wrap gap-2">
-            {selectedRegions.map(region => (
-              <span
-                key={region}
-                className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-100 dark:bg-blue-900/40 text-blue-900 dark:text-blue-100 rounded-md text-sm"
+        {/* Body map — takes 60% on desktop */}
+        <div className="w-full lg:flex-1 rounded-2xl border border-slate-200 dark:border-gray-700
+          bg-white dark:bg-gray-900 shadow-sm overflow-hidden">
+          <div className="px-4 pt-4 pb-1 flex items-center justify-between">
+            <span className="text-xs font-semibold uppercase tracking-wide text-slate-400 dark:text-slate-500">
+              {selectedRegions.length === 0
+                ? 'Select locations'
+                : `${selectedRegions.length} location${selectedRegions.length !== 1 ? 's' : ''} marked`}
+            </span>
+            {selectedRegions.length > 0 && (
+              <button
+                onClick={() => setSelectedRegions([])}
+                className="text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
               >
-                {region}
-                <button
-                  onClick={() => setSelectedRegions(selectedRegions.filter(r => r !== region))}
-                  className="hover:text-blue-700 dark:hover:text-blue-300"
-                  aria-label={`Remove ${region}`}
-                >
-                  ×
-                </button>
-              </span>
-            ))}
+                Clear all
+              </button>
+            )}
           </div>
-
-          {/* Pain Level Slider */}
-          <div className="mt-4 space-y-2">
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-              Pain Level: {painLevel}/10
-            </label>
-            <input
-              type="range"
-              min="0"
-              max="10"
-              value={painLevel}
-              onChange={e => setPainLevel(Number(e.target.value))}
-              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
+          <div className="p-3">
+            <InteractiveBodyMap
+              selectedRegions={selectedRegions}
+              onRegionSelect={setSelectedRegions}
+              mode="selection"
+              height={680}
             />
-            <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400">
-              <span>No Pain</span>
-              <span>Worst Pain</span>
+          </div>
+        </div>
+
+        {/* Sidebar: pain level + notes + save */}
+        <div className="w-full lg:w-72 xl:w-80 space-y-4 lg:sticky lg:top-6">
+
+          {/* Recent locations quick-add */}
+          {recentRegions.length > 0 && (
+            <div className="rounded-2xl border border-slate-200 dark:border-gray-700
+              bg-white dark:bg-gray-900 p-4">
+              <div className="flex items-center gap-1.5 mb-2.5">
+                <Clock className="h-3.5 w-3.5 text-slate-400" />
+                <span className="text-xs font-semibold uppercase tracking-wide text-slate-400 dark:text-slate-500">
+                  Recent
+                </span>
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                {recentRegions.map(regionId => {
+                  const isAdded = selectedRegions.includes(regionId);
+                  return (
+                    <button
+                      key={regionId}
+                      onClick={() => {
+                        if (!isAdded) setSelectedRegions(prev => [...prev, regionId]);
+                        else setSelectedRegions(prev => prev.filter(r => r !== regionId));
+                      }}
+                      className={`px-2.5 py-1 rounded-full text-xs font-medium border transition-all
+                        ${isAdded
+                          ? 'bg-rose-100 border-rose-300 text-rose-700 dark:bg-rose-900/40 dark:border-rose-700 dark:text-rose-300'
+                          : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100 dark:bg-gray-800 dark:border-gray-600 dark:text-slate-400 dark:hover:bg-gray-700'
+                        }`}
+                    >
+                      {getDisplayName(regionId)}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Pain level */}
+          <div className="rounded-2xl border border-slate-200 dark:border-gray-700
+            bg-white dark:bg-gray-900 p-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-semibold uppercase tracking-wide text-slate-400 dark:text-slate-500">
+                Pain Level
+              </span>
+              <span className={`text-sm font-bold tabular-nums ${painMeta.color}`}>
+                {painLevel}/10 — {painMeta.label}
+              </span>
+            </div>
+            {/* Custom styled range track */}
+            <div className="relative pt-1">
+              <input
+                type="range"
+                min="0"
+                max="10"
+                value={painLevel}
+                onChange={e => setPainLevel(Number(e.target.value))}
+                className="w-full h-2 appearance-none rounded-full cursor-pointer
+                  bg-gradient-to-r from-emerald-400 via-amber-400 to-red-500"
+                aria-label="Pain level"
+                aria-valuemin={0}
+                aria-valuemax={10}
+                aria-valuenow={painLevel}
+              />
+              <div className="flex justify-between text-[10px] text-slate-400 mt-1.5 px-0.5">
+                <span>0</span>
+                <span>5</span>
+                <span>10</span>
+              </div>
             </div>
           </div>
 
           {/* Notes */}
-          <div className="mt-4 space-y-2">
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-              Notes (Optional)
+          <div className="rounded-2xl border border-slate-200 dark:border-gray-700
+            bg-white dark:bg-gray-900 p-4 space-y-2">
+            <label
+              htmlFor="bodymap-notes"
+              className="text-xs font-semibold uppercase tracking-wide text-slate-400 dark:text-slate-500 block"
+            >
+              Notes <span className="normal-case font-normal">(optional)</span>
             </label>
             <textarea
+              id="bodymap-notes"
               value={notes}
               onChange={e => setNotes(e.target.value)}
-              placeholder="Describe your pain, triggers, or any relevant details..."
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Describe your pain, triggers, or anything relevant…"
+              className="w-full px-3 py-2.5 rounded-xl border border-slate-200 dark:border-gray-600
+                bg-slate-50 dark:bg-gray-800 text-gray-900 dark:text-white
+                text-sm placeholder-slate-400 dark:placeholder-slate-500
+                focus:ring-2 focus:ring-blue-500/40 focus:border-blue-400 focus:outline-none
+                resize-none transition-colors"
               rows={3}
             />
           </div>
 
-          {/* Save Button */}
-          <div className="mt-4">
+          {/* Save / empty state */}
+          {selectedRegions.length === 0 ? (
+            <div className="rounded-2xl border border-dashed border-slate-200 dark:border-gray-700
+              bg-slate-50/50 dark:bg-gray-900/50 px-4 py-6 text-center space-y-2">
+              <MapPin className="h-8 w-8 text-slate-300 dark:text-slate-600 mx-auto" />
+              <p className="text-sm text-slate-500 dark:text-slate-400">
+                Select at least one location on the body map to record an entry.
+              </p>
+            </div>
+          ) : (
             <button
               onClick={handleSaveEntry}
-              disabled={isSaving || selectedRegions.length === 0}
-              className="w-full px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 dark:bg-gray-500 text-white font-semibold rounded-lg transition-colors disabled:cursor-not-allowed"
+              disabled={isSaving}
+              className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl
+                bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 dark:disabled:bg-gray-600
+                text-white font-semibold text-sm transition-colors shadow-sm
+                focus:outline-none focus:ring-2 focus:ring-blue-500/50"
             >
-              {isSaving ? 'Saving...' : 'Save Entry'}
+              {isSaving ? (
+                <>
+                  <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                  Saving…
+                </>
+              ) : (
+                <>
+                  <Save className="h-4 w-4" />
+                  Save Entry
+                </>
+              )}
             </button>
-          </div>
-        </div>
-      )}
+          )}
 
-      {/* Empty State */}
-      {selectedRegions.length === 0 && (
-        <div className="text-center py-12 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700">
-          <div className="inline-flex p-4 bg-gray-100 dark:bg-gray-700 rounded-full mb-4">
-            <svg
-              className="w-8 h-8 text-gray-400 dark:text-gray-500"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"
-              />
-            </svg>
-          </div>
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-            Select Pain Locations
-          </h3>
-          <p className="text-gray-600 dark:text-gray-400 max-w-md mx-auto">
-            Click on the body diagram above to mark where you're experiencing pain
-          </p>
+          {/* Validation hint */}
+          {selectedRegions.length === 0 && (
+            <div className="flex items-start gap-2 text-xs text-slate-400 dark:text-slate-500">
+              <AlertCircle className="h-3.5 w-3.5 flex-shrink-0 mt-0.5" />
+              <span>You need to mark at least one body region before saving.</span>
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 }
