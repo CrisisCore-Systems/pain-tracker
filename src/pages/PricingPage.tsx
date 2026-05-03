@@ -4,11 +4,11 @@
  * Upgraded with dramatic editorial magazine treatment
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import '../styles/pages/landing.css';
 import '../styles/pages/pricing.css';
 import { Check, X, ChevronDown, Crown, Star, Users, Sparkles, Shield, Zap, ArrowRight, Activity } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { SUBSCRIPTION_PLANS, FEATURE_COMPARISON } from '../config/subscription-tiers';
 import type { SubscriptionTier } from '../types/subscription';
@@ -19,18 +19,107 @@ import { getLocalUserId } from '../utils/user-identity';
 import { combineSchemas, generateBreadcrumbSchema } from '../lib/seo';
 import { applyPageMetadata } from '../components/seo/applyPageMetadata';
 
+type CheckoutTier = NonNullable<ReturnType<typeof getTierForCheckout>>;
+
+function isCheckoutTier(value: string | null): value is CheckoutTier {
+  return value === 'basic' || value === 'pro';
+}
+
+function isBillingInterval(value: string | null): value is 'monthly' | 'yearly' {
+  return value === 'monthly' || value === 'yearly';
+}
+
+function buildResumeCheckoutPath(tier: CheckoutTier, interval: 'monthly' | 'yearly'): string {
+  const params = new URLSearchParams({
+    resumeCheckout: '1',
+    tier,
+    interval,
+  });
+
+  return `/pricing?${params.toString()}`;
+}
+
 export const PricingPage: React.FC = () => {
   const { currentTier } = useSubscription();
   const vaultStatus = useVaultStatus();
+  const location = useLocation();
   const navigate = useNavigate();
   const [billingInterval, setBillingInterval] = useState<'monthly' | 'yearly'>('monthly');
   const [isUpgrading, setIsUpgrading] = useState(false);
+  const [checkoutMessage, setCheckoutMessage] = useState<string | null>(null);
+  const [checkoutMessageTone, setCheckoutMessageTone] = useState<'info' | 'warning'>('info');
+  const resumedCheckoutRef = useRef<string | null>(null);
 
   useEffect(() => applyPageMetadata({
     title: 'Pain Tracker Pricing — Free, Basic $9.99, Pro $24.99 | PainTracker.ca',
     description: 'Compare Free, Basic, Pro, and Enterprise plans for private, offline-capable pain tracking, clinician-friendly reports, and structured documentation workflows.',
     canonicalUrl: 'https://www.paintracker.ca/pricing',
   }), []);
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const checkoutState = params.get('checkout');
+
+    if (checkoutState === 'canceled') {
+      setCheckoutMessage('Checkout was canceled. Your current plan has not changed.');
+      setCheckoutMessageTone('warning');
+      return;
+    }
+
+    if (checkoutState === 'success') {
+      setCheckoutMessage('Checkout completed. Your subscription status will refresh on this device as soon as Stripe confirms the payment.');
+      setCheckoutMessageTone('info');
+      return;
+    }
+
+    setCheckoutMessage(null);
+    setCheckoutMessageTone('info');
+  }, [location.search]);
+
+  async function startCheckout(checkoutTier: CheckoutTier, interval: 'monthly' | 'yearly') {
+    setIsUpgrading(true);
+    try {
+      const userId = getLocalUserId();
+
+      await createCheckoutSession({
+        userId,
+        tier: checkoutTier,
+        interval,
+      });
+    } catch (err) {
+      console.error('Upgrade failed:', err);
+      const message = err instanceof Error
+        ? err.message
+        : 'Failed to start checkout. Please try again.';
+      setCheckoutMessage(message);
+      setCheckoutMessageTone('warning');
+    } finally {
+      setIsUpgrading(false);
+    }
+  }
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (params.get('resumeCheckout') !== '1' || vaultStatus.state !== 'unlocked') {
+      return;
+    }
+
+    const tier = params.get('tier');
+    const interval = params.get('interval');
+    if (!isCheckoutTier(tier) || !isBillingInterval(interval)) {
+      return;
+    }
+
+    const resumeKey = `${tier}:${interval}`;
+    if (resumedCheckoutRef.current === resumeKey) {
+      return;
+    }
+
+    resumedCheckoutRef.current = resumeKey;
+    setBillingInterval(interval);
+    navigate('/pricing', { replace: true });
+    void startCheckout(tier, interval);
+  }, [location.search, navigate, vaultStatus.state]);
 
   const schema = combineSchemas(
     generateBreadcrumbSchema(
@@ -43,15 +132,7 @@ export const PricingPage: React.FC = () => {
   );
 
   const handleUpgrade = async (tier: SubscriptionTier) => {
-    setIsUpgrading(true);
     try {
-      // Checkout is tied to the current browser profile after vault unlock.
-      if (vaultStatus.state !== 'unlocked') {
-        alert('Please unlock your vault on this device before starting checkout.');
-        navigate('/start?redirect=/pricing');
-        return;
-      }
-
       // Free tier doesn't need payment
       if (tier === 'free') {
         alert('You are already on the Free plan!');
@@ -70,21 +151,23 @@ export const PricingPage: React.FC = () => {
         throw new Error('Invalid tier for checkout');
       }
 
-      // Stable browser-profile identifier for ownership binding.
-      const userId = getLocalUserId();
+      // Checkout is tied to the current browser profile after vault unlock.
+      if (vaultStatus.state !== 'unlocked') {
+        setCheckoutMessage('Please unlock your vault on this device before starting checkout.');
+        setCheckoutMessageTone('warning');
+        const redirect = encodeURIComponent(buildResumeCheckoutPath(checkoutTier, billingInterval));
+        navigate(`/start?redirect=${redirect}`);
+        return;
+      }
 
-      // Redirect to Stripe Checkout
-      await createCheckoutSession({
-        userId,
-        tier: checkoutTier,
-        interval: billingInterval,
-      });
-
+      await startCheckout(checkoutTier, billingInterval);
     } catch (err) {
       console.error('Upgrade failed:', err);
-      alert('Failed to start checkout. Please try again.');
-    } finally {
-      setIsUpgrading(false);
+      const message = err instanceof Error
+        ? err.message
+        : 'Failed to start checkout. Please try again.';
+      setCheckoutMessage(message);
+      setCheckoutMessageTone('warning');
     }
   };
 
@@ -168,6 +251,20 @@ export const PricingPage: React.FC = () => {
           <p className="text-sm text-slate-400 max-w-3xl mx-auto mb-10">
             Data is stored locally on your device unless you choose to export it.
           </p>
+
+          {checkoutMessage && (
+            <div
+              role="status"
+              aria-live="polite"
+              className={`mb-10 rounded-2xl border px-5 py-4 text-sm sm:text-base ${
+                checkoutMessageTone === 'warning'
+                  ? 'border-amber-400/40 bg-amber-500/10 text-amber-100'
+                  : 'border-sky-400/40 bg-sky-500/10 text-sky-100'
+              }`}
+            >
+              {checkoutMessage}
+            </div>
+          )}
 
           {/* Current Tier Display */}
           {currentTier && (

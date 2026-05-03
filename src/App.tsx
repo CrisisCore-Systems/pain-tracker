@@ -45,6 +45,7 @@ const PainDiaryTemplatePage = lazy(() => import('./pages/PainDiaryTemplatePage')
 const PainTrackingAppsComparisonPage = lazy(() => import('./pages/PainTrackingAppsComparisonPage').then(m => ({ default: m.PainTrackingAppsComparisonPage })));
 const PrivacyOfflineFirstPainTrackerPage = lazy(() => import('./pages/PrivacyOfflineFirstPainTrackerPage').then(m => ({ default: m.PrivacyOfflineFirstPainTrackerPage })));
 const VaultGate = lazy(() => import('./components/security/VaultGate').then(m => ({ default: m.VaultGate })));
+const StartRedirect = lazy(() => import('./components/security/StartRedirect').then(m => ({ default: m.StartRedirect })));
 const ProtectedAppShell = lazy(() => import('./routes/ProtectedAppShell').then(m => ({ default: m.ProtectedAppShell })));
 
 // SEO Resource Pages - Lazy loaded for code splitting
@@ -223,7 +224,7 @@ function App() {
                       path="/start"
                       element={
                         <VaultGate>
-                          <Navigate to="/app" replace />
+                          <StartRedirect />
                         </VaultGate>
                       }
                     />

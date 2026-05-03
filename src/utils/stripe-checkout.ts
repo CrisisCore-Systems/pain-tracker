@@ -4,6 +4,7 @@
  */
 
 import type { SubscriptionTier } from '../types/subscription';
+import { buildApiUrl, getApiRequestCredentials } from '../lib/api-url';
 
 interface CheckoutOptions {
   userId: string;
@@ -17,6 +18,18 @@ interface CheckoutResponse {
   url: string;
 }
 
+async function readCheckoutError(response: Response): Promise<string> {
+  const contentType = response.headers.get('content-type') || '';
+
+  if (contentType.includes('application/json')) {
+    const error = await response.json() as { error?: string; message?: string };
+    return error.message || error.error || 'Failed to create checkout session';
+  }
+
+  const text = await response.text();
+  return text.trim() || `Checkout request failed with status ${response.status}`;
+}
+
 /**
  * Create a Stripe checkout session and redirect user to payment
  */
@@ -25,14 +38,14 @@ export async function createCheckoutSession(options: CheckoutOptions): Promise<v
 
   // Determine success and cancel URLs
   const baseUrl = globalThis.location.origin;
-  const successUrl = `${baseUrl}/app?checkout=success&session_id={CHECKOUT_SESSION_ID}`;
+  const successUrl = `${baseUrl}/pricing?checkout=success&session_id={CHECKOUT_SESSION_ID}`;
   const cancelUrl = `${baseUrl}/pricing?checkout=canceled`;
 
   try {
     // Call API to create checkout session
-    const response = await fetch('/api/stripe/create-checkout-session', {
+    const response = await fetch(buildApiUrl('/stripe/create-checkout-session'), {
       method: 'POST',
-      credentials: 'same-origin',
+      credentials: getApiRequestCredentials(),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -47,8 +60,7 @@ export async function createCheckoutSession(options: CheckoutOptions): Promise<v
     });
 
     if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || 'Failed to create checkout session');
+      throw new Error(await readCheckoutError(response));
     }
 
     const data: CheckoutResponse = await response.json();

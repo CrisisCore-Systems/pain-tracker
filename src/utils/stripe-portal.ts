@@ -1,3 +1,5 @@
+import { buildApiUrl, getApiRequestCredentials } from '../lib/api-url';
+
 interface BillingPortalOptions {
   userId: string;
   returnUrl?: string;
@@ -8,9 +10,9 @@ interface BillingPortalResponse {
 }
 
 export async function openBillingPortal(options: BillingPortalOptions): Promise<void> {
-  const response = await fetch('/api/stripe/create-portal-session', {
+  const response = await fetch(buildApiUrl('/stripe/create-portal-session'), {
     method: 'POST',
-    credentials: 'same-origin',
+    credentials: getApiRequestCredentials(),
     headers: {
       'Content-Type': 'application/json',
     },

@@ -8,8 +8,8 @@ import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
+import { fileURLToPath } from 'node:url';
+import { dirname, join } from 'node:path';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -30,7 +30,12 @@ const PORT = process.env.API_DEV_PORT || 3001;
 
 // Middleware
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: [
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+    'http://localhost:4173',
+    'http://127.0.0.1:4173',
+  ],
   credentials: true,
 }));
 app.use(express.json());
@@ -48,70 +53,69 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', service: 'api-dev-server' });
 });
 
+async function loadHandler(filePath, route) {
+  try {
+    // Convert Windows path to file:// URL
+    const fileUrl = new URL(`file:///${filePath.replaceAll('\\', '/')}`);
+    const module = await import(fileUrl.href);
+    const handler = module.default;
+
+    if (!handler) {
+      console.warn(`[API-DEV] No default export in ${filePath}`);
+      return;
+    }
+
+    // Wrap Vercel handler for Express
+    app.all(route, async (req, res) => {
+      try {
+        // Create Vercel-compatible request object
+        const vercelReq = {
+          ...req,
+          query: req.query,
+          cookies: req.cookies || {},
+          body: req.body,
+          headers: req.headers,
+          method: req.method,
+          url: req.url,
+        };
+
+        // Create Vercel-compatible response object
+        const vercelRes = {
+          status: (code) => {
+            res.status(code);
+            return vercelRes;
+          },
+          json: (data) => {
+            res.json(data);
+          },
+          send: (data) => {
+            res.send(data);
+          },
+          setHeader: (name, value) => {
+            res.setHeader(name, value);
+          },
+          end: () => {
+            res.end();
+          },
+        };
+
+        await handler(vercelReq, vercelRes);
+      } catch (error) {
+        console.error(`[API-DEV] Error in ${route}:`, error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
+    });
+
+    console.log(`[API-DEV] ✓ Loaded ${route}`);
+  } catch (error) {
+    console.error(`[API-DEV] Failed to load ${filePath}:`, error.message);
+  }
+}
+
 // Dynamically load and mount API routes
 async function loadApiRoutes() {
   const apiDir = join(__dirname, '..', 'api');
-  
-  // Helper to load a Vercel serverless function
-  async function loadHandler(filePath, route) {
-    try {
-      // Convert Windows path to file:// URL
-      const fileUrl = new URL(`file:///${filePath.replace(/\\/g, '/')}`);
-      const module = await import(fileUrl.href);
-      const handler = module.default;
-      
-      if (!handler) {
-        console.warn(`[API-DEV] No default export in ${filePath}`);
-        return;
-      }
-      
-      // Wrap Vercel handler for Express
-      app.all(route, async (req, res) => {
-        try {
-          // Create Vercel-compatible request object
-          const vercelReq = {
-            ...req,
-            query: req.query,
-            cookies: req.cookies || {},
-            body: req.body,
-            headers: req.headers,
-            method: req.method,
-            url: req.url,
-          };
-          
-          // Create Vercel-compatible response object
-          const vercelRes = {
-            status: (code) => {
-              res.status(code);
-              return vercelRes;
-            },
-            json: (data) => {
-              res.json(data);
-            },
-            send: (data) => {
-              res.send(data);
-            },
-            setHeader: (name, value) => {
-              res.setHeader(name, value);
-            },
-            end: () => {
-              res.end();
-            },
-          };
-          
-          await handler(vercelReq, vercelRes);
-        } catch (error) {
-          console.error(`[API-DEV] Error in ${route}:`, error);
-          res.status(500).json({ error: 'Internal server error' });
-        }
-      });
-      
-      console.log(`[API-DEV] ✓ Loaded ${route}`);
-    } catch (error) {
-      console.error(`[API-DEV] Failed to load ${filePath}:`, error.message);
-    }
-  }
-  
+
   // Load clinic auth routes
   await loadHandler(
     join(apiDir, 'clinic', 'auth', '[action].ts'),
@@ -153,10 +157,24 @@ async function loadApiRoutes() {
     join(apiDir, 'clinic', 'auth', 'mfa', 'verify.ts'),
     '/api/clinic/auth/mfa/verify'
   );
+
+  await loadHandler(
+    join(apiDir, 'stripe', 'create-checkout-session.ts'),
+    '/api/stripe/create-checkout-session'
+  );
+  await loadHandler(
+    join(apiDir, 'stripe', 'create-portal-session.ts'),
+    '/api/stripe/create-portal-session'
+  );
+  await loadHandler(
+    join(apiDir, 'stripe', 'subscription-status.ts'),
+    '/api/stripe/subscription-status'
+  );
 }
 
 // Start server
-loadApiRoutes().then(() => {
+try {
+  await loadApiRoutes();
   app.listen(PORT, () => {
     console.log('\n' + '='.repeat(60));
     console.log('🚀 API Development Server');
@@ -174,9 +192,12 @@ loadApiRoutes().then(() => {
     console.log('  POST   /api/clinic/auth/password-reset/confirm');
     console.log('  POST   /api/clinic/auth/mfa/setup');
     console.log('  POST   /api/clinic/auth/mfa/verify');
+    console.log('  POST   /api/stripe/create-checkout-session');
+    console.log('  POST   /api/stripe/create-portal-session');
+    console.log('  POST   /api/stripe/subscription-status');
     console.log('='.repeat(60) + '\n');
   });
-}).catch(error => {
+} catch (error) {
   console.error('[API-DEV] Failed to start server:', error);
   process.exit(1);
-});
+}
