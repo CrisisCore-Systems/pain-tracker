@@ -87,6 +87,66 @@ const PainDiaryForDoctorVisitsPage = lazy(() => import('./pages/resources/PainDi
 const SymptomJournalTemplatePage = lazy(() => import('./pages/resources/SymptomJournalTemplatePage').then(m => ({ default: m.SymptomJournalTemplatePage })));
 const ChronicPainLogPrintablePage = lazy(() => import('./pages/resources/ChronicPainLogPrintablePage').then(m => ({ default: m.ChronicPainLogPrintablePage })));
 const PainJournalExamplesPage = lazy(() => import('./pages/resources/PainJournalExamplesPage').then(m => ({ default: m.PainJournalExamplesPage })));
+const WeeklyPainTrackerPrintablePage = lazy(() => import('./pages/resources/ExpansionPackPages').then(m => ({ default: m.WeeklyPainTrackerPrintablePage })));
+const MedicationAndPainLogPage = lazy(() => import('./pages/resources/ExpansionPackPages').then(m => ({ default: m.MedicationAndPainLogPage })));
+const FlareUpTrackerPrintablePage = lazy(() => import('./pages/resources/ExpansionPackPages').then(m => ({ default: m.FlareUpTrackerPrintablePage })));
+const DoctorVisitPainSummaryTemplatePage = lazy(() => import('./pages/resources/ExpansionPackPages').then(m => ({ default: m.DoctorVisitPainSummaryTemplatePage })));
+const BodyPainChartTemplatePage = lazy(() => import('./pages/resources/ExpansionPackPages').then(m => ({ default: m.BodyPainChartTemplatePage })));
+const ChronicPainJournalTemplateExpansionPage = lazy(() => import('./pages/resources/ExpansionPackPages').then(m => ({ default: m.ChronicPainJournalTemplatePage })));
+const HowToStartPainJournalPage = lazy(() => import('./pages/resources/ExpansionPackPages').then(m => ({ default: m.HowToStartPainJournalPage })));
+const HowToDescribePainPage = lazy(() => import('./pages/resources/ExpansionPackPages').then(m => ({ default: m.HowToDescribePainPage })));
+const HowToTrackPainTriggersPage = lazy(() => import('./pages/resources/ExpansionPackPages').then(m => ({ default: m.HowToTrackPainTriggersPage })));
+const OfflinePainTrackerAppPage = lazy(() => import('./pages/OfflinePainTrackerAppPage').then(m => ({ default: m.OfflinePainTrackerAppPage })));
+const PainTrackingForFibromyalgiaPage = lazy(() => import('./pages/resources/ExpansionPackPages2').then(m => ({ default: m.PainTrackingForFibromyalgiaPage })));
+const HowToUsePainScalePage = lazy(() => import('./pages/resources/ExpansionPackPages2').then(m => ({ default: m.HowToUsePainScalePage })));
+const PainDiaryForInsuranceClaimsPage = lazy(() => import('./pages/resources/ExpansionPackPages2').then(m => ({ default: m.PainDiaryForInsuranceClaimsPage })));
+const PrintableSymptomChecklistPage = lazy(() => import('./pages/resources/ExpansionPackPages2').then(m => ({ default: m.PrintableSymptomChecklistPage })));
+const PainReliefLogPage = lazy(() => import('./pages/resources/ExpansionPackPages2').then(m => ({ default: m.PainReliefLogPage })));
+const PainTrackingBeforeSurgeryPage = lazy(() => import('./pages/resources/ExpansionPackPages2').then(m => ({ default: m.PainTrackingBeforeSurgeryPage })));
+const ChronicFatigueSymptomLogPage = lazy(() => import('./pages/resources/ExpansionPackPages2').then(m => ({ default: m.ChronicFatigueSymptomLogPage })));
+const FunctionalCapacityLogPage = lazy(() => import('./pages/resources/ExpansionPackPages2').then(m => ({ default: m.FunctionalCapacityLogPage })));
+const PainDiaryForDisabilityApplicationPage = lazy(() => import('./pages/resources/ExpansionPackPages2').then(m => ({ default: m.PainDiaryForDisabilityApplicationPage })));
+const SleepAndPainTrackerPage = lazy(() => import('./pages/resources/ExpansionPackPages2').then(m => ({ default: m.SleepAndPainTrackerPage })));
+const PainTrackingForArthritisPage = lazy(() => import('./pages/resources/ExpansionPackPages3').then(m => ({ default: m.PainTrackingForArthritisPage })));
+const PainTrackingForMigrainesPage = lazy(() => import('./pages/resources/ExpansionPackPages3').then(m => ({ default: m.PainTrackingForMigrainesPage })));
+const WeatherAndPainTrackerPage = lazy(() => import('./pages/resources/ExpansionPackPages3').then(m => ({ default: m.WeatherAndPainTrackerPage })));
+const ExerciseAndPainLogPage = lazy(() => import('./pages/resources/ExpansionPackPages3').then(m => ({ default: m.ExerciseAndPainLogPage })));
+const FreePainTrackerAppPage = lazy(() => import('./pages/resources/ExpansionPackPages3').then(m => ({ default: m.FreePainTrackerAppPage })));
+const BestPainTrackingAppPage = lazy(() => import('./pages/resources/ExpansionPackPages3').then(m => ({ default: m.BestPainTrackingAppPage })));
+const PainTrackerForIphonePage = lazy(() => import('./pages/resources/ExpansionPackPages3').then(m => ({ default: m.PainTrackerForIphonePage })));
+const PainJournalForKidsAndTeensPage = lazy(() => import('./pages/resources/ExpansionPackPages3').then(m => ({ default: m.PainJournalForKidsAndTeensPage })));
+const PainDiaryTemplateFreeDownloadPage = lazy(() => import('./pages/resources/ExpansionPackPages3').then(m => ({ default: m.PainDiaryTemplateFreeDownloadPage })));
+const ChronicPainSelfCareLogPage = lazy(() => import('./pages/resources/ExpansionPackPages3').then(m => ({ default: m.ChronicPainSelfCareLogPage })));
+const PainTrackingForBackPainPage = lazy(() => import('./pages/resources/ExpansionPackPages4').then(m => ({ default: m.PainTrackingForBackPainPage })));
+const PainTrackingForNervePainPage = lazy(() => import('./pages/resources/ExpansionPackPages4').then(m => ({ default: m.PainTrackingForNervePainPage })));
+const PainTrackerForAndroidPage = lazy(() => import('./pages/resources/ExpansionPackPages4').then(m => ({ default: m.PainTrackerForAndroidPage })));
+const PainDiaryForWorkersCompensationPage = lazy(() => import('./pages/resources/ExpansionPackPages4').then(m => ({ default: m.PainDiaryForWorkersCompensationPage })));
+const PainDiaryForRheumatologistPage = lazy(() => import('./pages/resources/ExpansionPackPages4').then(m => ({ default: m.PainDiaryForRheumatologistPage })));
+const PainLogForPhysicalTherapyPage = lazy(() => import('./pages/resources/ExpansionPackPages4').then(m => ({ default: m.PainLogForPhysicalTherapyPage })));
+const ChronicPainMedicationLogPage = lazy(() => import('./pages/resources/ExpansionPackPages4').then(m => ({ default: m.ChronicPainMedicationLogPage })));
+const DailySymptomTrackerPage = lazy(() => import('./pages/resources/ExpansionPackPages4').then(m => ({ default: m.DailySymptomTrackerPage })));
+const PainTrackingAppForSeniorsPage = lazy(() => import('./pages/resources/ExpansionPackPages4').then(m => ({ default: m.PainTrackingAppForSeniorsPage })));
+const PainDiaryForPersonalInjuryClaimPage = lazy(() => import('./pages/resources/ExpansionPackPages4').then(m => ({ default: m.PainDiaryForPersonalInjuryClaimPage })));
+const PainTrackingForLupusPage = lazy(() => import('./pages/resources/ExpansionPackPages5').then(m => ({ default: m.PainTrackingForLupusPage })));
+const PainTrackingForEndometriosisPage = lazy(() => import('./pages/resources/ExpansionPackPages5').then(m => ({ default: m.PainTrackingForEndometriosisPage })));
+const PainTrackerForIpadPage = lazy(() => import('./pages/resources/ExpansionPackPages5').then(m => ({ default: m.PainTrackerForIpadPage })));
+const PainDiaryForSocialSecurityDisabilityPage = lazy(() => import('./pages/resources/ExpansionPackPages5').then(m => ({ default: m.PainDiaryForSocialSecurityDisabilityPage })));
+const PainDiaryForLongTermDisabilityPage = lazy(() => import('./pages/resources/ExpansionPackPages5').then(m => ({ default: m.PainDiaryForLongTermDisabilityPage })));
+const PainTrackingForCancerPainPage = lazy(() => import('./pages/resources/ExpansionPackPages5').then(m => ({ default: m.PainTrackingForCancerPainPage })));
+const PainTrackingForEhlersDanlosPage = lazy(() => import('./pages/resources/ExpansionPackPages5').then(m => ({ default: m.PainTrackingForEhlersDanlosPage })));
+const PainDiaryForPhysiotherapistPage = lazy(() => import('./pages/resources/ExpansionPackPages5').then(m => ({ default: m.PainDiaryForPhysiotherapistPage })));
+const PainManagementJournalPage = lazy(() => import('./pages/resources/ExpansionPackPages5').then(m => ({ default: m.PainManagementJournalPage })));
+const PainTrackingForMsPage = lazy(() => import('./pages/resources/ExpansionPackPages5').then(m => ({ default: m.PainTrackingForMsPage })));
+const PainTrackingForCrpsPage = lazy(() => import('./pages/resources/ExpansionPackPages6').then(m => ({ default: m.PainTrackingForCrpsPage })));
+const PainTrackingForSciaticaPage = lazy(() => import('./pages/resources/ExpansionPackPages6').then(m => ({ default: m.PainTrackingForSciaticaPage })));
+const PainTrackingAfterSurgeryPage = lazy(() => import('./pages/resources/ExpansionPackPages6').then(m => ({ default: m.PainTrackingAfterSurgeryPage })));
+const PainDiaryForGpAppointmentPage = lazy(() => import('./pages/resources/ExpansionPackPages6').then(m => ({ default: m.PainDiaryForGpAppointmentPage })));
+const PainTrackingForHeadachesPage = lazy(() => import('./pages/resources/ExpansionPackPages6').then(m => ({ default: m.PainTrackingForHeadachesPage })));
+const PainTrackingForHipPainPage = lazy(() => import('./pages/resources/ExpansionPackPages6').then(m => ({ default: m.PainTrackingForHipPainPage })));
+const PainTrackingForShoulderPainPage = lazy(() => import('./pages/resources/ExpansionPackPages6').then(m => ({ default: m.PainTrackingForShoulderPainPage })));
+const ChronicPainFlareTrackerPage = lazy(() => import('./pages/resources/ExpansionPackPages6').then(m => ({ default: m.ChronicPainFlareTrackerPage })));
+const PainDiaryTemplateForInsurancePage = lazy(() => import('./pages/resources/ExpansionPackPages6').then(m => ({ default: m.PainDiaryTemplateForInsurancePage })));
+const PainTrackerForDesktopPage = lazy(() => import('./pages/resources/ExpansionPackPages6').then(m => ({ default: m.PainTrackerForDesktopPage })));
 
 const LoadingFallback = () => {
   return <BlackBoxSplashScreen message="Loading..." />;
@@ -301,6 +361,66 @@ function App() {
                     <Route path="/resources/symptom-journal-template" element={<SymptomJournalTemplatePage />} />
                     <Route path="/resources/chronic-pain-log-printable" element={<ChronicPainLogPrintablePage />} />
                     <Route path="/resources/pain-journal-examples" element={<PainJournalExamplesPage />} />
+                    <Route path="/resources/weekly-pain-tracker-printable" element={<WeeklyPainTrackerPrintablePage />} />
+                    <Route path="/resources/medication-and-pain-log" element={<MedicationAndPainLogPage />} />
+                    <Route path="/resources/flare-up-tracker-printable" element={<FlareUpTrackerPrintablePage />} />
+                    <Route path="/resources/doctor-visit-pain-summary-template" element={<DoctorVisitPainSummaryTemplatePage />} />
+                    <Route path="/resources/body-pain-chart-template" element={<BodyPainChartTemplatePage />} />
+                    <Route path="/resources/chronic-pain-journal-template" element={<ChronicPainJournalTemplateExpansionPage />} />
+                    <Route path="/resources/how-to-start-a-pain-journal" element={<HowToStartPainJournalPage />} />
+                    <Route path="/resources/how-to-describe-pain" element={<HowToDescribePainPage />} />
+                    <Route path="/resources/how-to-track-pain-triggers" element={<HowToTrackPainTriggersPage />} />
+                    <Route path="/resources/pain-tracking-for-fibromyalgia" element={<PainTrackingForFibromyalgiaPage />} />
+                    <Route path="/resources/how-to-use-pain-scale" element={<HowToUsePainScalePage />} />
+                    <Route path="/resources/pain-diary-for-insurance-claims" element={<PainDiaryForInsuranceClaimsPage />} />
+                    <Route path="/resources/printable-symptom-checklist" element={<PrintableSymptomChecklistPage />} />
+                    <Route path="/resources/pain-relief-log" element={<PainReliefLogPage />} />
+                    <Route path="/resources/pain-tracking-before-surgery" element={<PainTrackingBeforeSurgeryPage />} />
+                    <Route path="/resources/chronic-fatigue-symptom-log" element={<ChronicFatigueSymptomLogPage />} />
+                    <Route path="/resources/functional-capacity-log" element={<FunctionalCapacityLogPage />} />
+                    <Route path="/resources/pain-diary-for-disability-application" element={<PainDiaryForDisabilityApplicationPage />} />
+                    <Route path="/resources/sleep-and-pain-tracker" element={<SleepAndPainTrackerPage />} />
+                    <Route path="/resources/pain-tracking-for-arthritis" element={<PainTrackingForArthritisPage />} />
+                    <Route path="/resources/pain-tracking-for-migraines" element={<PainTrackingForMigrainesPage />} />
+                    <Route path="/resources/weather-and-pain-tracker" element={<WeatherAndPainTrackerPage />} />
+                    <Route path="/resources/exercise-and-pain-log" element={<ExerciseAndPainLogPage />} />
+                    <Route path="/resources/free-pain-tracker-app" element={<FreePainTrackerAppPage />} />
+                    <Route path="/resources/best-pain-tracking-app" element={<BestPainTrackingAppPage />} />
+                    <Route path="/resources/pain-tracker-for-iphone" element={<PainTrackerForIphonePage />} />
+                    <Route path="/resources/pain-journal-for-kids-and-teens" element={<PainJournalForKidsAndTeensPage />} />
+                    <Route path="/resources/pain-diary-template-free-download" element={<PainDiaryTemplateFreeDownloadPage />} />
+                    <Route path="/resources/chronic-pain-self-care-log" element={<ChronicPainSelfCareLogPage />} />
+                    <Route path="/resources/pain-tracking-for-back-pain" element={<PainTrackingForBackPainPage />} />
+                    <Route path="/resources/pain-tracking-for-nerve-pain" element={<PainTrackingForNervePainPage />} />
+                    <Route path="/resources/pain-tracker-for-android" element={<PainTrackerForAndroidPage />} />
+                    <Route path="/resources/pain-diary-for-workers-compensation" element={<PainDiaryForWorkersCompensationPage />} />
+                    <Route path="/resources/pain-diary-for-rheumatologist" element={<PainDiaryForRheumatologistPage />} />
+                    <Route path="/resources/pain-log-for-physical-therapy" element={<PainLogForPhysicalTherapyPage />} />
+                    <Route path="/resources/chronic-pain-medication-log" element={<ChronicPainMedicationLogPage />} />
+                    <Route path="/resources/daily-symptom-tracker" element={<DailySymptomTrackerPage />} />
+                    <Route path="/resources/pain-tracking-app-for-seniors" element={<PainTrackingAppForSeniorsPage />} />
+                    <Route path="/resources/pain-diary-for-personal-injury-claim" element={<PainDiaryForPersonalInjuryClaimPage />} />
+                    <Route path="/resources/pain-tracking-for-lupus" element={<PainTrackingForLupusPage />} />
+                    <Route path="/resources/pain-tracking-for-endometriosis" element={<PainTrackingForEndometriosisPage />} />
+                    <Route path="/resources/pain-tracker-for-ipad" element={<PainTrackerForIpadPage />} />
+                    <Route path="/resources/pain-diary-for-social-security-disability" element={<PainDiaryForSocialSecurityDisabilityPage />} />
+                    <Route path="/resources/pain-diary-for-long-term-disability" element={<PainDiaryForLongTermDisabilityPage />} />
+                    <Route path="/resources/pain-tracking-for-cancer-pain" element={<PainTrackingForCancerPainPage />} />
+                    <Route path="/resources/pain-tracking-for-ehlers-danlos" element={<PainTrackingForEhlersDanlosPage />} />
+                    <Route path="/resources/pain-diary-for-physiotherapist" element={<PainDiaryForPhysiotherapistPage />} />
+                    <Route path="/resources/pain-management-journal" element={<PainManagementJournalPage />} />
+                    <Route path="/resources/pain-tracking-for-ms" element={<PainTrackingForMsPage />} />
+                    <Route path="/resources/pain-tracking-for-crps" element={<PainTrackingForCrpsPage />} />
+                    <Route path="/resources/pain-tracking-for-sciatica" element={<PainTrackingForSciaticaPage />} />
+                    <Route path="/resources/pain-tracking-after-surgery" element={<PainTrackingAfterSurgeryPage />} />
+                    <Route path="/resources/pain-diary-for-gp-appointment" element={<PainDiaryForGpAppointmentPage />} />
+                    <Route path="/resources/pain-tracking-for-headaches" element={<PainTrackingForHeadachesPage />} />
+                    <Route path="/resources/pain-tracking-for-hip-pain" element={<PainTrackingForHipPainPage />} />
+                    <Route path="/resources/pain-tracking-for-shoulder-pain" element={<PainTrackingForShoulderPainPage />} />
+                    <Route path="/resources/chronic-pain-flare-tracker" element={<ChronicPainFlareTrackerPage />} />
+                    <Route path="/resources/pain-diary-template-for-insurance" element={<PainDiaryTemplateForInsurancePage />} />
+                    <Route path="/resources/pain-tracker-for-desktop" element={<PainTrackerForDesktopPage />} />
+                    <Route path="/offline-pain-tracker-app" element={<OfflinePainTrackerAppPage />} />
 
                     {/* Fallback - redirect to landing */}
                     <Route path="*" element={<Navigate to="/" replace />} />

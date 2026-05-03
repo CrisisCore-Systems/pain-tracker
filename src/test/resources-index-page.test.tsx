@@ -13,7 +13,8 @@ describe('ResourcesIndexPage SEO guards', () => {
       </MemoryRouter>
     );
 
-    expect(document.querySelector('meta[name="robots"]')?.getAttribute('content')).toBe('noindex, follow');
+    const robots = document.querySelector('meta[name="robots"]')?.getAttribute('content') ?? '';
+    expect(robots.replace(/\s+/g, '').toLowerCase()).toBe('noindex,follow');
   });
 
   it('does not leave a noindex tag behind for the clean resources hub', () => {
@@ -25,6 +26,7 @@ describe('ResourcesIndexPage SEO guards', () => {
       </MemoryRouter>
     );
 
-    expect(document.querySelector('meta[name="robots"]')?.getAttribute('content')).not.toBe('noindex, follow');
+    const robots = document.querySelector('meta[name="robots"]')?.getAttribute('content') ?? '';
+    expect(robots.replace(/\s+/g, '').toLowerCase()).not.toBe('noindex,follow');
   });
 });

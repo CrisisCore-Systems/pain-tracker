@@ -120,10 +120,58 @@ const resources: ResourceCard[] = [
     implemented: true
   },
   {
+    title: 'Weekly Pain Tracker Printable',
+    description: 'Free weekly tracking layout for pain, triggers, medication, sleep, and flare episodes.',
+    href: '/resources/weekly-pain-tracker-printable',
+    icon: <ClipboardList className="w-6 h-6" />,
+    category: 'template',
+    implemented: true
+  },
+  {
     title: 'Weekly Pain Log PDF',
     description: '7-day spread format showing your pain patterns at a glance.',
     href: '/resources/weekly-pain-log-pdf',
     icon: <ClipboardList className="w-6 h-6" />,
+    category: 'template',
+    implemented: true
+  },
+  {
+    title: 'Flare-Up Tracker Printable',
+    description: 'Track flare episode start, severity, likely triggers, and recovery timing.',
+    href: '/resources/flare-up-tracker-printable',
+    icon: <FileText className="w-6 h-6" />,
+    category: 'template',
+    implemented: true
+  },
+  {
+    title: 'Medication and Pain Log',
+    description: 'Record dose timing, pain response, and side effects in a clean tracking format.',
+    href: '/resources/medication-and-pain-log',
+    icon: <FileText className="w-6 h-6" />,
+    category: 'template',
+    implemented: true
+  },
+  {
+    title: 'Doctor Visit Pain Summary Template',
+    description: 'One-page appointment summary for symptom trends, limitations, and medication response.',
+    href: '/resources/doctor-visit-pain-summary-template',
+    icon: <ClipboardList className="w-6 h-6" />,
+    category: 'template',
+    implemented: true
+  },
+  {
+    title: 'Body Pain Chart Template',
+    description: 'Map pain location, spread, and intensity zones for clearer symptom reporting.',
+    href: '/resources/body-pain-chart-template',
+    icon: <FileText className="w-6 h-6" />,
+    category: 'template',
+    implemented: true
+  },
+  {
+    title: 'Chronic Pain Journal Template',
+    description: 'Daily structured journal format for long-term pain, trigger, and function tracking.',
+    href: '/resources/chronic-pain-journal-template',
+    icon: <FileText className="w-6 h-6" />,
     category: 'template',
     implemented: true
   },
@@ -174,6 +222,30 @@ const resources: ResourceCard[] = [
     title: 'What to Include in a Pain Journal',
     description: 'Complete guide to the information that makes pain tracking clinically useful.',
     href: '/resources/what-to-include-in-pain-journal',
+    icon: <BookOpen className="w-6 h-6" />,
+    category: 'guide',
+    implemented: true
+  },
+  {
+    title: 'How to Start a Pain Journal',
+    description: 'Start with a low-friction routine you can keep on hard days.',
+    href: '/resources/how-to-start-a-pain-journal',
+    icon: <BookOpen className="w-6 h-6" />,
+    category: 'guide',
+    implemented: true
+  },
+  {
+    title: 'How to Describe Pain Clearly',
+    description: 'Use better pain language for doctor appointments and progress reviews.',
+    href: '/resources/how-to-describe-pain',
+    icon: <BookOpen className="w-6 h-6" />,
+    category: 'guide',
+    implemented: true
+  },
+  {
+    title: 'How to Track Pain Triggers',
+    description: 'Track sleep, stress, weather, activity, and timing patterns before flares.',
+    href: '/resources/how-to-track-pain-triggers',
     icon: <BookOpen className="w-6 h-6" />,
     category: 'guide',
     implemented: true
@@ -317,6 +389,412 @@ const resources: ResourceCard[] = [
     href: '/resources/neuropathy-symptom-tracker',
     icon: <FileText className="w-6 h-6" />,
     category: 'template',
+    implemented: true
+  },
+  // Tier 5: Condition + Intent Guides (Tranche 2)
+  {
+    title: 'Pain Tracking for Fibromyalgia',
+    description: 'How to track the six fibromyalgia symptom domains: pain, fatigue, fog, sleep, mood, and sensitivity.',
+    href: '/resources/pain-tracking-for-fibromyalgia',
+    icon: <BookOpen className="w-6 h-6" />,
+    category: 'guide',
+    implemented: true
+  },
+  {
+    title: 'How to Use a Pain Scale',
+    description: 'Understand the 0-10 NRS scale, what each number means, and how to use it consistently.',
+    href: '/resources/how-to-use-pain-scale',
+    icon: <BookOpen className="w-6 h-6" />,
+    category: 'guide',
+    implemented: true
+  },
+  {
+    title: 'Pain Diary for Insurance Claims',
+    description: 'What insurance adjusters look for in pain documentation and how to build a credible record.',
+    href: '/resources/pain-diary-for-insurance-claims',
+    icon: <Shield className="w-6 h-6" />,
+    category: 'guide',
+    implemented: true
+  },
+  {
+    title: 'Printable Symptom Checklist',
+    description: 'Check off 40+ symptoms with severity ratings before any doctor appointment.',
+    href: '/resources/printable-symptom-checklist',
+    icon: <FileText className="w-6 h-6" />,
+    badge: 'Printable',
+    category: 'template',
+    implemented: true
+  },
+  {
+    title: 'Pain Relief Log',
+    description: 'Track what you tried, what worked, and how long relief lasted for each intervention.',
+    href: '/resources/pain-relief-log',
+    icon: <FileText className="w-6 h-6" />,
+    category: 'template',
+    implemented: true
+  },
+  {
+    title: 'Pain Tracking Before Surgery',
+    description: 'Establish a documented baseline before surgery to support recovery comparison and clinical planning.',
+    href: '/resources/pain-tracking-before-surgery',
+    icon: <BookOpen className="w-6 h-6" />,
+    category: 'guide',
+    implemented: true
+  },
+  {
+    title: 'Chronic Fatigue Symptom Log',
+    description: 'Track energy, PEM, sleep, cognitive function, and pain for ME/CFS and chronic fatigue.',
+    href: '/resources/chronic-fatigue-symptom-log',
+    icon: <FileText className="w-6 h-6" />,
+    category: 'template',
+    implemented: true
+  },
+  {
+    title: 'Functional Capacity Log',
+    description: 'Track what you can and cannot do each day — ADLs, work tasks, and physical tolerance.',
+    href: '/resources/functional-capacity-log',
+    icon: <Shield className="w-6 h-6" />,
+    category: 'template',
+    implemented: true
+  },
+  {
+    title: 'Pain Diary for Disability Application',
+    description: 'Build consistent, daily documentation in the format disability evaluators use.',
+    href: '/resources/pain-diary-for-disability-application',
+    icon: <Shield className="w-6 h-6" />,
+    category: 'guide',
+    implemented: true
+  },
+  {
+    title: 'Sleep and Pain Tracker',
+    description: 'Track sleep hours, quality, and next-day pain to find how sleep and pain interact.',
+    href: '/resources/sleep-and-pain-tracker',
+    icon: <FileText className="w-6 h-6" />,
+    category: 'template',
+    implemented: true
+  },
+  // Tier 6: Condition, Correlation, and App Pages (Tranche 3)
+  {
+    title: 'Pain Tracking for Arthritis',
+    description: 'Track morning stiffness, joint pain, swelling, and flares for rheumatology appointments.',
+    href: '/resources/pain-tracking-for-arthritis',
+    icon: <BookOpen className="w-6 h-6" />,
+    category: 'guide',
+    implemented: true
+  },
+  {
+    title: 'Pain Tracking for Migraines',
+    description: 'Log each migraine attack: onset, phases, triggers, and medication response.',
+    href: '/resources/pain-tracking-for-migraines',
+    icon: <BookOpen className="w-6 h-6" />,
+    category: 'guide',
+    implemented: true
+  },
+  {
+    title: 'Weather and Pain Tracker',
+    description: 'Find whether barometric pressure, temperature, or humidity correlates with your pain.',
+    href: '/resources/weather-and-pain-tracker',
+    icon: <BookOpen className="w-6 h-6" />,
+    category: 'guide',
+    implemented: true
+  },
+  {
+    title: 'Exercise and Pain Log',
+    description: 'Track physical activity and pain response to find your safe movement zone.',
+    href: '/resources/exercise-and-pain-log',
+    icon: <FileText className="w-6 h-6" />,
+    category: 'template',
+    implemented: true
+  },
+  {
+    title: 'Free Pain Tracker App',
+    description: 'No account, no cloud — free private pain tracking on any device.',
+    href: '/resources/free-pain-tracker-app',
+    icon: <BookOpen className="w-6 h-6" />,
+    badge: 'Free',
+    category: 'guide',
+    implemented: true
+  },
+  {
+    title: 'Best Pain Tracking App',
+    description: 'What features matter for chronic pain management and how to evaluate your options.',
+    href: '/resources/best-pain-tracking-app',
+    icon: <BookOpen className="w-6 h-6" />,
+    category: 'guide',
+    implemented: true
+  },
+  {
+    title: 'Pain Tracker for iPhone',
+    description: 'Install PainTracker.ca on your iPhone home screen for offline tracking without App Store.',
+    href: '/resources/pain-tracker-for-iphone',
+    icon: <BookOpen className="w-6 h-6" />,
+    category: 'guide',
+    implemented: true
+  },
+  {
+    title: 'Pain Journal for Kids and Teens',
+    description: 'Simple daily tracking adapted for children and teenagers with school-impact focus.',
+    href: '/resources/pain-journal-for-kids-and-teens',
+    icon: <BookOpen className="w-6 h-6" />,
+    category: 'guide',
+    implemented: true
+  },
+  {
+    title: 'Pain Diary Template Free Download',
+    description: 'Download free daily, weekly, and monthly pain diary templates in PDF format.',
+    href: '/resources/pain-diary-template-free-download',
+    icon: <FileText className="w-6 h-6" />,
+    badge: 'Printable',
+    category: 'template',
+    implemented: true
+  },
+  {
+    title: 'Chronic Pain Self-Care Log',
+    description: 'Track pacing, rest, heat and cold, and other non-medication strategies alongside pain.',
+    href: '/resources/chronic-pain-self-care-log',
+    icon: <FileText className="w-6 h-6" />,
+    category: 'template',
+    implemented: true
+  },
+  // Tier 7: Condition, Documentation, and App Pages (Tranche 4)
+  {
+    title: 'Pain Tracking for Back Pain',
+    description: 'Track posture triggers, radiation patterns, and functional limits for spine and back conditions.',
+    href: '/resources/pain-tracking-for-back-pain',
+    icon: <BookOpen className="w-6 h-6" />,
+    category: 'guide',
+    implemented: true
+  },
+  {
+    title: 'Pain Tracking for Nerve Pain',
+    description: 'Log burning, shooting, and tingling pain alongside triggers and medication response.',
+    href: '/resources/pain-tracking-for-nerve-pain',
+    icon: <BookOpen className="w-6 h-6" />,
+    category: 'guide',
+    implemented: true
+  },
+  {
+    title: 'Pain Tracker for Android',
+    description: 'Install PainTracker.ca on Android home screen for offline tracking without Play Store.',
+    href: '/resources/pain-tracker-for-android',
+    icon: <BookOpen className="w-6 h-6" />,
+    category: 'guide',
+    implemented: true
+  },
+  {
+    title: "Pain Diary for Workers' Compensation",
+    description: "Document daily pain and functional limits for WSBC, WSIB, and other compensation board claims.",
+    href: '/resources/pain-diary-for-workers-compensation',
+    icon: <BookOpen className="w-6 h-6" />,
+    category: 'guide',
+    implemented: true
+  },
+  {
+    title: 'Pain Diary for Rheumatologist',
+    description: 'Track morning stiffness, joint involvement, and medication response for rheumatology appointments.',
+    href: '/resources/pain-diary-for-rheumatologist',
+    icon: <BookOpen className="w-6 h-6" />,
+    category: 'guide',
+    implemented: true
+  },
+  {
+    title: 'Pain Log for Physical Therapy',
+    description: 'Track exercise response and functional milestones during physiotherapy rehabilitation.',
+    href: '/resources/pain-log-for-physical-therapy',
+    icon: <FileText className="w-6 h-6" />,
+    category: 'template',
+    implemented: true
+  },
+  {
+    title: 'Chronic Pain Medication Log',
+    description: 'Track medications, doses, timing, and effectiveness for better prescriber conversations.',
+    href: '/resources/chronic-pain-medication-log',
+    icon: <FileText className="w-6 h-6" />,
+    category: 'template',
+    implemented: true
+  },
+  {
+    title: 'Daily Symptom Tracker',
+    description: 'Log pain, fatigue, sleep, mood, and brain fog daily to build the full clinical picture.',
+    href: '/resources/daily-symptom-tracker',
+    icon: <FileText className="w-6 h-6" />,
+    category: 'template',
+    implemented: true
+  },
+  {
+    title: 'Pain Tracking App for Seniors',
+    description: 'Simple, free, offline-capable pain tracking for older adults — no account needed.',
+    href: '/resources/pain-tracking-app-for-seniors',
+    icon: <BookOpen className="w-6 h-6" />,
+    category: 'guide',
+    implemented: true
+  },
+  {
+    title: 'Pain Diary for Personal Injury Claim',
+    description: 'Document daily pain and functional impact for ICBC, MVA, and personal injury legal proceedings.',
+    href: '/resources/pain-diary-for-personal-injury-claim',
+    icon: <BookOpen className="w-6 h-6" />,
+    category: 'guide',
+    implemented: true
+  },
+  {
+    title: 'Pain Tracking for Lupus',
+    description: 'Document SLE flares, joint involvement, organ symptoms, and fatigue for rheumatology appointments and disability claims.',
+    href: '/resources/pain-tracking-for-lupus',
+    icon: <BookOpen className="w-6 h-6" />,
+    category: 'guide',
+    implemented: true
+  },
+  {
+    title: 'Pain Tracking for Endometriosis',
+    description: 'Track cyclical pelvic pain, bowel and bladder symptoms, and functional disruption to support diagnosis and surgical evaluation.',
+    href: '/resources/pain-tracking-for-endometriosis',
+    icon: <BookOpen className="w-6 h-6" />,
+    category: 'guide',
+    implemented: true
+  },
+  {
+    title: 'Pain Tracker for iPad',
+    description: 'Install PainTracker.ca on iPad from Safari — no App Store, no account, no cost. Track pain privately and offline.',
+    href: '/resources/pain-tracker-for-ipad',
+    icon: <BookOpen className="w-6 h-6" />,
+    category: 'guide',
+    implemented: true
+  },
+  {
+    title: 'Pain Diary for Social Security Disability',
+    description: 'Document daily functional limits and pain severity for SSDI and SSI applications and appeals.',
+    href: '/resources/pain-diary-for-social-security-disability',
+    icon: <BookOpen className="w-6 h-6" />,
+    category: 'guide',
+    implemented: true
+  },
+  {
+    title: 'Pain Diary for Long-Term Disability',
+    description: 'Track occupational limits, treatment compliance, and functional capacity for LTD insurance claims.',
+    href: '/resources/pain-diary-for-long-term-disability',
+    icon: <BookOpen className="w-6 h-6" />,
+    category: 'guide',
+    implemented: true
+  },
+  {
+    title: 'Pain Tracking for Cancer Pain',
+    description: 'Log baseline and breakthrough pain, opioid response, and functional impact for oncology and palliative care.',
+    href: '/resources/pain-tracking-for-cancer-pain',
+    icon: <BookOpen className="w-6 h-6" />,
+    category: 'guide',
+    implemented: true
+  },
+  {
+    title: 'Pain Tracking for Ehlers-Danlos Syndrome',
+    description: 'Document subluxations, POTS episodes, fatigue, and multi-system EDS symptoms for connective tissue specialists.',
+    href: '/resources/pain-tracking-for-ehlers-danlos',
+    icon: <BookOpen className="w-6 h-6" />,
+    category: 'guide',
+    implemented: true
+  },
+  {
+    title: 'Pain Diary for Physiotherapist',
+    description: 'Track exercise response, home program compliance, and functional progress between PT sessions.',
+    href: '/resources/pain-diary-for-physiotherapist',
+    icon: <BookOpen className="w-6 h-6" />,
+    category: 'guide',
+    implemented: true
+  },
+  {
+    title: 'Pain Management Journal',
+    description: 'Keep a structured daily pain journal that improves clinical care, supports disability documentation, and reveals your own patterns.',
+    href: '/resources/pain-management-journal',
+    icon: <BookOpen className="w-6 h-6" />,
+    category: 'guide',
+    implemented: true
+  },
+  {
+    title: 'Pain Tracking for Multiple Sclerosis',
+    description: 'Log MS neuropathic pain, spasticity, fatigue, and relapse patterns for neurology appointments and disability documentation.',
+    href: '/resources/pain-tracking-for-ms',
+    icon: <BookOpen className="w-6 h-6" />,
+    category: 'guide',
+    implemented: true
+  },
+  {
+    title: 'Pain Tracking for CRPS',
+    description: 'Log allodynia, skin and temperature changes, motor dysfunction, and autonomic signs for pain clinic and disability documentation.',
+    href: '/resources/pain-tracking-for-crps',
+    icon: <BookOpen className="w-6 h-6" />,
+    category: 'guide',
+    implemented: true
+  },
+  {
+    title: 'Pain Tracking for Sciatica',
+    description: 'Document radiation pattern, neurological symptoms, and posture triggers for GP, physiotherapy, and specialist appointments.',
+    href: '/resources/pain-tracking-for-sciatica',
+    icon: <BookOpen className="w-6 h-6" />,
+    category: 'guide',
+    implemented: true
+  },
+  {
+    title: 'Pain Tracking After Surgery',
+    description: 'Track post-operative pain severity, medication timing, wound status, and functional milestones for surgical recovery.',
+    href: '/resources/pain-tracking-after-surgery',
+    icon: <BookOpen className="w-6 h-6" />,
+    category: 'guide',
+    implemented: true
+  },
+  {
+    title: 'Pain Diary for GP Appointment',
+    description: 'Prepare for your family doctor visit with documented pain trends, functional limits, and medication response data.',
+    href: '/resources/pain-diary-for-gp-appointment',
+    icon: <BookOpen className="w-6 h-6" />,
+    category: 'guide',
+    implemented: true
+  },
+  {
+    title: 'Pain Tracking for Headaches',
+    description: 'Log headache frequency, duration, type, triggers, and medication use — including medication-overuse headache patterns.',
+    href: '/resources/pain-tracking-for-headaches',
+    icon: <BookOpen className="w-6 h-6" />,
+    category: 'guide',
+    implemented: true
+  },
+  {
+    title: 'Pain Tracking for Hip Pain',
+    description: 'Document hip pain location, weight-bearing tolerance, gait limitations, and activity triggers for orthopaedic assessment.',
+    href: '/resources/pain-tracking-for-hip-pain',
+    icon: <BookOpen className="w-6 h-6" />,
+    category: 'guide',
+    implemented: true
+  },
+  {
+    title: 'Pain Tracking for Shoulder Pain',
+    description: 'Log movement restrictions, overhead tolerance, night pain, and activity triggers for physiotherapy and orthopaedic care.',
+    href: '/resources/pain-tracking-for-shoulder-pain',
+    icon: <BookOpen className="w-6 h-6" />,
+    category: 'guide',
+    implemented: true
+  },
+  {
+    title: 'Chronic Pain Flare Tracker',
+    description: 'Log flare onset, peak severity, duration, triggers, and recovery time to identify patterns and manage flares proactively.',
+    href: '/resources/chronic-pain-flare-tracker',
+    icon: <BookOpen className="w-6 h-6" />,
+    category: 'tool',
+    implemented: true
+  },
+  {
+    title: 'Pain Diary Template for Insurance',
+    description: 'Document functional limits, treatment compliance, and consistent pain patterns for insurance claim evidence.',
+    href: '/resources/pain-diary-template-for-insurance',
+    icon: <BookOpen className="w-6 h-6" />,
+    category: 'template',
+    implemented: true
+  },
+  {
+    title: 'Pain Tracker for Desktop',
+    description: 'Open PainTracker.ca in any desktop browser — Chrome, Edge, Firefox, Safari — on Windows, Mac, or Linux. No download required.',
+    href: '/resources/pain-tracker-for-desktop',
+    icon: <BookOpen className="w-6 h-6" />,
+    category: 'app',
     implemented: true
   },
 ];
