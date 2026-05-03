@@ -244,8 +244,8 @@ stripe listen --forward-to http://localhost:3002/api/stripe/webhook
 
 ```powershell
 # Checkout session creation is implemented as a serverless endpoint (Vercel-style).
-# It is not currently served by the local API dev server (`npm run dev:api`).
-# For end-to-end checkout testing, use a Vercel deployment/preview (or a serverless dev runner).
+# `npm run dev:api` now serves the Stripe checkout/status/portal endpoints locally on port 3001.
+# If you are using `vite preview` on port 4173, the frontend will target that local API server directly.
 ```
 
 Expected response:

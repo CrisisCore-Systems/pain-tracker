@@ -345,9 +345,9 @@ const CommonMistakes: React.FC = () => {
 const pageContent: SEOPageContent = {
   // Meta & SEO
   slug: 'worksafebc-pain-journal-template',
-  title: 'WorkSafeBC Pain Journal Template (Free)',
-  metaTitle: 'WorkSafeBC Pain Journal Template | PainTracker.ca',
-  metaDescription: 'Download the free PainTracker.ca WorkSafeBC pain journal template for BC workplace injury documentation. Track work-related pain, functional capacity, treatment compliance, and return-to-work notes for appointments and claim-related discussions.',
+  title: 'WorkSafeBC Pain Journal Template for Workplace Injury Notes',
+  metaTitle: 'WorkSafeBC Pain Journal Template for Workplace Injury Notes',
+  metaDescription: 'For workplace injury documentation: keep structured notes about pain, functional limits, medication changes, triggers, and recovery patterns for appointment and claim-related review.',
   keywords: [
     'worksafebc pain journal template',
     'wcb pain diary',
@@ -367,8 +367,8 @@ const pageContent: SEOPageContent = {
   
   // Above-the-fold
   badge: 'Free 6-Page PDF',
-  headline: 'WorkSafeBC Pain Journal Template',
-  subheadline: 'Document workplace injury pain with a structured template for symptoms, functional capacity, treatment compliance, and return-to-work notes. Built to support WorkSafeBC-related documentation without promising claim acceptance or legal outcomes.',
+  headline: 'Pain journal template for workplace injury documentation.',
+  subheadline: 'PainTracker.ca can help you keep structured notes about pain, functional limits, medication changes, triggers, and recovery patterns. These records may help you prepare for appointments, workplace injury discussions, or claim related review.',
   primaryCTA: {
     text: 'Download Free PDF (6 Pages)',
     href: '/assets/worksafebc-pain-journal.pdf',
@@ -434,7 +434,7 @@ const pageContent: SEOPageContent = {
   trustSignals: {
     medicalNote: 'Built to support work-related symptom, function, and treatment notes that can be brought to clinicians preparing Form 8 or related documentation.',
     privacyNote: 'Your workers\' compensation records stay private until you choose to share them with WCB or your advocate.',
-    legalNote: 'Helpful for Review Division appeals, WCAT preparation, and Independent Medical Exams. This is a documentation aid, not an official WorkSafeBC form or legal advice.',
+    legalNote: 'PainTracker.ca does not replace medical advice, legal advice, WorkSafeBC instructions, or official claim forms.',
   },
   
   // FAQ

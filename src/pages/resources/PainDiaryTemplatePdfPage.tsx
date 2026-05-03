@@ -52,9 +52,8 @@ import '../../styles/pages/landing.css';
 // ---------------------------------------------------------------------------
 const SEO = {
   slug: 'pain-diary-template-pdf',
-  title: 'Printable Pain Diary Template (Free PDF)',
-  metaTitle:
-    'Pain Diary Template PDF — Free Clinician-Designed Printable | PainTracker.ca',
+  title: 'Free Daily Pain Tracker Printable PDF',
+  metaTitle: 'Free Daily Pain Tracker Printable PDF',
   metaDescription:
     'Download a free, clinician-designed pain diary template PDF. Tracks pain intensity, location, medications, triggers, sleep, and mood — ready for doctor appointments, WorkSafeBC claims, and disability documentation.',
   keywords: [
@@ -503,9 +502,9 @@ export const PainDiaryTemplatePdfPage: React.FC = () => {
               id="hero-heading"
               className="landing-headline landing-headline-lg text-white mb-6"
             >
-              The Pain Diary Template{' '}
+              Free daily pain tracker{' '}
               <span className="bg-gradient-to-r from-sky-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">
-                Your Doctor Wishes You Had
+                printable.
               </span>
             </h1>
 
