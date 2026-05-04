@@ -140,8 +140,8 @@ const templateChooserRows = [
   { need: 'Support disability documentation', resource: 'Daily Functioning Log for Disability', href: '/resources/daily-functioning-log-for-disability' },
   { need: 'Track medication effects', resource: 'Medication Response Tracker', href: '/resources/medication-and-pain-log' },
   { need: 'Track work injury pain', resource: 'WorkSafeBC Pain Journal Template', href: '/resources/worksafebc-pain-journal-template' },
-  { need: 'Track migraines', resource: 'Migraine Pain Diary', href: '/resources/migraine-pain-diary-printable' },
-  { need: 'Track chronic condition patterns', resource: 'Condition-specific pain logs', href: '/resources/endometriosis-pain-log' },
+  { need: 'Track a specific condition', resource: 'Migraine, Fibromyalgia, Arthritis, CRPS, Back Pain, and Endometriosis logs', href: '/resources/endometriosis-pain-log' },
+  { need: 'Keep records privately on your device', resource: 'PainTracker Offline App', href: '/start' },
 ];
 
 const resourcesHubFaqs: FAQItem[] = [
@@ -1412,36 +1412,12 @@ export const ResourcesIndexPage: React.FC = () => {
             </p>
 
             <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link to="/resources/pain-diary-template-free-download" className="btn-cta-primary px-6 py-3 rounded-xl font-medium">
-                Download free starter pack
-              </Link>
+              <a href="#printable-templates" className="btn-cta-primary px-6 py-3 rounded-xl font-medium">
+                Browse free templates
+              </a>
               <Link to="/start" className="px-6 py-3 rounded-xl border border-slate-600 text-white hover:border-primary hover:text-primary transition-colors">
                 Use PainTracker offline
               </Link>
-            </div>
-
-            <div className="mt-10 rounded-2xl border border-slate-700 bg-slate-900/80 p-6 text-left">
-              <h2 className="text-2xl font-bold text-white">Download the free pain tracking starter pack</h2>
-              <p className="mt-3 text-slate-300">
-                Start with the simplest printable set so you can build the habit before deciding whether you need condition-specific pages or private digital tracking.
-              </p>
-              <ul className="mt-5 grid gap-3 sm:grid-cols-2 text-slate-200">
-                {starterPackResources.map((resource) => (
-                  <li key={resource.href} className="rounded-xl border border-slate-700 bg-slate-950/70 px-4 py-3">
-                    <Link to={resource.href} className="font-medium text-white hover:text-primary transition-colors">
-                      {resource.title}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-              <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-                <Link to="/resources/pain-diary-template-free-download" className="btn-cta-primary px-6 py-3 rounded-xl font-medium text-center">
-                  Download free starter pack
-                </Link>
-                <Link to="/start" className="px-6 py-3 rounded-xl border border-slate-600 text-white hover:border-primary hover:text-primary transition-colors text-center">
-                  Use the private offline app
-                </Link>
-              </div>
             </div>
           </div>
         </section>
@@ -1476,6 +1452,30 @@ export const ResourcesIndexPage: React.FC = () => {
                   ))}
                 </tbody>
               </table>
+            </div>
+
+            <div className="mt-10 rounded-2xl border border-slate-700 bg-slate-950/70 p-6 text-left">
+              <h2 className="text-2xl font-bold text-white">Download the free pain tracking starter pack</h2>
+              <p className="mt-3 text-slate-300">
+                Start with the simplest printable set so you can build the habit before deciding whether you need condition-specific pages or private digital tracking.
+              </p>
+              <ul className="mt-5 grid gap-3 sm:grid-cols-2 text-slate-200">
+                {starterPackResources.map((resource) => (
+                  <li key={resource.href} className="rounded-xl border border-slate-700 bg-slate-900/80 px-4 py-3">
+                    <Link to={resource.href} className="font-medium text-white hover:text-primary transition-colors">
+                      {resource.title}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+                <Link to="/resources/pain-diary-template-free-download" className="btn-cta-primary px-6 py-3 rounded-xl font-medium text-center">
+                  Download free starter pack
+                </Link>
+                <Link to="/start" className="px-6 py-3 rounded-xl border border-slate-600 text-white hover:border-primary hover:text-primary transition-colors text-center">
+                  Use the private offline app
+                </Link>
+              </div>
             </div>
           </div>
         </section>
@@ -1623,7 +1623,7 @@ export const ResourcesIndexPage: React.FC = () => {
           </div>
         </section>
 
-        <section className="py-16 bg-slate-900 pt-0">
+        <section id="printable-templates" className="py-16 bg-slate-900 pt-0">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-2xl font-bold text-white mb-3">Printable templates and logs</h2>
             <p className="text-slate-300 mb-8 max-w-3xl">
