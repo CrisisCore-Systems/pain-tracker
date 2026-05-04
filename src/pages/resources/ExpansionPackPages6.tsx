@@ -42,36 +42,40 @@ const painTrackingForCrpsContent: SEOPageContent = {
   ],
   badge: 'Guide',
   headline: 'Pain Tracking for CRPS',
-  subheadline: 'Document allodynia, skin and temperature changes, motor dysfunction, and pain severity — the multi-domain CRPS data that pain specialists and insurers need.',
+  subheadline: 'Document allodynia, temperature and color asymmetry, swelling, motor changes, and disability impact so CRPS records reflect the full syndrome instead of just pain intensity.',
   primaryCTA: { text: 'Start tracking CRPS symptoms', href: '/start' },
-  secondaryCTA: { text: 'Download the symptom tracker', href: '/resources/symptom-tracker-printable' },
+  secondaryCTA: { text: 'Download the CRPS pain diary', href: '/resources/crps-pain-diary-template' },
   whatIsThis:
-    'A tracking approach for Complex Regional Pain Syndrome (CRPS, formerly RSD) — capturing the hallmark features of disproportionate pain, allodynia, autonomic changes (skin colour, temperature, sweating), motor dysfunction, and trophic changes that pain specialists use to assess CRPS severity and treatment response.',
+    'A tracking approach for Complex Regional Pain Syndrome that follows the same multi-domain logic specialists use when they think in Budapest-criteria terms. It captures disproportionate pain, allodynia, temperature and color asymmetry, sweating or swelling changes, motor dysfunction, and trophic change progression, while also preserving the day-to-day evidence often needed when CRPS is challenged by insurers, employers, or non-specialist clinicians.',
   whoShouldUse: [
     'People diagnosed with CRPS Type I or Type II',
     'Anyone tracking CRPS symptoms for pain clinic or specialist appointments',
-    'People building evidence for CRPS-related disability or insurance claims'
+    'People building evidence for CRPS-related disability or insurance claims',
+    'Anyone whose CRPS symptoms fluctuate enough that a single appointment snapshot misses the real pattern'
   ],
   howToUse: [
-    { step: 1, title: 'Track allodynia and hyperalgesia as distinct symptoms', description: 'Log pain from light touch (allodynia) and exaggerated pain from mild stimuli (hyperalgesia) separately from your baseline pain score. These are cardinal CRPS features that distinguish it from other pain conditions.' },
-    { step: 2, title: 'Document autonomic changes with each entry', description: 'Record skin colour changes (red, blue, pale), skin temperature compared to the unaffected limb, sweating abnormalities, and swelling. Autonomic signs fluctuate and benefit from timestamped documentation.' },
-    { step: 3, title: 'Note motor and trophic changes over time', description: 'Log tremor, weakness, dystonia, and changes to skin texture, hair growth, or nails in the affected area. Trophic changes develop over weeks to months and are important for staging CRPS.' }
+    { step: 1, title: 'Track sensory symptoms separately from baseline pain', description: 'Log allodynia, hyperalgesia, burning pain, and touch intolerance as distinct symptoms. CRPS is not just high pain. The type of pain and what triggers it is part of the evidence.' },
+    { step: 2, title: 'Document autonomic asymmetry with each entry', description: 'Compare color, temperature, swelling, and sweating changes to the unaffected side. Timestamped asymmetry is often what turns a vague report into convincing clinical documentation.' },
+    { step: 3, title: 'Note motor and trophic changes over time', description: 'Track weakness, tremor, stiffness, dystonia, reduced range of motion, skin texture, nail change, or hair change. These shifts often develop over weeks and matter for severity, staging, and disability evidence.' },
+    { step: 4, title: 'Pair each treatment with the after-effect', description: 'Record what happened after PT, desensitization, mirror therapy, medication, nerve blocks, pacing, or rest. Specialists need to see whether function improved, flared, or plateaued after each intervention.' }
   ],
   whyItMatters:
-    'CRPS is one of the most poorly understood and frequently disbelieved chronic pain conditions. Detailed documentation of the multi-domain symptom pattern — pain, allodynia, autonomic signs, and trophic changes — provides objective evidence that supports clinical management and counters insurer and legal skepticism.',
+    'CRPS is one of the most frequently doubted pain diagnoses, especially when imaging is limited or symptoms fluctuate between visits. Detailed documentation across sensory, autonomic, motor, and trophic domains makes the condition harder to dismiss and more actionable to treat. It also creates a stronger record when work capacity, benefit eligibility, or long-term disability support depends on proving that the syndrome affects far more than pain score alone.',
   trustSignals: {
     medicalNote: 'The Budapest Criteria for CRPS diagnosis require documented signs and symptoms across four categories: sensory, vasomotor, sudomotor/oedema, and motor/trophic — all of which detailed tracking captures.',
     privacyNote: 'Your CRPS records stay on your device.',
     legalNote: 'CRPS documentation supports disability claims, WorkSafeBC appeals, and legal proceedings — conditions where objective evidence is often disputed.'
   },
   faqs: [
-    { question: 'What should I track for CRPS?', answer: 'Pain severity (0-10), allodynia (pain from touch), skin colour and temperature changes, swelling, sweating changes, tremor or weakness, trophic changes (skin, hair, nails), and response to any treatments or interventions.' },
-    { question: 'How do I document skin temperature changes?', answer: 'Use your hand to compare the affected and unaffected limb and describe the difference qualitatively (warmer, cooler, same). If you have a skin thermometer, log the temperature difference. Consistent entries over time build a pattern.' },
-    { question: 'How does CRPS tracking support an insurance claim?', answer: 'CRPS is frequently disputed by insurers. A detailed log showing persistent multi-domain symptoms corroborated by clinical records makes the condition harder to dismiss and supports disability and legal claims.' }
+    { question: 'What should I track for CRPS?', answer: 'Track pain severity, allodynia, skin color and temperature changes, swelling, sweating, tremor, weakness, range of motion, and trophic changes. CRPS needs multi-domain tracking because the syndrome is broader than pain alone.' },
+    { question: 'How do I document skin temperature changes?', answer: 'Compare the affected and unaffected side at roughly the same time each day and describe the difference clearly. If you have a thermometer, log the difference, but consistent descriptive comparison is still useful.' },
+    { question: 'How does CRPS tracking support an insurance claim?', answer: 'CRPS is frequently questioned because symptoms can fluctuate and standard imaging may not explain the severity. A daily log showing persistent sensory, autonomic, and motor disruption makes the condition harder to dismiss.' }
   ],
   relatedLinks: [
+    { title: 'CRPS Pain Diary Template', description: 'Printable CRPS-specific diary aligned with Budapest-style symptom tracking', href: '/resources/crps-pain-diary-template' },
     { title: 'Symptom Tracker Printable', description: 'Multi-domain symptom tracking for CRPS', href: '/resources/symptom-tracker-printable' },
     { title: 'Pain Tracking for Nerve Pain', description: 'Track neuropathic pain components of CRPS', href: '/resources/pain-tracking-for-nerve-pain' },
+    { title: 'Daily Functioning Log for Disability', description: 'Document CRPS function loss for claims and accommodations', href: '/resources/daily-functioning-log-for-disability' },
     { title: 'Pain Diary for Long-Term Disability', description: 'Document CRPS for LTD insurance', href: '/resources/pain-diary-for-long-term-disability' },
     { title: 'Free Private Pain Tracker App', description: 'Track CRPS symptoms locally with exports', href: '/start' }
   ],
@@ -86,7 +90,7 @@ export function PainTrackingForCrpsPage() {
   return (
     <ResourcePageTemplate
       content={painTrackingForCrpsContent}
-      opening="CRPS is one of the most disputed chronic pain conditions — and detailed documentation of its multi-domain symptoms is one of the most important tools available for clinical management and legal defense. This guide explains what to track for CRPS and why the specific categories of signs and symptoms matter."
+      opening="CRPS is one of the most disputed chronic pain conditions, and a useful record has to show more than pain severity. Sensory change, autonomic asymmetry, swelling, motor disruption, and daily function all matter. This guide explains what to track so the record reflects the syndrome instead of a single symptom."
       ctaHref="/start"
       ctaText="Start tracking CRPS symptoms free"
     />

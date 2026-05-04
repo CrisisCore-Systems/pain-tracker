@@ -378,6 +378,11 @@ const pageContent: SEOPageContent = {
   // Related links
   relatedLinks: [
     {
+      title: 'Pain Tracking for Migraines',
+      description: 'Guide to logging attacks, triggers, and treatment response between appointments',
+      href: '/resources/pain-tracking-for-migraines',
+    },
+    {
       title: 'Pain Diary Template PDF',
       description: 'General pain tracking for non-migraine days',
       href: '/resources/pain-diary-template-pdf',

@@ -19,7 +19,7 @@ import {
 } from 'lucide-react';
 import { LandingFooter } from '../../components/landing/LandingFooter';
 import '../../styles/pages/landing.css';
-import { combineSchemas, generateBreadcrumbSchema } from '../../lib/seo';
+import { combineSchemas, generateBreadcrumbSchema, generateFAQSchema, type FAQItem } from '../../lib/seo';
 import { ResourceCtaStack } from '../../components/seo';
 import { applyPageMetadata } from '../../components/seo/applyPageMetadata';
 
@@ -29,9 +29,322 @@ interface ResourceCard {
   href: string;
   icon: React.ReactNode;
   badge?: string;
-  category: 'template' | 'guide' | 'tool';
+  category: 'template' | 'guide' | 'tool' | 'app';
   implemented: boolean;
 }
+
+interface FeaturedLink {
+  title: string;
+  href: string;
+}
+
+interface FeaturedResource {
+  title: string;
+  description: string;
+  href: string;
+  relatedLinks?: FeaturedLink[];
+}
+
+interface FeaturedSection {
+  title: string;
+  description: string;
+  ctaText: string;
+  ctaHref: string;
+  resources: FeaturedResource[];
+}
+
+const RESOURCES_HUB_TITLE = 'Free Pain Tracker Templates & Pain Journal Printables | PainTracker.ca';
+const RESOURCES_HUB_DESCRIPTION = 'Download free pain tracker templates, printable pain journals, condition-specific pain logs, and private tracking guides for chronic pain, doctor visits, disability documentation, and daily symptom tracking.';
+const RESOURCES_HUB_HEADING = 'Free Pain Tracker Templates, Printable Pain Journals, and Private Tracking Guides';
+
+const painJournalChecklist = [
+  'Pain level',
+  'Pain location',
+  'Triggers',
+  'Sleep',
+  'Medication response',
+  'Mood',
+  'Flare patterns',
+  'Functional impact',
+  'Notes for appointments',
+];
+
+const resourcesHubFaqs: FAQItem[] = [
+  {
+    question: 'What is a pain tracker template?',
+    answer: 'A pain tracker template is a structured page you can print or reuse to record pain level, location, triggers, medication response, and daily limits. It helps you build consistent records instead of trying to remember details later during a flare, doctor appointment, or disability review.',
+  },
+  {
+    question: 'Is the pain journal printable free?',
+    answer: 'Yes. The printable pain journal templates and tracker sheets in this resource hub are free to download and use. You can start with paper, keep your own copies, and move to the private offline app later if you want faster tracking and cleaner exports.',
+  },
+  {
+    question: 'What should I write in a pain journal?',
+    answer: 'Write down pain intensity, where the pain is, what seems to trigger it, how sleep and activity affected it, what medication or self-care you tried, and what changed in your ability to function. Short daily notes are usually more useful than long entries written only during severe flares.',
+  },
+  {
+    question: 'Can I use a pain tracker for doctor appointments?',
+    answer: 'Yes. A pain tracker can help you bring organized notes to doctor appointments, especially when visits are short. Patterns across days or weeks often make appointments more productive because you can show pain severity, flare timing, treatment response, and how symptoms affect daily function.',
+  },
+  {
+    question: 'Can I use a pain journal for disability or WorkSafeBC documentation?',
+    answer: 'Yes. A pain journal can support disability or WorkSafeBC documentation when it records pain consistently and ties symptoms to functional impact. Daily notes about limits, missed tasks, medication effects, and flare recovery are often more useful than general summaries written weeks later.',
+  },
+  {
+    question: 'Is PainTracker private?',
+    answer: 'PainTracker is built around local-first privacy. You can start with printables or use the app without an account, and your records stay under your control until you choose to export them. The product is designed to reduce unnecessary exposure rather than pushing you into cloud-first tracking.',
+  },
+  {
+    question: 'Does PainTracker work offline?',
+    answer: 'Yes. PainTracker is designed to keep working offline so you can keep tracking even when internet access is unreliable or you do not want to depend on a connection. That matters when pain is high, appointments are close, or you need records available on your own device.',
+  },
+  {
+    question: 'Do I need an account?',
+    answer: 'No. You can use PainTracker resources and the core tracking experience without creating an account. That makes it easier to start quickly, reduces friction on hard days, and keeps the basic tracking workflow focused on your records instead of sign-up, passwords, or cloud dependence.',
+  },
+  {
+    question: 'Should I use the app or a printable template?',
+    answer: 'Start with the format that makes tracking easiest today. Printable templates work well when you want something simple and visible. The app becomes useful when you want private offline records, faster daily entries, and cleaner summaries or exports without changing the habit you already built on paper.',
+  },
+];
+
+const featuredSections: FeaturedSection[] = [
+  {
+    title: 'Printable Pain Tracker Templates',
+    description: 'Start with a printable format you can use immediately, then build the habit before moving to digital tracking. These templates align the hub with pain tracker, chronic pain journal template, free printable pain tracker, and pain journal template searches.',
+    ctaText: 'Download free printable templates',
+    ctaHref: '/resources/pain-diary-template-free-download',
+    resources: [
+      {
+        title: 'Monthly Pain Tracker Printable',
+        description: 'Use a 30-day view to spot flare patterns, sleep shifts, medication response, and longer treatment trends.',
+        href: '/resources/monthly-pain-tracker-printable',
+        relatedLinks: [
+          { title: 'What to Include in a Pain Journal', href: '/resources/what-to-include-in-pain-journal' },
+          { title: 'Daily Functioning Log for Disability', href: '/resources/daily-functioning-log-for-disability' },
+          { title: 'WorkSafeBC Pain Journal Template', href: '/resources/worksafebc-pain-journal-template' },
+          { title: 'Use the app free', href: '/start' },
+        ],
+      },
+      {
+        title: 'Daily Pain Tracker Template',
+        description: 'Capture pain level, location, triggers, medication response, and short daily notes without overcomplicating the habit.',
+        href: '/resources/daily-pain-tracker-printable',
+        relatedLinks: [
+          { title: 'How to Start a Pain Journal', href: '/resources/how-to-start-a-pain-journal' },
+          { title: 'Pain Scale Chart Printable', href: '/resources/pain-scale-chart-printable' },
+          { title: 'Medication and Pain Log', href: '/resources/medication-and-pain-log' },
+        ],
+      },
+      {
+        title: 'Weekly Pain Journal Template',
+        description: 'See a one-week pattern before a doctor visit, medication change, or short functional review.',
+        href: '/resources/weekly-pain-tracker-printable',
+        relatedLinks: [
+          { title: 'Doctor Visit Pain Summary Template', href: '/resources/doctor-visit-pain-summary-template' },
+          { title: 'How Doctors Use Pain Diaries', href: '/resources/how-doctors-use-pain-diaries' },
+          { title: 'Pain Diary for GP Appointment', href: '/resources/pain-diary-for-gp-appointment' },
+        ],
+      },
+      {
+        title: 'Pain Journal Template for Doctor Visits',
+        description: 'Bring a concise appointment-ready summary that focuses on trends, functional impact, and what changed.',
+        href: '/resources/doctor-visit-pain-summary-template',
+        relatedLinks: [
+          { title: 'How to Track Pain for Doctors', href: '/resources/how-to-track-pain-for-doctors' },
+          { title: 'How to Describe Pain Clearly', href: '/resources/how-to-describe-pain' },
+          { title: 'Printable Symptom Checklist', href: '/resources/printable-symptom-checklist' },
+        ],
+      },
+    ],
+  },
+  {
+    title: 'Doctor Visit and Disability Documentation',
+    description: 'This is the documentation lane. Use these pages when you need records that show daily function, appointment trends, medication response, or WorkSafeBC and disability-relevant limitations instead of vague symptom summaries.',
+    ctaText: 'See documentation-focused resources',
+    ctaHref: '/resources/documenting-pain-for-disability-claim',
+    resources: [
+      {
+        title: 'Pain Journal for Doctor Appointments',
+        description: 'Learn what to bring when your appointment time is short and you need the important pattern visible fast.',
+        href: '/resources/how-to-track-pain-for-doctors',
+        relatedLinks: [
+          { title: 'Doctor Visit Pain Summary Template', href: '/resources/doctor-visit-pain-summary-template' },
+          { title: 'Pain Diary for Specialist Appointment', href: '/resources/pain-diary-for-specialist-appointment' },
+          { title: 'Pain Diary for Rheumatologist', href: '/resources/pain-diary-for-rheumatologist' },
+        ],
+      },
+      {
+        title: 'Daily Functioning Log for Disability',
+        description: 'Track the daily limits evaluators actually need to see: self-care, walking, sitting, concentration, chores, and missed tasks.',
+        href: '/resources/daily-functioning-log-for-disability',
+        relatedLinks: [
+          { title: 'Functional Capacity Log', href: '/resources/functional-capacity-log' },
+          { title: 'Pain Journal for Disability Benefits', href: '/resources/pain-journal-for-disability-benefits' },
+          { title: 'Documenting Pain for Disability Claims', href: '/resources/documenting-pain-for-disability-claim' },
+        ],
+      },
+      {
+        title: 'WorkSafeBC Pain Journal Template',
+        description: 'Use a BC-specific template when you need structured pain and function documentation for WorkSafeBC workflows.',
+        href: '/resources/worksafebc-pain-journal-template',
+        relatedLinks: [
+          { title: 'Daily Functioning Log for Disability', href: '/resources/daily-functioning-log-for-disability' },
+          { title: 'Monthly Pain Tracker Printable', href: '/resources/monthly-pain-tracker-printable' },
+          { title: 'Pain Diary for Workers\' Compensation', href: '/resources/pain-diary-for-workers-compensation' },
+          { title: 'Privacy architecture', href: '/privacy-architecture' },
+        ],
+      },
+      {
+        title: 'Functional Impact Log',
+        description: 'Keep the focus on what pain changes in daily life, not just the number on a scale.',
+        href: '/resources/functional-capacity-log',
+        relatedLinks: [
+          { title: 'Pain Diary for Disability Application', href: '/resources/pain-diary-for-disability-application' },
+          { title: 'Pain Diary for Long-Term Disability', href: '/resources/pain-diary-for-long-term-disability' },
+          { title: 'Pain Diary for Social Security Disability', href: '/resources/pain-diary-for-social-security-disability' },
+        ],
+      },
+      {
+        title: 'Medication Response Tracker',
+        description: 'Show what you tried, when you took it, how much relief you got, and what side effects followed.',
+        href: '/resources/medication-and-pain-log',
+        relatedLinks: [
+          { title: 'Pain Relief Log', href: '/resources/pain-relief-log' },
+          { title: 'Chronic Pain Medication Log', href: '/resources/chronic-pain-medication-log' },
+          { title: 'How to Track Pain Triggers', href: '/resources/how-to-track-pain-triggers' },
+        ],
+      },
+    ],
+  },
+  {
+    title: 'Condition Specific Pain Logs',
+    description: 'Condition-specific pages show that PainTracker is not just a generic journal. These templates keep the core daily tracking pattern while emphasizing the details different specialists and diagnoses care about most.',
+    ctaText: 'Browse condition-specific logs',
+    ctaHref: '/resources/endometriosis-pain-log',
+    resources: [
+      {
+        title: 'Endometriosis Pain Log',
+        description: 'Track cycle-linked pelvic pain, GI symptoms, bowel or bladder disruption, and functional impact.',
+        href: '/resources/endometriosis-pain-log',
+        relatedLinks: [
+          { title: 'Pain Tracking for Endometriosis', href: '/resources/pain-tracking-for-endometriosis' },
+          { title: 'Monthly Pain Tracker Printable', href: '/resources/monthly-pain-tracker-printable' },
+          { title: 'Use the app free', href: '/start' },
+        ],
+      },
+      {
+        title: 'Migraine Pain Diary',
+        description: 'Record onset, aura, duration, trigger patterns, and medication response for neurology appointments.',
+        href: '/resources/migraine-pain-diary-printable',
+        relatedLinks: [
+          { title: 'Pain Tracking for Migraines', href: '/resources/pain-tracking-for-migraines' },
+          { title: 'Sleep and Pain Tracker', href: '/resources/sleep-and-pain-tracker' },
+          { title: 'How to Track Pain Triggers', href: '/resources/how-to-track-pain-triggers' },
+        ],
+      },
+      {
+        title: 'Fibromyalgia Pain Tracker',
+        description: 'Track pain, fatigue, fog, sleep, and sensitivity together instead of treating them as separate problems.',
+        href: '/resources/fibromyalgia-pain-diary',
+        relatedLinks: [
+          { title: 'Pain Tracking for Fibromyalgia', href: '/resources/pain-tracking-for-fibromyalgia' },
+          { title: 'Daily Symptom Tracker', href: '/resources/daily-symptom-tracker' },
+          { title: 'Chronic Fatigue Symptom Log', href: '/resources/chronic-fatigue-symptom-log' },
+        ],
+      },
+      {
+        title: 'Back Pain Tracker',
+        description: 'Monitor posture, radiation, activity triggers, and recovery timing when back pain shifts through the day.',
+        href: '/resources/chronic-back-pain-diary',
+        relatedLinks: [
+          { title: 'Pain Tracking for Back Pain', href: '/resources/pain-tracking-for-back-pain' },
+          { title: 'Exercise and Pain Log', href: '/resources/exercise-and-pain-log' },
+          { title: 'Body Pain Chart Template', href: '/resources/body-pain-chart-template' },
+        ],
+      },
+      {
+        title: 'Arthritis Pain Journal',
+        description: 'Capture stiffness, swelling, movement limits, and medication response in a rheumatology-friendly format.',
+        href: '/resources/arthritis-pain-tracker',
+        relatedLinks: [
+          { title: 'Pain Tracking for Arthritis', href: '/resources/pain-tracking-for-arthritis' },
+          { title: 'Pain Diary for Rheumatologist', href: '/resources/pain-diary-for-rheumatologist' },
+          { title: 'Functional Capacity Log', href: '/resources/functional-capacity-log' },
+        ],
+      },
+      {
+        title: 'CRPS Pain Diary',
+        description: 'Track burning pain, swelling, temperature changes, sensitivity, and motor disruption over time.',
+        href: '/resources/crps-pain-diary-template',
+        relatedLinks: [
+          { title: 'Pain Tracking for CRPS', href: '/resources/pain-tracking-for-crps' },
+          { title: 'Pain Relief Log', href: '/resources/pain-relief-log' },
+          { title: 'Daily Functioning Log for Disability', href: '/resources/daily-functioning-log-for-disability' },
+        ],
+      },
+    ],
+  },
+  {
+    title: 'Private Offline App Guides',
+    description: 'The product lane starts after the habit forms. Start with a printable, keep control of your records, then move into private digital tracking when paper stops being enough or you want easier summaries and exports.',
+    ctaText: 'Use the private app free',
+    ctaHref: '/start',
+    resources: [
+      {
+        title: 'How to use PainTracker offline',
+        description: 'Start with the app in the browser or install it for offline use when you want private tracking on your own device.',
+        href: '/resources/free-pain-tracker-app',
+        relatedLinks: [
+          { title: 'Download PainTracker', href: '/download' },
+          { title: 'Pain Tracker app overview', href: '/pain-tracker-app' },
+          { title: 'Pain Tracker for iPhone', href: '/resources/pain-tracker-for-iphone' },
+          { title: 'Pain Tracker for Android', href: '/resources/pain-tracker-for-android' },
+        ],
+      },
+      {
+        title: 'How private local tracking works',
+        description: 'Understand the local-first approach before moving your paper habit into digital records.',
+        href: '/privacy-architecture',
+        relatedLinks: [
+          { title: 'Privacy policy', href: '/privacy' },
+          { title: 'Free Pain Tracker App', href: '/resources/free-pain-tracker-app' },
+          { title: 'Pain Tracker for Desktop', href: '/resources/pain-tracker-for-desktop' },
+        ],
+      },
+      {
+        title: 'Why no account matters',
+        description: 'Reduce friction, reduce exposure, and keep the first tracking session focused on records instead of sign-up.',
+        href: '/privacy',
+        relatedLinks: [
+          { title: 'Free Pain Tracker App', href: '/resources/free-pain-tracker-app' },
+          { title: 'Pain Tracking App for Seniors', href: '/resources/pain-tracking-app-for-seniors' },
+          { title: 'Start the app', href: '/start' },
+        ],
+      },
+      {
+        title: 'How to export pain records',
+        description: 'Move from daily logging into cleaner appointment and documentation summaries when you need to share your records.',
+        href: '/pain-tracker-app',
+        relatedLinks: [
+          { title: 'Doctor Visit Pain Summary Template', href: '/resources/doctor-visit-pain-summary-template' },
+          { title: 'WorkSafeBC Pain Journal Template', href: '/resources/worksafebc-pain-journal-template' },
+          { title: 'Use the app free', href: '/start' },
+        ],
+      },
+      {
+        title: 'How to install the app',
+        description: 'Install the app on desktop, iPhone, iPad, or Android when you want the speed of digital tracking without cloud-first lock-in.',
+        href: '/download',
+        relatedLinks: [
+          { title: 'Pain Tracker for iPad', href: '/resources/pain-tracker-for-ipad' },
+          { title: 'Pain Tracker for Android', href: '/resources/pain-tracker-for-android' },
+          { title: 'Pain Tracker for Desktop', href: '/resources/pain-tracker-for-desktop' },
+        ],
+      },
+    ],
+  },
+];
 
 function useRobotsMeta(content: string | null) {
   useEffect(() => {
@@ -815,8 +1128,8 @@ export const ResourcesIndexPage: React.FC = () => {
 
   useEffect(() => {
     return applyPageMetadata({
-      title: 'Pain Tracker Resources: Free Printables, Pain Journal Templates, and Privacy Guides',
-      description: 'Browse free pain tracker printables, pain journal templates, symptom logs, and privacy-first guides for documenting pain without an account.',
+      title: RESOURCES_HUB_TITLE,
+      description: RESOURCES_HUB_DESCRIPTION,
       canonicalUrl: 'https://www.paintracker.ca/resources',
     });
   }, []);
@@ -828,13 +1141,23 @@ export const ResourcesIndexPage: React.FC = () => {
         { name: 'Resources', url: '/resources' },
       ],
       { siteUrl: 'https://www.paintracker.ca' }
-    )
+    ),
+    generateFAQSchema(resourcesHubFaqs)
   );
 
-  const templates = resources.filter(r => r.category === 'template');
-  const guides = resources.filter(r => r.category === 'guide');
+  const templates = resources.filter((resource) => resource.category === 'template');
+  const guides = resources.filter(
+    (resource) => resource.category === 'guide' || resource.category === 'tool' || resource.category === 'app'
+  );
 
   const renderResourceCard = (resource: ResourceCard) => {
+    let actionLabel = 'Open guide';
+    if (resource.category === 'template') {
+      actionLabel = 'Download free';
+    } else if (resource.category === 'tool') {
+      actionLabel = 'Open tool';
+    }
+
     const cardContent = (
       <>
         <div className="flex items-start gap-4">
@@ -858,13 +1181,15 @@ export const ResourcesIndexPage: React.FC = () => {
                 </span>
               )}
             </div>
-            <p className={`text-sm ${resource.implemented ? 'text-slate-400' : 'text-slate-500'} line-clamp-2`}>{resource.description}</p>
+            <p className={`text-sm ${resource.implemented ? 'text-slate-400' : 'text-slate-500'} line-clamp-2`}>
+              {resource.description}
+            </p>
           </div>
         </div>
         <div className="mt-4 flex items-center gap-2 text-sm text-primary">
           {resource.implemented ? (
             <>
-              <span>Download free</span>
+              <span>{actionLabel}</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </>
           ) : (
@@ -896,19 +1221,51 @@ export const ResourcesIndexPage: React.FC = () => {
     );
   };
 
+  const renderFeaturedCard = (resource: FeaturedResource) => (
+    <article
+      key={resource.href}
+      className="rounded-2xl border border-slate-700 bg-slate-900/70 p-6 shadow-[0_0_0_1px_rgba(14,165,233,0.03)]"
+    >
+      <div className="space-y-3">
+        <h3 className="text-xl font-semibold text-white">
+          <Link to={resource.href} className="hover:text-primary transition-colors">
+            {resource.title}
+          </Link>
+        </h3>
+        <p className="text-slate-300">{resource.description}</p>
+        <Link to={resource.href} className="inline-flex items-center gap-2 text-sm text-primary hover:text-sky-300 transition-colors">
+          <span>Open resource</span>
+          <ArrowRight className="w-4 h-4" />
+        </Link>
+      </div>
+
+      {resource.relatedLinks && resource.relatedLinks.length > 0 && (
+        <div className="mt-5 border-t border-slate-700 pt-4">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Related links</p>
+          <ul className="mt-3 space-y-2 text-sm text-slate-300">
+            {resource.relatedLinks.map((relatedLink) => (
+              <li key={`${resource.href}-${relatedLink.href}`}>
+                <Link to={relatedLink.href} className="hover:text-primary transition-colors">
+                  {relatedLink.title}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </article>
+  );
+
   return (
     <div className="min-h-screen bg-background landing-always-dark">
-      {/* Structured data */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: schema }} />
-      {/* Skip to main content */}
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md"
       >
         Skip to main content
       </a>
-      
-      {/* Navigation */}
+
       <nav className="sticky top-0 z-50 nav-floating-glass">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
@@ -932,65 +1289,171 @@ export const ResourcesIndexPage: React.FC = () => {
           </div>
         </div>
       </nav>
-      
+
       <main id="main-content" role="main">
-        {/* Hero */}
         <section className="hero-section-dramatic py-16 sm:py-24">
           <div className="hero-bg-mesh" />
           <div className="hero-grid-pattern" />
-          
+
           <div className="orb-container">
             <div className="orb-glow orb-glow-sky w-96 h-96 -top-48 -left-48" />
             <div className="orb-glow orb-glow-purple w-72 h-72 top-1/4 -right-36" />
           </div>
-          
+
           <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <div className="inline-flex items-center gap-2 landing-badge mb-6">
               <Download className="w-4 h-4" />
-              <span>Patient Resources</span>
+              <span>Free printables and private tracking</span>
             </div>
-            
+
             <h1 className="landing-headline landing-headline-lg text-white mb-6">
-              Free pain tracker printables and privacy-first guides
+              {RESOURCES_HUB_HEADING}
             </h1>
-            
-            <p className="landing-subhead text-lg sm:text-xl max-w-2xl mx-auto">
-              Start with the template you need now: daily, weekly, monthly, symptom, medication, flare-up, and doctor-visit formats.
+
+            <p className="landing-subhead text-lg sm:text-xl max-w-3xl mx-auto">
+              PainTracker resources help you document chronic pain clearly, privately, and consistently. Download free printable pain tracker templates, build a daily pain journal, prepare better notes for doctor appointments, or use the private offline app when paper stops being enough.
             </p>
+
+            <p className="mt-5 text-base sm:text-lg text-slate-200 max-w-2xl mx-auto">
+              Start with a printable. Keep control of your records. Move into private digital tracking when you are ready.
+            </p>
+
+            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Link to="/resources/pain-diary-template-free-download" className="btn-cta-primary px-6 py-3 rounded-xl font-medium">
+                Download free printable templates
+              </Link>
+              <Link to="/start" className="px-6 py-3 rounded-xl border border-slate-600 text-white hover:border-primary hover:text-primary transition-colors">
+                Use the private app free
+              </Link>
+            </div>
           </div>
         </section>
-        
-        {/* Templates Section */}
+
+        <section className="py-16 bg-slate-950/70 border-y border-slate-800">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
+              <div>
+                <h2 className="text-3xl font-bold text-white">Build the tracking habit first, then decide how far you need to go</h2>
+                <p className="mt-4 text-slate-300 max-w-3xl">
+                  The hub is designed to support one clear flow: printable template first, better daily records second, stronger doctor and disability documentation third, and private offline app use when you want faster logging or cleaner exports. That turns the page into a command center instead of a passive directory.
+                </p>
+                <p className="mt-4 text-slate-300 max-w-3xl">
+                  If you only need a pain journal template today, start there. If you need clinician-ready notes, use the documentation lane. If you want long-term privacy and offline access, move into the app without changing the tracking logic you already built.
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-slate-700 bg-slate-900/80 p-6">
+                <h2 className="text-2xl font-bold text-white">What to track in a pain journal</h2>
+                <p className="mt-3 text-slate-300">
+                  These are the details that make a pain journal useful for pattern spotting, doctor appointments, and disability documentation.
+                </p>
+                <ul className="mt-5 grid gap-3 sm:grid-cols-2 text-slate-200">
+                  {painJournalChecklist.map((item) => (
+                    <li key={item} className="rounded-xl border border-slate-700 bg-slate-950/70 px-4 py-3">
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-6">
+                  <Link to="/resources/what-to-include-in-pain-journal" className="inline-flex items-center gap-2 text-primary hover:text-sky-300 transition-colors">
+                    <span>Read what to include in a pain journal</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {featuredSections.map((section, index) => (
+          <section
+            key={section.title}
+            className={index % 2 === 0 ? 'py-16 bg-slate-900' : 'py-16 bg-slate-800/50 border-t border-slate-700'}
+          >
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+                <div className="max-w-3xl">
+                  <h2 className="text-3xl font-bold text-white">{section.title}</h2>
+                  <p className="mt-3 text-slate-300">{section.description}</p>
+                </div>
+                <div>
+                  <Link to={section.ctaHref} className="inline-flex items-center gap-2 text-primary hover:text-sky-300 transition-colors font-medium">
+                    <span>{section.ctaText}</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </Link>
+                </div>
+              </div>
+
+              <div className="mt-8 grid gap-6 lg:grid-cols-2">
+                {section.resources.map(renderFeaturedCard)}
+              </div>
+            </div>
+          </section>
+        ))}
+
+        <section className="py-16 bg-slate-950 border-y border-slate-800">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-3xl">
+              <h2 className="text-3xl font-bold text-white">Frequently asked questions</h2>
+              <p className="mt-3 text-slate-300">
+                These answers help clarify the choice between printables, guided tracking, and the app before you commit to a workflow.
+              </p>
+            </div>
+
+            <div className="mt-8 grid gap-5 lg:grid-cols-2">
+              {resourcesHubFaqs.map((faq) => (
+                <article key={faq.question} className="rounded-2xl border border-slate-700 bg-slate-900/70 p-6">
+                  <h3 className="text-lg font-semibold text-white">{faq.question}</h3>
+                  <p className="mt-3 text-slate-300">{faq.answer}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
         <section className="py-16 bg-slate-900">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-2xl font-bold text-white mb-3">Free Pain Tracker Printables</h2>
+            <div className="max-w-3xl mb-8">
+              <h2 className="text-3xl font-bold text-white">Full resource library</h2>
+              <p className="mt-3 text-slate-300">
+                Browse every printable template, condition-specific page, doctor-visit guide, and app-related resource in one place. The featured sections above organize the strongest intent lanes. The full library below keeps the wider archive crawlable and easy to explore.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section className="py-16 bg-slate-900 pt-0">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="text-2xl font-bold text-white mb-3">Printable templates and logs</h2>
             <p className="text-slate-300 mb-8 max-w-3xl">
-              Use the printable hub to pick your format, then move to the app whenever you want faster logging and local-first exports.
+              These pages target printable and template intent directly, including pain tracker printables, pain journal worksheets, symptom logs, appointment summaries, and daily tracking sheets.
             </p>
-            
+
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {templates.map(renderResourceCard)}
             </div>
           </div>
         </section>
-        
-        {/* Guides Section */}
+
         <section className="py-16 bg-slate-800/50 border-t border-slate-700">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-2xl font-bold text-white mb-8">Guides & How-To</h2>
-            
+            <h2 className="text-2xl font-bold text-white mb-3">Guides, condition pages, and app help</h2>
+            <p className="text-slate-300 mb-8 max-w-3xl">
+              This section connects informational searches with documentation workflows and private app use, so the hub supports both discovery and progression through the full tracking funnel.
+            </p>
+
             <div className="grid sm:grid-cols-2 gap-6">
               {guides.map(renderResourceCard)}
             </div>
           </div>
         </section>
-        
+
         <ResourceCtaStack
           heading="Use the resource funnel that matches real-life pain tracking"
           body="The patient lane starts with utility: use the app free, print a tracker, or prepare records for doctors, disability, or WorkSafeBC workflows."
         />
       </main>
-      
+
       <LandingFooter />
     </div>
   );

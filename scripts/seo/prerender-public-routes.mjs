@@ -84,7 +84,18 @@ function injectRouteMetadata(template, route) {
   html = robotsContent
     ? upsertTag(html, /<meta\s+name=["']googlebot["']\s+content=["'][^"']*["']\s*\/?>(?:\s*)/i, `<meta name="googlebot" content="${robotsContent}" />`)
     : html.replace(/\s*<meta\s+name=["']googlebot["']\s+content=["'][^"']*["']\s*\/?>(?:\s*)/i, '\n');
-  html = replaceTag(html, /<h1\s+class=["']initial-route-heading["']>[\s\S]*?<\/h1>/i, `<h1 class="initial-route-heading">${prerenderHeading}</h1>`, 'initial route heading');
+
+  if (route.prerenderBodyHtml) {
+    html = replaceTag(
+      html,
+      /<div id=['"]root['"]>[\s\S]*?<\/div>\s*<!-- PWA Initialization -->/i,
+      `<div id='root'>\n${route.prerenderBodyHtml}\n    </div>\n    \n    <!-- PWA Initialization -->`,
+      'initial route root shell'
+    );
+  } else {
+    html = replaceTag(html, /<h1\s+class=["']initial-route-heading["']>[\s\S]*?<\/h1>/i, `<h1 class="initial-route-heading">${prerenderHeading}</h1>`, 'initial route heading');
+  }
+
   html = injectStructuredData(html, route);
 
   return html;

@@ -40,6 +40,123 @@ const PRICING_FAQS = [
   },
 ];
 
+const RESOURCES_HUB_FAQS = [
+  {
+    question: 'What is a pain tracker template?',
+    answer:
+      'A pain tracker template is a structured page you can print or reuse to record pain level, location, triggers, medication response, and daily limits. It helps you build consistent records instead of trying to remember details later during a flare, doctor appointment, or disability review.',
+  },
+  {
+    question: 'Is the pain journal printable free?',
+    answer:
+      'Yes. The printable pain journal templates and tracker sheets in this resource hub are free to download and use. You can start with paper, keep your own copies, and move to the private offline app later if you want faster tracking and cleaner exports.',
+  },
+  {
+    question: 'What should I write in a pain journal?',
+    answer:
+      'Write down pain intensity, where the pain is, what seems to trigger it, how sleep and activity affected it, what medication or self-care you tried, and what changed in your ability to function. Short daily notes are usually more useful than long entries written only during severe flares.',
+  },
+  {
+    question: 'Can I use a pain tracker for doctor appointments?',
+    answer:
+      'Yes. A pain tracker can help you bring organized notes to doctor appointments, especially when visits are short. Patterns across days or weeks often make appointments more productive because you can show pain severity, flare timing, treatment response, and how symptoms affect daily function.',
+  },
+  {
+    question: 'Can I use a pain journal for disability or WorkSafeBC documentation?',
+    answer:
+      'Yes. A pain journal can support disability or WorkSafeBC documentation when it records pain consistently and ties symptoms to functional impact. Daily notes about limits, missed tasks, medication effects, and flare recovery are often more useful than general summaries written weeks later.',
+  },
+  {
+    question: 'Is PainTracker private?',
+    answer:
+      'PainTracker is built around local-first privacy. You can start with printables or use the app without an account, and your records stay under your control until you choose to export them. The product is designed to reduce unnecessary exposure rather than pushing you into cloud-first tracking.',
+  },
+  {
+    question: 'Does PainTracker work offline?',
+    answer:
+      'Yes. PainTracker is designed to keep working offline so you can keep tracking even when internet access is unreliable or you do not want to depend on a connection. That matters when pain is high, appointments are close, or you need records available on your own device.',
+  },
+  {
+    question: 'Do I need an account?',
+    answer:
+      'No. You can use PainTracker resources and the core tracking experience without creating an account. That makes it easier to start quickly, reduces friction on hard days, and keeps the basic tracking workflow focused on your records instead of sign-up, passwords, or cloud dependence.',
+  },
+  {
+    question: 'Should I use the app or a printable template?',
+    answer:
+      'Start with the format that makes tracking easiest today. Printable templates work well when you want something simple and visible. The app becomes useful when you want private offline records, faster daily entries, and cleaner summaries or exports without changing the habit you already built on paper.',
+  },
+];
+
+const RESOURCES_PRERENDER_BODY = `
+<main id="initial-loader" aria-label="PainTracker resources" style="padding: 2rem 1.5rem 4rem; max-width: 68rem; margin: 0 auto; color: #f1f5f9;">
+  <p style="margin: 0 0 1rem; color: #7dd3fc; font-size: 0.95rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em;">Free printables and private tracking</p>
+  <h1 class="initial-route-heading" style="max-width: 18ch; margin-bottom: 1.25rem;">Free Pain Tracker Templates, Printable Pain Journals, and Private Tracking Guides</h1>
+  <p style="max-width: 56rem; line-height: 1.7; color: #cbd5e1;">PainTracker resources help you document chronic pain clearly, privately, and consistently. Download free printable pain tracker templates, build a daily pain journal, prepare better notes for doctor appointments, or use the private offline app when paper stops being enough.</p>
+  <p style="max-width: 56rem; line-height: 1.7; color: #e2e8f0; font-weight: 600;">Start with a printable. Keep control of your records. Move into private digital tracking when you are ready.</p>
+  <section style="margin-top: 2rem;">
+    <h2 style="font-size: 1.5rem; margin-bottom: 0.75rem;">Printable Pain Tracker Templates</h2>
+    <p style="line-height: 1.7; color: #cbd5e1;">Begin with the strongest printable intent pages: <a href="/resources/monthly-pain-tracker-printable" style="color: #7dd3fc;">Monthly Pain Tracker Printable</a>, <a href="/resources/daily-pain-tracker-printable" style="color: #7dd3fc;">Daily Pain Tracker Template</a>, <a href="/resources/weekly-pain-tracker-printable" style="color: #7dd3fc;">Weekly Pain Journal Template</a>, and <a href="/resources/doctor-visit-pain-summary-template" style="color: #7dd3fc;">Pain Journal Template for Doctor Visits</a>. For broader download intent, the hub also connects to <a href="/resources/pain-diary-template-free-download" style="color: #7dd3fc;">daily, weekly, and monthly pain diary downloads</a> and condition-specific printables.</p>
+  </section>
+  <section style="margin-top: 2rem;">
+    <h2 style="font-size: 1.5rem; margin-bottom: 0.75rem;">What to Track in a Pain Journal</h2>
+    <p style="line-height: 1.7; color: #cbd5e1;">Track pain level, pain location, triggers, sleep, medication response, mood, flare patterns, functional impact, and notes for appointments. The full guide on <a href="/resources/what-to-include-in-pain-journal" style="color: #7dd3fc;">what to include in a pain journal</a> connects the template pages to real doctor-visit and disability-documentation use, while <a href="/resources/how-to-start-a-pain-journal" style="color: #7dd3fc;">how to start a pain journal</a> helps when the habit still feels too heavy.</p>
+  </section>
+  <section style="margin-top: 2rem;">
+    <h2 style="font-size: 1.5rem; margin-bottom: 0.75rem;">Condition Specific Pain Logs</h2>
+    <p style="line-height: 1.7; color: #cbd5e1;">Use focused templates like <a href="/resources/endometriosis-pain-log" style="color: #7dd3fc;">Endometriosis Pain Log</a>, <a href="/resources/migraine-pain-diary-printable" style="color: #7dd3fc;">Migraine Pain Diary</a>, <a href="/resources/fibromyalgia-pain-diary" style="color: #7dd3fc;">Fibromyalgia Pain Tracker</a>, <a href="/resources/chronic-back-pain-diary" style="color: #7dd3fc;">Back Pain Tracker</a>, <a href="/resources/arthritis-pain-tracker" style="color: #7dd3fc;">Arthritis Pain Journal</a>, and <a href="/resources/crps-pain-diary-template" style="color: #7dd3fc;">CRPS Pain Diary</a>. Their companion guides explain the reasoning layer too: <a href="/resources/pain-tracking-for-migraines" style="color: #7dd3fc;">migraine tracking</a>, <a href="/resources/pain-tracking-for-back-pain" style="color: #7dd3fc;">back pain tracking</a>, <a href="/resources/pain-tracking-for-arthritis" style="color: #7dd3fc;">arthritis tracking</a>, and <a href="/resources/pain-tracking-for-crps" style="color: #7dd3fc;">CRPS tracking</a>.</p>
+  </section>
+  <section style="margin-top: 2rem;">
+    <h2 style="font-size: 1.5rem; margin-bottom: 0.75rem;">Doctor Visit and Disability Documentation</h2>
+    <p style="line-height: 1.7; color: #cbd5e1;">Use the documentation lane for <a href="/resources/how-to-track-pain-for-doctors" style="color: #7dd3fc;">doctor appointments</a>, <a href="/resources/daily-functioning-log-for-disability" style="color: #7dd3fc;">Daily Functioning Log for Disability</a>, <a href="/resources/worksafebc-pain-journal-template" style="color: #7dd3fc;">WorkSafeBC Pain Journal Template</a>, <a href="/resources/functional-capacity-log" style="color: #7dd3fc;">Functional Impact Log</a>, and <a href="/resources/medication-and-pain-log" style="color: #7dd3fc;">Medication Response Tracker</a>. When claims or specialist reviews are involved, the strongest record usually pairs symptom tracking with function tracking rather than treating them as separate stories.</p>
+  </section>
+  <section style="margin-top: 2rem;">
+    <h2 style="font-size: 1.5rem; margin-bottom: 0.75rem;">Private Offline App Guides</h2>
+    <p style="line-height: 1.7; color: #cbd5e1;">When paper stops being enough, move into the product lane through <a href="/resources/free-pain-tracker-app" style="color: #7dd3fc;">How to use PainTracker offline</a>, <a href="/privacy-architecture" style="color: #7dd3fc;">how private local tracking works</a>, <a href="/privacy" style="color: #7dd3fc;">why no account matters</a>, <a href="/pain-tracker-app" style="color: #7dd3fc;">how to export pain records</a>, and <a href="/download" style="color: #7dd3fc;">how to install the app</a>. The intended flow is printable to habit to doctor usefulness to private app.</p>
+  </section>
+  <section style="margin-top: 2.25rem;">
+    <h2 style="font-size: 1.5rem; margin-bottom: 0.75rem;">Frequently asked questions</h2>
+    <div style="display: grid; gap: 1rem;">
+      <div>
+        <h3 style="font-size: 1rem; margin-bottom: 0.35rem; color: #f8fafc;">What is a pain tracker template?</h3>
+        <p style="line-height: 1.7; color: #cbd5e1;">A pain tracker template is a structured page you can print or reuse to record pain level, location, triggers, medication response, and daily limits. It helps you build consistent records instead of trying to remember details later during a flare, doctor appointment, or disability review.</p>
+      </div>
+      <div>
+        <h3 style="font-size: 1rem; margin-bottom: 0.35rem; color: #f8fafc;">Is the pain journal printable free?</h3>
+        <p style="line-height: 1.7; color: #cbd5e1;">Yes. The printable pain journal templates and tracker sheets in this resource hub are free to download and use. You can start with paper, keep your own copies, and move to the private offline app later if you want faster tracking and cleaner exports.</p>
+      </div>
+      <div>
+        <h3 style="font-size: 1rem; margin-bottom: 0.35rem; color: #f8fafc;">What should I write in a pain journal?</h3>
+        <p style="line-height: 1.7; color: #cbd5e1;">Write down pain intensity, where the pain is, what seems to trigger it, how sleep and activity affected it, what medication or self-care you tried, and what changed in your ability to function. Short daily notes are usually more useful than long entries written only during severe flares.</p>
+      </div>
+      <div>
+        <h3 style="font-size: 1rem; margin-bottom: 0.35rem; color: #f8fafc;">Can I use a pain tracker for doctor appointments?</h3>
+        <p style="line-height: 1.7; color: #cbd5e1;">Yes. A pain tracker can help you bring organized notes to doctor appointments, especially when visits are short. Patterns across days or weeks often make appointments more productive because you can show pain severity, flare timing, treatment response, and how symptoms affect daily function.</p>
+      </div>
+      <div>
+        <h3 style="font-size: 1rem; margin-bottom: 0.35rem; color: #f8fafc;">Can I use a pain journal for disability or WorkSafeBC documentation?</h3>
+        <p style="line-height: 1.7; color: #cbd5e1;">Yes. A pain journal can support disability or WorkSafeBC documentation when it records pain consistently and ties symptoms to functional impact. Daily notes about limits, missed tasks, medication effects, and flare recovery are often more useful than general summaries written weeks later.</p>
+      </div>
+      <div>
+        <h3 style="font-size: 1rem; margin-bottom: 0.35rem; color: #f8fafc;">Is PainTracker private?</h3>
+        <p style="line-height: 1.7; color: #cbd5e1;">PainTracker is built around local-first privacy. You can start with printables or use the app without an account, and your records stay under your control until you choose to export them. The product is designed to reduce unnecessary exposure rather than pushing you into cloud-first tracking.</p>
+      </div>
+      <div>
+        <h3 style="font-size: 1rem; margin-bottom: 0.35rem; color: #f8fafc;">Does PainTracker work offline?</h3>
+        <p style="line-height: 1.7; color: #cbd5e1;">Yes. PainTracker is designed to keep working offline so you can keep tracking even when internet access is unreliable or you do not want to depend on a connection. That matters when pain is high, appointments are close, or you need records available on your own device.</p>
+      </div>
+      <div>
+        <h3 style="font-size: 1rem; margin-bottom: 0.35rem; color: #f8fafc;">Do I need an account?</h3>
+        <p style="line-height: 1.7; color: #cbd5e1;">No. You can use PainTracker resources and the core tracking experience without creating an account. That makes it easier to start quickly, reduces friction on hard days, and keeps the basic tracking workflow focused on your records instead of sign-up, passwords, or cloud dependence.</p>
+      </div>
+      <div>
+        <h3 style="font-size: 1rem; margin-bottom: 0.35rem; color: #f8fafc;">Should I use the app or a printable template?</h3>
+        <p style="line-height: 1.7; color: #cbd5e1;">Start with the format that makes tracking easiest today. Printable templates work well when you want something simple and visible. The app becomes useful when you want private offline records, faster daily entries, and cleaner summaries or exports without changing the habit you already built on paper.</p>
+      </div>
+    </div>
+  </section>
+</main>`;
+
 function stripSiteSuffix(title) {
   return title
     .replace(/\s+\|\s+Pain Tracker$/u, '')
@@ -188,7 +305,12 @@ function withStructuredData(route) {
     structuredData.push(makeBreadcrumbSchema(defaultBreadcrumbItems(route)));
 
     if (route.path === '/pricing') {
-      structuredData.push(makeSoftwareApplicationSchema(), makeFaqSchema(PRICING_FAQS));
+      structuredData.push(makeSoftwareApplicationSchema());
+    }
+
+    const faqItems = route.faqItems ?? (route.path === '/pricing' ? PRICING_FAQS : null);
+    if (faqItems?.length) {
+      structuredData.push(makeFaqSchema(faqItems));
     }
   }
 
@@ -359,11 +481,14 @@ export const publicRouteMetadata = [
   },
   {
     path: '/resources',
-    title: 'Pain Tracker Resources: Free Printables, Pain Journal Templates, and Privacy Guides',
-    description: 'Browse free pain tracker printables, pain journal templates, symptom logs, and privacy-first guides for documenting pain without an account.',
+    title: 'Free Pain Tracker Templates & Pain Journal Printables | PainTracker.ca',
+    description: 'Download free pain tracker templates, printable pain journals, condition-specific pain logs, and private tracking guides for chronic pain, doctor visits, disability documentation, and daily symptom tracking.',
     canonicalUrl: `${SITE_URL}/resources`,
     ogImage: DEFAULT_OG_IMAGE,
     breadcrumbName: 'Resources',
+    prerenderHeading: 'Free Pain Tracker Templates, Printable Pain Journals, and Private Tracking Guides',
+    faqItems: RESOURCES_HUB_FAQS,
+    prerenderBodyHtml: RESOURCES_PRERENDER_BODY,
   },
   resource('pain-diary-template-pdf', 'Free Daily Pain Tracker Printable PDF', 'Download a free daily pain tracker printable PDF for pain intensity, location, symptoms, medications, triggers, and daily function notes.'),
   resource('daily-pain-tracker-printable', 'Free Daily Pain Tracker Printable PDF | PainTracker.ca', 'Download the free PainTracker.ca daily pain tracker printable PDF to record pain levels, medications, flare ups, triggers, daily limits, mood, and notes for doctor visits.'),

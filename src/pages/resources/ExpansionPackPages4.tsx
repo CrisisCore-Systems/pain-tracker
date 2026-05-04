@@ -42,37 +42,41 @@ const painTrackingForBackPainContent: SEOPageContent = {
   ],
   badge: 'Guide',
   headline: 'Pain Tracking for Back Pain',
-  subheadline: 'Record pain location, posture triggers, functional limits, and treatment response — the data your physiotherapist, GP, or spine specialist needs.',
+  subheadline: 'Record location, posture tolerance, radiation pattern, neurological symptoms, and treatment response so spine, physio, and disability conversations are built on specifics.',
   primaryCTA: { text: 'Start tracking back pain', href: '/start' },
-  secondaryCTA: { text: 'Download the daily pain tracker', href: '/resources/daily-pain-tracker-printable' },
+  secondaryCTA: { text: 'Download the chronic back pain diary', href: '/resources/chronic-back-pain-diary' },
   whatIsThis:
-    'A tracking approach for lower, middle, and upper back pain — covering the positional, activity-related, and neurological data points that help clinicians classify and treat back pain effectively.',
+    'A tracking approach for lower, middle, and upper back pain that focuses on the details clinicians actually use to classify spinal pain: exact location, whether pain radiates, how long you can sit or stand before symptoms rise, what positions relieve it, and whether numbness, tingling, or weakness appear alongside the pain. It is built to support physiotherapy, GP review, spine clinic referral, and documentation for work-related or disability-related function loss.',
   whoShouldUse: [
     'People with chronic lower or upper back pain',
     'Anyone in physiotherapy or rehabilitation for back pain',
-    'People preparing for orthopaedic, physiatry, or spine clinic appointments'
+    'People preparing for orthopaedic, physiatry, or spine clinic appointments',
+    'Anyone documenting back pain for WorkSafeBC, insurance, or work accommodation reviews'
   ],
   howToUse: [
-    { step: 1, title: 'Map pain location and radiation pattern', description: 'Is it left, right, or central? Does it radiate into the hip, buttock, or leg? Radiation patterns distinguish mechanical back pain from disc or nerve involvement.' },
-    { step: 2, title: 'Log positions and activities that worsen or relieve pain', description: 'Sitting, standing, lying, walking — and how long each is tolerable before pain worsens — gives clinicians functional capacity data.' },
-    { step: 3, title: 'Record any neurological symptoms', description: 'Numbness, tingling, weakness, or bladder changes alongside back pain are red flags that need separate logging and urgent reporting.' }
+    { step: 1, title: 'Map pain location and radiation pattern', description: 'Be specific: left, right, central, upper, mid, lower, or sacral. Then note whether pain travels into the buttock, hip, calf, foot, ribs, or arm. Radiation patterns help distinguish spinal, muscular, and nerve-related causes.' },
+    { step: 2, title: 'Track posture tolerance in minutes', description: 'Log how long you can sit, stand, walk, drive, bend, or lift before symptoms rise. This gives clinicians functional capacity data and makes work accommodation or disability evidence much stronger.' },
+    { step: 3, title: 'Record neurological symptoms separately', description: 'Numbness, tingling, weakness, or bladder and bowel changes need their own notes, not a footnote under pain. They may shift urgency, change referral decisions, or signal that a nerve root is involved.' },
+    { step: 4, title: 'Pair treatment with the response', description: 'Track exercises, rest, heat, medication, posture changes, PT sessions, or injections against pain and function. Back pain care improves when the record shows what helps, what aggravates, and what only helps briefly.' }
   ],
   whyItMatters:
-    'Back pain is the most common chronic pain condition, yet it is among the most under-documented. Consistent pain diaries help distinguish mechanical pain from disc, nerve, or systemic causes — and support treatment adjustment over time.',
+    'Back pain is common, but the reason it stays difficult to treat is often poor documentation. A precise back-pain record helps distinguish mechanical loading problems from disc, nerve, inflammatory, or postural drivers. It also turns vague claims like back pain at work into measurable evidence about lifting, sitting tolerance, walking tolerance, and the tasks that consistently break your baseline.',
   trustSignals: {
     medicalNote: 'Physiotherapists and physiatrists use activity-pain diaries and functional reports directly in treatment planning for chronic back pain.',
     privacyNote: 'Your back pain records stay on your device.',
     legalNote: 'Back pain documentation supports WorkSafeBC claims, disability reviews, and ergonomic accommodation requests.'
   },
   faqs: [
-    { question: 'What should I track for lower back pain?', answer: 'Pain location and radiation, severity (0-10), what triggered or worsened it, how long you could perform each posture before pain increased, what relieved it, and any neurological symptoms.' },
-    { question: 'When should back pain be treated as urgent?', answer: 'New numbness, tingling, or weakness in the legs, or any loss of bladder/bowel control alongside back pain requires immediate medical attention — do not wait to track it.' },
-    { question: 'How does tracking help with physiotherapy?', answer: 'Physiotherapists adjust programs based on what activities worsen vs. improve your pain. A log removes guesswork and allows data-driven progressive loading.' }
+    { question: 'What should I track for lower back pain?', answer: 'Track exact location, radiation, severity, suspected trigger, posture tolerance, what relieved it, and any numbness or tingling. The posture and function details are often more useful than the pain number alone.' },
+    { question: 'When should back pain be treated as urgent?', answer: 'New weakness, spreading numbness, saddle numbness, or bladder or bowel changes need urgent medical attention. Do not rely on a diary alone when neurological red flags are present.' },
+    { question: 'How does tracking help with physiotherapy?', answer: 'Physiotherapists need to know which movements help, which aggravate symptoms later in the day, and how long you tolerate each task. A log removes guesswork and supports safer progression.' }
   ],
   relatedLinks: [
+    { title: 'Chronic Back Pain Diary', description: '6-page spine-specific printable for posture, radiation, and PT tracking', href: '/resources/chronic-back-pain-diary' },
     { title: 'Daily Pain Tracker Printable', description: 'Detailed daily format for back pain entries', href: '/resources/daily-pain-tracker-printable' },
     { title: 'Pain Log for Physical Therapy', description: 'Track progress during rehabilitation', href: '/resources/pain-log-for-physical-therapy' },
     { title: 'Exercise and Pain Log', description: 'Track which movements help vs. hurt', href: '/resources/exercise-and-pain-log' },
+    { title: 'Daily Functioning Log for Disability', description: 'Document sitting, standing, and lifting limits for claims or accommodations', href: '/resources/daily-functioning-log-for-disability' },
     { title: 'Free Private Pain Tracker App', description: 'Digital back pain tracking with exports', href: '/start' }
   ],
   breadcrumbs: [
@@ -86,7 +90,7 @@ export function PainTrackingForBackPainPage() {
   return (
     <ResourcePageTemplate
       content={painTrackingForBackPainContent}
-      opening="Back pain tracking is position-specific and function-focused. The most useful data for spine clinicians and physiotherapists is how long each posture is tolerable, where the pain radiates, and what aggravates or relieves it — not just a daily pain number. This guide explains what to record and why."
+      opening="Back pain tracking is position-specific and function-focused. The most useful record for spine clinicians and physiotherapists is not just a daily number but a map of posture tolerance, radiation pattern, neurological symptoms, and what changed after work, exercise, or rest. This guide explains what to record so the pattern is clinically useful."
       ctaHref="/start"
       ctaText="Start tracking back pain free"
     />

@@ -27,6 +27,20 @@ function parseSitemapPaths(xml: string) {
 }
 
 describe('SEO prerendered entrypoints', () => {
+  it('gives the resources hub FAQ schema and a prerendered body shell', () => {
+    const resourcesRoute = publicRouteMetadata.find((route) => route.path === '/resources');
+
+    expect(resourcesRoute).toBeDefined();
+    expect(resourcesRoute?.title).toBe('Free Pain Tracker Templates & Pain Journal Printables | PainTracker.ca');
+    expect(resourcesRoute?.structuredData.some((item: Record<string, unknown>) => item['@type'] === 'FAQPage')).toBe(true);
+    expect(typeof resourcesRoute?.prerenderBodyHtml).toBe('string');
+    expect(resourcesRoute?.prerenderBodyHtml).toContain('Printable Pain Tracker Templates');
+    expect(resourcesRoute?.prerenderBodyHtml).toContain('/resources/monthly-pain-tracker-printable');
+    expect(resourcesRoute?.prerenderBodyHtml).toContain('/resources/pain-tracking-for-migraines');
+    expect(resourcesRoute?.prerenderBodyHtml).toContain('What is a pain tracker template?');
+    expect(resourcesRoute?.prerenderBodyHtml).toContain('PainTracker is built around local-first privacy.');
+  });
+
   it('covers every sitemap URL with unique prerender metadata', () => {
     const sitemapPaths = parseSitemapPaths(readUtf8('public/sitemap.xml'));
     const metadataPaths = publicRouteMetadata

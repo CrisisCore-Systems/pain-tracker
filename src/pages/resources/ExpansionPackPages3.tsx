@@ -42,36 +42,39 @@ const painTrackingForArthritisContent: SEOPageContent = {
   ],
   badge: 'Guide',
   headline: 'Pain Tracking for Arthritis',
-  subheadline: 'Record morning stiffness, joint pain, swelling, range of motion, and flares — the data your rheumatologist needs to adjust your treatment plan.',
+  subheadline: 'Record morning stiffness, joint-by-joint pain, swelling, heat, function, and flare patterns so rheumatology visits are driven by trends instead of memory.',
   primaryCTA: { text: 'Start tracking arthritis symptoms', href: '/start' },
   secondaryCTA: { text: 'Download the arthritis pain tracker', href: '/resources/arthritis-pain-tracker' },
   whatIsThis:
-    'A tracking approach designed for inflammatory and degenerative arthritis — covering the joint-specific data points that matter for rheumatology, orthopaedics, and pain management.',
+    'A tracking approach designed for inflammatory and degenerative arthritis that connects daily symptoms to clinical decision-making. It focuses on morning stiffness duration, which joints are involved, whether swelling or heat is present, how function changes through the day, and whether treatment is actually improving your week-to-week baseline. That makes it useful for rheumatoid arthritis, osteoarthritis, psoriatic arthritis, gout, and mixed-pattern joint pain where the trend matters more than any single bad day.',
   whoShouldUse: [
     'People with RA, OA, PsA, gout, or other arthritis types',
     'Anyone preparing for rheumatology appointments',
-    'People monitoring treatment response to DMARDs or biologics'
+    'People monitoring treatment response to DMARDs or biologics',
+    'Anyone documenting functional limits for work accommodations or disability reviews'
   ],
   howToUse: [
-    { step: 1, title: 'Record morning stiffness duration daily', description: 'How long joints are stiff after waking is a standard RA disease activity measure. Record minutes, not just whether it happened.' },
-    { step: 2, title: 'Log each affected joint separately', description: 'Rheumatologists use joint counts. Track which joints hurt, which are swollen, and severity for each.' },
-    { step: 3, title: 'Note functional impact and fatigue', description: 'What you cannot grip, lift, or do because of joint pain — plus fatigue level — rounds out the disease activity picture.' }
+    { step: 1, title: 'Record morning stiffness duration daily', description: 'Time stiffness in minutes, not just whether it happened. This is one of the cleanest ways to distinguish inflammatory arthritis from mechanical wear and to show whether treatment is calming the disease or not.' },
+    { step: 2, title: 'Log each affected joint separately', description: 'Track which joints hurt, which are swollen, and which feel hot. Joint counts and symmetry patterns matter. Both hands and wrists tell a different story than one knee flaring after weight-bearing.' },
+    { step: 3, title: 'Note function alongside pain', description: 'Record what pain changed in real life: opening jars, getting dressed, climbing stairs, typing, writing, carrying groceries, or standing from a chair. Function is often what pushes treatment changes and disability documentation forward.' },
+    { step: 4, title: 'Track medication response over weeks', description: 'DMARDs, biologics, NSAIDs, injections, braces, and pacing strategies should be logged against stiffness, swelling, and function. Arthritis treatment works on trends, so your records need to show the trend.' }
   ],
   whyItMatters:
-    'Arthritis disease activity fluctuates. Rheumatologists adjust treatment based on trends across weeks, not your worst day. Consistent tracking gives them the data to act.',
+    'Arthritis disease activity fluctuates, and treatment changes are usually based on patterns across weeks rather than what happened the morning of an appointment. Consistent tracking shows whether the disease is spreading, calming, staying localized, or causing deeper functional loss. It also helps support accommodation or disability paperwork when joint pain is being underestimated because imaging or lab work does not reflect how limited you are day to day.',
   trustSignals: {
     medicalNote: 'DAS28 and other rheumatology disease activity scores draw on exactly the data this tracking approach captures.',
     privacyNote: 'Your symptom records stay on your device unless you export them.',
     legalNote: 'Joint function documentation supports disability and workplace accommodation reviews.'
   },
   faqs: [
-    { question: 'What should I track for rheumatoid arthritis?', answer: 'Morning stiffness (minutes), affected joints (which and severity), swelling, fatigue (0-10), functional limits, and medication timing and response.' },
-    { question: 'How is OA tracking different from RA tracking?', answer: 'OA tracking focuses more on mechanical triggers (activity, weight-bearing) and less on systemic inflammation markers like fatigue and morning stiffness duration.' },
-    { question: 'Should I track flares separately?', answer: 'Yes. Log flare start, suspected trigger, severity, duration, and what helped. Flare patterns help rheumatologists identify treatment gaps.' }
+    { question: 'What should I track for rheumatoid arthritis?', answer: 'Track morning stiffness in minutes, affected joints, swelling, warmth, fatigue, medication timing, and functional loss. Rheumatologists need the pattern across multiple joints, not just a pain score from one body area.' },
+    { question: 'How is OA tracking different from RA tracking?', answer: 'OA tracking usually emphasizes weight-bearing, mechanical triggers, and end-of-day worsening. RA tracking needs more attention to morning stiffness, swelling, symmetry, fatigue, and whether inflammation is changing over time.' },
+    { question: 'Should I track flares separately?', answer: 'Yes. Log flare start, suspected trigger, peak severity, duration, and what changed afterward. Flare records help show whether treatment is containing the disease or whether you are cycling into repeat loss of function.' }
   ],
   relatedLinks: [
     { title: 'Arthritis Pain Tracker Printable', description: '6-page joint-by-joint tracking template', href: '/resources/arthritis-pain-tracker' },
     { title: 'Flare-Up Tracker Printable', description: 'Log flare episodes, triggers, and recovery', href: '/resources/flare-up-tracker-printable' },
+    { title: 'Daily Functioning Log for Disability', description: 'Document arthritis-related function loss for claims or accommodations', href: '/resources/daily-functioning-log-for-disability' },
     { title: 'Pain Diary for Specialist Appointment', description: 'Prepare for rheumatology visits', href: '/resources/pain-diary-for-specialist-appointment' },
     { title: 'Free Private Pain Tracker App', description: 'Track joints, stiffness, and flares locally', href: '/start' }
   ],
@@ -86,7 +89,7 @@ export function PainTrackingForArthritisPage() {
   return (
     <ResourcePageTemplate
       content={painTrackingForArthritisContent}
-      opening="Arthritis tracking is joint-specific work. Morning stiffness duration, which joints are affected, swelling, and functional limits are the clinical data points your rheumatologist uses to measure disease activity. This guide explains what to record and why each data point matters."
+      opening="Arthritis tracking is joint-specific work, not a generic pain score exercise. Morning stiffness duration, swelling, symmetry, and functional loss are the signals rheumatologists and disability reviewers actually use to judge disease activity. This guide explains what to record so your notes support treatment decisions instead of becoming another vague summary."
       ctaHref="/start"
       ctaText="Start tracking arthritis symptoms free"
     />
@@ -110,37 +113,40 @@ const painTrackingForMigrainesContent: SEOPageContent = {
   ],
   badge: 'Guide',
   headline: 'Pain Tracking for Migraines',
-  subheadline: 'Log each attack from prodrome to postdrome — severity, duration, triggers, and treatment — to identify your patterns and get better care.',
+  subheadline: 'Log each migraine from prodrome to postdrome so attack timing, trigger stacking, aura patterns, medication response, and disability impact are visible to you and your neurologist.',
   primaryCTA: { text: 'Start tracking migraines', href: '/start' },
   secondaryCTA: { text: 'Download the migraine pain diary', href: '/resources/migraine-pain-diary-printable' },
   whatIsThis:
-    'A tracking approach for migraines that covers all four phases — prodrome, aura, headache, and postdrome — alongside trigger tracking, medication response, and monthly attack frequency.',
+    'A tracking approach for migraines that treats each attack as a timeline rather than a single pain event. It covers prodrome, aura, headache, and postdrome, along with likely trigger stacking, medication timing, time-to-relief, and how the episode affected work, school, childcare, driving, or recovery the next day. That makes it useful for finding patterns on your own and for helping a neurologist classify migraine type, overuse risk, and treatment response more accurately.',
   whoShouldUse: [
     'People with episodic or chronic migraine',
     'Anyone trying to identify migraine triggers',
-    'People preparing for neurology or headache specialist appointments'
+    'People preparing for neurology or headache specialist appointments',
+    'Anyone documenting migraine frequency and disability impact for work accommodations or benefit claims'
   ],
   howToUse: [
-    { step: 1, title: 'Log attack start time and first warning signs', description: 'Prodrome symptoms — mood shifts, neck stiffness, light sensitivity — often appear hours before pain. Catching them helps identify your personal pattern.' },
-    { step: 2, title: 'Record severity, location, and associated symptoms', description: 'Unilateral vs. bilateral, throbbing vs. pressure, nausea, aura type — these determine migraine classification and treatment.' },
-    { step: 3, title: 'Track medication timing and response', description: 'Did you take a triptan within 1 hour of onset? Did it work? Time-to-relief data directly informs treatment adjustment.' }
+    { step: 1, title: 'Log attack start time and first warning signs', description: 'Prodrome symptoms such as neck stiffness, mood shifts, yawning, or food cravings often arrive before pain. Logging them early helps you separate real triggers from warning signs that only look like triggers in hindsight.' },
+    { step: 2, title: 'Record the whole symptom picture', description: 'Track location, peak severity, aura type, nausea, light sensitivity, sound sensitivity, smell sensitivity, and the parts of the day you lost. This gives specialists the detail needed to distinguish migraine from other headache patterns.' },
+    { step: 3, title: 'Track medication timing and response', description: 'Note what you took, when you took it, how fast relief started, whether symptoms rebounded, and whether you had to repeat the dose. This is often the deciding factor in whether treatment is adjusted.' },
+    { step: 4, title: 'Review frequency month by month', description: 'Monthly counts matter. They help distinguish episodic from chronic migraine, reveal medication-overuse patterns, and create the documentation often required before higher-cost treatments or accommodations are approved.' }
   ],
   whyItMatters:
-    'Neurologists and headache specialists rely on attack diaries to classify migraine type, identify preventative treatment needs, and evaluate acute treatment effectiveness. Without a log, these decisions are based on memory recall that significantly underestimates attack frequency.',
+    'Neurologists and headache specialists rely on attack diaries because memory consistently underestimates migraine frequency, duration, and disability. A structured log shows whether you are dealing with chronic migraine, aura-related patterns, menstrual correlation, rebound headaches, or ineffective timing of acute medication. It also helps create a clearer record when migraines affect work reliability, school attendance, or disability documentation.',
   trustSignals: {
     medicalNote: 'Headache specialist guidelines recommend prospective migraine diaries over retrospective recall for accurate diagnosis and treatment planning.',
     privacyNote: 'Your migraine log stays on your device — no uploads, no sharing by default.',
     legalNote: 'Documented migraine frequency and disability impact supports workplace accommodation and disability applications.'
   },
   faqs: [
-    { question: 'What should I track for each migraine attack?', answer: 'Onset time and date, phase durations (prodrome, aura if present, headache, postdrome), severity at peak, location, associated symptoms (nausea, light/sound sensitivity), medication taken with timing, and disability impact.' },
-    { question: 'How do I identify migraine triggers?', answer: 'Track potential triggers in the 24-48 hours before each attack: sleep, stress, hormonal phase, food, alcohol, weather changes, and physical exertion. Patterns emerge over 2-3 months of consistent logging.' },
-    { question: 'How many migraines per month indicate chronic migraine?', answer: '15 or more headache days per month for 3+ months, with 8 or more being migraines, meets the chronic migraine diagnostic threshold. Accurate monthly tracking is essential for this classification.' }
+    { question: 'What should I track for each migraine attack?', answer: 'Record onset time, phase durations, severity at onset and peak, aura type, associated symptoms, medication timing, time-to-relief, and what the attack stopped you from doing. The disability impact is part of the clinical picture.' },
+    { question: 'How do I identify migraine triggers?', answer: 'Track likely triggers in the 24 to 48 hours before each attack, not just the same hour. Sleep disruption, hormones, stress, dehydration, skipped meals, weather, and sensory overload often work in combination rather than alone.' },
+    { question: 'How many migraines per month indicate chronic migraine?', answer: 'Fifteen or more headache days per month for three months, with at least eight showing migraine features, meets the chronic migraine threshold. Reliable monthly tracking is what makes that classification defensible.' }
   ],
   relatedLinks: [
     { title: 'Migraine Pain Diary Printable', description: '6-page migraine tracker covering all four phases', href: '/resources/migraine-pain-diary-printable' },
     { title: 'How to Track Pain Triggers', description: 'Systematic trigger identification method', href: '/resources/how-to-track-pain-triggers' },
     { title: 'Pain Diary for Specialist Appointment', description: 'Prepare for neurology appointments', href: '/resources/pain-diary-for-specialist-appointment' },
+    { title: 'Monthly Pain Tracker Printable', description: 'See attack frequency and disability patterns month by month', href: '/resources/monthly-pain-tracker-printable' },
     { title: 'Free Private Pain Tracker App', description: 'Track migraine attacks with timestamps locally', href: '/start' }
   ],
   breadcrumbs: [
@@ -154,7 +160,7 @@ export function PainTrackingForMigrainesPage() {
   return (
     <ResourcePageTemplate
       content={painTrackingForMigrainesContent}
-      opening="Migraine tracking is attack-level work. Logging onset, phases, severity, medication timing, and likely triggers for each attack — consistently over months — reveals your personal migraine pattern and gives neurologists the data they need to classify and treat effectively."
+      opening="Migraine tracking is attack-level work, but the real value comes from pattern-level review. When you log onset, phases, medication timing, trigger stacking, and next-day fallout consistently, the trend becomes clearer than memory ever can. This guide shows what to capture so neurology visits and accommodation discussions start from real evidence."
       ctaHref="/start"
       ctaText="Start tracking migraines free"
     />
