@@ -25,6 +25,12 @@ export interface BreadcrumbItem {
   url: string;
 }
 
+export interface ItemListEntry {
+  name: string;
+  url: string;
+  description?: string;
+}
+
 const seoIdentity = {
   productName: 'Pain Tracker',
   siteName: 'Pain Tracker',
@@ -281,6 +287,41 @@ export function generateHowToSchema(data: {
       text: step.text,
       image: step.image
     }))
+  };
+}
+
+export function generateCollectionPageSchema(data: {
+  name: string;
+  description: string;
+  url: string;
+}): object {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: data.name,
+    description: data.description,
+    url: data.url,
+    isPartOf: {
+      '@type': 'WebSite',
+      name: defaultSEOConfig.siteName,
+      url: defaultSEOConfig.siteUrl,
+    },
+  };
+}
+
+export function generateItemListSchema(items: ItemListEntry[], opts?: { siteUrl?: string }): object {
+  const siteUrl = opts?.siteUrl ?? defaultSEOConfig.siteUrl;
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    itemListElement: items.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: item.name,
+      url: normalizeToAbsoluteUrl(item.url, siteUrl),
+      description: item.description,
+    })),
   };
 }
 

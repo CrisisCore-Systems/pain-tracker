@@ -88,12 +88,54 @@ const RESOURCES_HUB_FAQS = [
   },
 ];
 
+const RESOURCES_STARTER_PACK = [
+  { name: 'Daily Pain Tracker Template', url: '/resources/daily-pain-tracker-printable', description: 'Daily symptom, trigger, medication, and note capture when you need the simplest starting point.' },
+  { name: 'Weekly Pain Journal Template', url: '/resources/weekly-pain-tracker-printable', description: 'A short pattern view for treatment changes, flares, and appointment prep.' },
+  { name: 'Monthly Pain Tracker Printable', url: '/resources/monthly-pain-tracker-printable', description: 'A 30-day view for patterns, flares, sleep disruption, and treatment response.' },
+  { name: 'Doctor Visit Pain Notes Sheet', url: '/resources/doctor-visit-pain-summary-template', description: 'A concise appointment-ready summary built for short visits and clearer conversation.' },
+  { name: 'Medication Response Tracker', url: '/resources/medication-and-pain-log', description: 'Track what you took, when you took it, what relief you got, and what side effects followed.' },
+  { name: 'Functional Impact Log', url: '/resources/functional-capacity-log', description: 'Document how pain changes walking, sitting, lifting, concentration, chores, and work demands.' },
+];
+
 const RESOURCES_PRERENDER_BODY = `
 <main id="initial-loader" aria-label="PainTracker resources" style="padding: 2rem 1.5rem 4rem; max-width: 68rem; margin: 0 auto; color: #f1f5f9;">
   <p style="margin: 0 0 1rem; color: #7dd3fc; font-size: 0.95rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em;">Free printables and private tracking</p>
   <h1 class="initial-route-heading" style="max-width: 18ch; margin-bottom: 1.25rem;">Free Pain Tracker Templates, Printable Pain Journals, and Private Tracking Guides</h1>
   <p style="max-width: 56rem; line-height: 1.7; color: #cbd5e1;">PainTracker resources help you document chronic pain clearly, privately, and consistently. Download free printable pain tracker templates, build a daily pain journal, prepare better notes for doctor appointments, or use the private offline app when paper stops being enough.</p>
   <p style="max-width: 56rem; line-height: 1.7; color: #e2e8f0; font-weight: 600;">Start with a printable. Keep control of your records. Move into private digital tracking when you are ready.</p>
+  <section style="margin-top: 2rem; border: 1px solid rgba(100, 116, 139, 0.45); border-radius: 1rem; padding: 1.5rem; background: rgba(15, 23, 42, 0.7);">
+    <h2 style="font-size: 1.65rem; margin-bottom: 0.75rem;">Download the free pain tracking starter pack</h2>
+    <p style="line-height: 1.7; color: #cbd5e1;">Start with the simplest printable set so you can build the habit before deciding whether you need condition-specific pages or private digital tracking.</p>
+    <ul style="margin: 1rem 0 0; padding-left: 1.25rem; color: #e2e8f0; line-height: 1.8;">
+      <li><a href="/resources/daily-pain-tracker-printable" style="color: #7dd3fc;">Daily Pain Tracker Template</a></li>
+      <li><a href="/resources/weekly-pain-tracker-printable" style="color: #7dd3fc;">Weekly Pain Journal Template</a></li>
+      <li><a href="/resources/monthly-pain-tracker-printable" style="color: #7dd3fc;">Monthly Pain Tracker Printable</a></li>
+      <li><a href="/resources/doctor-visit-pain-summary-template" style="color: #7dd3fc;">Doctor Visit Pain Notes Sheet</a></li>
+      <li><a href="/resources/medication-and-pain-log" style="color: #7dd3fc;">Medication Response Tracker</a></li>
+      <li><a href="/resources/functional-capacity-log" style="color: #7dd3fc;">Functional Impact Log</a></li>
+    </ul>
+  </section>
+  <section style="margin-top: 2rem;">
+    <h2 style="font-size: 1.5rem; margin-bottom: 0.75rem;">Choose the right pain tracker</h2>
+    <table style="width: 100%; border-collapse: collapse; color: #e2e8f0;">
+      <thead>
+        <tr>
+          <th style="text-align: left; border-bottom: 1px solid rgba(100, 116, 139, 0.45); padding: 0.75rem 0.5rem;">Need</th>
+          <th style="text-align: left; border-bottom: 1px solid rgba(100, 116, 139, 0.45); padding: 0.75rem 0.5rem;">Best resource</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td style="padding: 0.75rem 0.5rem; border-bottom: 1px solid rgba(51, 65, 85, 0.6);">Track daily symptoms</td><td style="padding: 0.75rem 0.5rem; border-bottom: 1px solid rgba(51, 65, 85, 0.6);"><a href="/resources/daily-pain-tracker-printable" style="color: #7dd3fc;">Daily Pain Tracker Template</a></td></tr>
+        <tr><td style="padding: 0.75rem 0.5rem; border-bottom: 1px solid rgba(51, 65, 85, 0.6);">See monthly patterns</td><td style="padding: 0.75rem 0.5rem; border-bottom: 1px solid rgba(51, 65, 85, 0.6);"><a href="/resources/monthly-pain-tracker-printable" style="color: #7dd3fc;">Monthly Pain Tracker Printable</a></td></tr>
+        <tr><td style="padding: 0.75rem 0.5rem; border-bottom: 1px solid rgba(51, 65, 85, 0.6);">Prepare for a doctor visit</td><td style="padding: 0.75rem 0.5rem; border-bottom: 1px solid rgba(51, 65, 85, 0.6);"><a href="/resources/doctor-visit-pain-summary-template" style="color: #7dd3fc;">Pain Journal Template for Doctor Visits</a></td></tr>
+        <tr><td style="padding: 0.75rem 0.5rem; border-bottom: 1px solid rgba(51, 65, 85, 0.6);">Support disability documentation</td><td style="padding: 0.75rem 0.5rem; border-bottom: 1px solid rgba(51, 65, 85, 0.6);"><a href="/resources/daily-functioning-log-for-disability" style="color: #7dd3fc;">Daily Functioning Log for Disability</a></td></tr>
+        <tr><td style="padding: 0.75rem 0.5rem; border-bottom: 1px solid rgba(51, 65, 85, 0.6);">Track medication effects</td><td style="padding: 0.75rem 0.5rem; border-bottom: 1px solid rgba(51, 65, 85, 0.6);"><a href="/resources/medication-and-pain-log" style="color: #7dd3fc;">Medication Response Tracker</a></td></tr>
+        <tr><td style="padding: 0.75rem 0.5rem; border-bottom: 1px solid rgba(51, 65, 85, 0.6);">Track work injury pain</td><td style="padding: 0.75rem 0.5rem; border-bottom: 1px solid rgba(51, 65, 85, 0.6);"><a href="/resources/worksafebc-pain-journal-template" style="color: #7dd3fc;">WorkSafeBC Pain Journal Template</a></td></tr>
+        <tr><td style="padding: 0.75rem 0.5rem; border-bottom: 1px solid rgba(51, 65, 85, 0.6);">Track migraines</td><td style="padding: 0.75rem 0.5rem; border-bottom: 1px solid rgba(51, 65, 85, 0.6);"><a href="/resources/migraine-pain-diary-printable" style="color: #7dd3fc;">Migraine Pain Diary</a></td></tr>
+        <tr><td style="padding: 0.75rem 0.5rem;">Track chronic condition patterns</td><td style="padding: 0.75rem 0.5rem;"><a href="/resources/endometriosis-pain-log" style="color: #7dd3fc;">Condition-specific pain logs</a></td></tr>
+      </tbody>
+    </table>
+  </section>
   <section style="margin-top: 2rem;">
     <h2 style="font-size: 1.5rem; margin-bottom: 0.75rem;">Printable Pain Tracker Templates</h2>
     <p style="line-height: 1.7; color: #cbd5e1;">Begin with the strongest printable intent pages: <a href="/resources/monthly-pain-tracker-printable" style="color: #7dd3fc;">Monthly Pain Tracker Printable</a>, <a href="/resources/daily-pain-tracker-printable" style="color: #7dd3fc;">Daily Pain Tracker Template</a>, <a href="/resources/weekly-pain-tracker-printable" style="color: #7dd3fc;">Weekly Pain Journal Template</a>, and <a href="/resources/doctor-visit-pain-summary-template" style="color: #7dd3fc;">Pain Journal Template for Doctor Visits</a>. For broader download intent, the hub also connects to <a href="/resources/pain-diary-template-free-download" style="color: #7dd3fc;">daily, weekly, and monthly pain diary downloads</a> and condition-specific printables.</p>
@@ -113,6 +155,28 @@ const RESOURCES_PRERENDER_BODY = `
   <section style="margin-top: 2rem;">
     <h2 style="font-size: 1.5rem; margin-bottom: 0.75rem;">Private Offline App Guides</h2>
     <p style="line-height: 1.7; color: #cbd5e1;">When paper stops being enough, move into the product lane through <a href="/resources/free-pain-tracker-app" style="color: #7dd3fc;">How to use PainTracker offline</a>, <a href="/privacy-architecture" style="color: #7dd3fc;">how private local tracking works</a>, <a href="/privacy" style="color: #7dd3fc;">why no account matters</a>, <a href="/pain-tracker-app" style="color: #7dd3fc;">how to export pain records</a>, and <a href="/download" style="color: #7dd3fc;">how to install the app</a>. The intended flow is printable to habit to doctor usefulness to private app.</p>
+  </section>
+  <section style="margin-top: 2rem;">
+    <h2 style="font-size: 1.5rem; margin-bottom: 0.75rem;">How to start tracking pain without overthinking it</h2>
+    <ol style="padding-left: 1.25rem; color: #cbd5e1; line-height: 1.8;">
+      <li>Pick one template.</li>
+      <li>Track once per day for 7 days.</li>
+      <li>Record pain level, location, medication response, sleep, and functional limits.</li>
+      <li>Bring the pattern, not just the memory, to your next appointment.</li>
+      <li>Move to the offline app when you want faster entries and cleaner exports.</li>
+    </ol>
+  </section>
+  <section style="margin-top: 2rem;">
+    <h2 style="font-size: 1.5rem; margin-bottom: 0.75rem;">When paper stops being enough</h2>
+    <p style="line-height: 1.7; color: #cbd5e1;">Printables are the easiest way to start. PainTracker is for when you need the habit to survive real life.</p>
+    <ul style="margin: 1rem 0 0; padding-left: 1.25rem; color: #e2e8f0; line-height: 1.8;">
+      <li>Offline tracking</li>
+      <li>No account</li>
+      <li>Private local records</li>
+      <li>Faster daily entries</li>
+      <li>Cleaner exports for appointments</li>
+      <li>Less dependence on memory during flares</li>
+    </ul>
   </section>
   <section style="margin-top: 2.25rem;">
     <h2 style="font-size: 1.5rem; margin-bottom: 0.75rem;">Frequently asked questions</h2>
@@ -155,6 +219,9 @@ const RESOURCES_PRERENDER_BODY = `
       </div>
     </div>
   </section>
+  <section style="margin-top: 2rem; border-top: 1px solid rgba(51, 65, 85, 0.6); padding-top: 1.25rem;">
+    <p style="line-height: 1.7; color: #94a3b8; font-size: 0.95rem;">PainTracker does not diagnose, treat, or replace medical advice. These templates are designed to help you organize your own notes so you can communicate patterns more clearly with clinicians, insurers, case managers, or support workers.</p>
+  </section>
 </main>`;
 
 function stripSiteSuffix(title) {
@@ -188,6 +255,35 @@ function makeFaqSchema(items) {
         text: item.answer,
       },
     })),
+  };
+}
+
+function makeItemListSchema(items) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    itemListElement: items.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: item.name,
+      url: `${SITE_URL}${item.url}`,
+      description: item.description,
+    })),
+  };
+}
+
+function makeCollectionPageSchema({ name, description, url }) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name,
+    description,
+    url,
+    isPartOf: {
+      '@type': 'WebSite',
+      name: 'Pain Tracker',
+      url: SITE_URL,
+    },
   };
 }
 
@@ -306,6 +402,17 @@ function withStructuredData(route) {
 
     if (route.path === '/pricing') {
       structuredData.push(makeSoftwareApplicationSchema());
+    }
+
+    if (route.path === '/resources') {
+      structuredData.push(
+        makeCollectionPageSchema({
+          name: 'Free Pain Tracker Templates, Printable Pain Journals, and Private Tracking Guides',
+          description: 'Download free pain tracker templates, printable pain journals, condition-specific pain logs, and private tracking guides for chronic pain, doctor visits, disability documentation, and daily symptom tracking.',
+          url: `${SITE_URL}/resources`,
+        }),
+        makeItemListSchema(RESOURCES_STARTER_PACK)
+      );
     }
 
     const faqItems = route.faqItems ?? (route.path === '/pricing' ? PRICING_FAQS : null);

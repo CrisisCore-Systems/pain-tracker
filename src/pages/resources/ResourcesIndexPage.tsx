@@ -19,7 +19,15 @@ import {
 } from 'lucide-react';
 import { LandingFooter } from '../../components/landing/LandingFooter';
 import '../../styles/pages/landing.css';
-import { combineSchemas, generateBreadcrumbSchema, generateFAQSchema, type FAQItem } from '../../lib/seo';
+import {
+  combineSchemas,
+  generateBreadcrumbSchema,
+  generateCollectionPageSchema,
+  generateFAQSchema,
+  generateHowToSchema,
+  generateItemListSchema,
+  type FAQItem,
+} from '../../lib/seo';
 import { ResourceCtaStack } from '../../components/seo';
 import { applyPageMetadata } from '../../components/seo/applyPageMetadata';
 
@@ -67,6 +75,73 @@ const painJournalChecklist = [
   'Flare patterns',
   'Functional impact',
   'Notes for appointments',
+];
+
+const starterPackResources = [
+  {
+    title: 'Daily Pain Tracker Template',
+    href: '/resources/daily-pain-tracker-printable',
+    description: 'Daily symptom, trigger, medication, and note capture when you need the simplest starting point.',
+  },
+  {
+    title: 'Weekly Pain Journal Template',
+    href: '/resources/weekly-pain-tracker-printable',
+    description: 'A short pattern view for treatment changes, flares, and appointment prep.',
+  },
+  {
+    title: 'Monthly Pain Tracker Printable',
+    href: '/resources/monthly-pain-tracker-printable',
+    description: 'A 30-day view for patterns, flares, sleep disruption, and treatment response.',
+  },
+  {
+    title: 'Doctor Visit Pain Notes Sheet',
+    href: '/resources/doctor-visit-pain-summary-template',
+    description: 'A concise appointment-ready summary built for short visits and clearer conversation.',
+  },
+  {
+    title: 'Medication Response Tracker',
+    href: '/resources/medication-and-pain-log',
+    description: 'Track what you took, when you took it, what relief you got, and what side effects followed.',
+  },
+  {
+    title: 'Functional Impact Log',
+    href: '/resources/functional-capacity-log',
+    description: 'Document how pain changes walking, sitting, lifting, concentration, chores, and work demands.',
+  },
+];
+
+const quickStartSteps = [
+  {
+    name: 'Pick one template',
+    text: 'Choose the printable or guide that matches your immediate need instead of trying to track everything at once.',
+  },
+  {
+    name: 'Track once per day for 7 days',
+    text: 'Use one short daily entry for a week so a real pattern starts to emerge without turning tracking into another burden.',
+  },
+  {
+    name: 'Capture the core details',
+    text: 'Record pain level, location, medication response, sleep, triggers, and functional limits before you add anything more detailed.',
+  },
+  {
+    name: 'Bring the pattern, not just the memory',
+    text: 'Use the completed template for appointments, claims, or case reviews so the conversation starts from evidence instead of recall.',
+  },
+  {
+    name: 'Move to the offline app when ready',
+    text: 'Switch to the app when you want faster entries, private local records, and cleaner exports without changing the tracking habit you built on paper.',
+  },
+];
+
+const templateChooserRows = [
+  { need: 'Track daily symptoms', resource: 'Daily Pain Tracker Template', href: '/resources/daily-pain-tracker-printable' },
+  { need: 'See monthly patterns', resource: 'Monthly Pain Tracker Printable', href: '/resources/monthly-pain-tracker-printable' },
+  { need: 'Prepare for a doctor visit', resource: 'Pain Journal Template for Doctor Visits', href: '/resources/doctor-visit-pain-summary-template' },
+  { need: 'Support disability documentation', resource: 'Daily Functioning Log for Disability', href: '/resources/daily-functioning-log-for-disability' },
+  { need: 'Track medication effects', resource: 'Medication Response Tracker', href: '/resources/medication-and-pain-log' },
+  { need: 'Track work injury pain', resource: 'WorkSafeBC Pain Journal Template', href: '/resources/worksafebc-pain-journal-template' },
+  { need: 'Track migraines', resource: 'Migraine Pain Diary', href: '/resources/migraine-pain-diary-printable' },
+  { need: 'Track chronic condition patterns', resource: 'Condition-specific pain logs', href: '/resources/endometriosis-pain-log' },
 ];
 
 const resourcesHubFaqs: FAQItem[] = [
@@ -1135,6 +1210,19 @@ export const ResourcesIndexPage: React.FC = () => {
   }, []);
 
   const schema = combineSchemas(
+    generateCollectionPageSchema({
+      name: RESOURCES_HUB_HEADING,
+      description: RESOURCES_HUB_DESCRIPTION,
+      url: 'https://www.paintracker.ca/resources',
+    }),
+    generateItemListSchema(
+      starterPackResources.map((resource) => ({
+        name: resource.title,
+        url: resource.href,
+        description: resource.description,
+      })),
+      { siteUrl: 'https://www.paintracker.ca' }
+    ),
     generateBreadcrumbSchema(
       [
         { name: 'Home', url: '/' },
@@ -1142,6 +1230,11 @@ export const ResourcesIndexPage: React.FC = () => {
       ],
       { siteUrl: 'https://www.paintracker.ca' }
     ),
+    generateHowToSchema({
+      name: 'How to start tracking pain without overthinking it',
+      description: 'A simple five-step flow for starting with a printable and moving into private offline tracking when needed.',
+      steps: quickStartSteps,
+    }),
     generateFAQSchema(resourcesHubFaqs)
   );
 
@@ -1320,11 +1413,69 @@ export const ResourcesIndexPage: React.FC = () => {
 
             <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link to="/resources/pain-diary-template-free-download" className="btn-cta-primary px-6 py-3 rounded-xl font-medium">
-                Download free printable templates
+                Download free starter pack
               </Link>
               <Link to="/start" className="px-6 py-3 rounded-xl border border-slate-600 text-white hover:border-primary hover:text-primary transition-colors">
-                Use the private app free
+                Use PainTracker offline
               </Link>
+            </div>
+
+            <div className="mt-10 rounded-2xl border border-slate-700 bg-slate-900/80 p-6 text-left">
+              <h2 className="text-2xl font-bold text-white">Download the free pain tracking starter pack</h2>
+              <p className="mt-3 text-slate-300">
+                Start with the simplest printable set so you can build the habit before deciding whether you need condition-specific pages or private digital tracking.
+              </p>
+              <ul className="mt-5 grid gap-3 sm:grid-cols-2 text-slate-200">
+                {starterPackResources.map((resource) => (
+                  <li key={resource.href} className="rounded-xl border border-slate-700 bg-slate-950/70 px-4 py-3">
+                    <Link to={resource.href} className="font-medium text-white hover:text-primary transition-colors">
+                      {resource.title}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+                <Link to="/resources/pain-diary-template-free-download" className="btn-cta-primary px-6 py-3 rounded-xl font-medium text-center">
+                  Download free starter pack
+                </Link>
+                <Link to="/start" className="px-6 py-3 rounded-xl border border-slate-600 text-white hover:border-primary hover:text-primary transition-colors text-center">
+                  Use the private offline app
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="py-16 bg-slate-900 border-t border-slate-800">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-3xl mb-8">
+              <h2 className="text-3xl font-bold text-white">Choose the right pain tracker</h2>
+              <p className="mt-3 text-slate-300">
+                Start from the job you need the record to do. The fastest path is usually one template matched to one use case.
+              </p>
+            </div>
+
+            <div className="overflow-hidden rounded-2xl border border-slate-700 bg-slate-950/70">
+              <table className="min-w-full text-left text-sm text-slate-200">
+                <thead className="bg-slate-900 text-slate-300">
+                  <tr>
+                    <th className="px-5 py-4 font-semibold">Need</th>
+                    <th className="px-5 py-4 font-semibold">Best resource</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {templateChooserRows.map((row) => (
+                    <tr key={row.need} className="border-t border-slate-800">
+                      <td className="px-5 py-4 align-top">{row.need}</td>
+                      <td className="px-5 py-4 align-top">
+                        <Link to={row.href} className="font-medium text-white hover:text-primary transition-colors">
+                          {row.resource}
+                        </Link>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         </section>
@@ -1411,6 +1562,56 @@ export const ResourcesIndexPage: React.FC = () => {
           </div>
         </section>
 
+        <section className="py-16 bg-slate-900 border-t border-slate-800">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-3xl mb-8">
+              <h2 className="text-3xl font-bold text-white">How to start tracking pain without overthinking it</h2>
+              <p className="mt-3 text-slate-300">
+                This page should reduce decision fatigue, not add to it. Start with one format and one short routine.
+              </p>
+            </div>
+
+            <ol className="grid gap-4 lg:grid-cols-5">
+              {quickStartSteps.map((step, index) => (
+                <li key={step.name} className="rounded-2xl border border-slate-700 bg-slate-950/70 p-5">
+                  <div className="text-sm font-semibold text-primary">Step {index + 1}</div>
+                  <h3 className="mt-2 text-lg font-semibold text-white">{step.name}</h3>
+                  <p className="mt-3 text-sm text-slate-300">{step.text}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+
+        <section className="py-16 bg-slate-800/50 border-t border-slate-700">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-3xl">
+              <h2 className="text-3xl font-bold text-white">When paper stops being enough</h2>
+              <p className="mt-4 text-slate-300">
+                Printables are the easiest way to start. PainTracker is for when you need the habit to survive real life without depending on an account or a connection.
+              </p>
+              <ul className="mt-5 grid gap-3 sm:grid-cols-2 text-slate-200">
+                {[
+                  'Offline tracking',
+                  'No account',
+                  'Private local records',
+                  'Faster daily entries',
+                  'Cleaner exports for appointments',
+                  'Less dependence on memory during flares',
+                ].map((benefit) => (
+                  <li key={benefit} className="rounded-xl border border-slate-700 bg-slate-900/70 px-4 py-3">
+                    {benefit}
+                  </li>
+                ))}
+              </ul>
+              <Link to="/start" className="mt-6 inline-flex items-center gap-2 text-primary hover:text-sky-300 transition-colors font-medium">
+                <span>Use PainTracker free</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          </div>
+        </section>
+
         <section className="py-16 bg-slate-900">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-3xl mb-8">
@@ -1452,6 +1653,14 @@ export const ResourcesIndexPage: React.FC = () => {
           heading="Use the resource funnel that matches real-life pain tracking"
           body="The patient lane starts with utility: use the app free, print a tracker, or prepare records for doctors, disability, or WorkSafeBC workflows."
         />
+
+        <section className="py-10 bg-slate-950 border-t border-slate-800">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <p className="text-sm leading-relaxed text-slate-400">
+              PainTracker does not diagnose, treat, or replace medical advice. These templates are designed to help you organize your own notes so you can communicate patterns more clearly with clinicians, insurers, case managers, or support workers.
+            </p>
+          </div>
+        </section>
       </main>
 
       <LandingFooter />

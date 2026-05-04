@@ -288,6 +288,33 @@ export default function BlogResourcesPage() {
         </p>
       </div>
 
+      <section className="rounded-2xl border border-sky-500/20 bg-sky-500/5 p-5">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div className="max-w-2xl">
+            <h2 className="text-lg font-semibold text-foreground">Start with the free template hub if you need paper-first tracking.</h2>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+              The resource hub now groups printable pain trackers, appointment sheets, disability documentation tools,
+              and a starter pack that gives you the shortest route to daily, weekly, and monthly tracking.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <a
+              href="/resources/pain-diary-template-free-download"
+              className="inline-flex items-center gap-2 rounded-xl bg-sky-500 px-4 py-2 text-sm font-semibold text-white hover:bg-sky-400"
+            >
+              Open starter pack
+              <ArrowRight className="h-4 w-4" />
+            </a>
+            <a
+              href="/resources"
+              className="inline-flex items-center gap-2 rounded-xl border border-border/60 px-4 py-2 text-sm font-medium text-foreground hover:bg-muted/40"
+            >
+              Browse all free pain tracker templates
+            </a>
+          </div>
+        </div>
+      </section>
+
       {/* Search + Filters */}
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1 max-w-md">

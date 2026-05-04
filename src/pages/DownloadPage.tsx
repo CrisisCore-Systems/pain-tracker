@@ -184,6 +184,39 @@ export const DownloadPage: React.FC = () => {
           </div>
         </section>
 
+        <section
+          className="mb-16 rounded-xl border border-cyan-500/20 bg-slate-900/70 p-8"
+          aria-labelledby="printable-options-heading"
+        >
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+            <div className="max-w-2xl">
+              <h2 id="printable-options-heading" className="text-2xl font-bold text-white">
+                Need printables before you use the app?
+              </h2>
+              <p className="mt-3 text-slate-300 leading-relaxed">
+                Start with paper if that lowers friction today. The free resources hub includes pain
+                diary PDFs, weekly and monthly trackers, doctor-visit notes, and a starter pack you
+                can use without creating an account or changing how you already document symptoms.
+              </p>
+            </div>
+            <div className="flex flex-col gap-3 sm:min-w-72">
+              <Link
+                to="/resources/pain-diary-template-free-download"
+                className="inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 px-5 py-3 font-semibold text-white transition-all hover:from-cyan-400 hover:to-blue-500"
+              >
+                <Download className="h-4 w-4" aria-hidden="true" />
+                Open the printable starter pack
+              </Link>
+              <Link
+                to="/resources"
+                className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-600 px-5 py-3 font-medium text-slate-200 transition-colors hover:border-slate-500 hover:text-white"
+              >
+                Browse all free pain tracker templates
+              </Link>
+            </div>
+          </div>
+        </section>
+
         {/* Screenshots */}
         <section className="mb-16" aria-labelledby="screenshots">
           <h2 id="screenshots" className="text-2xl font-bold mb-6 text-white">Screenshots</h2>

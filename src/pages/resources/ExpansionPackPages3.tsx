@@ -1,6 +1,52 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { ArrowRight, Calendar, ClipboardList, Download, FileText } from 'lucide-react';
 import { SEOPageLayout, type SEOPageContent } from '../../components/seo';
+
+const painDiaryStarterPackResources = [
+  {
+    title: 'Daily Pain Tracker Template',
+    href: '/resources/daily-pain-tracker-printable',
+    description: 'Use this when you need the lowest-friction daily page for pain level, location, triggers, and medication response.',
+    bestFor: 'Best for: starting today with one simple sheet',
+    icon: FileText,
+  },
+  {
+    title: 'Weekly Pain Tracker Printable',
+    href: '/resources/weekly-pain-tracker-printable',
+    description: 'Use a one-week view to prepare for short appointments or compare a medication or pacing change.',
+    bestFor: 'Best for: doctor visits and short pattern reviews',
+    icon: ClipboardList,
+  },
+  {
+    title: 'Monthly Pain Tracker Printable',
+    href: '/resources/monthly-pain-tracker-printable',
+    description: 'Track flare timing, sleep disruption, and longer treatment patterns over a full month.',
+    bestFor: 'Best for: long-range trends and recurring flares',
+    icon: Calendar,
+  },
+  {
+    title: 'Doctor Visit Pain Summary Template',
+    href: '/resources/doctor-visit-pain-summary-template',
+    description: 'Bring a short appointment-ready summary when you need the important pattern visible fast.',
+    bestFor: 'Best for: primary care and specialist appointments',
+    icon: FileText,
+  },
+  {
+    title: 'Medication and Pain Log',
+    href: '/resources/medication-and-pain-log',
+    description: 'Track dose timing, relief window, side effects, and whether the same medication keeps helping.',
+    bestFor: 'Best for: medication changes and treatment response',
+    icon: ClipboardList,
+  },
+  {
+    title: 'Functional Capacity Log',
+    href: '/resources/functional-capacity-log',
+    description: 'Document what pain changed about walking, sitting, lifting, concentration, chores, and work.',
+    bestFor: 'Best for: disability, injury, and function-focused documentation',
+    icon: FileText,
+  },
+] as const;
 
 type ResourcePageConfig = {
   content: SEOPageContent;
@@ -579,51 +625,57 @@ export function PainJournalForKidsAndTeensPage() {
 
 const painDiaryTemplateFreeDownloadContent: SEOPageContent = {
   slug: 'pain-diary-template-free-download',
-  title: 'Pain Diary Template Free Download',
-  metaTitle: 'Pain Diary Template Free Download: Daily, Weekly, and Monthly Formats',
+  title: 'Pain Diary Template Free Download Starter Pack',
+  metaTitle: 'Pain Diary Template Free Download Starter Pack: Daily, Weekly, and Monthly Formats',
   metaDescription:
-    'Download free pain diary templates in daily, weekly, and monthly formats. Printable PDF pain trackers for doctor visits, disability claims, and personal chronic pain management.',
+    'Open the free pain diary starter pack with daily, weekly, monthly, medication, function, and doctor-visit templates. Printable pain tracker PDFs for private tracking, appointments, and documentation.',
   keywords: [
     'pain diary template free download',
     'free pain diary template',
     'pain diary PDF download',
     'pain tracker template free',
-    'printable pain diary free'
+    'printable pain diary free',
+    'pain diary starter pack'
   ],
   badge: 'Printable',
-  headline: 'Pain Diary Template — Free Download',
-  subheadline: 'Download free daily, weekly, and monthly pain diary templates — printable PDFs for doctor visits, disability documentation, and personal pain management.',
+  headline: 'Pain Diary Starter Pack — Free Download',
+  subheadline: 'Start with a printable bundle of daily, weekly, monthly, medication, function, and appointment templates so you can track pain on paper before moving to the app.',
   primaryCTA: { text: 'Download the daily pain tracker', href: '/resources/daily-pain-tracker-printable' },
   secondaryCTA: { text: 'Track digitally instead', href: '/start' },
-  utilityBlock: { type: 'download', downloadUrl: '/resources/pain-diary-template-pdf', downloadFileName: 'pain-diary-template-free' },
+  utilityBlock: { type: 'download', downloadUrl: '/resources/pain-diary-template-pdf', downloadFileName: 'pain-diary-starter-pack' },
   whatIsThis:
-    'A directory of free, downloadable pain diary templates in multiple formats — daily entry, weekly summary, and monthly trend — for all chronic pain management needs.',
+    'A printable starter pack that groups the most useful paper-first pain diary templates in one place: daily entries, weekly and monthly reviews, medication response notes, doctor-visit summaries, and function-impact logging. It is built for people who need a practical starting point, not another giant directory to sort through while tired or in pain.',
   whoShouldUse: [
     'Anyone who prefers print-first pain tracking',
     'People preparing templates for family members or patients',
-    'Anyone who wants a backup to digital tracking'
+    'Anyone who wants a backup to digital tracking',
+    'People preparing for appointments, claim paperwork, or function reviews'
   ],
   howToUse: [
-    { step: 1, title: 'Choose the format that matches your tracking goal', description: 'Daily for granular symptom detail; weekly for appointment prep; monthly for long-term trend visibility.' },
-    { step: 2, title: 'Print and keep near where you rest or sleep', description: 'Proximity removes friction. The closer the template is to where you need it, the more likely you are to fill it out.' },
-    { step: 3, title: 'Bring completed sheets to every appointment', description: 'Hand the sheet to your doctor at the start of the visit. A completed pain diary in hand changes the quality of the appointment.' }
+    { step: 1, title: 'Choose one sheet for the problem you have right now', description: 'Start with the daily tracker, the weekly review, or the doctor-visit summary instead of printing everything at once. The starter pack is meant to reduce choice overload.' },
+    { step: 2, title: 'Keep the pages where symptoms actually interrupt you', description: 'Put the printable near your bed, desk, or medication area so you can record details while they are still accurate.' },
+    { step: 3, title: 'Use the specialty sheets when the pattern needs more proof', description: 'Add the medication log or function log when treatment response, daily limits, or documentation quality starts to matter more than a simple pain score.' },
+    { step: 4, title: 'Move to the app only when you want faster entry and exports', description: 'Paper is a valid long-term format. Switch to the app when timestamps, local analytics, or export workflows become worth it to you.' }
   ],
   whyItMatters:
-    'Paper templates remain the most accessible form of pain tracking — no device, no battery, no account. They are also the most shareable, the easiest to hand to a clinician, and the simplest to start with today.',
+    'Paper templates remain the lowest-friction way to start tracking: no account, no battery, no setup ritual, and no need to explain an app before a doctor looks at your notes. A starter pack matters because different situations need different sheets. The page is built to help you choose the smallest useful format now, then expand only if your documentation needs become more complex later.',
   trustSignals: {
-    medicalNote: 'Structured paper pain diaries are accepted and used in clinical appointments.',
-    privacyNote: 'Downloaded PDFs stay on your device and are never uploaded. No data is collected.',
-    legalNote: 'Printed and dated pain diary entries are accepted forms of documentation for disability and insurance claims.'
+    medicalNote: 'Structured paper pain diaries are commonly used in clinical appointments because they make symptom trends easier to review quickly.',
+    privacyNote: 'These printable templates are paper-first and local-first. You choose what to print, keep, scan, or share.',
+    legalNote: 'Consistent, dated symptom and function notes can support disability, injury, or accommodation documentation, but the template itself does not guarantee any claim outcome.'
   },
   faqs: [
-    { question: 'What is the best free pain diary template?', answer: 'The best format depends on your goal: daily sheets for clinical detail, weekly for appointment prep, monthly for long-term trend reviews. All three are available free here.' },
-    { question: 'Can I use a printed pain diary for a disability claim?', answer: 'Yes. Printed, dated pain diary entries are recognized documentation. Consistency of entries over time matters more than the format.' },
-    { question: 'Should I use digital or printable tracking?', answer: 'Digital provides automatic timestamping and better long-term analysis. Printable provides accessibility and ease of sharing. Using both — app primary, printable backup — is the most resilient approach.' }
+    { question: 'What is included in the free pain diary starter pack?', answer: 'The starter pack points you to the core printable formats most people need first: daily, weekly, and monthly pain trackers plus appointment, medication, and function logs.' },
+    { question: 'What is the best free pain diary template?', answer: 'The best format depends on your goal. Daily sheets capture symptom detail, weekly sheets help with short appointment prep, monthly sheets show longer patterns, and the specialty logs support medication or function-focused documentation.' },
+    { question: 'Can I use a printed pain diary for a disability claim?', answer: 'A printed pain diary can support disability or injury documentation when it is dated, consistent, and tied to function. The stronger record is usually the one that shows the pattern over time, not just a single bad day.' },
+    { question: 'Should I use digital or printable tracking?', answer: 'Printable tracking is often the easiest starting point because it works immediately and can be handed to a clinician. Digital tracking becomes useful when you want timestamps, local summaries, and export workflows. Many people use both.' }
   ],
   relatedLinks: [
     { title: 'Daily Pain Tracker Printable', description: 'Most detailed daily format', href: '/resources/daily-pain-tracker-printable' },
     { title: 'Weekly Pain Tracker Printable', description: 'Seven-day appointment prep format', href: '/resources/weekly-pain-tracker-printable' },
     { title: 'Monthly Pain Tracker Printable', description: '30-day trend visibility', href: '/resources/monthly-pain-tracker-printable' },
+    { title: 'Medication and Pain Log', description: 'Track dose timing, relief, and side effects', href: '/resources/medication-and-pain-log' },
+    { title: 'Doctor Visit Pain Summary Template', description: 'A concise sheet for short appointments', href: '/resources/doctor-visit-pain-summary-template' },
     { title: 'Free Private Pain Tracker App', description: 'Digital alternative — no account needed', href: '/start' }
   ],
   breadcrumbs: [
@@ -637,10 +689,82 @@ export function PainDiaryTemplateFreeDownloadPage() {
   return (
     <ResourcePageTemplate
       content={painDiaryTemplateFreeDownloadContent}
-      opening="Free pain diary templates in daily, weekly, and monthly formats — no email required, no account, no tracking. Download the format that fits your goal and start filling it out today."
+      opening="The starter pack is built for the first decision, not the final one. Pick the one printable that matches your situation now, keep it near you, and add the specialty sheets only when you need stronger appointment or documentation detail."
       ctaHref="/resources/daily-pain-tracker-printable"
       ctaText="Download the daily pain diary template free"
-    />
+    >
+      <section className="mt-8 rounded-2xl border border-slate-700 bg-slate-950/70 p-6 text-left">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <div className="max-w-2xl">
+            <h2 className="text-2xl font-bold text-white">Choose from the six starter-pack templates</h2>
+            <p className="mt-3 text-slate-300">
+              Each sheet solves a different documentation problem. Start with one. Add the others only
+              if they help you explain a pattern more clearly.
+            </p>
+          </div>
+          <Link
+            to="/resources"
+            className="inline-flex items-center gap-2 text-sm font-medium text-sky-300 hover:text-sky-200"
+          >
+            Browse the full resource hub
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
+
+        <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {painDiaryStarterPackResources.map((resource) => {
+            const Icon = resource.icon;
+
+            return (
+              <article key={resource.href} className="flex h-full flex-col rounded-xl border border-slate-700 bg-slate-900/80 p-5">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="rounded-lg bg-sky-500/10 p-2 text-sky-300">
+                    <Icon className="h-5 w-5" />
+                  </div>
+                  <Link
+                    to={resource.href}
+                    className="inline-flex items-center gap-2 rounded-lg bg-sky-600 px-3 py-2 text-sm font-semibold text-white hover:bg-sky-500"
+                  >
+                    <Download className="h-4 w-4" />
+                    Open
+                  </Link>
+                </div>
+
+                <h3 className="mt-4 text-lg font-semibold text-white">{resource.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-slate-300">{resource.description}</p>
+                <p className="mt-4 text-xs font-medium uppercase tracking-[0.18em] text-sky-300">
+                  {resource.bestFor}
+                </p>
+              </article>
+            );
+          })}
+        </div>
+
+        <div className="mt-6 grid gap-4 lg:grid-cols-2">
+          <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-5">
+            <h3 className="text-lg font-semibold text-white">If you want the lowest-friction option</h3>
+            <p className="mt-2 text-sm leading-relaxed text-slate-300">
+              Start with the daily tracker and the doctor-visit summary. That pair covers most first
+              appointments without forcing you into a full diary system.
+            </p>
+          </div>
+          <div className="rounded-xl border border-slate-700 bg-slate-900 p-5">
+            <h3 className="text-lg font-semibold text-white">If paper starts feeling too slow later</h3>
+            <p className="mt-2 text-sm leading-relaxed text-slate-300">
+              Move to the offline app when you want faster entries, local pattern review, and export
+              workflows while keeping the same tracking categories you started on paper.
+            </p>
+            <Link
+              to="/start"
+              className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-sky-300 hover:text-sky-200"
+            >
+              Try the free private pain tracker app
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </div>
+      </section>
+    </ResourcePageTemplate>
   );
 }
 

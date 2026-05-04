@@ -185,6 +185,8 @@ export const LandingFooter: React.FC = () => {
               </h3>
               <ul className="space-y-4 text-sm">
                 {([
+                  { label: 'Free Pain Tracker Templates', onClick: () => navigate('/resources') },
+                  { label: 'Pain Diary Starter Pack', onClick: () => navigate('/resources/pain-diary-template-free-download') },
                   { label: 'Templates & Guides', onClick: () => navigate('/resources') },
                   { label: 'Whitepaper (PDF)', onClick: () => navigate('/whitepaper') },
                   { label: 'Overton Framework (Canon)', onClick: () => navigate('/overton-framework'), icon: BookOpen },

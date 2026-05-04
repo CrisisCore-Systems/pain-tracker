@@ -37,8 +37,13 @@ describe('SEO prerendered entrypoints', () => {
     expect(resourcesRoute?.prerenderBodyHtml).toContain('Printable Pain Tracker Templates');
     expect(resourcesRoute?.prerenderBodyHtml).toContain('/resources/monthly-pain-tracker-printable');
     expect(resourcesRoute?.prerenderBodyHtml).toContain('/resources/pain-tracking-for-migraines');
+    expect(resourcesRoute?.prerenderBodyHtml).toContain('Download the free pain tracking starter pack');
+    expect(resourcesRoute?.prerenderBodyHtml).toContain('Choose the right pain tracker');
+    expect(resourcesRoute?.prerenderBodyHtml).toContain('How to start tracking pain without overthinking it');
     expect(resourcesRoute?.prerenderBodyHtml).toContain('What is a pain tracker template?');
     expect(resourcesRoute?.prerenderBodyHtml).toContain('PainTracker is built around local-first privacy.');
+    expect(resourcesRoute?.structuredData.some((item: Record<string, unknown>) => item['@type'] === 'CollectionPage')).toBe(true);
+    expect(resourcesRoute?.structuredData.some((item: Record<string, unknown>) => item['@type'] === 'ItemList')).toBe(true);
   });
 
   it('covers every sitemap URL with unique prerender metadata', () => {

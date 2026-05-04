@@ -497,6 +497,20 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
                 </Link>
               ))}
             </div>
+
+            <div className="mt-8 rounded-2xl border border-slate-700 bg-slate-800/60 p-6">
+              <h3 className="text-xl font-semibold text-white">Explore the full resource hub</h3>
+              <p className="mt-3 text-slate-300">
+                Explore all free pain tracker templates and pain journal printables if you need a different format for doctor visits, disability documentation, or private offline tracking.
+              </p>
+              <Link
+                to="/resources"
+                className="mt-4 inline-flex items-center gap-2 text-primary hover:text-sky-300 transition-colors"
+              >
+                <span>Explore all free pain tracker templates and pain journal printables</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
           </div>
         </section>
         
@@ -540,6 +554,14 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
         </section>
 
         <ResourceCtaStack />
+
+        <section className="py-10 bg-slate-950 border-t border-slate-800">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <p className="text-sm leading-relaxed text-slate-400">
+              PainTracker does not diagnose, treat, or replace medical advice. These templates and guides are designed to help you organize your own notes so you can communicate patterns more clearly with clinicians, insurers, case managers, or support workers.
+            </p>
+          </div>
+        </section>
       </main>
       
       <LandingFooter />

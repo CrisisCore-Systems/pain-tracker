@@ -86,6 +86,12 @@ const pathCards = [
     cta: 'Download Printable Pain Journal',
   },
   {
+    title: 'Compare free templates first',
+    text: 'Browse the full resource hub or open the printable starter pack if you want the shortest paper-first path.',
+    href: '/resources/pain-diary-template-free-download',
+    cta: 'Open Starter Pack',
+  },
+  {
     title: 'Prepare for an appointment',
     text: 'Organize symptoms, medication changes, triggers, and functional impact.',
     href: '/share-pain-records-with-doctor-without-giving-an-app-your-data',
@@ -179,6 +185,16 @@ export const LandingPage: React.FC = () => {
             <p className="text-sm text-slate-300">
               No account. No cloud pain database. Works offline after first load.
             </p>
+            <div className="mt-5 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-slate-200">
+              <Link to="/resources" className="inline-flex items-center gap-2 hover:text-sky-300 transition-colors">
+                Browse free pain tracker templates
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+              <Link to="/resources/pain-diary-template-free-download" className="inline-flex items-center gap-2 hover:text-sky-300 transition-colors">
+                Open the printable starter pack
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            </div>
           </div>
         </section>
 

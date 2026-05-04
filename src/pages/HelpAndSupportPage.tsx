@@ -1,5 +1,6 @@
 import React from 'react';
-import { AlertTriangle, BookOpen, HelpCircle, LifeBuoy, HeartHandshake } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { AlertTriangle, BookOpen, HelpCircle, LifeBuoy, HeartHandshake, Download } from 'lucide-react';
 import { usePainTrackerStore } from '../stores/pain-tracker-store';
 
 export default function HelpAndSupportPage() {
@@ -10,15 +11,15 @@ export default function HelpAndSupportPage() {
   };
 
   const handleOpenVideoTutorials = () => {
-    window.open('https://www.paintracker.ca/docs', '_blank', 'noopener');
+    globalThis.open('https://www.paintracker.ca/docs', '_blank', 'noopener');
   };
 
   const handleOpenFaq = () => {
-    window.open('https://www.paintracker.ca/docs/faq', '_blank', 'noopener');
+    globalThis.open('https://www.paintracker.ca/docs/faq', '_blank', 'noopener');
   };
 
   const handleContactSupport = () => {
-    window.location.href = 'mailto:support@paintracker.ca?subject=Pain%20Tracker%20Support%20Request';
+    globalThis.location.href = 'mailto:support@paintracker.ca?subject=Pain%20Tracker%20Support%20Request';
   };
 
   return (
@@ -42,10 +43,35 @@ export default function HelpAndSupportPage() {
           If something feels confusing or overwhelming, you're not alone. These options can help
           you get oriented, find answers, or reach out for technical support.
         </p>
+        <div className="rounded-xl border border-sky-200 bg-sky-50 p-4 dark:border-sky-500/20 dark:bg-sky-500/10">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h3 className="text-sm font-semibold text-sky-800 dark:text-sky-300">Prefer a printable option?</h3>
+              <p className="mt-1 text-sm text-slate-700 dark:text-slate-300">
+                Open the free pain diary starter pack or browse all paper-first templates if you are
+                not ready to track in the app yet.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Link
+                to="/resources/pain-diary-template-free-download"
+                className="inline-flex items-center rounded-lg bg-sky-600 px-4 py-2 text-sm font-medium text-white hover:bg-sky-700"
+              >
+                Open starter pack
+              </Link>
+              <Link
+                to="/resources"
+                className="inline-flex items-center rounded-lg border border-sky-300 px-4 py-2 text-sm font-medium text-sky-700 hover:bg-sky-100 dark:border-sky-400/30 dark:text-sky-300 dark:hover:bg-sky-500/10"
+              >
+                Browse all templates
+              </Link>
+            </div>
+          </div>
+        </div>
       </header>
 
       {/* Support Cards */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Getting Started Card */}
         <div
           className="rounded-xl p-6 transition-all duration-300 hover:-translate-y-1 bg-white dark:bg-slate-800/90 border border-gray-200 dark:border-white/10 shadow-sm dark:shadow-lg"
@@ -123,6 +149,28 @@ export default function HelpAndSupportPage() {
           >
             Contact support
           </button>
+        </div>
+
+        <div
+          className="rounded-xl p-6 transition-all duration-300 hover:-translate-y-1 bg-white dark:bg-slate-800/90 border border-gray-200 dark:border-white/10 shadow-sm dark:shadow-lg"
+        >
+          <div className="flex items-center gap-3 mb-4">
+            <div
+              className="p-2 rounded-lg bg-cyan-100 dark:bg-cyan-500/15"
+            >
+              <Download className="h-5 w-5 text-cyan-600 dark:text-cyan-400" />
+            </div>
+            <h3 className="font-semibold text-gray-900 dark:text-white">Printable starter pack</h3>
+          </div>
+          <p className="text-sm text-gray-600 dark:text-slate-400 mb-4 leading-relaxed">
+            Open a paper-first bundle with daily, weekly, monthly, medication, function, and appointment templates.
+          </p>
+          <Link
+            to="/resources/pain-diary-template-free-download"
+            className="inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 bg-cyan-100 dark:bg-cyan-500/15 border border-cyan-200 dark:border-cyan-500/30 text-cyan-700 dark:text-cyan-400 hover:bg-cyan-200 dark:hover:bg-cyan-500/25"
+          >
+            Open starter pack
+          </Link>
         </div>
       </div>
 

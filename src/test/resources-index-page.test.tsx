@@ -17,6 +17,9 @@ describe('ResourcesIndexPage SEO guards', () => {
       'Free Pain Tracker Templates, Printable Pain Journals, and Private Tracking Guides'
     );
     expect(document.title).toBe('Free Pain Tracker Templates & Pain Journal Printables | PainTracker.ca');
+    expect(getByText('Download the free pain tracking starter pack')).toBeInTheDocument();
+    expect(getByText('Choose the right pain tracker')).toBeInTheDocument();
+    expect(getByText('How to start tracking pain without overthinking it')).toBeInTheDocument();
     expect(getByText('What is a pain tracker template?')).toBeInTheDocument();
   });
 
