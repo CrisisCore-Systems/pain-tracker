@@ -7,6 +7,7 @@ type OwnerPayload = {
 };
 
 const SUBSCRIPTION_OWNER_COOKIE = 'pt_subscription_owner';
+const SUBSCRIPTION_OWNER_HINT_COOKIE = 'pt_subscription_owner_present';
 const OWNER_TTL_SECONDS = 30 * 24 * 60 * 60;
 
 function getSecret(): string | null {
@@ -115,6 +116,10 @@ export function issueSubscriptionOwnerCookie(
   ];
 
   appendSetCookie(res, `${SUBSCRIPTION_OWNER_COOKIE}=${payloadBase64}.${signature}; ${attrs.join('; ')}`);
+  appendSetCookie(
+    res,
+    `${SUBSCRIPTION_OWNER_HINT_COOKIE}=1; Path=/; SameSite=Strict; Max-Age=${OWNER_TTL_SECONDS}${secure ? '; Secure' : ''}`
+  );
   return true;
 }
 

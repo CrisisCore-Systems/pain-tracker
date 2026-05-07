@@ -91,6 +91,14 @@ function findCookie(setCookies: string[], cookieName: string): string | undefine
   return setCookies.find(cookie => cookie.startsWith(`${cookieName}=`));
 }
 
+function storeReadableCookie(setCookieHeader: string | undefined): void {
+  if (!setCookieHeader) return;
+  const cookieValue = setCookieHeader.split(';')[0];
+  if (cookieValue) {
+    document.cookie = `${cookieValue}; path=/`;
+  }
+}
+
 function SubscriptionProbe() {
   const { currentTier, hasFeature } = useSubscription();
 
@@ -202,9 +210,11 @@ describe('subscription checkout ownership flow', () => {
 
     expect(checkoutRes._status).toBe(200);
     const ownerCookie = findCookie(readSetCookie(checkoutRes), 'pt_subscription_owner');
+    const ownerHintCookie = findCookie(readSetCookie(checkoutRes), 'pt_subscription_owner_present');
     expect(ownerCookie).toContain('HttpOnly');
     expect(ownerCookie).toContain('SameSite=Strict');
     expect(ownerCookie).toContain('Secure');
+    storeReadableCookie(ownerHintCookie);
 
     const cookieHeader = ownerCookie?.split(';')[0] || '';
     const originalFetch = globalThis.fetch;

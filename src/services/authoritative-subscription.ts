@@ -2,6 +2,7 @@ import type { UserSubscription } from '../types/subscription';
 import { buildApiUrl, getApiRequestCredentials } from '../lib/api-url';
 
 const SUBSCRIPTION_OWNER_COOKIE = 'pt_subscription_owner';
+const SUBSCRIPTION_OWNER_HINT_COOKIE = 'pt_subscription_owner_present';
 
 interface AuthoritativeSubscriptionResponse {
   subscription: UserSubscription | null;
@@ -14,7 +15,13 @@ export function hasSubscriptionOwnerCookie(): boolean {
 
   return document.cookie
     .split(';')
-    .some(cookie => cookie.trim().startsWith(`${SUBSCRIPTION_OWNER_COOKIE}=`));
+    .some(cookie => {
+      const trimmed = cookie.trim();
+      return (
+        trimmed.startsWith(`${SUBSCRIPTION_OWNER_COOKIE}=`) ||
+        trimmed.startsWith(`${SUBSCRIPTION_OWNER_HINT_COOKIE}=`)
+      );
+    });
 }
 
 export async function fetchAuthoritativeSubscription(

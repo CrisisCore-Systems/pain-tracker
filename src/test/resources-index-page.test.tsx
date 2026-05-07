@@ -5,7 +5,7 @@ import { ResourcesIndexPage } from '../pages/resources/ResourcesIndexPage';
 
 describe('ResourcesIndexPage SEO guards', () => {
   it('renders the resources hub with the search-intent headline', () => {
-    const { getByRole, getByText } = render(
+    const { getAllByRole, getByRole, getByText } = render(
       <MemoryRouter initialEntries={['/resources']}>
         <Routes>
           <Route path="/resources" element={<ResourcesIndexPage />} />
@@ -17,7 +17,11 @@ describe('ResourcesIndexPage SEO guards', () => {
       'Free Pain Tracker Templates, Printable Pain Journals, and Private Tracking Guides'
     );
     expect(document.title).toBe('Free Pain Tracker Templates & Pain Journal Printables | PainTracker.ca');
-    expect(getByText('Download the Free Pain Tracking Starter Pack ZIP')).toBeInTheDocument();
+    expect(
+      getAllByRole('link', { name: 'Download the Free Pain Tracking Starter Pack ZIP' }).every(
+        (link) => link.getAttribute('href') === '/assets/free-pain-tracking-starter-pack.zip'
+      )
+    ).toBe(true);
     expect(getByText('Choose the right pain tracker')).toBeInTheDocument();
     expect(getByText('How to start tracking pain without overthinking it')).toBeInTheDocument();
     expect(getByText('What is a pain tracker template?')).toBeInTheDocument();

@@ -1278,6 +1278,10 @@ export const ResourcesIndexPage: React.FC = () => {
   }, [location.hash]);
 
   useEffect(() => {
+    if (typeof IntersectionObserver === 'undefined') {
+      return undefined;
+    }
+
     const observer = new IntersectionObserver(
       (entries) => {
         const visibleEntries = entries
