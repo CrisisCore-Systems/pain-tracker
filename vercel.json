@@ -6,6 +6,17 @@
   "outputDirectory": "dist",
   "redirects": [
     {
+      "source": "/resources",
+      "has": [
+        {
+          "type": "query",
+          "key": "q"
+        }
+      ],
+      "destination": "/resources-query",
+      "permanent": false
+    },
+    {
       "source": "/blog/start-here",
       "has": [
         {
@@ -677,7 +688,7 @@
       "destination": "/:route/index.html"
     },
     {
-      "source": "/((?!api/).*)",
+      "source": "/:path((?!api/|assets/|icons/|logos/|screenshots/|.*\\.[^/]+$).*)",
       "destination": "/index.html"
     }
   ],

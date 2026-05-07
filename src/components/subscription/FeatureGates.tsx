@@ -157,8 +157,7 @@ export const UpgradePrompt: React.FC<UpgradePromptProps> = ({
 
         <div className="flex-1">
           <h3 className="text-lg font-semibold mb-2">
-            {tierIcons[requiredTier]} {requiredTier.charAt(0).toUpperCase() + requiredTier.slice(1)}{' '}
-            Feature
+            {tierIcons[requiredTier]} Make this record easier to use
           </h3>
 
           <p className="text-sm mb-4">
@@ -179,7 +178,7 @@ export const UpgradePrompt: React.FC<UpgradePromptProps> = ({
               className="bg-white px-4 py-2 rounded-md font-medium hover:shadow-md transition-shadow flex items-center gap-2"
             >
               <TrendingUp className="w-4 h-4" />
-              Upgrade to {requiredTier.charAt(0).toUpperCase() + requiredTier.slice(1)}
+              {requiredTier === 'basic' ? 'Create cleaner summaries' : 'See upgrade options'}
             </button>
 
             <a href="/pricing" className="text-sm underline hover:no-underline">
@@ -248,7 +247,7 @@ export const UsageWarning: React.FC<UsageWarningProps> = ({ feature, threshold =
             onClick={() => (globalThis.location.href = '/pricing')}
             className="text-sm font-medium underline hover:no-underline"
           >
-            {isAtLimit ? 'Upgrade now' : 'Upgrade for more'}
+            {isAtLimit ? 'Make records easier to use' : 'See upgrade options'}
           </button>
         </div>
       </div>
@@ -350,7 +349,7 @@ export const TrialBanner: React.FC<TrialBannerProps> = ({ onUpgrade }) => {
               {daysRemaining} {daysRemaining === 1 ? 'day' : 'days'} left in your evaluation
             </h3>
             <p className="text-sm opacity-90">
-              Upgrade anytime to keep full reporting and export features.
+              Upgrade anytime when you want cleaner summaries, easier exports, and less manual work.
             </p>
           </div>
         </div>

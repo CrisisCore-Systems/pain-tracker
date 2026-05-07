@@ -24,10 +24,17 @@ export type QuickLogOneScreenData = {
   medicationAdherence?: MedicationAdherence;
   activities?: string[];
   triggers?: string[];
+  occupationalImpact?: {
+    cannotLiftOver10Lbs?: boolean;
+    impairedMobility?: boolean;
+    lossOfGripStrength?: boolean;
+    unableToOperateMachinery?: boolean;
+  };
 };
 
 interface QuickLogOneScreenProps {
   mode?: 'new' | 'edit';
+  interactionMode?: 'standard' | 'industrial';
   initialData?: Partial<QuickLogOneScreenData>;
   onComplete: (data: QuickLogOneScreenData) => void;
   onCancel: () => void;
@@ -114,6 +121,13 @@ const SYMPTOM_TAGS = [
   'Weakness',
 ];
 
+const OCCUPATIONAL_FLAGS = [
+  { key: 'cannotLiftOver10Lbs', label: 'Incapable of lifting >10 lbs' },
+  { key: 'impairedMobility', label: 'Impaired mobility' },
+  { key: 'lossOfGripStrength', label: 'Loss of grip strength' },
+  { key: 'unableToOperateMachinery', label: 'Unable to operate machinery' },
+] as const;
+
 type SpeechRecognitionWindow = Window & {
   webkitSpeechRecognition?: SpeechRecognitionConstructor;
   SpeechRecognition?: SpeechRecognitionConstructor;
@@ -173,6 +187,7 @@ function applyInitialData(
     setMedicationAdherence: (value: MedicationAdherence | null) => void;
     setActivitiesText: (value: string) => void;
     setDietTriggersText: (value: string) => void;
+    setOccupationalImpact: (value: NonNullable<QuickLogOneScreenData['occupationalImpact']>) => void;
   }
 ) {
   if (typeof initialData.pain === 'number') setters.setPain(initialData.pain);
@@ -199,6 +214,7 @@ function applyInitialData(
       ? initialData.triggers.join(', ')
       : ''
   );
+  setters.setOccupationalImpact(initialData.occupationalImpact ?? {});
 }
 
 function SelectionChipCard({
@@ -684,10 +700,12 @@ function useAudioNoteRecorder() {
 
 export function QuickLogOneScreen({
   mode = 'new',
+  interactionMode = 'standard',
   initialData,
   onComplete,
   onCancel,
 }: Readonly<QuickLogOneScreenProps>) {
+  const isIndustrialMode = interactionMode === 'industrial';
   const [pain, setPain] = useState(5);
   const [locations, setLocations] = useState<string[]>([]);
   const [symptoms, setSymptoms] = useState<string[]>([]);
@@ -701,6 +719,7 @@ export function QuickLogOneScreen({
   const [medicationAdherence, setMedicationAdherence] = useState<MedicationAdherence | null>(null);
   const [activitiesText, setActivitiesText] = useState('');
   const [dietTriggersText, setDietTriggersText] = useState('');
+  const [occupationalImpact, setOccupationalImpact] = useState<NonNullable<QuickLogOneScreenData['occupationalImpact']>>({});
 
   useEffect(() => {
     if (!initialData) return;
@@ -717,8 +736,18 @@ export function QuickLogOneScreen({
       setMedicationAdherence,
       setActivitiesText,
       setDietTriggersText,
+      setOccupationalImpact,
     });
   }, [initialData]);
+
+  const toggleOccupationalFlag = (
+    key: keyof NonNullable<QuickLogOneScreenData['occupationalImpact']>
+  ) => {
+    setOccupationalImpact(current => ({
+      ...current,
+      [key]: !current[key],
+    }));
+  };
 
   // Adaptive copy based on patient state
   const painLabel = useAdaptiveCopy(quickLogCopy.painSliderLabel);
@@ -790,8 +819,9 @@ export function QuickLogOneScreen({
       medicationAdherence: medicationAdherence ?? undefined,
       activities: activities.length > 0 ? activities : undefined,
       triggers: triggers.length > 0 ? triggers : undefined,
+      occupationalImpact,
     });
-  }, [activitiesText, activityLevel, activityLevelSet, dietTriggersText, locations, medicationAdherence, notes, onComplete, pain, sleep, sleepSet, symptoms]);
+  }, [activitiesText, activityLevel, activityLevelSet, dietTriggersText, locations, medicationAdherence, notes, occupationalImpact, onComplete, pain, sleep, sleepSet, symptoms]);
 
   return (
     <div className="min-h-screen bg-surface-900 text-ink-100 flex flex-col">
@@ -965,7 +995,7 @@ export function QuickLogOneScreen({
                         'text-small tabular-nums font-medium',
                         'transition-all duration-150',
                         'focus:outline-none focus:ring-2 focus:ring-primary-500',
-                        'min-h-[40px]',
+                        isIndustrialMode ? 'min-h-[64px]' : 'min-h-[52px]',
                         i === pain
                           ? cn(isc.bg, isc.selectedText, 'ring-2', isc.ring, 'font-bold scale-105')
                           : 'text-ink-400 hover:bg-surface-700 hover:text-ink-200'
@@ -1025,6 +1055,51 @@ export function QuickLogOneScreen({
                 tags={SYMPTOM_TAGS}
                 toggleTag={(tag) => toggleTag(tag, symptoms, setSymptoms)}
               />
+            </div>
+          </section>
+
+          <section className="space-y-5">
+            <div>
+              <h2 className="text-h2 text-ink-50 mb-1">Functional limitation translation</h2>
+              <p className="text-small text-ink-400">Mark work-relevant limits you can confirm right now. These export as explicit checkboxes instead of being inferred from pain score.</p>
+            </div>
+
+            <div className="grid gap-3 sm:grid-cols-2">
+              {OCCUPATIONAL_FLAGS.map(flag => {
+                const selected = Boolean(occupationalImpact[flag.key]);
+
+                return (
+                  <button
+                    key={flag.key}
+                    type="button"
+                    aria-pressed={selected}
+                    onClick={() => toggleOccupationalFlag(flag.key)}
+                    className={cn(
+                      isIndustrialMode ? 'min-h-[88px]' : 'min-h-[72px]',
+                      'rounded-[var(--radius-xl)] border px-4 py-4 text-left',
+                      'transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-primary-500',
+                      selected
+                        ? 'border-primary-500/60 bg-primary-500/15 text-ink-50 shadow-sm'
+                        : 'border-surface-700 bg-surface-800 text-ink-200 hover:border-surface-500 hover:bg-surface-700'
+                    )}
+                  >
+                    <div className="flex items-start gap-3">
+                      <span
+                        className={cn(
+                          'mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded border text-xs font-bold',
+                          selected
+                            ? 'border-primary-400 bg-primary-500 text-slate-950'
+                            : 'border-surface-500 text-transparent'
+                        )}
+                        aria-hidden="true"
+                      >
+                        <Check className="h-4 w-4" />
+                      </span>
+                      <span className="text-body-medium leading-snug">{flag.label}</span>
+                    </div>
+                  </button>
+                );
+              })}
             </div>
           </section>
 
@@ -1126,7 +1201,8 @@ export function QuickLogOneScreen({
                     type="button"
                     onClick={() => setMedicationAdherence((opt.value || null) as MedicationAdherence | null)}
                     className={cn(
-                      'px-3 py-2.5 rounded-[var(--radius-md)] text-small text-center',
+                      isIndustrialMode ? 'px-3 py-4 min-h-[64px]' : 'px-3 py-3.5 min-h-[56px]',
+                      'rounded-[var(--radius-md)] text-small text-center',
                       'border transition-all duration-150',
                       'focus:outline-none focus:ring-2 focus:ring-primary-500',
                       (medicationAdherence ?? '') === opt.value

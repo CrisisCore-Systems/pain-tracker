@@ -35,10 +35,25 @@ export function migratePainTrackerState(
     state.entries = state.entries.map((entry): PainEntry => {
       const e = { ...entry } as PainEntry;
       if (!e.id) e.id = Date.now() + Math.floor(Math.random() * 10000);
-  e.timestamp = toIsoString(e.timestamp) ?? new Date().toISOString();
+      e.timestamp = toIsoString(e.timestamp) ?? new Date().toISOString();
+      e.recordIntegrity = {
+        createdAt: e.recordIntegrity?.createdAt ?? e.timestamp,
+        originalTimestamp: e.recordIntegrity?.originalTimestamp ?? e.timestamp,
+        lastAmendedAt: e.recordIntegrity?.lastAmendedAt,
+        revisionCount: e.recordIntegrity?.revisionCount ?? e.recordIntegrity?.revisions?.length ?? 0,
+        revisions: e.recordIntegrity?.revisions ?? [],
+        captureContext: e.recordIntegrity?.captureContext ?? {
+          networkState: 'unknown',
+          storageLocation: 'local-device',
+          captureChannel: 'unknown',
+        },
+      };
       // Normalize nested treatment dates to ISO strings if present
       if (e.treatments && Array.isArray(e.treatments.recent)) {
-  e.treatments.recent = e.treatments.recent.map(t => ({ ...t, date: toIsoString(t.date) ?? new Date().toISOString() }));
+        e.treatments.recent = e.treatments.recent.map(t => ({
+          ...t,
+          date: toIsoString(t.date) ?? new Date().toISOString(),
+        }));
       }
       return e;
     });
@@ -49,9 +64,12 @@ export function migratePainTrackerState(
     state.activityLogs = state.activityLogs.map((log): ActivityLogEntry => {
       const a = { ...log } as ActivityLogEntry;
       if (!a.id) a.id = Date.now() + Math.floor(Math.random() * 10000);
-  a.date = toIsoString(a.date) ?? new Date().toISOString();
+      a.date = toIsoString(a.date) ?? new Date().toISOString();
       if (Array.isArray(a.activities)) {
-  a.activities = a.activities.map(act => ({ ...act, timestamp: toIsoString(act.timestamp) ?? new Date().toISOString() }));
+        a.activities = a.activities.map(act => ({
+          ...act,
+          timestamp: toIsoString(act.timestamp) ?? new Date().toISOString(),
+        }));
       }
       return a;
     });
@@ -62,8 +80,8 @@ export function migratePainTrackerState(
     state.scheduledReports = state.scheduledReports.map((s): ScheduledReport => {
       const sr = { ...s } as ScheduledReport;
       if (!sr.id) sr.id = `sr-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
-  sr.nextRun = toIsoString(sr.nextRun) ?? new Date().toISOString();
-  sr.lastRun = toIsoString(sr.lastRun) ?? sr.lastRun;
+      sr.nextRun = toIsoString(sr.nextRun) ?? new Date().toISOString();
+      sr.lastRun = toIsoString(sr.lastRun) ?? sr.lastRun;
       return sr;
     });
   }

@@ -106,6 +106,9 @@ const RESOURCES_PRERENDER_BODY = `
   <section style="margin-top: 2rem; border: 1px solid rgba(100, 116, 139, 0.45); border-radius: 1rem; padding: 1.5rem; background: rgba(15, 23, 42, 0.7);">
     <h2 style="font-size: 1.65rem; margin-bottom: 0.75rem;">Download the free pain tracking starter pack</h2>
     <p style="line-height: 1.7; color: #cbd5e1;">Start with the simplest printable set so you can build the habit before deciding whether you need condition-specific pages or private digital tracking.</p>
+    <p style="margin: 1rem 0 0;">
+      <a href="/assets/free-pain-tracking-starter-pack.zip" style="display: inline-block; border-radius: 0.85rem; background: #0ea5e9; color: #f8fafc; font-weight: 700; line-height: 1.4; padding: 0.9rem 1.2rem; text-decoration: none;">Download the Free Pain Tracking Starter Pack ZIP</a>
+    </p>
     <ul style="margin: 1rem 0 0; padding-left: 1.25rem; color: #e2e8f0; line-height: 1.8;">
       <li><a href="/resources/daily-pain-tracker-printable" style="color: #7dd3fc;">Daily Pain Tracker Template</a></li>
       <li><a href="/resources/weekly-pain-tracker-printable" style="color: #7dd3fc;">Weekly Pain Journal Template</a></li>
@@ -448,7 +451,7 @@ export const publicRouteMetadata = [
   },
   {
     path: '/pricing',
-    title: 'Pain Tracker Pricing — Free, Basic $9.99, Pro $24.99 | PainTracker.ca',
+    title: 'PainTracker Pricing | Track, Explain, Document | PainTracker.ca',
     description: 'Compare Free, Basic, Pro, and Enterprise plans for private, offline-capable pain tracking, clinician-friendly reports, and structured documentation workflows.',
     canonicalUrl: `${SITE_URL}/pricing`,
     ogImage: DEFAULT_OG_IMAGE,
@@ -689,6 +692,16 @@ export const publicRouteMetadata = [
 ].map(withStructuredData);
 
 export const privateRouteMetadata = [
+  {
+    path: '/resources-query',
+    title: 'Free Pain Tracker Templates & Pain Journal Printables | PainTracker.ca',
+    description:
+      'Download free pain tracker templates, printable pain journals, condition-specific pain logs, and private tracking guides for chronic pain, doctor visits, disability documentation, and daily symptom tracking.',
+    canonicalUrl: `${SITE_URL}/resources`,
+    ogImage: DEFAULT_OG_IMAGE,
+    noindex: true,
+    prerenderBodyHtml: RESOURCES_PRERENDER_BODY,
+  },
   {
     path: '/start',
     title: 'Unlock Pain Tracker | PainTracker.ca',

@@ -345,9 +345,9 @@ const CommonMistakes: React.FC = () => {
 const pageContent: SEOPageContent = {
   // Meta & SEO
   slug: 'worksafebc-pain-journal-template',
-  title: 'WorkSafeBC Pain Journal Template for Workplace Injury Notes',
-  metaTitle: 'WorkSafeBC Pain Journal Template for Workplace Injury Notes',
-  metaDescription: 'For workplace injury documentation: keep structured notes about pain, functional limits, medication changes, triggers, and recovery patterns for appointment and claim-related review.',
+  title: 'WorkSafeBC Pain Journal Template in 2026',
+  metaTitle: 'WorkSafeBC Pain Journal Template (2026) | Free PDF + Private Tracking',
+  metaDescription: 'For workplace injury documentation in 2026: keep structured notes about pain, functional limits, medication changes, triggers, and recovery patterns with a printable PDF or private local-first tracking.',
   keywords: [
     'worksafebc pain journal template',
     'wcb pain diary',
@@ -367,15 +367,15 @@ const pageContent: SEOPageContent = {
   
   // Above-the-fold
   badge: 'Free 6-Page PDF',
-  headline: 'Pain journal template for workplace injury documentation.',
-  subheadline: 'PainTracker.ca can help you keep structured notes about pain, functional limits, medication changes, triggers, and recovery patterns. These records may help you prepare for appointments, workplace injury discussions, or claim related review.',
+  headline: 'WorkSafeBC pain journal template for 2026 workplace injury documentation.',
+  subheadline: 'PainTracker.ca can help you keep structured notes about pain, functional limits, medication changes, triggers, and recovery patterns. Use the printable if you need something today. Use the free app when you need cleaner summaries and a longer-running private record for appointments, case review, or claim discussions.',
   primaryCTA: {
     text: 'Download Free PDF (6 Pages)',
     href: '/assets/worksafebc-pain-journal.pdf',
     download: true,
   },
   secondaryCTA: {
-    text: 'Try Digital Version',
+    text: 'Start tracking free',
     href: '/start',
   },
   
@@ -595,16 +595,16 @@ const WorkSafeBCCustomSections: React.FC = () => (
               <Shield className="w-6 h-6 text-sky-400" />
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-white mb-2">Pain Tracker: Auto-Generate WCB Reports</h3>
+              <h3 className="text-lg font-semibold text-white mb-2">When paper starts to feel scattered, use the app to keep the record cleaner</h3>
               <p className="text-slate-300 text-sm leading-relaxed mb-4">
-                The digital version automatically calculates pain trends, work impact metrics, treatment compliance rates, and functional capacity changes — then exports a Form 8-aligned PDF report with one click. Each export includes a SHA-256 integrity hash for verifiability. Everything stays encrypted on your device.
+                The digital version helps you keep day-by-day notes, work impact, treatment history, and functional changes in one place so the record is easier to review before appointments, case discussions, or claim follow-up. It is meant to reduce manual summarizing, not to replace medical advice, legal guidance, or official WorkSafeBC forms.
               </p>
               <div className="flex flex-wrap gap-3">
-                <span className="text-xs px-3 py-1.5 rounded-full border border-sky-500/30 bg-sky-500/10 text-sky-300">Auto pain trend analysis</span>
-                <span className="text-xs px-3 py-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-300">Work impact calculator</span>
-                <span className="text-xs px-3 py-1.5 rounded-full border border-purple-500/30 bg-purple-500/10 text-purple-300">One-click PDF export</span>
-                <span className="text-xs px-3 py-1.5 rounded-full border border-amber-500/30 bg-amber-500/10 text-amber-300">SHA-256 verification</span>
-                <span className="text-xs px-3 py-1.5 rounded-full border border-pink-500/30 bg-pink-500/10 text-pink-300">AES-256 encrypted</span>
+                <span className="text-xs px-3 py-1.5 rounded-full border border-sky-500/30 bg-sky-500/10 text-sky-300">Private on-device tracking</span>
+                <span className="text-xs px-3 py-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-300">Cleaner work-impact history</span>
+                <span className="text-xs px-3 py-1.5 rounded-full border border-purple-500/30 bg-purple-500/10 text-purple-300">Less manual summarizing</span>
+                <span className="text-xs px-3 py-1.5 rounded-full border border-amber-500/30 bg-amber-500/10 text-amber-300">User-controlled exports</span>
+                <span className="text-xs px-3 py-1.5 rounded-full border border-pink-500/30 bg-pink-500/10 text-pink-300">No account required</span>
               </div>
             </div>
           </div>

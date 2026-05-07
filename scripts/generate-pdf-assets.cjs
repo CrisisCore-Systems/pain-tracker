@@ -1,7 +1,7 @@
 /**
  * Generate Styled PDF Assets for PainTracker
  * 
- * Creates all 26 downloadable PDF templates referenced by SEO resource pages.
+ * Creates all downloadable PDF templates referenced by SEO resource pages.
  * Each PDF is print-ready (US Letter), branded, and contains real tracking tables/content.
  * 
  * Usage: node scripts/generate-pdf-assets.cjs
@@ -28,6 +28,149 @@ const COLORS = {
   accent: [16, 185, 129],       // #10B981 emerald
   warning: [245, 158, 11],      // #F59E0B amber
   bg: [248, 250, 252],          // #F8FAFC slate-50
+};
+
+const PDF_VOICE_GUIDES = {
+  'pain-diary-template.pdf': {
+    intro: 'This is the main tool. Not content for content\'s sake. A working record for when pain is already eating your focus.',
+    useItFor: 'Pick this when you need one sheet that can hold symptoms, meds, function, sleep, and pattern evidence without sending you through a maze.',
+    reminder: 'The record does not need to be beautiful. It needs to be true, dated, and usable under pressure.'
+  },
+  'medication-and-pain-log.pdf': {
+    intro: 'Medication changes live or die on timing, relief, and fallout. This sheet keeps that story from dissolving into guesswork.',
+    useItFor: 'Reach for it when the real question is not did I take it, but what changed after I took it and what did it cost me.',
+    reminder: 'Write the tradeoff cleanly. Less pain, more nausea. Better sleep, worse brain fog. That is the evidence.'
+  },
+  'doctor-visit-pain-summary-template.pdf': {
+    intro: 'Appointments move fast. Memory fractures faster. This page is the short version that still leaves a record behind.',
+    useItFor: 'Use it to triage your appointment: main pattern, main limit, main treatment response, main question.',
+    reminder: 'Do not narrate everything. Hand them the clearest proof first.'
+  },
+  'daily-pain-tracker.pdf': {
+    intro: 'Some days need a tighter lens. This sheet is for the day that changed shape in real time and needs a clean trail.',
+    useItFor: 'Use it for flare days, new treatments, crashes, or any day you will not trust memory to reconstruct later.',
+    reminder: 'Catch the turns. Morning, spike, med, crash, partial recovery. That sequence matters.'
+  },
+  'weekly-pain-log.pdf': {
+    intro: 'A week is often where the pattern starts to speak. This sheet keeps enough detail to be useful without turning tracking into a second occupation.',
+    useItFor: 'Use it when you need one clear week for a doctor, a claim file, or your own review of what keeps repeating.',
+    reminder: 'Fill it as the week happens. Reconstruction is where detail goes to die.'
+  },
+  'monthly-pain-tracker.pdf': {
+    intro: 'A month tells you whether the system is changing or whether life just feels blurred together. This sheet is for the long proof.',
+    useItFor: 'Use it across med changes, rehab blocks, claims timelines, cycles, seasons, or any stretch where trend matters more than one bad day.',
+    reminder: 'You are not chasing daily perfection here. You are building pattern visibility.'
+  },
+  'pain-scale-chart.pdf': {
+    intro: 'Pain scores collapse when the scale keeps moving. This chart gives the number a spine again.',
+    useItFor: 'Use it beside any log when you need your ratings to stay coherent across bad days, better days, and appointments.',
+    reminder: 'Rate from function and lived reality. Not from shame. Not from performance. Not from what sounds respectable.'
+  },
+  'symptom-tracker.pdf': {
+    intro: 'Pain is often only one witness. This tracker is for the fuller pattern when fatigue, fog, sleep, GI symptoms, and mood are all in the room.',
+    useItFor: 'Use it when the condition moves in clusters and a pain-only sheet keeps flattening what is actually happening.',
+    reminder: 'Do not track everything. Track what changes decisions, function, or survival.'
+  },
+  'migraine-pain-diary.pdf': {
+    intro: 'Migraine is a sequence, not just an event. This sheet is built to catch the phases before they blur into one word: headache.',
+    useItFor: 'Use it for neurology, aura mapping, trigger stacking, menstrual migraine review, or medication-overuse questions.',
+    reminder: 'Track the clear days too. Relief days prove whether treatment is doing anything real.'
+  },
+  'how-to-track-pain-for-doctors-guide.pdf': {
+    intro: 'Doctors do not need more generic content. They need sharper routing through the facts that matter.',
+    useItFor: 'Use this guide when you want your notes to stop sounding scattered and start acting like a triage system.',
+    reminder: 'Pick the need. Hand over the pattern. Move the conversation one step closer to control.'
+  },
+  'pain-journal-checklist.pdf': {
+    intro: 'When everything hurts, a blank page can feel like a dare. A checklist is simpler and more honest.',
+    useItFor: 'Use it to strip tracking down to what is essential now and ignore the rest until it becomes necessary.',
+    reminder: 'A shorter system you can survive is better than a perfect system you abandon.'
+  },
+  'disability-documentation-guide.pdf': {
+    intro: 'Claims systems ask for clean records from lives that are anything but clean. This guide is for building proof anyway.',
+    useItFor: 'Use it when disability, insurance, or injury review depends on records that can survive scrutiny.',
+    reminder: 'Do not dramatize. Do not soften. State what pain stopped, delayed, or damaged in real life.'
+  },
+  'worksafebc-pain-journal.pdf': {
+    intro: 'Work injury documentation lives on specifics. Task, time, limit, fallout. This sheet is built for that discipline.',
+    useItFor: 'Use it to connect symptoms, job duties, treatment compliance, and return-to-work barriers in one readable chain.',
+    reminder: 'Could stand 12 minutes before pain climbed is stronger than standing was hard.'
+  },
+  'disability-pain-journal-guide.pdf': {
+    intro: 'Benefits decisions often turn on whether your record feels credible under pressure. This guide helps build that kind of record.',
+    useItFor: 'Use it before filing or during review when you need your daily notes, timeline, and functional limits to line up cleanly.',
+    reminder: 'Good days stay in the file. They do not weaken the case. They make the pattern believable.'
+  },
+  'daily-functioning-log.pdf': {
+    intro: 'Sometimes the real evidence is not the pain number. It is the task that broke, the help you needed, the thing you could not finish.',
+    useItFor: 'Use it when independence, assistance, and functional loss are the main facts that need to survive the day.',
+    reminder: 'Write dependence plainly. Help needed is evidence, not failure.'
+  },
+  'fibromyalgia-pain-diary.pdf': {
+    intro: 'Fibromyalgia does not arrive as one clean symptom. It arrives as a field of interference. This sheet respects that.',
+    useItFor: 'Use it to track widespread pain, fatigue, brain fog, poor sleep, and flare spread without pretending they belong in separate boxes.',
+    reminder: 'Diffuse is not vague. The pattern is still real even when the borders move.'
+  },
+  'chronic-back-pain-diary.pdf': {
+    intro: 'Back pain is mechanical, positional, repetitive, and often badly remembered after the fact. This sheet catches the mechanics.',
+    useItFor: 'Use it when sitting, bending, lifting, standing, driving, or posture are central to what keeps setting the pain off.',
+    reminder: 'Track the trigger position and the recovery position. That contrast tells the story.'
+  },
+  'arthritis-pain-tracker.pdf': {
+    intro: 'Arthritis is not just pain. It is stiffness, swelling, heat, slowness, and the quiet loss of joint confidence.',
+    useItFor: 'Use it when you need a joint-specific record that shows morning stiffness, distribution, swelling, and functional drag.',
+    reminder: 'Small joint details matter. They explain daily limitation better than a single pain score ever will.'
+  },
+  'nerve-pain-symptom-log.pdf': {
+    intro: 'Nerve pain has a different grammar. Burning, shocks, numbness, tingling, strange touch, sudden bolts. This sheet keeps that language intact.',
+    useItFor: 'Use it when the type of sensation matters as much as the intensity and you need the record to reflect that.',
+    reminder: 'Name the sensation cleanly. Quality is evidence.'
+  },
+  'endometriosis-pain-log.pdf': {
+    intro: 'Endometriosis can scatter pain across the cycle and across body systems. This sheet keeps the timing from disappearing.',
+    useItFor: 'Use it for pelvic pain, bowel or bladder pain, bleeding shifts, GI symptoms, fatigue, and cycle-linked flares.',
+    reminder: 'Do not split the story into neat little parts if your body is not living it that way.'
+  },
+  'crps-pain-diary.pdf': {
+    intro: 'CRPS can turn a limb into an argument between pain, colour, temperature, swelling, and movement. This sheet keeps the argument visible.',
+    useItFor: 'Use it to document sensory, autonomic, and motor changes together instead of scattering them across separate notes.',
+    reminder: 'Record the visible changes and the invisible ones. Both belong in the file.'
+  },
+  'neuropathy-symptom-tracker.pdf': {
+    intro: 'Neuropathy is often a map before it is a conclusion. This sheet helps you track where it is, how it spreads, and what function it steals.',
+    useItFor: 'Use it when numbness, tingling, weakness, balance change, or progression across regions is the thing you need to prove.',
+    reminder: 'Distribution matters. Symmetry matters. Progression matters.'
+  },
+  'printable-pain-log-sheet.pdf': {
+    intro: 'This is the simplest tool in the set. Fast enough for the fridge, the bedside, the bag, the bad day.',
+    useItFor: 'Use it when all you can manage is the essentials and the important thing is not losing the record entirely.',
+    reminder: 'Minimal is fine. No record is the real problem.'
+  },
+  'chronic-pain-diary-template.pdf': {
+    intro: 'Chronic pain is rarely one flat line. There is baseline, escalation, survival, and whatever gets called normal afterward.',
+    useItFor: 'Use it when you need to separate the usual burden from the flare and show what each one does to the day.',
+    reminder: 'Do not let flare days vanish into the average. The rupture is part of the proof.'
+  },
+  '7-day-pain-diary.pdf': {
+    intro: 'A week is enough to show a pattern when time is short. This sheet is built for the run-up to something that matters.',
+    useItFor: 'Use it in the seven days before an appointment, review, assessment, or conversation where recent evidence matters most.',
+    reminder: 'Short does not mean weak. Current, specific, and honest is often enough.'
+  },
+  'clinical-pain-diary-guide.pdf': {
+    intro: 'This guide explains how clinicians read the record once it leaves your hands.',
+    useItFor: 'Use it when you want your tracking to stop feeling like wellness theater and start functioning as clinical evidence.',
+    reminder: 'Make it scan fast. Make it specific. Make it defensible.'
+  },
+  'specialist-appointment-pain-diary.pdf': {
+    intro: 'Specialist visits are short, expensive, and easy to lose the thread inside. This sheet helps you arrive with a sharper route through the noise.',
+    useItFor: 'Use it before rheumatology, neurology, pain clinic, gynecology, or any consult where pattern and history both need to survive compression.',
+    reminder: 'Lead with the pattern, the main limit, and the question that cannot be allowed to disappear.'
+  },
+  'pre-diagnosis-symptom-tracker.pdf': {
+    intro: 'Before diagnosis, the record often has to exist before the explanation does. This sheet is built for that stage.',
+    useItFor: 'Use it when symptoms cross systems, certainty is low, and you still need a structure strong enough to carry the evidence forward.',
+    reminder: 'Do not sand the story down into something cleaner than the body is giving you.'
+  },
 };
 
 // ─── Helpers ───────────────────────────────────────────────────────────────────
@@ -83,7 +226,7 @@ function drawHeader(doc, title, subtitle, badge) {
   // Free template text
   doc.setTextColor(...COLORS.light);
   doc.setFontSize(8);
-  doc.text('FREE TEMPLATE', pw - 36 - doc.getTextWidth('FREE TEMPLATE'), 55);
+    doc.text('FREE PRINTABLE', pw - 36 - doc.getTextWidth('FREE PRINTABLE'), 55);
 
   // Title block
   let y = 88;
@@ -119,6 +262,9 @@ function drawFooter(doc) {
   const pw = doc.internal.pageSize.getWidth();
   const ph = doc.internal.pageSize.getHeight();
   const pages = doc.internal.getNumberOfPages();
+  const footerRuleY = ph - 58;
+  const footerMetaY = ph - 38;
+  const footerNoteY = ph - 22;
 
   for (let i = 1; i <= pages; i++) {
     doc.setPage(i);
@@ -126,15 +272,15 @@ function drawFooter(doc) {
     // Footer line
     doc.setDrawColor(...COLORS.veryLight);
     doc.setLineWidth(0.5);
-    doc.line(36, ph - 48, pw - 36, ph - 48);
+    doc.line(36, footerRuleY, pw - 36, footerRuleY);
 
     // Footer text
     doc.setFontSize(7.5);
     doc.setTextColor(...COLORS.light);
     doc.setFont('helvetica', 'normal');
-    doc.text('PainTracker  •  paintracker.ca  •  Private Offline-First Pain Tracking', 36, ph - 34);
-    doc.text(`Page ${i} of ${pages}`, pw - 36, ph - 34, { align: 'right' });
-    doc.text('This template is free to use, print, and share. Not medical advice.', 36, ph - 22);
+    doc.text('PainTracker  •  paintracker.ca  •  Private, offline-first pain tracking', 36, footerMetaY);
+    doc.text(`Page ${i} of ${pages}`, pw - 36, footerMetaY, { align: 'right' });
+    doc.text('Free to print and share. Not medical advice.', 36, footerNoteY);
   }
 }
 
@@ -240,6 +386,46 @@ function drawDateNameBlock(doc, y) {
   return y + 4;
 }
 
+function drawVoicePrimer(doc, y, filename) {
+  const voice = PDF_VOICE_GUIDES[filename];
+  if (!voice) return y;
+
+  const pw = doc.internal.pageSize.getWidth();
+  y = checkPage(doc, y, 88);
+
+  doc.setFillColor(...COLORS.bg);
+  doc.setDrawColor(...COLORS.veryLight);
+  doc.setLineWidth(0.75);
+  doc.roundedRect(36, y, pw - 72, 74, 6, 6, 'FD');
+
+  doc.setFontSize(8);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(...COLORS.primaryDark);
+  doc.text('Routing Note', 48, y + 14);
+
+  const primerLines = [
+    { label: 'Need:', text: voice.intro },
+    { label: 'Tool:', text: voice.useItFor },
+    { label: 'Rule:', text: voice.reminder },
+  ];
+
+  let lineY = y + 28;
+  for (const entry of primerLines) {
+    doc.setFontSize(8.5);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(...COLORS.dark);
+    doc.text(entry.label, 48, lineY);
+
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(...COLORS.medium);
+    const wrapped = doc.splitTextToSize(entry.text, pw - 160);
+    doc.text(wrapped, 114, lineY);
+    lineY += wrapped.length * 11 + 3;
+  }
+
+  return y + 86;
+}
+
 // ─── Tracking table builders ───────────────────────────────────────────────────
 
 function dailyTrackingTable(doc, y, columns, rows) {
@@ -302,8 +488,8 @@ const pdfDefinitions = [
   {
     filename: 'pain-diary-template.pdf',
     title: 'Pain Diary Template',
-    subtitle: 'Clinician-designed daily pain diary. Tracks intensity, location, quality, medications, triggers, sleep, mood, and functional impact — the 8 data points providers need.',
-    badge: 'Most Popular',
+    subtitle: 'The core record. Built to capture pain, meds, sleep, function, and pattern without sending you through a maze.',
+    badge: 'Core Record',
     generate: (doc, y) => {
       const pw = doc.internal.pageSize.getWidth();
 
@@ -394,16 +580,16 @@ const pdfDefinitions = [
 
       // ── Tips Section ──
       y = checkPage(doc, y, 50);
-      y = drawSectionHeading(doc, y, 'Tips for Effective Pain Tracking');
+      y = drawSectionHeading(doc, y, 'Tracking Rules That Hold Under Pressure');
       const tips = [
-        '• Fill this in at the same time each day (evening works best) — consistency matters more than perfection.',
-        '• On high-pain days, just record your pain number and a few check marks. Partial data is better than no data.',
-        '• Print multiple copies — two full weeks (14 days) is the minimum to spot meaningful patterns.',
-        '• Bring completed sheets to every appointment. Most providers can scan this format in under 2 minutes.',
-        '• Compare your best and worst days to identify triggers. Patterns often become clear after week two.',
-        '• Rate pain in the moment, not from memory. Don\'t compare to others — use your own experience as the reference.',
-        '• Keep this diary with your medications or by your bed so it becomes part of your daily routine.',
-        '• For WorkSafeBC, ICBC, or disability claims: dated, consistent entries carry more weight than summaries.',
+        '• Consistency beats polish. Fill it at the same time each day and let the record accumulate weight.',
+        '• On brutal days, write less, not nothing. A pain number and two hard facts still count as proof.',
+        '• Two honest weeks usually reveal more than one dramatic page written after the fact.',
+        '• Clinicians scan fast. Hand them dates, patterns, limits, and treatment response they can trust immediately.',
+        '• Compare best days to worst days. That gap is where trigger logic usually shows itself.',
+        '• Rate in the moment when you can. Memory edits pain into something cleaner or louder than it was.',
+        '• Keep the sheet where collapse happens: bedside, meds drawer, bag, kitchen table.',
+        '• For claims and reviews, dated repetition carries more force than retrospective summary.',
       ];
       doc.setFontSize(8.5);
       doc.setFont('helvetica', 'normal');
@@ -424,20 +610,82 @@ const pdfDefinitions = [
       doc.setFontSize(10);
       doc.setFont('helvetica', 'bold');
       doc.setTextColor(...COLORS.primaryDark);
-      doc.text('Prefer digital? Try PainTracker — paintracker.ca', 48, y + 18);
+      doc.text('Need the same record with less friction? PainTracker — paintracker.ca', 48, y + 18);
       doc.setFontSize(8.5);
       doc.setFont('helvetica', 'normal');
       doc.setTextColor(...COLORS.medium);
-      doc.text('Same data, less effort. Auto-generated reports, encrypted offline storage, trend analysis. Free, no sign-up.', 48, y + 34);
-      doc.text('Works on any device. All data stays on your device — never sent to a server.', 48, y + 46);
+      doc.text('Same evidence, sharper routing. Local-first reports, encrypted offline storage, trend review without blog-maze nonsense.', 48, y + 34);
+      doc.text('Runs on your device. Your record stays with you unless you decide otherwise.', 48, y + 46);
+    },
+  },
+
+  {
+    filename: 'medication-and-pain-log.pdf',
+    title: 'Medication and Pain Log',
+    subtitle: 'A response record for medication timing, relief, fallout, and the tradeoffs people forget once the day gets messy.',
+    badge: 'Response Log',
+    generate: (doc, y) => {
+      y = drawDateNameBlock(doc, y);
+      y = drawInputLine(doc, y, 'Prescriber / Clinic:', 220);
+      y = drawInputLine(doc, y, 'Medication focus:', 220);
+
+      y = drawPainScale(doc, y);
+
+      y = drawSectionHeading(doc, y, 'Medication Response Log');
+      y = drawInstruction(doc, y, 'Record one row for each dose or treatment. Capture pain before and after so response patterns are visible during medication reviews.');
+      y = dailyTrackingTable(doc, y,
+        ['Date', 'Medication / Treatment', 'Dose', 'Time', 'Pain Before', 'Pain After', 'Relief Duration', 'Side Effects'],
+        Array.from({ length: 10 }, () => Array(8).fill('')));
+
+      y = checkPage(doc, y, 120);
+      y = drawSectionHeading(doc, y, 'What Changed?');
+      y = drawInstruction(doc, y, 'Note whether the medication improved function, sleep, flare recovery, or caused tradeoffs that matter clinically.');
+      y = dailyTrackingTable(doc, y,
+        ['Date', 'Function Improved?', 'Sleep Impact', 'Activity Tolerance', 'Other Notes'],
+        Array.from({ length: 6 }, () => Array(5).fill('')));
+
+      y = checkPage(doc, y, 80);
+      y = notesBox(doc, y, 'Questions for Medication Review', 4);
+    },
+  },
+
+  {
+    filename: 'doctor-visit-pain-summary-template.pdf',
+    title: 'Doctor Visit Pain Summary Template',
+    subtitle: 'A one-page visit triage sheet for the pattern, the limit, the response, and the question that cannot disappear.',
+    badge: 'Visit Brief',
+    generate: (doc, y) => {
+      y = drawDateNameBlock(doc, y);
+      y = drawInputLine(doc, y, 'Doctor / Clinic:', 220);
+      y = drawInputLine(doc, y, 'Appointment Date:', 160);
+
+      y = drawSectionHeading(doc, y, 'Pain Pattern Snapshot');
+      y = drawInstruction(doc, y, 'Summarize the clearest pattern from the last 7 to 14 days instead of rewriting every daily entry.');
+      y = dailyTrackingTable(doc, y,
+        ['Average Pain', 'Worst Pain', 'Main Locations', 'Top Triggers', 'Best Relief', 'Most Limited Activity'],
+        [Array(6).fill('')]);
+
+      y = checkPage(doc, y, 100);
+      y = drawSectionHeading(doc, y, 'Medication and Treatment Response');
+      y = dailyTrackingTable(doc, y,
+        ['Medication / Treatment', 'Helped?', 'How Long?', 'Side Effects', 'Still Using?'],
+        Array.from({ length: 4 }, () => Array(5).fill('')));
+
+      y = checkPage(doc, y, 100);
+      y = drawSectionHeading(doc, y, 'Questions and Goals for This Visit');
+      y = notesBox(doc, y, 'Top 3 Questions', 4);
+
+      y = checkPage(doc, y, 90);
+      y = drawSectionHeading(doc, y, 'Notes During Appointment');
+      y = notesBox(doc, y, 'Plan, referrals, tests, and follow-up', 4);
     },
   },
 
   {
     filename: 'daily-pain-tracker.pdf',
     title: 'Daily Pain Tracker',
-    subtitle: 'Comprehensive single-day pain log. Track episodes, medications, triggers, activity, mood, and sleep — everything your provider needs from one day.',
-    badge: 'Quick Entry',
+    subtitle: 'A single-day proof sheet for spikes, meds, activity, sleep, and the exact turns a hard day took.',
+    badge: 'Single-Day Proof',
     generate: (doc, y) => {
       const pw = doc.internal.pageSize.getWidth();
 
@@ -608,20 +856,20 @@ const pdfDefinitions = [
       doc.setFontSize(9);
       doc.setFont('helvetica', 'bold');
       doc.setTextColor(...COLORS.primaryDark);
-      doc.text('Tips for Accurate Tracking', 48, y + 14);
+      doc.text('Rules for the Hard Day Record', 48, y + 14);
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(8);
       doc.setTextColor(...COLORS.medium);
-      doc.text('Rate pain at the moment it happens, not from memory.  |  Track good days too — they show what works.', 48, y + 28);
-      doc.text('Bring this sheet to appointments.  |  Try the PainTracker app for automatic charts and reports.', 48, y + 40);
+      doc.text('Catch the turn when it happens.  |  Good days belong here too because they show what held.', 48, y + 28);
+      doc.text('Bring this sheet when memory is thin.  |  Use PainTracker for the same record with less drag.', 48, y + 40);
     },
   },
 
   {
     filename: 'weekly-pain-log.pdf',
     title: 'Weekly Pain Log',
-    subtitle: '7-day spread format with daily pain tracking, medications, sleep, activity, mood, triggers, and a weekly summary — everything your provider needs to see a full week at a glance.',
-    badge: 'Weekly View',
+    subtitle: 'A one-week pattern sheet for pain, sleep, meds, function, mood, and the repetition that only shows up when you stop looking at one day alone.',
+    badge: 'Week Pattern',
     generate: (doc, y) => {
       const pw = doc.internal.pageSize.getWidth();
       const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
@@ -779,21 +1027,21 @@ const pdfDefinitions = [
       doc.setFontSize(10);
       doc.setFont('helvetica', 'bold');
       doc.setTextColor(...COLORS.primaryDark);
-      doc.text('Tips for Better Weekly Tracking', 48, y + 16);
+      doc.text('Weekly Rules', 48, y + 16);
       doc.setFontSize(8);
       doc.setFont('helvetica', 'normal');
       doc.setTextColor(...COLORS.medium);
-      doc.text('Fill in each evening -- 2 minutes keeps the data accurate.  |  Print 4 copies for a full month of weekly tracking.', 48, y + 30);
-      doc.text('Lay weeks side by side to spot repeating patterns.  |  Bring completed sheets to every appointment.', 48, y + 42);
-      doc.text('Rate pain in the moment, not from memory.  |  Try PainTracker (paintracker.ca) for automatic charts and insights.', 48, y + 54);
+      doc.text('Fill it as the week happens.  |  Four honest weeks side by side can tell the truth faster than memory can.', 48, y + 30);
+      doc.text('Compare repeats, not feelings.  |  Bring the finished week in a form someone can scan fast.', 48, y + 42);
+      doc.text('Rate close to the moment.  |  Use PainTracker when you want the same pattern with less friction.', 48, y + 54);
     },
   },
 
   {
     filename: 'monthly-pain-tracker.pdf',
     title: 'Monthly Pain Tracker',
-    subtitle: 'Comprehensive 30-day overview with daily pain calendar, sleep & energy, medication log, functional impact, trigger patterns, mood trends, and monthly summary — the long-term view your provider needs.',
-    badge: 'Monthly View',
+    subtitle: 'A long-view tracker for the month that blurred together and still needs to become evidence.',
+    badge: 'Long View',
     generate: (doc, y) => {
       const pw = doc.internal.pageSize.getWidth();
 
@@ -984,21 +1232,21 @@ const pdfDefinitions = [
       doc.setFontSize(10);
       doc.setFont('helvetica', 'bold');
       doc.setTextColor(...COLORS.primaryDark);
-      doc.text('Tips for Better Monthly Tracking', 48, y + 16);
+      doc.text('Monthly Rules', 48, y + 16);
       doc.setFontSize(8);
       doc.setFont('helvetica', 'normal');
       doc.setTextColor(...COLORS.medium);
-      doc.text('Record your daily pain number each evening -- 30 seconds keeps a full month of data accurate.', 48, y + 30);
-      doc.text('Circle flare days on the calendar so patterns are visible at a glance when reviewing with your provider.', 48, y + 42);
-      doc.text('Compare month-over-month to judge treatment effectiveness.  |  Try PainTracker (paintracker.ca) for automatic analysis.', 48, y + 54);
+      doc.text('A short daily entry is enough to stop the month from collapsing into one vague memory.', 48, y + 30);
+      doc.text('Mark flare days hard. They are rupture points, not just bad moods on a calendar.', 48, y + 42);
+      doc.text('Month-over-month comparison is where treatment either earns trust or loses it.  |  paintracker.ca', 48, y + 54);
     },
   },
 
   {
     filename: 'pain-scale-chart.pdf',
     title: 'Pain Scale Chart',
-    subtitle: 'Comprehensive 0-10 Numeric Rating Scale (NRS) reference with functional descriptions, clinical categories, and self-assessment guidance.',
-    badge: 'Reference Guide',
+    subtitle: 'A steadier 0 to 10 anchor for people who need the number to mean the same thing tomorrow that it meant today.',
+    badge: 'Scale Anchor',
     generate: (doc, y) => {
       const pw = doc.internal.pageSize.getWidth();
 
@@ -1269,16 +1517,16 @@ const pdfDefinitions = [
       // ── Section 8: Tips & Callout Box ──
       y += 6;
       y = checkPage(doc, y, 100);
-      y = drawSectionHeading(doc, y, '8. Tips for Consistent Self-Assessment');
+      y = drawSectionHeading(doc, y, '8. Rules for a Stable Scale');
 
       const tips = [
-        '1. Rate in the moment -- not from memory. Accuracy drops significantly after just one hour.',
-        '2. Use the functional descriptions, not just the number. "6" means something specific.',
-        '3. Track good days AND bad days. Good-day data is essential for accurate averages.',
-        '4. Note what makes pain better or worse each time you rate.',
-        '5. Bring this chart to appointments so you and your doctor use the same reference.',
-        '6. It is normal for pain to fluctuate. Rate your AVERAGE for the period if tracking daily.',
-        '7. Your scale is personal. A "5" for you is valid even if someone else calls it a "3".',
+        '1. Rate close to the moment. The number drifts fast once memory starts rewriting the scene.',
+        '2. Use function as the anchor. A 6 is not decoration. It means something about what the body can still do.',
+        '3. Keep the better days. Without them, the averages lie.',
+        '4. Tie each number to context: what made it rise, what brought it down, what it cost.',
+        '5. Bring the same scale into appointments so the conversation starts from shared ground.',
+        '6. Fluctuation is not failure. Rate the real period you are talking about, not the most cinematic moment in it.',
+        '7. Your scale is yours. The job is consistency, not performance for someone else.',
       ];
       doc.setFontSize(8.5);
       doc.setTextColor(...COLORS.medium);
@@ -1299,19 +1547,19 @@ const pdfDefinitions = [
       doc.setFontSize(8.5);
       doc.setFont('helvetica', 'bold');
       doc.setTextColor(...COLORS.primaryDark);
-      doc.text('Why consistency matters:', 48, y + 14);
+      doc.text('Why the scale has to hold:', 48, y + 14);
       doc.setFont('helvetica', 'normal');
       doc.setTextColor(...COLORS.medium);
-      doc.text('Providers use your pain ratings to track treatment response over time. A 2-point change on the 0-10', 48, y + 26);
-      doc.text('scale is clinically significant. Inconsistent rating hides real changes.  |  paintracker.ca', 48, y + 36);
+      doc.text('If the scale keeps shifting, treatment response disappears into noise. A stable number is not paperwork.', 48, y + 26);
+      doc.text('It is what makes change visible.  |  paintracker.ca', 48, y + 36);
     },
   },
 
   {
     filename: 'symptom-tracker.pdf',
     title: 'Comprehensive Symptom Tracker',
-    subtitle: 'Track the complete picture of chronic illness: pain, fatigue, sleep, cognitive function, mood, physical symptoms, and functional impact — everything your provider needs beyond a pain diary.',
-    badge: 'Multi-Symptom',
+    subtitle: 'A whole-picture tracker for the days when pain is only one witness and the rest of the body is speaking too.',
+    badge: 'Whole Picture',
     generate: (doc, y) => {
       const pw = doc.internal.pageSize.getWidth();
 
@@ -1439,21 +1687,21 @@ const pdfDefinitions = [
       doc.setFontSize(8.5);
       doc.setFont('helvetica', 'bold');
       doc.setTextColor(...COLORS.primaryDark);
-      doc.text('Tips for Better Symptom Tracking', 48, y + 14);
+      doc.text('Whole-Picture Rules', 48, y + 14);
       doc.setFont('helvetica', 'normal');
       doc.setTextColor(...COLORS.medium);
       doc.setFontSize(7.5);
-      doc.text('Track at the same time daily (evening is best). On bad days, rate just pain and fatigue — partial data beats no data.', 48, y + 26);
-      doc.text('Focus on 6-10 symptoms max. Review weekly for clusters. Create a one-page summary for appointments.', 48, y + 38);
-      doc.text('Good days are as important as bad days — they show your baseline and what helps.  |  Try PainTracker: paintracker.ca', 48, y + 50);
+      doc.text('Track at the same time when possible. On collapse days, record the core symptoms and move on.', 48, y + 26);
+      doc.text('Do not over-track. Pick the symptoms that change function, care, or pattern logic.', 48, y + 38);
+      doc.text('Better days matter because they show baseline and what held.  |  paintracker.ca', 48, y + 50);
     },
   },
 
   {
     filename: 'migraine-pain-diary.pdf',
     title: 'Migraine Pain Diary',
-    subtitle: 'Comprehensive migraine tracking: all 4 phases, triggers, aura, medications, and monthly summary. Structured for neurologist review.',
-    badge: 'Migraine-Specific',
+    subtitle: 'A neurologist-ready migraine record for phases, aura, trigger stacking, treatment response, and the days between attacks.',
+    badge: 'Neurology Ready',
     generate: (doc, y) => {
       const pw = doc.internal.pageSize.getWidth();
 
@@ -1688,13 +1936,13 @@ const pdfDefinitions = [
       doc.setFont('helvetica', 'bold');
       doc.setTextColor(...COLORS.primaryDark);
       doc.setFontSize(9);
-      doc.text('Tips for Better Migraine Tracking', 48, y + 14);
+      doc.text('Migraine Rules', 48, y + 14);
       doc.setFont('helvetica', 'normal');
       doc.setTextColor(...COLORS.medium);
       doc.setFontSize(7.5);
-      doc.text('Track every day, not just migraine days — comparison data reveals triggers. Most triggers need 2+ factors to combine.', 48, y + 28);
-      doc.text('Prodrome symptoms are your early warning system. Note them as soon as they appear — early treatment works best.', 48, y + 40);
-      doc.text('Bring the Monthly Summary page (page 5) to every neurology appointment. It saves time and improves care.', 48, y + 52);
+      doc.text('Track the quiet days too. Migraine logic usually shows up in the contrast, not just the attack.', 48, y + 28);
+      doc.text('Prodrome notes are an early warning record, not trivia. Catch them when they surface.', 48, y + 40);
+      doc.text('Bring the summary page when you need the neurologist to see the system fast.', 48, y + 52);
     },
   },
 
@@ -1703,16 +1951,16 @@ const pdfDefinitions = [
   {
     filename: 'how-to-track-pain-for-doctors-guide.pdf',
     title: 'How to Track Pain for Doctors',
-    subtitle: 'What doctors actually want to see in your pain records and how to present it effectively.',
-    badge: 'Guide',
+    subtitle: 'A short guide to what clinicians actually need from your record and how to stop handing them a maze.',
+    badge: 'Doctor-Ready',
     generate: (doc, y) => {
       y = drawSectionHeading(doc, y, 'What Doctors Need to See');
       const sections = [
-        ['1. Pain Pattern Over Time', 'Track at least 7 days before your appointment. Show trends, not just today\'s pain. Doctors want to see the full picture—good days and bad.'],
-        ['2. Specific Descriptions', 'Where exactly? What type? (sharp, burning, aching, throbbing). When does it start and stop? What makes it better or worse?'],
-        ['3. Functional Impact', '"I couldn\'t cook dinner 4 days this week" is more useful than "my pain was 8/10." Describe what pain prevents you from doing.'],
-        ['4. Medication Response', 'What you took, when, how much it helped (percentage or time), and any side effects. This guides treatment decisions.'],
-        ['5. Sleep & Mood Connection', 'Pain affects sleep and mood. Tracking these helps doctors understand the full burden and consider comprehensive treatment.'],
+        ['1. Pattern Before Performance', 'Doctors do not need a dramatic monologue. They need a pattern they can trust. Bring at least a week of dated entries so the visit starts with evidence instead of reconstruction.'],
+        ['2. Sharp Description Beats Big Description', 'Where exactly? What kind of pain? When did it start, stop, move, or spike? Sharper routing through the facts is better than trying to make the pain sound impressive.'],
+        ['3. Function Is the Lever', '"Could not finish groceries" or "needed help showering" carries more weight than a floating number. Pain becomes clinically useful when it is tied to what the body could not do.'],
+        ['4. Treatment Response Needs a Trail', 'What did you take, when did you take it, what changed, and what did it cost? Relief without timing is weak. Side effects without context are weak. The chain matters.'],
+        ['5. Sleep, Mood, and Pain Are One System', 'Pain does not stay politely in one category. Sleep damage, mood strain, and cognitive drag belong in the record because they change treatment decisions.'],
       ];
       for (const [heading, text] of sections) {
         y = checkPage(doc, y, 50);
@@ -1747,8 +1995,8 @@ const pdfDefinitions = [
   {
     filename: 'pain-journal-checklist.pdf',
     title: 'What to Include in a Pain Journal',
-    subtitle: 'Complete checklist of information that makes pain tracking clinically useful.',
-    badge: 'Checklist',
+    subtitle: 'A field list for the facts that make tracking clinically useful instead of decorative.',
+    badge: 'Field List',
     generate: (doc, y) => {
       const categories = [
         ['Essential (Track Daily)', [
@@ -1810,16 +2058,16 @@ const pdfDefinitions = [
   {
     filename: 'disability-documentation-guide.pdf',
     title: 'Documenting Pain for Disability Claims',
-    subtitle: 'A guide to creating documentation that supports WorkSafeBC, insurance, and government benefit claims.',
-    badge: 'Essential Guide',
+    subtitle: 'A claim-facing guide to building pain records that can survive WorkSafeBC, insurance, and benefits scrutiny.',
+    badge: 'Evidence Guide',
     generate: (doc, y) => {
       const sections = [
-        ['Start Before You File', 'Begin tracking immediately. Records that predate your claim are more credible. Even if you\'re months from filing, daily entries starting now build a stronger case.'],
-        ['Document Functional Impact', 'Adjusters care most about what pain prevents you from doing. "Couldn\'t lift laundry basket" is more powerful than "pain was 8/10." Be specific about limitations.'],
-        ['Be Consistent, Not Perfect', 'Daily brief entries beat weekly detailed ones. If you miss a day, don\'t backfill—it looks fabricated. Gaps are normal; consistency demonstrates persistence.'],
-        ['Include Good Days', 'Documenting better days shows honesty. Constant 10/10 ratings destroy credibility. A pattern of mostly difficult days with occasional better ones is believable.'],
-        ['Connect to Work/Function', 'Every entry should relate to ability or inability to perform tasks. For WorkSafeBC: connect symptoms to work duties. For disability: describe daily living impact.'],
-        ['Align with Medical Records', 'Your diary should complement, not contradict, your medical records. Note appointment dates, treatments, and outcomes. Bring diary summaries to appointments.'],
+        ['Start Before the File Demands It', 'Claims systems love records that already existed before scrutiny began. Start now. A dated trail built under ordinary pressure reads stronger than a perfect record built after the stakes become obvious.'],
+        ['Function Makes the Claim Legible', 'Adjusters and reviewers are not persuaded by raw intensity alone. They look for what pain stopped, delayed, reduced, or made unsafe. Task failure is evidence.'],
+        ['Consistency Beats Theater', 'Brief daily entries beat polished weekly essays. Do not backfill. Do not dramatize. Let the repetition do the heavy lifting.'],
+        ['Good Days Stay in the Record', 'A believable file includes variation. Better days do not weaken the claim. They prove you are documenting a pattern, not performing one.'],
+        ['Tie Everything to Work or Daily Survival', 'For WorkSafeBC, connect symptoms to duties, hours, lifting, posture, pace, or tolerance. For disability, connect them to self-care, mobility, concentration, and daily living.'],
+        ['Make the Record Coherent Across Systems', 'Your diary should line up with appointments, meds, treatment attempts, and the medical timeline. The goal is not to sound dramatic. The goal is to sound impossible to misread.'],
       ];
       for (const [heading, text] of sections) {
         y = checkPage(doc, y, 50);
@@ -1864,8 +2112,8 @@ const pdfDefinitions = [
   {
     filename: 'worksafebc-pain-journal.pdf',
     title: 'WorkSafeBC Pain Journal Template',
-    subtitle: 'Comprehensive workplace injury documentation for BC workers\' compensation claims. Tracks work-related pain, functional capacity, treatment compliance, and return-to-work readiness — aligned with Form 8 standards.',
-    badge: 'BC Workers',
+    subtitle: 'A work-injury record for pain, duties, function, treatment compliance, and return-to-work friction inside a BC claim.',
+    badge: 'Work Injury',
     generate: (doc, y) => {
       const pw = doc.internal.pageSize.getWidth();
 
@@ -1900,19 +2148,19 @@ const pdfDefinitions = [
       doc.setFont('helvetica', 'bold');
       doc.setTextColor(...COLORS.dark);
       doc.setFontSize(9);
-      doc.text('Important: Connect Every Entry to Your Work Injury', 48, y + 14);
+      doc.text('Important: Keep the Work Connection Visible', 48, y + 14);
       doc.setFont('helvetica', 'normal');
       doc.setTextColor(...COLORS.medium);
       doc.setFontSize(7.5);
-      doc.text('Every entry should link symptoms to your workplace injury and job duties. Be specific about what work tasks are affected.', 48, y + 28);
-      doc.text('Example: "L4-L5 pain increased to 7/10 after 90 min at workstation — could not complete afternoon data entry tasks."', 48, y + 40);
+      doc.text('Every entry should tie symptoms to the injury and to the actual task load. The claim gets weaker when that chain disappears.', 48, y + 28);
+      doc.text('Example: "L4-L5 pain climbed after 90 minutes seated. Could not finish afternoon data-entry block."', 48, y + 40);
 
       // ────────────────────────────── PAGE 2: Daily Work-Related Pain Log ──────────
       doc.addPage();
       y = 40;
 
       y = drawSectionHeading(doc, y, 'Daily Work-Related Pain Log — Week of: _______________');
-      y = drawInstruction(doc, y, 'Complete one row per day. Connect all symptoms to your workplace injury and job duties. Note work status: F = Full duties, M = Modified, O = Off work.');
+      y = drawInstruction(doc, y, 'Complete one row per day. Keep the chain intact: symptom, duty, limit, fallout. Note work status: F = Full duties, M = Modified, O = Off work.');
       const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
       y = dailyTrackingTable(doc, y,
         ['Day', 'Date', 'AM\nPain', 'PM\nPain', 'Eve\nPain', 'Work\nStatus\n(F/M/O)', 'Specific Duties\nAffected', 'Aggravating\nActivities'],
@@ -1920,7 +2168,7 @@ const pdfDefinitions = [
 
       y = checkPage(doc, y, 130);
       y = drawSectionHeading(doc, y, 'Daily Functional Limitations (Work-Related)');
-      y = drawInstruction(doc, y, 'Be specific and measurable. E.g., "Sat for 20 min before L4 pain reached 6/10 — position requires 4 hrs." This supports modified duty requests.');
+      y = drawInstruction(doc, y, 'Be specific and measurable. A time limit, lifting limit, or failed task is stronger than a general complaint and easier to defend in a modified-duty discussion.');
       y = dailyTrackingTable(doc, y,
         ['Day', 'Sitting\n(min before\npain)', 'Standing\n(min before\npain)', 'Lifting\nCapacity\n(lbs)', 'Walking\n(min before\npain)', 'Driving\n(min)', 'Job Tasks\nUnable to\nComplete'],
         days.map(d => [d, '', '', '', '', '', '']));
@@ -1972,7 +2220,7 @@ const pdfDefinitions = [
       y = 40;
 
       y = drawSectionHeading(doc, y, 'Medical Appointments & Treatment');
-      y = drawInstruction(doc, y, 'WCB evaluates treatment compliance heavily. Record every appointment and outcome. Non-compliance can reduce or deny benefits.');
+      y = drawInstruction(doc, y, 'WCB weighs treatment compliance heavily. Record every appointment, recommendation, and outcome so the file shows effort as well as injury.');
       y = dailyTrackingTable(doc, y,
         ['Date', 'Provider /\nClinic', 'Type\n(MD/Physio/\nSpecialist)', 'Treatment\nProvided', 'Pain Before\n(0-10)', 'Pain After\n(0-10)', 'Next Steps /\nPrescribed'],
         Array.from({ length: 8 }, () => Array(7).fill('')));
@@ -1986,7 +2234,7 @@ const pdfDefinitions = [
 
       y = checkPage(doc, y, 120);
       y = drawSectionHeading(doc, y, 'Home Exercise / Rehabilitation Compliance');
-      y = drawInstruction(doc, y, 'Track prescribed home exercises. Completion rate demonstrates active engagement in recovery.');
+      y = drawInstruction(doc, y, 'Track prescribed home exercises. Completion is not just rehab detail here. It becomes part of the claim narrative.');
       y = dailyTrackingTable(doc, y,
         ['Date', 'Exercise 1:\n________', 'Exercise 2:\n________', 'Exercise 3:\n________', 'Duration\n(min)', 'Pain During\n(0-10)', 'Completed\nAll? (Y/N)'],
         Array.from({ length: 7 }, () => Array(7).fill('')));
@@ -1996,7 +2244,7 @@ const pdfDefinitions = [
       y = 40;
 
       y = drawSectionHeading(doc, y, 'Weekly Work Impact Summary');
-      y = drawInstruction(doc, y, 'Complete at end of each week. This page documents the gap between your capacity and your job requirements.');
+      y = drawInstruction(doc, y, 'Complete at week end. This page exists to make the gap between your capacity and the job demands impossible to wave away.');
       y += 4;
       y = drawInputLine(doc, y, 'Week of:', 180);
       y = drawInputLine(doc, y, 'Work Days Attended (full duties):', 100);
@@ -2042,7 +2290,7 @@ const pdfDefinitions = [
       y = 40;
 
       y = drawSectionHeading(doc, y, 'Monthly Summary — For WCB Case Manager Review');
-      y = drawInstruction(doc, y, 'Complete at month-end. This single page provides the case manager or medical advisor with a comprehensive monthly overview. Bring to all WCB appointments and Independent Medical Exams (IMEs).');
+      y = drawInstruction(doc, y, 'Complete at month end. This is the compressed version a case manager or medical advisor can scan fast without losing the pressure you were actually under.');
 
       y += 4;
       y = drawInputLine(doc, y, 'Month / Year:', 200);
@@ -2112,14 +2360,14 @@ const pdfDefinitions = [
   {
     filename: 'disability-pain-journal-guide.pdf',
     title: 'Pain Journal for Disability Benefits',
-    subtitle: 'Documentation strategies for disability benefit applications.',
-    badge: 'Benefits Guide',
+    subtitle: 'A benefits-facing guide to records that read as credible, specific, and hard to dismiss.',
+    badge: 'Benefits Proof',
     generate: (doc, y) => {
       const sections = [
-        ['Why Documentation Matters', 'Disability evaluators review hundreds of claims. Yours needs to stand out as credible and thorough. A systematic pain journal with daily entries demonstrates the persistent nature of your condition far better than medical records alone.'],
-        ['What Evaluators Look For', '1) Consistency of reporting over weeks/months. 2) Specific functional limitations, not just pain numbers. 3) Evidence of treatment compliance. 4) Honest variability—good days and bad. 5) Impact on daily activities, self-care, and social function.'],
-        ['Common Mistakes That Hurt Claims', '• Only tracking on bad days (looks like you\'re fine otherwise). • Constant 10/10 ratings (appears exaggerated). • Starting documentation only after filing. • Contradicting medical records. • Vague descriptions without specific examples.'],
-        ['Building Your Evidence Timeline', 'Start now. Track daily for minimum 30 days before filing. Continue throughout the process. Bring summaries to every medical appointment. Keep originals safe—submit copies only.'],
+        ['Why Documentation Carries Weight', 'Benefit systems often ask for clean proof from fractured lives. A dated daily record shows persistence, function loss, and treatment burden in a way isolated medical notes rarely can.'],
+        ['What Evaluators Actually Look For', 'Consistency over time. Specific limits instead of floating pain numbers. Treatment attempts. Honest variation. Evidence that the condition reaches into self-care, concentration, mobility, and ordinary daily life.'],
+        ['What Weakens a File Fast', 'Only tracking the worst days. Writing every day as 10/10. Starting after the claim begins. Contradicting the medical timeline. Saying everything hurt without naming what pain actually changed.'],
+        ['How to Build the Timeline', 'Start now and keep going. Daily entries over a month tell a stronger story than one perfect retrospective summary. Bring condensed versions to appointments. Keep originals. Submit copies.'],
       ];
       for (const [heading, text] of sections) {
         y = checkPage(doc, y, 60);
@@ -2153,13 +2401,13 @@ const pdfDefinitions = [
   {
     filename: 'daily-functioning-log.pdf',
     title: 'Daily Functioning Log for Disability',
-    subtitle: 'Track functional limitations that disability evaluators need to see.',
-    badge: 'Disability',
+    subtitle: 'A function-first log for the tasks, assistance, and daily losses evaluators actually weigh.',
+    badge: 'Function Proof',
     generate: (doc, y) => {
       y = drawDateNameBlock(doc, y);
 
-      y = drawSectionHeading(doc, y, 'Daily Functioning Assessment');
-      y = drawInstruction(doc, y, 'Rate each area: ✓ = No difficulty | ~ = Some difficulty | ✗ = Unable | N/A = Not attempted');
+      y = drawSectionHeading(doc, y, 'Daily Function Loss Record');
+      y = drawInstruction(doc, y, 'Rate each area: ✓ = held, ~ = reduced, ✗ = failed, N/A = not attempted. This sheet is for what the day would not let you do.');
       y = dailyTrackingTable(doc, y,
         ['Activity', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
         [
@@ -2180,10 +2428,10 @@ const pdfDefinitions = [
         ]);
 
       y = checkPage(doc, y, 100);
-      y = drawSectionHeading(doc, y, 'Assistance Required');
+      y = drawSectionHeading(doc, y, 'Help the Day Required');
       y = drawInputLine(doc, y, 'Help received from:', 200);
       y = drawInputLine(doc, y, 'Tasks they helped with:', 200);
-      y = notesBox(doc, y, 'Additional Limitations & Notes', 4);
+      y = notesBox(doc, y, 'Other losses, workarounds, and notes', 4);
     },
   },
 
@@ -2192,212 +2440,212 @@ const pdfDefinitions = [
   {
     filename: 'fibromyalgia-pain-diary.pdf',
     title: 'Fibromyalgia Pain Diary',
-    subtitle: 'Track widespread pain, fatigue, cognitive issues, and flare patterns specific to fibromyalgia.',
-    badge: 'Fibromyalgia',
+    subtitle: 'A fibro-specific record for widespread pain, fatigue, fog, flare spread, and the pattern they form together.',
+    badge: 'Fibro Pattern',
     generate: (doc, y) => {
       y = drawDateNameBlock(doc, y);
       y = drawPainScale(doc, y);
 
-      y = drawSectionHeading(doc, y, 'Fibromyalgia Symptom Log');
-      y = drawInstruction(doc, y, 'Track the key fibro symptoms daily. Rate each 0–10.');
+      y = drawSectionHeading(doc, y, 'Fibro Daily Pattern');
+      y = drawInstruction(doc, y, 'Track the symptoms that travel together in fibro. Rate each 0–10 so the spread is visible instead of flattened.');
       y = dailyTrackingTable(doc, y,
         ['Date', 'Pain (0-10)', 'Fatigue (0-10)', 'Brain Fog', 'Sleep Quality', 'Stiffness', 'Headache', 'Mood'],
         Array.from({ length: 7 }, () => Array(8).fill('')));
 
       y = checkPage(doc, y, 120);
-      y = drawSectionHeading(doc, y, 'Pain Location Map');
-      y = drawInstruction(doc, y, 'Mark affected areas: N=Neck, S=Shoulders, UB=Upper Back, LB=Lower Back, H=Hips, K=Knees, A=Arms, L=Legs');
+      y = drawSectionHeading(doc, y, 'Body Spread Map');
+      y = drawInstruction(doc, y, 'Mark where fibro showed up that day: N=Neck, S=Shoulders, UB=Upper Back, LB=Lower Back, H=Hips, K=Knees, A=Arms, L=Legs.');
       y = dailyTrackingTable(doc, y,
         ['Date', 'Neck', 'Shoulders', 'Upper Back', 'Lower Back', 'Hips', 'Arms', 'Legs'],
         Array.from({ length: 7 }, () => Array(8).fill('')));
 
       y = checkPage(doc, y, 100);
-      y = drawSectionHeading(doc, y, 'Flare Triggers');
+      y = drawSectionHeading(doc, y, 'What Lit the Flare');
       y = dailyTrackingTable(doc, y,
         ['Date', 'Overexertion', 'Poor Sleep', 'Stress', 'Weather', 'Illness', 'Other'],
         Array.from({ length: 7 }, () => Array(7).fill('')));
 
       y = checkPage(doc, y, 80);
-      y = notesBox(doc, y, 'Notes & Observations', 4);
+      y = notesBox(doc, y, 'Spread, crash, and pattern notes', 4);
     },
   },
 
   {
     filename: 'chronic-back-pain-diary.pdf',
     title: 'Chronic Back Pain Diary',
-    subtitle: 'Track back pain location, activities, posture, and treatments for spine specialists.',
-    badge: 'Back Pain',
+    subtitle: 'A spine-pattern record for position, load, radiation, posture, and the mechanics that keep setting pain off.',
+    badge: 'Spine Pattern',
     generate: (doc, y) => {
       y = drawDateNameBlock(doc, y);
       y = drawPainScale(doc, y);
 
-      y = drawSectionHeading(doc, y, 'Back Pain Log');
-      y = drawInstruction(doc, y, 'Location: C=Cervical (neck), T=Thoracic (mid), L=Lumbar (low), S=Sacral. Note radiation to legs/arms.');
+      y = drawSectionHeading(doc, y, 'Spine Pattern Log');
+      y = drawInstruction(doc, y, 'Location: C=Cervical (neck), T=Thoracic (mid), L=Lumbar (low), S=Sacral. Note radiation when the pain starts traveling.');
       y = dailyTrackingTable(doc, y,
         ['Date', 'Pain (0-10)', 'Location', 'Radiating?', 'Stiffness', 'Activity', 'Posture Issues', 'Treatment'],
         Array.from({ length: 7 }, () => Array(8).fill('')));
 
       y = checkPage(doc, y, 120);
-      y = drawSectionHeading(doc, y, 'Activity & Position Impact');
+      y = drawSectionHeading(doc, y, 'Position and Load Fallout');
       y = dailyTrackingTable(doc, y,
         ['Date', 'Sitting', 'Standing', 'Walking', 'Bending', 'Lifting', 'Lying Down', 'Driving'],
         Array.from({ length: 7 }, () => Array(8).fill('')));
 
       y = checkPage(doc, y, 80);
-      y = notesBox(doc, y, 'Exercise / Physio / Notes', 5);
+      y = notesBox(doc, y, 'Physio, movement, and recovery notes', 5);
     },
   },
 
   {
     filename: 'arthritis-pain-tracker.pdf',
     title: 'Arthritis Pain Tracker',
-    subtitle: 'Track joint pain, stiffness, swelling, and mobility. For RA, OA, and psoriatic arthritis.',
-    badge: 'Arthritis',
+    subtitle: 'A joint-specific record for stiffness, swelling, warmth, mobility loss, and the daily drag of arthritis.',
+    badge: 'Joint Record',
     generate: (doc, y) => {
       y = drawDateNameBlock(doc, y);
       y = drawPainScale(doc, y);
 
-      y = drawSectionHeading(doc, y, 'Joint Pain & Stiffness Log');
-      y = drawInstruction(doc, y, 'Track morning stiffness duration (minutes) and affected joints. Note swelling (S) and warmth (W).');
+      y = drawSectionHeading(doc, y, 'Joint Stiffness and Pain Record');
+      y = drawInstruction(doc, y, 'Track morning stiffness in minutes and name the joints that joined the fight. Note swelling (S) and warmth (W).');
       y = dailyTrackingTable(doc, y,
         ['Date', 'AM Stiffness (min)', 'Pain (0-10)', 'Joints Affected', 'Swelling?', 'Warmth?', 'Function'],
         Array.from({ length: 7 }, () => Array(7).fill('')));
 
       y = checkPage(doc, y, 120);
-      y = drawSectionHeading(doc, y, 'Joint-by-Joint Tracking');
-      y = drawInstruction(doc, y, 'Rate pain 0–10 for each affected joint. Leave blank if not affected.');
+      y = drawSectionHeading(doc, y, 'Joint-by-Joint Load');
+      y = drawInstruction(doc, y, 'Rate pain 0–10 for each joint that mattered that day. Leave blanks where the joint stayed quiet.');
       y = dailyTrackingTable(doc, y,
         ['Date', 'Hands', 'Wrists', 'Elbows', 'Shoulders', 'Knees', 'Ankles', 'Feet'],
         Array.from({ length: 7 }, () => Array(8).fill('')));
 
       y = checkPage(doc, y, 100);
-      y = drawSectionHeading(doc, y, 'Functional Impact');
+      y = drawSectionHeading(doc, y, 'What the Joints Cost');
       y = dailyTrackingTable(doc, y,
         ['Date', 'Grip Strength', 'Stairs', 'Buttons/Zippers', 'Jar Opening', 'Walking', 'Writing'],
         Array.from({ length: 7 }, () => Array(7).fill('')));
 
       y = checkPage(doc, y, 80);
-      y = notesBox(doc, y, 'Medication Response & Doctor Notes', 4);
+      y = notesBox(doc, y, 'Medication response and joint notes', 4);
     },
   },
 
   {
     filename: 'nerve-pain-symptom-log.pdf',
     title: 'Nerve Pain Symptom Log',
-    subtitle: 'Track burning, tingling, numbness, and shooting pain for neuropathy conditions.',
-    badge: 'Nerve Pain',
+    subtitle: 'A nerve-pattern log for burning, shocks, numbness, tingling, and the sensory detail clinicians actually use.',
+    badge: 'Nerve Pattern',
     generate: (doc, y) => {
       y = drawDateNameBlock(doc, y);
       y = drawPainScale(doc, y);
 
-      y = drawSectionHeading(doc, y, 'Nerve Pain Symptom Log');
-      y = drawInstruction(doc, y, 'Track specific nerve pain types: B=Burning, T=Tingling, N=Numbness, S=Shooting, E=Electric shock.');
+      y = drawSectionHeading(doc, y, 'Nerve Signal Record');
+      y = drawInstruction(doc, y, 'Track the nerve-specific signal: B=Burning, T=Tingling, N=Numbness, S=Shooting, E=Electric shock. Keep the sensation language intact.');
       y = dailyTrackingTable(doc, y,
         ['Date', 'Pain (0-10)', 'Type (B/T/N/S/E)', 'Location', 'Duration', 'Trigger', 'Medication', 'Relief'],
         Array.from({ length: 7 }, () => Array(8).fill('')));
 
       y = checkPage(doc, y, 120);
-      y = drawSectionHeading(doc, y, 'Sensation Changes');
+      y = drawSectionHeading(doc, y, 'Sensory Loss and Distortion');
       y = dailyTrackingTable(doc, y,
         ['Date', 'Numbness Areas', 'Tingling Areas', 'Weakness', 'Balance', 'Temperature Sens.', 'Touch Sens.'],
         Array.from({ length: 7 }, () => Array(7).fill('')));
 
       y = checkPage(doc, y, 80);
-      y = notesBox(doc, y, 'Observations & Questions for Neurologist', 5);
+      y = notesBox(doc, y, 'Neurologist questions and signal notes', 5);
     },
   },
 
   {
     filename: 'endometriosis-pain-log.pdf',
     title: 'Endometriosis Pain Log',
-    subtitle: 'Track endo symptoms throughout your cycle: pelvic pain, GI issues, and more.',
-    badge: 'Endo Tracker',
+    subtitle: 'A cycle-linked record for pelvic pain, GI spillover, fatigue, bleeding shifts, and endo patterns that refuse to stay tidy.',
+    badge: 'Cycle Record',
     generate: (doc, y) => {
       y = drawDateNameBlock(doc, y);
       y = drawPainScale(doc, y);
 
-      y = drawSectionHeading(doc, y, 'Cycle & Pain Tracking');
-      y = drawInstruction(doc, y, 'Cycle Day 1 = first day of period. Track pain and symptoms throughout your cycle.');
+      y = drawSectionHeading(doc, y, 'Cycle-Linked Pain Record');
+      y = drawInstruction(doc, y, 'Cycle Day 1 = first day of bleeding. Track pain and symptom spillover across the cycle, not just the obvious days.');
       y = dailyTrackingTable(doc, y,
         ['Date', 'Cycle Day', 'Pain (0-10)', 'Pelvic Pain', 'Back Pain', 'Bloating', 'GI Issues', 'Fatigue'],
         Array.from({ length: 7 }, () => Array(8).fill('')));
 
       y = checkPage(doc, y, 120);
-      y = drawSectionHeading(doc, y, 'Endo-Specific Symptoms');
+      y = drawSectionHeading(doc, y, 'Where Endo Spilled Over');
       y = dailyTrackingTable(doc, y,
         ['Date', 'Pain w/ Periods', 'Pain w/ Sex', 'Pain w/ Bowel', 'Bladder Pain', 'Heavy Bleeding', 'Spotting', 'Mood'],
         Array.from({ length: 7 }, () => Array(8).fill('')));
 
       y = checkPage(doc, y, 80);
-      y = notesBox(doc, y, 'Treatment Response & Doctor Notes', 5);
+      y = notesBox(doc, y, 'Treatment response and cycle notes', 5);
     },
   },
 
   {
     filename: 'crps-pain-diary.pdf',
     title: 'CRPS Pain Diary Template',
-    subtitle: 'Track Complex Regional Pain Syndrome symptoms: burning, swelling, color changes, temperature.',
-    badge: 'CRPS',
+    subtitle: 'A CRPS record for burning pain, allodynia, swelling, colour, temperature, and motor change on the same page.',
+    badge: 'CRPS Record',
     generate: (doc, y) => {
       y = drawDateNameBlock(doc, y);
       y = drawPainScale(doc, y);
 
-      y = drawSectionHeading(doc, y, 'CRPS Symptom Log');
-      y = drawInstruction(doc, y, 'CRPS symptoms are complex. Track pain, sensory, autonomic, and motor changes daily.');
+      y = drawSectionHeading(doc, y, 'CRPS Daily Record');
+      y = drawInstruction(doc, y, 'CRPS shifts across pain, sensory change, autonomic change, and motor fallout. Track all four on the same day.');
       y = dailyTrackingTable(doc, y,
         ['Date', 'Pain (0-10)', 'Burning', 'Allodynia', 'Swelling', 'Color Changes', 'Temp Changes', 'Sweating'],
         Array.from({ length: 7 }, () => Array(8).fill('')));
 
       y = checkPage(doc, y, 120);
-      y = drawSectionHeading(doc, y, 'Motor & Functional Changes');
+      y = drawSectionHeading(doc, y, 'Motor Breakdown and Function Loss');
       y = dailyTrackingTable(doc, y,
         ['Date', 'Weakness', 'Tremor', 'Stiffness', 'Range of Motion', 'Dystonia', 'Grip', 'Walking'],
         Array.from({ length: 7 }, () => Array(8).fill('')));
 
       y = checkPage(doc, y, 100);
-      y = drawSectionHeading(doc, y, 'Affected Limb Comparison');
-      y = drawInstruction(doc, y, 'Compare affected vs unaffected side for visible changes.');
+      y = drawSectionHeading(doc, y, 'Affected vs Unaffected Side');
+      y = drawInstruction(doc, y, 'Compare sides when visible changes show up. Colour, temperature, swelling, and nail or hair shifts belong in the record.');
       y = dailyTrackingTable(doc, y,
         ['Date', 'Side', 'Color', 'Temperature', 'Swelling', 'Hair/Nail Changes', 'Notes'],
         Array.from({ length: 4 }, () => Array(7).fill('')));
 
       y = checkPage(doc, y, 80);
-      y = notesBox(doc, y, 'Treatment & Specialist Notes', 4);
+      y = notesBox(doc, y, 'Treatment response and specialist notes', 4);
     },
   },
 
   {
     filename: 'neuropathy-symptom-tracker.pdf',
     title: 'Neuropathy Symptom Tracker',
-    subtitle: 'Monitor peripheral neuropathy: numbness, tingling, and progression over time.',
-    badge: 'Neuropathy',
+    subtitle: 'A neuropathy map for numbness, tingling, weakness, balance change, and progression over time.',
+    badge: 'Neuropathy Map',
     generate: (doc, y) => {
       y = drawDateNameBlock(doc, y);
       y = drawPainScale(doc, y);
 
-      y = drawSectionHeading(doc, y, 'Daily Neuropathy Symptoms');
-      y = drawInstruction(doc, y, 'Rate symptoms 0–10 or mark present (✓). Track progression over weeks.');
+      y = drawSectionHeading(doc, y, 'Daily Neuropathy Map');
+      y = drawInstruction(doc, y, 'Rate symptoms 0–10 or mark present (✓). The point is to catch progression, spread, and balance cost over time.');
       y = dailyTrackingTable(doc, y,
         ['Date', 'Numbness (0-10)', 'Tingling (0-10)', 'Burning (0-10)', 'Shooting Pain', 'Weakness', 'Balance', 'Sleep'],
         Array.from({ length: 7 }, () => Array(8).fill('')));
 
       y = checkPage(doc, y, 120);
-      y = drawSectionHeading(doc, y, 'Affected Areas Progression');
-      y = drawInstruction(doc, y, 'Track which areas are affected to monitor progression. Use: M=Mild, Mod=Moderate, S=Severe.');
+      y = drawSectionHeading(doc, y, 'Spread and Progression');
+      y = drawInstruction(doc, y, 'Track where the neuropathy has reached. Use: M=Mild, Mod=Moderate, S=Severe. Distribution is part of the evidence.');
       y = dailyTrackingTable(doc, y,
         ['Date', 'Feet', 'Lower Legs', 'Hands', 'Forearms', 'Other', 'Symmetrical?'],
         Array.from({ length: 7 }, () => Array(7).fill('')));
 
       y = checkPage(doc, y, 80);
-      y = notesBox(doc, y, 'Triggers, Blood Sugar, Medication Notes', 5);
+      y = notesBox(doc, y, 'Trigger, blood sugar, and medication notes', 5);
     },
   },
 
   {
     filename: 'printable-pain-log-sheet.pdf',
     title: 'Printable Pain Log Sheet',
-    subtitle: 'Simple, clean pain tracking sheet for quick daily documentation.',
-    badge: 'Simple',
+    subtitle: 'The lowest-friction pain log in the set. Fast enough for the bedside, the fridge, or the bad day.',
+    badge: 'Low Friction',
     generate: (doc, y) => {
       y = drawDateNameBlock(doc, y);
       y = drawPainScale(doc, y);
@@ -2415,8 +2663,8 @@ const pdfDefinitions = [
   {
     filename: 'chronic-pain-diary-template.pdf',
     title: 'Chronic Pain Diary Template',
-    subtitle: 'Designed for long-term chronic pain tracking with baseline and flare documentation.',
-    badge: 'Chronic Pain',
+    subtitle: 'A chronic pain record built to separate baseline burden from flare rupture and show what each one costs.',
+    badge: 'Baseline + Flare',
     generate: (doc, y) => {
       y = drawDateNameBlock(doc, y);
       y = drawPainScale(doc, y);
@@ -2447,8 +2695,8 @@ const pdfDefinitions = [
   {
     filename: '7-day-pain-diary.pdf',
     title: '7-Day Pain Diary Template',
-    subtitle: 'One-week format perfect for preparing for doctor appointments.',
-    badge: '7-Day',
+    subtitle: 'A one-week record for the run-up to an appointment, review, or assessment where recent proof matters most.',
+    badge: 'One Week',
     generate: (doc, y) => {
       y = drawDateNameBlock(doc, y);
       y = drawInputLine(doc, y, 'Appointment Date:', 140);
@@ -2478,15 +2726,15 @@ const pdfDefinitions = [
   {
     filename: 'clinical-pain-diary-guide.pdf',
     title: 'How Doctors Use Pain Diaries',
-    subtitle: 'Understanding the clinical perspective on pain tracking and what information matters most.',
-    badge: 'Clinical Guide',
+    subtitle: 'A guide to how clinicians read pain records and which details actually survive the scan.',
+    badge: 'Clinical Lens',
     generate: (doc, y) => {
       const sections = [
-        ['Why Doctors Value Pain Diaries', 'Appointments capture a snapshot; diaries capture the movie. Clinicians use pain diaries to identify patterns, assess treatment response, plan interventions, and communicate with specialists. A good diary saves appointment time and improves care.'],
-        ['What Clinicians Extract From Diaries', '1) Pain trajectory: Is it stable, worsening, or improving? 2) Treatment response: How well are medications working? 3) Functional capacity: What can/can\'t the patient do? 4) Triggers: What makes pain better or worse? 5) Sleep-pain-mood cycle: How are these interconnected?'],
-        ['Standardized Measures Doctors Use', 'Doctors often use validated tools alongside diaries: Numeric Rating Scale (NRS 0-10), Brief Pain Inventory (BPI), Oswestry Disability Index (for back pain), PROMIS measures. Your diary complements these by adding daily context.'],
-        ['What Makes a Diary Clinically Useful', '• Consistency: daily entries over at least one week. • Specificity: exact locations, descriptions, timing. • Functional focus: how pain affects real activities. • Medication logging: name, dose, time, and response. • Honest variability: not all days are the same.'],
-        ['Common Diary Mistakes (From Doctors\' Perspective)', '• Vague descriptions ("pain everywhere"). • Only tracking bad days. • Ignoring triggers and relief factors. • Not recording medication timing. • Starting the diary the night before the appointment.'],
+        ['Why Clinicians Keep Asking for Diaries', 'Appointments catch a snapshot. Diaries catch the system underneath it. Clinicians use them to judge pattern, treatment response, risk, function, and whether the story holds across time.'],
+        ['What Survives the Scan', 'Trajectory. Response. Functional loss. Trigger logic. Sleep and mood spillover. The details that survive are the ones tied to decisions, not the ones written for emotional effect.'],
+        ['Where Standardized Measures Fit', 'Numeric scales and clinical tools matter, but they flatten the day. Your diary gives them context: when pain rose, what changed, what helped, what failed, and what function was lost.'],
+        ['What Makes a Record Clinically Strong', 'A week or more of dated entries. Specific location and timing. Real function impact. Medication timing and outcome. Honest variation. A structure that can be scanned fast without losing the truth.'],
+        ['What Makes a Record Easy to Dismiss', 'Vague wording. Only bad days. Missing treatment timing. No trigger or relief context. A diary started the night before the appointment. In short: heat without structure.'],
       ];
       for (const [heading, text] of sections) {
         y = checkPage(doc, y, 60);
@@ -2509,8 +2757,8 @@ const pdfDefinitions = [
   {
     filename: 'specialist-appointment-pain-diary.pdf',
     title: 'Pain Diary for Specialist Appointment',
-    subtitle: 'Prepare effectively for rheumatology, neurology, and pain specialist visits.',
-    badge: 'Specialist Prep',
+    subtitle: 'A specialist-ready record for the consult where pattern, history, and limits all need to survive compression.',
+    badge: 'Specialist Ready',
     generate: (doc, y) => {
       y = drawInputLine(doc, y, 'Specialist:', 200);
       y = drawInputLine(doc, y, 'Specialty:', 200);
@@ -2544,8 +2792,8 @@ const pdfDefinitions = [
   {
     filename: 'pre-diagnosis-symptom-tracker.pdf',
     title: 'Symptom Tracking Before Diagnosis',
-    subtitle: 'Strategic tracking when seeking a diagnosis for unexplained symptoms.',
-    badge: 'Pre-Diagnosis',
+    subtitle: 'A pattern-hunt tracker for the stage before diagnosis, when the evidence has to exist before the explanation does.',
+    badge: 'Pattern Hunt',
     generate: (doc, y) => {
       y = drawDateNameBlock(doc, y);
 
@@ -2600,7 +2848,8 @@ async function main() {
   for (const def of pdfDefinitions) {
     try {
       const doc = createDoc();
-      const y = drawHeader(doc, def.title, def.subtitle, def.badge);
+      let y = drawHeader(doc, def.title, def.subtitle, def.badge);
+      y = drawVoicePrimer(doc, y, def.filename);
       def.generate(doc, y);
       drawFooter(doc);
 

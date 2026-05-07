@@ -6,9 +6,9 @@ const pageContent: SEOPageContent = {
   slug: 'pain-tracking-apps-comparison',
   canonicalPath: '/pain-tracking-apps-comparison',
   title: 'Best Pain Tracking Apps in 2026',
-  metaTitle: 'Best Pain Tracking Apps in 2026: Private, Free, Offline, and Printable Options',
+  metaTitle: 'Best Pain Tracking Apps in 2026: No Account, Offline, Private Options',
   metaDescription:
-    'Compare the best pain tracking apps for privacy, offline use, printable logs, chronic pain journaling, and doctor-ready symptom reports.',
+    'Compare the best pain tracking apps for privacy, no-account use, offline reliability, printable logs, and doctor-ready symptom reports in 2026.',
   keywords: [
     'pain tracking apps',
     'pain management apps',

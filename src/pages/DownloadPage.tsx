@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Download, ExternalLink, Shield, Smartphone, Monitor, Globe, HelpCircle } from 'lucide-react';
 import { combineSchemas, defaultSEOConfig, generateBreadcrumbSchema, generateFAQSchema } from '../lib/seo';
-import { ResourceCtaStack } from '../components/seo';
+import { ResourceCtaStack, ResourceOutcomeBridge, ResourceWorkflowSteps } from '../components/seo';
 
 const breadcrumbs = [
   { name: 'Home', url: '/' },
@@ -114,6 +114,15 @@ export const DownloadPage: React.FC = () => {
           </p>
         </header>
 
+        <ResourceOutcomeBridge
+          downloadUrl="/assets/free-pain-tracking-starter-pack.zip"
+          downloadFileName="free-pain-tracking-starter-pack.zip"
+          printableLabel="Download printable starter pack"
+          appLabel="Use the app free"
+        />
+
+        <ResourceWorkflowSteps intent="general" />
+
         {/* What It Does */}
         <section className="mb-16" aria-labelledby="what-it-does">
           <h2 id="what-it-does" className="text-2xl font-bold mb-6 text-white">What Pain Tracker helps you do</h2>
@@ -200,13 +209,14 @@ export const DownloadPage: React.FC = () => {
               </p>
             </div>
             <div className="flex flex-col gap-3 sm:min-w-72">
-              <Link
-                to="/resources/pain-diary-template-free-download"
+              <a
+                href="/assets/free-pain-tracking-starter-pack.zip"
+                download="free-pain-tracking-starter-pack.zip"
                 className="inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 px-5 py-3 font-semibold text-white transition-all hover:from-cyan-400 hover:to-blue-500"
               >
                 <Download className="h-4 w-4" aria-hidden="true" />
-                Open the printable starter pack
-              </Link>
+                Download the printable starter pack
+              </a>
               <Link
                 to="/resources"
                 className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-600 px-5 py-3 font-medium text-slate-200 transition-colors hover:border-slate-500 hover:text-white"
@@ -312,6 +322,7 @@ export const DownloadPage: React.FC = () => {
         </section>
 
         <ResourceCtaStack
+          intent="printable"
           heading="Stay in the patient lane from here"
           body="If you are not ready to use the app yet, move sideways into printables or the record-sharing workflow instead of dropping into builder content."
         />

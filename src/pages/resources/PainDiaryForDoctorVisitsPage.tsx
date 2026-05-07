@@ -13,10 +13,10 @@ import {
 import {
   SEOPageLayout,
   type SEOPageContent,
+  type StatItem,
   StatsBanner,
   BottomCTACallout,
 } from '../../components/seo';
-import type { StatItem } from '../../components/seo';
 
 /* ── Appointment Summary Builder ──────────────────────────────────────────── */
 
@@ -256,15 +256,15 @@ export const PainDiaryForDoctorVisitsPage: React.FC = () => (
     <AppointmentTimeline />
     <BottomCTACallout
       icon={Stethoscope}
-      heading="Your Next Appointment Can Be Different."
-      body="Fifteen minutes with your doctor becomes much more useful when you arrive with two weeks of structured data and a one-page summary. Download the template and start tracking today."
+      heading="Bring a clearer record into the next visit."
+      body="A short run of structured tracking gives you something better than recall alone. Start with the template now or use the app if that makes it easier to keep the record going until your appointment."
       pdfUrl="/assets/pain-diary-for-doctor-visits.pdf"
       gradientClasses="from-blue-600 to-cyan-600"
       tintClass="text-blue-100"
       buttonTextClass="text-blue-700"
       buttonHoverClass="hover:bg-blue-50"
-      primaryLabel="Download Template"
-      secondaryLabel="Try Digital Tracking"
+      primaryLabel="Download the template"
+      secondaryLabel="Start tracking free"
     />
   </SEOPageLayout>
 );

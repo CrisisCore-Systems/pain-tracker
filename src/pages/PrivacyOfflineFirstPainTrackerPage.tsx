@@ -85,6 +85,11 @@ const pageContent: SEOPageContent = {
   ],
   relatedLinks: [
     {
+      title: 'Zero-Knowledge Health Tracking FAQ',
+      description: 'Read the technical FAQ for the local-first and no-cloud boundary in plain language.',
+      href: '/zero-knowledge-health-tracking-faq',
+    },
+    {
       title: 'Pain Tracker App',
       description: 'See the app overview page focused on category intent.',
       href: '/pain-tracker-app',

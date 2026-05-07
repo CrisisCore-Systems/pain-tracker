@@ -6,6 +6,15 @@ import { trackDataExported } from '../../analytics/ga4-events';
 import { trackExport } from '../usage-tracking';
 import { analyticsLogger } from '../../lib/debug-logger';
 
+type WCBExportTemplateStyle = 'standard' | 'hostile-bureaucracy';
+
+const OCCUPATIONAL_LIMITATION_LABELS = {
+  cannotLiftOver10Lbs: 'Incapable of lifting >10 lbs',
+  impairedMobility: 'Impaired mobility',
+  lossOfGripStrength: 'Loss of grip strength',
+  unableToOperateMachinery: 'Unable to operate machinery',
+} as const;
+
 /**
  * Enhanced WorkSafe BC PDF Export
  * 
@@ -37,6 +46,8 @@ interface WCBExportOptions {
   includeDetailedEntries?: boolean;
   /** Include a brief pain trend summary section */
   includeTrendSummary?: boolean;
+  /** Report presentation mode */
+  templateStyle?: WCBExportTemplateStyle;
 }
 
 export interface WorkSafeBCExportArtifact {
@@ -244,6 +255,53 @@ function getPainTrend(entries: PainEntry[]): string {
   return 'Slightly Improving';
 }
 
+function summarizeCaptureStates(entries: PainEntry[]) {
+  return entries.reduce(
+    (acc, entry) => {
+      const networkState = entry.recordIntegrity?.captureContext.networkState ?? 'unknown';
+      acc[networkState] += 1;
+      return acc;
+    },
+    { online: 0, offline: 0, unknown: 0 }
+  );
+}
+
+function summarizeOccupationalLimits(entries: PainEntry[]) {
+  return entries.reduce(
+    (acc, entry) => {
+      const flags = entry.occupationalImpact;
+      if (!flags) return acc;
+
+      (Object.keys(OCCUPATIONAL_LIMITATION_LABELS) as Array<keyof typeof OCCUPATIONAL_LIMITATION_LABELS>).forEach(key => {
+        if (flags[key]) {
+          acc[key] += 1;
+        }
+      });
+
+      return acc;
+    },
+    {
+      cannotLiftOver10Lbs: 0,
+      impairedMobility: 0,
+      lossOfGripStrength: 0,
+      unableToOperateMachinery: 0,
+    }
+  );
+}
+
+function collectProvenanceRows(entries: PainEntry[]) {
+  return entries.map(entry => ({
+    timestamp: entry.timestamp,
+    createdAt: entry.recordIntegrity?.createdAt ?? entry.timestamp,
+    amendedAt: entry.recordIntegrity?.lastAmendedAt,
+    revisionCount: entry.recordIntegrity?.revisionCount ?? 0,
+    networkState: entry.recordIntegrity?.captureContext.networkState ?? 'unknown',
+    summary:
+      entry.recordIntegrity?.revisions.at(-1)?.summary.join(' | ') ??
+      (entry.recordIntegrity?.revisionCount ? 'Entry amended' : 'Original entry'),
+  }));
+}
+
 /**
  * Export enhanced WorkSafe BC PDF report
  */
@@ -266,6 +324,7 @@ export async function exportWorkSafeBCPDF(
     healthcareProvider,
     includeDetailedEntries = true,
     includeTrendSummary = true,
+    templateStyle = 'standard',
   } = options;
 
   // Filter entries by date range
@@ -276,6 +335,10 @@ export async function exportWorkSafeBCPDF(
 
   const metrics = calculateMetrics(filteredEntries);
   const painTrend = getPainTrend(filteredEntries);
+  const captureStateSummary = summarizeCaptureStates(filteredEntries);
+  const occupationalLimitSummary = summarizeOccupationalLimits(filteredEntries);
+  const provenanceRows = collectProvenanceRows(filteredEntries);
+  const isHostileBureaucracy = templateStyle === 'hostile-bureaucracy';
 
   const { default: jsPDF } = await import('jspdf');
   const doc = new jsPDF();
@@ -288,22 +351,41 @@ export async function exportWorkSafeBCPDF(
   const bottomLimit = pageHeight - 22;
   const reportId = `WCB-${Date.now().toString(36).toUpperCase()}`;
 
-  const palette = {
-    ink: [15, 23, 42] as const,
-    muted: [71, 85, 105] as const,
-    soft: [100, 116, 139] as const,
-    border: [203, 213, 225] as const,
-    surface: [248, 250, 252] as const,
-    accent: [14, 165, 233] as const,
-    accentSoft: [224, 242, 254] as const,
-    warning: [180, 83, 9] as const,
-    warningSoft: [254, 243, 199] as const,
-    danger: [185, 28, 28] as const,
-    dangerSoft: [254, 226, 226] as const,
-    success: [22, 163, 74] as const,
-    successSoft: [220, 252, 231] as const,
-    slateBand: [30, 41, 59] as const,
-  };
+  const palette = isHostileBureaucracy
+    ? {
+        ink: [17, 17, 17] as const,
+        muted: [64, 64, 64] as const,
+        soft: [115, 115, 115] as const,
+        border: [161, 161, 161] as const,
+        surface: [245, 245, 245] as const,
+        accent: [38, 38, 38] as const,
+        accentSoft: [229, 229, 229] as const,
+        warning: [38, 38, 38] as const,
+        warningSoft: [240, 240, 240] as const,
+        danger: [23, 23, 23] as const,
+        dangerSoft: [235, 235, 235] as const,
+        success: [23, 23, 23] as const,
+        successSoft: [235, 235, 235] as const,
+        slateBand: [23, 23, 23] as const,
+      }
+    : {
+        ink: [15, 23, 42] as const,
+        muted: [71, 85, 105] as const,
+        soft: [100, 116, 139] as const,
+        border: [203, 213, 225] as const,
+        surface: [248, 250, 252] as const,
+        accent: [14, 165, 233] as const,
+        accentSoft: [224, 242, 254] as const,
+        warning: [180, 83, 9] as const,
+        warningSoft: [254, 243, 199] as const,
+        danger: [185, 28, 28] as const,
+        dangerSoft: [254, 226, 226] as const,
+        success: [22, 163, 74] as const,
+        successSoft: [220, 252, 231] as const,
+        slateBand: [30, 41, 59] as const,
+      };
+  const headingFont = isHostileBureaucracy ? 'courier' : 'helvetica';
+  const bodyFont = isHostileBureaucracy ? 'courier' : 'helvetica';
 
   const periodDays = Math.max(
     1,
@@ -318,9 +400,9 @@ export async function exportWorkSafeBCPDF(
     doc.line(0, 16, pageWidth, 16);
     doc.setTextColor(...palette.soft);
     doc.setFontSize(8);
-    doc.setFont('helvetica', 'bold');
+    doc.setFont(headingFont, 'bold');
     doc.text('WorkSafe BC Clinical Documentation Report', leftMargin, 10.5);
-    doc.setFont('helvetica', 'normal');
+    doc.setFont(bodyFont, 'normal');
     doc.text(`Report ID: ${reportId}`, rightMargin, 10.5, { align: 'right' });
     yPosition = 24;
   };
@@ -338,7 +420,7 @@ export async function exportWorkSafeBCPDF(
   const drawSectionHeading = (title: string, subtitle?: string) => {
     checkPageBreak(24);
     doc.setTextColor(...palette.ink);
-    doc.setFont('helvetica', 'bold');
+    doc.setFont(headingFont, 'bold');
     doc.setFontSize(13);
     doc.text(title, leftMargin, yPosition);
     yPosition += 4;
@@ -349,7 +431,7 @@ export async function exportWorkSafeBCPDF(
     yPosition += 7;
 
     if (subtitle) {
-      doc.setFont('helvetica', 'normal');
+      doc.setFont(bodyFont, 'normal');
       doc.setFontSize(8.7);
       doc.setTextColor(...palette.muted);
       const subLines = doc.splitTextToSize(subtitle, contentWidth);
@@ -377,7 +459,7 @@ export async function exportWorkSafeBCPDF(
     doc.roundedRect(x, y, width, height, 2, 2);
 
     doc.setTextColor(...tone.text);
-    doc.setFont('helvetica', 'bold');
+    doc.setFont(headingFont, 'bold');
     doc.setFontSize(16);
     doc.text(value, x + width / 2, y + 11, { align: 'center' });
 
@@ -385,7 +467,7 @@ export async function exportWorkSafeBCPDF(
     doc.setLineWidth(0.15);
     doc.line(x + 3, y + 13.2, x + width - 3, y + 13.2);
 
-    doc.setFont('helvetica', 'normal');
+    doc.setFont(bodyFont, 'normal');
     doc.setFontSize(8);
     doc.text(label, x + width / 2, y + 18, { align: 'center' });
   };
@@ -398,15 +480,25 @@ export async function exportWorkSafeBCPDF(
 
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(18);
-    doc.setFont('helvetica', 'bold');
+    doc.setFont(headingFont, 'bold');
     doc.text('Pain Tracker', leftMargin, 14);
 
     doc.setFontSize(11);
-    doc.setFont('helvetica', 'normal');
-    doc.text('WorkSafe BC Clinical Documentation Report', leftMargin, 23);
+    doc.setFont(bodyFont, 'normal');
+    doc.text(
+      isHostileBureaucracy ? 'Hostile Bureaucracy Export' : 'WorkSafe BC Clinical Documentation Report',
+      leftMargin,
+      23
+    );
     doc.setFontSize(8);
     doc.setTextColor(148, 163, 184);
-    doc.text('Confidential clinical summary for case review', leftMargin, 29);
+    doc.text(
+      isHostileBureaucracy
+        ? 'Monochrome device-generated record with amendment and capture metadata'
+        : 'Confidential clinical summary for case review',
+      leftMargin,
+      29
+    );
 
     doc.setFillColor(...palette.slateBand);
     doc.roundedRect(rightMargin - 66, 7, 66, 24, 2, 2, 'F');
@@ -429,10 +521,10 @@ export async function exportWorkSafeBCPDF(
 
     doc.setTextColor(...palette.ink);
     doc.setFontSize(10);
-    doc.setFont('helvetica', 'bold');
+    doc.setFont(headingFont, 'bold');
     doc.text('Patient & Claim Information', leftMargin + 5, yPosition + 8.5);
 
-    doc.setFont('helvetica', 'normal');
+    doc.setFont(bodyFont, 'normal');
     doc.setFontSize(9);
 
     const col1 = leftMargin + 5;
@@ -444,7 +536,7 @@ export async function exportWorkSafeBCPDF(
     doc.text('Provider', col2, yPosition + 27);
 
     doc.setTextColor(...palette.ink);
-    doc.setFont('helvetica', 'bold');
+    doc.setFont(headingFont, 'bold');
     doc.text(patientName || '[De-identified]', col1 + 20, yPosition + 15);
     doc.text(claimNumber || 'N/A', col2 + 17, yPosition + 15);
     doc.text(
@@ -509,13 +601,87 @@ export async function exportWorkSafeBCPDF(
 
     doc.setTextColor(...palette.muted);
     doc.setFontSize(9.5);
-    doc.setFont('helvetica', 'normal');
+    doc.setFont(bodyFont, 'normal');
 
     const summaryText = `During this ${Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24))}-day reporting period, the patient recorded ${metrics.totalEntries} pain entries. Pain levels ranged from ${metrics.minPain} to ${metrics.maxPain} (${getPainSeverity(metrics.maxPain)}), with an average intensity of ${formatNumber(metrics.averagePain, 1)}/10 (${getPainSeverity(metrics.averagePain)}). The overall pain trend is assessed as ${painTrend.toLowerCase()}.`;
 
     const summaryLines = doc.splitTextToSize(summaryText, contentWidth);
     doc.text(summaryLines, leftMargin, yPosition);
     yPosition += summaryLines.length * 4.4 + 8;
+  };
+
+  const renderCaptureEnvironment = () => {
+    drawSectionHeading(
+      'Capture Environment',
+      'Device-reported metadata included for context. This describes what the device reported at capture time; it is not a notarized attestation.'
+    );
+
+    doc.setFont(bodyFont, 'normal');
+    doc.setFontSize(9);
+    doc.setTextColor(...palette.ink);
+    doc.text(`Storage location: LOCAL DEVICE STORAGE`, leftMargin, yPosition);
+    yPosition += 6;
+    doc.text(`Network state counts: OFFLINE ${captureStateSummary.offline} | ONLINE ${captureStateSummary.online} | UNKNOWN ${captureStateSummary.unknown}`, leftMargin, yPosition);
+    yPosition += 8;
+  };
+
+  const renderFunctionalLimitations = () => {
+    drawSectionHeading(
+      'Functional Limitation Translation',
+      'Explicit user-entered occupational limits are shown as binary indicators. Unchecked items are not inferred from pain score alone.'
+    );
+
+    doc.setFont(bodyFont, 'normal');
+    doc.setFontSize(9);
+    doc.setTextColor(...palette.ink);
+
+    (Object.entries(OCCUPATIONAL_LIMITATION_LABELS) as Array<
+      [keyof typeof OCCUPATIONAL_LIMITATION_LABELS, string]
+    >).forEach(([key, label]) => {
+      checkPageBreak(10);
+      const active = occupationalLimitSummary[key] > 0;
+      doc.text(`${active ? '[X]' : '[ ]'} ${label} (${occupationalLimitSummary[key]} entries)`, leftMargin, yPosition);
+      yPosition += 6;
+    });
+
+    yPosition += 2;
+  };
+
+  const renderProvenanceLog = () => {
+    drawSectionHeading(
+      'Append-Only Amendment Log',
+      'Original capture time is preserved. Later changes are reported as amendments with the last recorded delta summary.'
+    );
+
+    doc.setFont(bodyFont, 'normal');
+    doc.setFontSize(8.4);
+    doc.setTextColor(...palette.ink);
+
+    provenanceRows.slice(0, 18).forEach((row, index) => {
+      checkPageBreak(18);
+      if (isHostileBureaucracy && index % 2 === 0) {
+        doc.setFillColor(...palette.surface);
+        doc.rect(leftMargin, yPosition - 4, contentWidth, 14, 'F');
+      }
+
+      doc.text(`CREATED ${row.createdAt}`, leftMargin, yPosition);
+      doc.text(`NETWORK ${row.networkState.toUpperCase()}`, rightMargin, yPosition, { align: 'right' });
+      yPosition += 4.5;
+
+      if (row.amendedAt) {
+        doc.text(`AMENDED ${row.amendedAt} | REV ${row.revisionCount}`, leftMargin, yPosition);
+        yPosition += 4.5;
+      }
+
+      const summaryLines = doc.splitTextToSize(`DELTA ${row.summary}`, contentWidth);
+      doc.text(summaryLines, leftMargin, yPosition);
+      yPosition += summaryLines.length * 3.8 + 3;
+    });
+
+    if (provenanceRows.length > 18) {
+      doc.text(`... ${provenanceRows.length - 18} additional provenance rows omitted from print view`, leftMargin, yPosition);
+      yPosition += 6;
+    }
   };
 
   const renderTrendSummary = () => {
@@ -883,14 +1049,14 @@ export async function exportWorkSafeBCPDF(
     doc.roundedRect(leftMargin, yPosition, contentWidth, 35, 3, 3);
 
     doc.setFontSize(8.7);
-    doc.setFont('helvetica', 'bold');
+    doc.setFont(headingFont, 'bold');
     doc.setTextColor(133, 77, 14);
     doc.text('IMPORTANT DISCLAIMER', leftMargin + 5, yPosition + 8);
 
-    doc.setFont('helvetica', 'normal');
+    doc.setFont(bodyFont, 'normal');
     doc.setFontSize(8);
     const disclaimerText =
-      'This report is a structured summary of self-reported pain data for WorkSafe BC reference only. It does not constitute medical advice, diagnosis, or treatment. This document should be reviewed with a qualified healthcare provider. Pain Tracker is not affiliated with WorkSafe BC.';
+      'This report is a structured summary of self-reported pain data for WorkSafe BC reference only. Device metadata and amendment logs describe local record state but do not constitute notarization, geolocation proof, or medical advice. This document should be reviewed with a qualified healthcare provider. Pain Tracker is not affiliated with WorkSafe BC.';
     const disclaimerLines = doc.splitTextToSize(disclaimerText, contentWidth - 10);
     doc.text(disclaimerLines, leftMargin + 5, yPosition + 15);
   };
@@ -911,6 +1077,11 @@ export async function exportWorkSafeBCPDF(
 
   renderHeaderAndPatientInfo();
   renderExecutiveSummary();
+  if (isHostileBureaucracy) {
+    renderCaptureEnvironment();
+    renderFunctionalLimitations();
+    renderProvenanceLog();
+  }
   renderTrendSummary();
   renderMissedWorkAlert();
   renderPainAnalysis();
@@ -941,6 +1112,7 @@ export async function downloadWorkSafeBCPDF(
   options: WCBExportOptions
 ): Promise<void> {
   const pdf = await exportWorkSafeBCPDF(entries, options);
+  const templateStyle = options.templateStyle ?? 'standard';
   
   // Create filename with date range
   const startStr = options.startDate.toISOString().split('T')[0];
@@ -949,8 +1121,9 @@ export async function downloadWorkSafeBCPDF(
 
   const manifestFilename = `PainTracker-WCB-Report-${startStr}-to-${endStr}.manifest.json`;
   const manifest = {
-    schemaVersion: 1,
+    schemaVersion: 2,
     exportType: 'work-safebc-pdf',
+    templateStyle,
     generatedAt: new Date().toISOString(),
     reportId: pdf.reportId,
     startDate: options.startDate.toISOString(),

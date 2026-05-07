@@ -35,15 +35,18 @@ describe('SubscriptionProvider', () => {
   beforeEach(() => {
     vi.restoreAllMocks();
     vi.stubGlobal('fetch', vi.fn());
+    document.cookie = 'pt_subscription_owner=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
   });
 
   afterEach(() => {
     vi.restoreAllMocks();
     vi.unstubAllGlobals();
+    document.cookie = 'pt_subscription_owner=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
   });
 
   it('hydrates premium gating from the authoritative subscription endpoint', async () => {
     await subscriptionService.createSubscription('user-123', 'free');
+    document.cookie = 'pt_subscription_owner=test-token; path=/';
 
     const fetchMock = vi.mocked(fetch);
     fetchMock.mockResolvedValue({
@@ -95,8 +98,23 @@ describe('SubscriptionProvider', () => {
     });
   });
 
+  it('skips the authoritative subscription endpoint when the ownership cookie is absent', async () => {
+    render(
+      <SubscriptionProvider userId="local-user">
+        <SubscriptionProbe />
+      </SubscriptionProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByTestId('tier')).toHaveTextContent('free');
+    });
+
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
   it('falls back to the local free plan when the authoritative endpoint is unavailable', async () => {
     const fetchMock = vi.mocked(fetch);
+    document.cookie = 'pt_subscription_owner=test-token; path=/';
     fetchMock.mockRejectedValue(new Error('offline'));
 
     render(

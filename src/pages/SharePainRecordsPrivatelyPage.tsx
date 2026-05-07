@@ -78,6 +78,16 @@ const pageContent: SEOPageContent = {
   ],
   relatedLinks: [
     {
+      title: 'Zero-Knowledge Health Tracking FAQ',
+      description: 'Read the technical privacy FAQ for the local-first and no-cloud boundary behind private sharing.',
+      href: '/zero-knowledge-health-tracking-faq',
+    },
+    {
+      title: 'Pain Tracking Apps Comparison',
+      description: 'Compare private, printable, and local-first workflows before choosing one long-term system.',
+      href: '/pain-tracking-apps-comparison',
+    },
+    {
       title: 'How to Track Pain for Doctors',
       description: 'Use the appointment-focused guide.',
       href: '/resources/how-to-track-pain-for-doctors',

@@ -2,10 +2,10 @@ import type { ArticleData } from './types';
 
 const article: ArticleData = {
   slug: 'pain-diary-template',
-  title: 'Pain Diary Template: What to Record for Effective Symptom Tracking',
+  title: 'Pain Diary Template in 2026: Free PDF, No Email, Privacy-First Tracking',
   description:
-    'A structured pain diary template that captures what actually matters: intensity, location, timing, medications, and functional impact. Without demanding more than you can give.',
-  h1: 'Pain Diary Template: A Structured Approach to Symptom Tracking',
+    'A structured pain diary template for 2026 that captures what actually matters: intensity, location, timing, medications, and functional impact, without email gates or cloud lock-in.',
+  h1: 'Pain Diary Template in 2026: A Structured, Privacy-First Approach',
   cluster: 'privacy',
   isPillar: false,
   schemaTypes: ['Article'],
@@ -14,7 +14,7 @@ const article: ArticleData = {
       h2: 'Why structure matters more than effort',
       paragraphs: [
         'An unstructured pain diary becomes a collection of inconsistent entries that are difficult to interpret. A structured template ensures you capture the same data points each time, producing comparable records that reveal trends and support clinical decisions. The template defines what to record, not how you feel about it. Consistency comes from structure, not discipline.',
-        'Pain Tracker provides a built-in template through its structured entry interface: intensity scale, body map, quality descriptors, timing, medications, functional impact, and optional notes. This combines the thoroughness of a clinical assessment tool with the accessibility of a daily habit.',
+        'Pain Tracker provides a built-in template through its structured entry interface: intensity scale, body map, quality descriptors, timing, medications, functional impact, and optional notes. In 2026, that matters even more because people want something that starts free, asks for no account, and can move from paper into a private local-first workflow without rebuilding the habit from scratch.',
       ],
     },
     {

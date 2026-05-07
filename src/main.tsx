@@ -6,6 +6,34 @@ import reportWebVitals from './reportWebVitals';
 
 import { recordLocalUsageSessionIfEnabled } from './services/localUsageBootstrap';
 
+const PRELOAD_RECOVERY_KEY = 'pt:preload-recovery-url';
+
+function installDynamicImportRecovery(): void {
+  if (globalThis.window === undefined) {
+    return;
+  }
+
+  globalThis.addEventListener('vite:preloadError', event => {
+    event.preventDefault();
+    const preloadErrorEvent = event as Event & { payload?: unknown };
+
+    try {
+      const currentUrl = `${globalThis.location.pathname}${globalThis.location.search}`;
+      const lastRecoveredUrl = globalThis.sessionStorage.getItem(PRELOAD_RECOVERY_KEY);
+
+      if (lastRecoveredUrl === currentUrl) {
+        console.warn('Dynamic import recovery already attempted for this route.', preloadErrorEvent.payload);
+        return;
+      }
+
+      globalThis.sessionStorage.setItem(PRELOAD_RECOVERY_KEY, currentUrl);
+      globalThis.location.reload();
+    } catch {
+      globalThis.location.reload();
+    }
+  });
+}
+
 function shouldEnableDevTestMode(): boolean {
   if (!import.meta.env.DEV) {
     return false;
@@ -33,6 +61,8 @@ if (shouldEnableDevTestMode()) {
     // ignore errors reading URL/localStorage in some test harnesses
   }
 }
+
+installDynamicImportRecovery();
 
 await recordLocalUsageSessionIfEnabled();
 

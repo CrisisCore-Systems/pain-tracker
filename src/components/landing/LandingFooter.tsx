@@ -1,11 +1,11 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Code, Heart, Shield, Activity, Mail, ArrowRight, BookOpen, Sparkles, ExternalLink, Zap, type LucideIcon } from 'lucide-react';
 import { Button } from '../../design-system/components/Button';
 
 interface ResourceLink {
   label: string;
-  onClick?: () => void | Promise<void>;
+  to?: string;
   href?: string;
   icon?: LucideIcon;
 }
@@ -13,6 +13,9 @@ interface ResourceLink {
 export const LandingFooter: React.FC = () => {
   const navigate = useNavigate();
   const currentYear = new Date().getFullYear();
+  const footerNavLinkClass = 'group flex h-auto min-h-0 items-center gap-2 border-0 bg-transparent p-0 text-left text-slate-300 transition-all duration-200 hover:text-sky-400';
+  const footerExternalLinkClass = 'group flex h-auto min-h-0 items-center gap-2 border-0 bg-transparent p-0 text-left text-slate-300 transition-all duration-200 hover:text-sky-400';
+  const footerBlogLinkClass = 'group flex h-auto min-h-0 items-center border-0 bg-transparent p-0 text-left text-slate-400 transition-all duration-200 hover:text-purple-400';
 
   const socialLinks = [
     { icon: Code, href: 'https://github.com/CrisisCore-Systems/pain-tracker', label: 'GitHub' },
@@ -23,7 +26,7 @@ export const LandingFooter: React.FC = () => {
   return (
     <footer className="relative">
       {/* Final CTA Section - Premium Editorial Design */}
-      <div className="relative py-24 overflow-hidden">
+      <div className="relative overflow-hidden py-20 sm:py-24">
         {/* Background with gradient mesh */}
         <div className="absolute inset-0 bg-slate-900" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(56,189,248,0.08)_0%,_transparent_70%)]" />
@@ -122,10 +125,10 @@ export const LandingFooter: React.FC = () => {
         {/* Subtle top gradient */}
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-slate-700 to-transparent" />
         
-        <div className="container mx-auto px-4 py-20">
-          <div className="grid gap-12 grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+        <div className="container mx-auto px-4 py-14 sm:py-16">
+          <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-5 lg:gap-12">
             {/* Brand */}
-            <div className="space-y-6 col-span-2 md:col-span-3 lg:col-span-2">
+            <div className="col-span-1 space-y-6 sm:col-span-2 lg:col-span-2">
               <div className="flex items-center gap-3">
                 <div 
                   className="p-2.5 rounded-xl"
@@ -185,35 +188,32 @@ export const LandingFooter: React.FC = () => {
               </h3>
               <ul className="space-y-4 text-sm">
                 {([
-                  { label: 'Free Pain Tracker Templates', onClick: () => navigate('/resources') },
-                  { label: 'Pain Diary Starter Pack', onClick: () => navigate('/resources/pain-diary-template-free-download') },
-                  { label: 'Templates & Guides', onClick: () => navigate('/resources') },
-                  { label: 'Whitepaper (PDF)', onClick: () => navigate('/whitepaper') },
-                  { label: 'Overton Framework (Canon)', onClick: () => navigate('/overton-framework'), icon: BookOpen },
-                  { label: 'Download', onClick: () => navigate('/download') },
-                  { label: 'Pricing Plans', onClick: () => navigate('/pricing') },
-                  { label: 'Privacy Policy', onClick: () => navigate('/privacy'), icon: Shield },
-                  { label: 'Tracking & Data Policy', onClick: () => navigate('/tracking-data-policy'), icon: Shield },
+                  { label: 'Free Pain Tracker Templates', to: '/resources' },
+                  { label: 'Pain Diary Starter Pack', href: '/assets/free-pain-tracking-starter-pack.zip' },
+                  { label: 'Templates & Guides', to: '/resources' },
+                  { label: 'Whitepaper (PDF)', to: '/whitepaper' },
+                  { label: 'Overton Framework (Canon)', to: '/overton-framework', icon: BookOpen },
+                  { label: 'Download', to: '/download' },
+                  { label: 'Pricing Plans', to: '/pricing' },
+                  { label: 'Privacy Policy', to: '/privacy', icon: Shield },
+                  { label: 'Tracking & Data Policy', to: '/tracking-data-policy', icon: Shield },
                   { label: 'Source Code', href: 'https://github.com/CrisisCore-Systems/pain-tracker', icon: Code },
                   { label: 'Documentation', href: 'https://github.com/CrisisCore-Systems/pain-tracker/blob/main/README.md' },
                   { label: 'Security Policy', href: 'https://github.com/CrisisCore-Systems/pain-tracker/blob/main/SECURITY.md', icon: Shield },
                   { label: 'Contributing', href: 'https://github.com/CrisisCore-Systems/pain-tracker/blob/main/CONTRIBUTING.md' },
                 ] as ResourceLink[]).map((item) => (
                   <li key={item.label}>
-                    {item.onClick ? (
-                      <button
-                        onClick={item.onClick}
-                        className="group flex items-center gap-2 text-slate-300 hover:text-sky-400 transition-all duration-200"
-                      >
+                    {item.to ? (
+                      <Link to={item.to} className={footerNavLinkClass}>
                         {item.icon && <item.icon className="h-4 w-4" />}
                         <span className="group-hover:translate-x-1 transition-transform">{item.label}</span>
-                      </button>
+                      </Link>
                     ) : (
                       <a
                         href={item.href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group flex items-center gap-2 text-slate-300 hover:text-sky-400 transition-all duration-200"
+                        className={footerExternalLinkClass}
                       >
                         {item.icon && <item.icon className="h-4 w-4" />}
                         <span className="group-hover:translate-x-1 transition-transform">{item.label}</span>
@@ -244,7 +244,7 @@ export const LandingFooter: React.FC = () => {
                       href={item.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group flex items-center text-slate-400 hover:text-purple-400 transition-all duration-200"
+                      className={footerBlogLinkClass}
                     >
                       <span className="group-hover:translate-x-1 transition-transform truncate">{item.label}</span>
                     </a>
@@ -277,7 +277,7 @@ export const LandingFooter: React.FC = () => {
           </div>
 
           {/* Trust Badges - Premium glass design */}
-          <div className="mt-16 pt-12 border-t border-white/5">
+          <div className="mt-12 border-t border-white/5 pt-8 sm:mt-16 sm:pt-12">
             <div className="flex flex-wrap justify-center gap-4">
               {[
                 { icon: Shield, label: 'AES-256 Encrypted', color: 'sky' },
@@ -311,8 +311,8 @@ export const LandingFooter: React.FC = () => {
           </div>
 
           {/* Bottom Bar */}
-          <div className="mt-12 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-sm">
-            <div className="flex flex-col sm:flex-row items-center gap-4 text-slate-500">
+          <div className="mt-10 pt-6 border-t border-white/5 flex flex-col items-center gap-3 text-sm text-center md:flex-row md:justify-between md:text-left">
+            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-slate-500 md:justify-start">
               <p>© {currentYear} CrisisCore Systems</p>
               <a
                 href="https://github.com/CrisisCore-Systems/pain-tracker/blob/main/LICENSE"
@@ -323,14 +323,14 @@ export const LandingFooter: React.FC = () => {
                 View License
               </a>
             </div>
-            <p className="flex items-center gap-2 text-slate-500">
+            <p className="flex flex-wrap items-center justify-center gap-2 text-slate-500 md:justify-end">
               Made with <Heart className="h-4 w-4 fill-current text-rose-500 animate-pulse" style={{ animationDuration: '2s' }} /> for chronic pain survivors
             </p>
           </div>
 
           {/* Privacy Statement - Premium glass card */}
           <div 
-            className="mt-10 text-center p-8 rounded-2xl backdrop-blur-xl"
+            className="mt-6 rounded-2xl p-6 text-center backdrop-blur-xl sm:p-8"
             style={{ 
               background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.6) 100%)',
               border: '1px solid rgba(56, 189, 248, 0.15)',

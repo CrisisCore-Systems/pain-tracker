@@ -2,24 +2,38 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { SEOPageLayout, type SEOPageContent } from '../../components/seo';
 
+const MEDICATION_AND_PAIN_LOG_ASSET_PATH = '/assets/medication-and-pain-log.pdf';
+const DOCTOR_VISIT_PAIN_SUMMARY_ASSET_PATH = '/assets/doctor-visit-pain-summary-template.pdf';
+
 type ResourcePageConfig = {
   content: SEOPageContent;
   opening: string;
   ctaHref: string;
   ctaText: string;
+  ctaDownload?: boolean;
 };
 
-function ResourcePageTemplate({ content, opening, ctaHref, ctaText }: Readonly<ResourcePageConfig>) {
+function ResourcePageTemplate({ content, opening, ctaHref, ctaText, ctaDownload = false }: Readonly<ResourcePageConfig>) {
   return (
     <SEOPageLayout content={content}>
       <section className="rounded-xl border border-sky-200 bg-sky-50 p-5 text-left">
         <p className="text-sm leading-relaxed text-slate-700">{opening}</p>
-        <Link
-          to={ctaHref}
-          className="mt-4 inline-flex items-center gap-2 rounded-lg bg-sky-700 px-4 py-2 text-sm font-semibold text-white hover:bg-sky-800"
-        >
-          {ctaText}
-        </Link>
+        {ctaDownload ? (
+          <a
+            href={ctaHref}
+            download
+            className="mt-4 inline-flex items-center gap-2 rounded-lg bg-sky-700 px-4 py-2 text-sm font-semibold text-white hover:bg-sky-800"
+          >
+            {ctaText}
+          </a>
+        ) : (
+          <Link
+            to={ctaHref}
+            className="mt-4 inline-flex items-center gap-2 rounded-lg bg-sky-700 px-4 py-2 text-sm font-semibold text-white hover:bg-sky-800"
+          >
+            {ctaText}
+          </Link>
+        )}
       </section>
     </SEOPageLayout>
   );
@@ -91,9 +105,9 @@ const medicationAndPainLogContent: SEOPageContent = {
   badge: 'Printable',
   headline: 'Medication and Pain Log',
   subheadline: 'Record dose timing and relief response so treatment conversations are based on evidence, not guesswork.',
-  primaryCTA: { text: 'Download medication and pain log', href: '/resources/medication-and-pain-log' },
+  primaryCTA: { text: 'Download medication and pain log', href: MEDICATION_AND_PAIN_LOG_ASSET_PATH, download: true },
   secondaryCTA: { text: 'Use the app free', href: '/start' },
-  utilityBlock: { type: 'download', downloadUrl: '/resources/medication-and-pain-log', downloadFileName: 'medication-and-pain-log' },
+  utilityBlock: { type: 'download', downloadUrl: MEDICATION_AND_PAIN_LOG_ASSET_PATH, downloadFileName: 'medication-and-pain-log.pdf' },
   whatIsThis: 'A simple medication and pain log focused on treatment timing, symptom response, side effects, and dose impact over time.',
   whoShouldUse: ['People testing medication adjustments', 'Patients preparing medication reviews', 'Caregivers documenting response patterns'],
   howToUse: [
@@ -179,9 +193,9 @@ const doctorVisitPainSummaryTemplateContent: SEOPageContent = {
   badge: 'Appointment',
   headline: 'Doctor Visit Pain Summary Template',
   subheadline: 'Condense your tracking into one appointment-ready page clinicians can read in under two minutes.',
-  primaryCTA: { text: 'Download doctor summary template', href: '/resources/doctor-visit-pain-summary-template' },
+  primaryCTA: { text: 'Download doctor summary template', href: DOCTOR_VISIT_PAIN_SUMMARY_ASSET_PATH, download: true },
   secondaryCTA: { text: 'Use the app free', href: '/start' },
-  utilityBlock: { type: 'download', downloadUrl: '/resources/doctor-visit-pain-summary-template', downloadFileName: 'doctor-visit-pain-summary-template' },
+  utilityBlock: { type: 'download', downloadUrl: DOCTOR_VISIT_PAIN_SUMMARY_ASSET_PATH, downloadFileName: 'doctor-visit-pain-summary-template.pdf' },
   whatIsThis: 'A one-page doctor visit summary template that translates daily tracking into concise appointment signals.',
   whoShouldUse: ['Patients with short appointment windows', 'People juggling multiple symptom categories', 'Anyone needing clearer clinician communication'],
   howToUse: [
@@ -446,8 +460,9 @@ export const MedicationAndPainLogPage: React.FC = () => (
   <ResourcePageTemplate
     content={medicationAndPainLogContent}
     opening="A useful medication and pain log records dose time, pain level before and after, side effects, and how long relief lasted. This turns treatment conversations into concrete evidence."
-    ctaHref="/resources/medication-and-pain-log"
+    ctaHref={MEDICATION_AND_PAIN_LOG_ASSET_PATH}
     ctaText="Download the free medication and pain log"
+    ctaDownload
   />
 );
 
@@ -464,8 +479,9 @@ export const DoctorVisitPainSummaryTemplatePage: React.FC = () => (
   <ResourcePageTemplate
     content={doctorVisitPainSummaryTemplateContent}
     opening="A doctor visit pain summary should show trends, top limitations, trigger patterns, medication response, and your key questions on one page."
-    ctaHref="/resources/doctor-visit-pain-summary-template"
+    ctaHref={DOCTOR_VISIT_PAIN_SUMMARY_ASSET_PATH}
     ctaText="Download the free doctor summary template"
+    ctaDownload
   />
 );
 

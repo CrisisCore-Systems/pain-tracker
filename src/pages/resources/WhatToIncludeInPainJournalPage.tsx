@@ -217,15 +217,15 @@ export const WhatToIncludeInPainJournalPage: React.FC = () => (
     <SampleEntry />
     <BottomCTACallout
       icon={MonitorSmartphone}
-      heading="You know what to track. Now make it easier to keep up."
-      body="Download the checklist for quick reference or start tracking in the app when you want a lower-friction daily routine."
+      heading="Use a format you can keep up with on hard days."
+      body="Start with the checklist if you need a simple reference, or use the app when you want the same record to be easier to keep going day after day."
       pdfUrl="/assets/pain-journal-checklist.pdf"
       gradientClasses="from-amber-600 to-orange-600"
       tintClass="text-amber-100"
       buttonTextClass="text-amber-700"
       buttonHoverClass="hover:bg-amber-50"
-      primaryLabel="Get the pain journal checklist"
-      secondaryLabel="Start tracking in the app"
+      primaryLabel="Get the checklist"
+      secondaryLabel="Start tracking free"
     />
   </SEOPageLayout>
 );

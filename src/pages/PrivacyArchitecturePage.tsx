@@ -204,6 +204,13 @@ export const PrivacyArchitecturePage: React.FC = () => {
             <p>
               Once you export a file, its handling becomes your responsibility. The export can be copied, printed, emailed, or stored elsewhere depending on what you do with it afterward.
             </p>
+            <p>
+              If you want the short technical FAQ version of this boundary for privacy-minded communities, read the{' '}
+              <Link to="/zero-knowledge-health-tracking-faq" className="font-medium text-sky-300 underline decoration-sky-500/40 underline-offset-2 hover:text-sky-200">
+                zero-knowledge health tracking FAQ
+              </Link>
+              .
+            </p>
           </div>
         </section>
 

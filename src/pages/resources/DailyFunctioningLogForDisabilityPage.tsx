@@ -136,9 +136,9 @@ const functioningStats: StatItem[] = [
 
 const pageContent: SEOPageContent = {
   slug: 'daily-functioning-log-for-disability',
-  title: 'Daily Functioning Log for Disability (Free)',
-  metaTitle: 'Daily Functioning Log for Disability | PainTracker.ca',
-  metaDescription: 'Download the free PainTracker.ca daily functioning log designed for disability claims. Track self-care, household, work, social, and physical activities with capacity ratings evaluators use.',
+  title: 'Daily Functioning Log for Disability in 2026',
+  metaTitle: 'Daily Functioning Log for Disability (2026) | Free PDF Template',
+  metaDescription: 'Download the free daily functioning log for disability claims in 2026. Track self-care, household, work, social, and physical activities with the capacity ratings evaluators actually use.',
   keywords: [
     'daily functioning log for disability', 'functional capacity log',
     'disability functioning diary', 'ADL tracking for disability',
@@ -149,10 +149,10 @@ const pageContent: SEOPageContent = {
     'physical capacity tracking', 'self-care limitation log'
   ],
   badge: 'Free Download',
-  headline: 'Daily Functioning Log for Disability',
-  subheadline: 'Disability evaluators don\'t just ask "how much does it hurt?" — they ask "what can you do?" This log tracks functional capacity across self-care, household, work, social, and physical domains with the rating scale evaluators actually use.',
+  headline: 'Daily Functioning Log for Disability in 2026',
+  subheadline: 'Disability evaluators don\'t just ask "how much does it hurt?" — they ask "what can you do?" This log tracks functional capacity across self-care, household, work, social, and physical domains with the rating scale evaluators actually use. Start with the printable if you need something today. Use the free app when you need a longer-running private record and easier summaries.',
   primaryCTA: { text: 'Download Free PDF (6 Pages)', href: '/assets/daily-functioning-log.pdf', download: true },
-  secondaryCTA: { text: 'Start Digital Tracking', href: '/start' },
+  secondaryCTA: { text: 'Start tracking free', href: '/start' },
   utilityBlock: { type: 'download', downloadUrl: '/assets/daily-functioning-log.pdf', downloadFileName: 'daily-functioning-log.pdf' },
   whatIsThis: 'A daily functioning log that documents what you CAN and CAN\'T do in a way that is easier to review later. Pain levels matter, but functional limitations are often the details evaluators look for when assessing daily impact. This 6-page log tracks 20+ daily activities across four domains (self-care, household/work, social, physical), uses a standardized 0-5 capacity scale, and formats weekly/monthly summaries for evaluators, attorneys, and physicians. It helps organize records for appointments or claim-related discussions.',
   whoShouldUse: [
@@ -194,6 +194,7 @@ const pageContent: SEOPageContent = {
     { title: 'Documenting Pain for Disability', description: 'Complete evidence-building guide', href: '/resources/documenting-pain-for-disability-claim' },
     { title: 'Pain Journal for Disability Benefits', description: 'Benefits-ready journal format', href: '/resources/pain-journal-for-disability-benefits' },
     { title: 'WorkSafeBC Pain Journal', description: 'BC workplace injury claims', href: '/resources/worksafebc-pain-journal-template' },
+    { title: 'Best Pain Tracking Apps in 2026', description: 'Compare printable, local-first, and no-account tracking options before choosing a workflow.', href: '/pain-tracking-apps-comparison' },
     { title: 'Pain Diary Template PDF', description: 'Comprehensive daily tracking', href: '/resources/pain-diary-template-pdf' },
     { title: 'Pain Diary for Specialist', description: 'Prepare for evaluations', href: '/resources/pain-diary-for-specialist-appointment' },
     { title: 'Symptom Tracker Printable', description: 'Track symptoms beyond pain', href: '/resources/symptom-tracker-printable' }
@@ -214,14 +215,14 @@ export const DailyFunctioningLogForDisabilityPage: React.FC = () => (
     <PdfContentsPreview pages={functioningPdfPages} accentColor="blue" heading="What’s in the Functioning Log (6 Pages)" />
     <BottomCTACallout
       icon={MonitorSmartphone}
-      heading='Evaluators Ask "What Can You Do?" Your Log Answers.'
-      body="Every activity you rate, every limitation you document, every modification you note — it builds the functional evidence that pain levels alone can't provide. Download the log and start turning your daily reality into evidence."
+      heading="A clear daily record is easier to review later."
+      body="Documenting what you could do, what you had to stop, and what help you needed gives you something concrete to bring into appointments or claim discussions. Start with the printable log, or use the app if daily tracking is easier there."
       pdfUrl="/assets/daily-functioning-log.pdf"
       gradientClasses="from-blue-600 to-indigo-600"
       tintClass="text-blue-100"
       buttonTextClass="text-blue-700"
       buttonHoverClass="hover:bg-blue-50"
-      secondaryLabel="Start Digital Tracking"
+      secondaryLabel="Start tracking free"
     />
   </SEOPageLayout>
 );

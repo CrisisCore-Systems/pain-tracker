@@ -133,6 +133,32 @@ export const OvertonFrameworkPage: React.FC = () => {
           </p>
         </section>
 
+        <section
+          className="mb-12 p-6 rounded-xl bg-slate-800/50 border border-slate-700/50"
+          aria-labelledby="implementation-paths"
+        >
+          <h2 id="implementation-paths" className="text-xl font-bold mb-3 text-white">
+            Implementation paths
+          </h2>
+          <p className="text-slate-300 leading-relaxed mb-4">
+            If you want to see how these ideas show up in the product rather than the canon, start with the privacy boundary and the app comparison pages.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <Link
+              to="/zero-knowledge-health-tracking-faq"
+              className="inline-flex items-center justify-center gap-2 rounded-lg border border-cyan-500/30 bg-cyan-500/10 px-4 py-3 text-sm font-medium text-cyan-300 hover:bg-cyan-500/20"
+            >
+              Read the zero-knowledge FAQ
+            </Link>
+            <Link
+              to="/pain-tracking-apps-comparison"
+              className="inline-flex items-center justify-center gap-2 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm font-medium text-emerald-300 hover:bg-emerald-500/20"
+            >
+              Compare pain tracking apps
+            </Link>
+          </div>
+        </section>
+
         <div className="text-center">
           <Link to="/" className="text-slate-400 hover:text-white transition-colors">
             ← Back to home

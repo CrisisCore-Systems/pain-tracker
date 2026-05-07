@@ -299,10 +299,11 @@ export default function BlogResourcesPage() {
           </div>
           <div className="flex flex-wrap gap-2">
             <a
-              href="/resources/pain-diary-template-free-download"
+              href="/assets/free-pain-tracking-starter-pack.zip"
+              download="free-pain-tracking-starter-pack.zip"
               className="inline-flex items-center gap-2 rounded-xl bg-sky-500 px-4 py-2 text-sm font-semibold text-white hover:bg-sky-400"
             >
-              Open starter pack
+              Download starter pack ZIP
               <ArrowRight className="h-4 w-4" />
             </a>
             <a

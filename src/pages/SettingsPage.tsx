@@ -7,6 +7,7 @@ import BackupSettings from '../components/settings/BackupSettings';
 import ExportSettings from '../components/settings/ExportSettings';
 import PrivacySettings from '../components/settings/PrivacySettings';
 import TonePreferencesPanel from '../components/settings/TonePreferencesPanel';
+import WorkflowPreferencesPanel from '../components/settings/WorkflowPreferencesPanel';
 import { ClinicalIntegrationSettings } from '../components/settings/ClinicalIntegrationSettings';
 import { Settings, Bell, Shield, Download, Eye, Stethoscope, Database } from 'lucide-react';
 import { usePainTrackerStore } from '../stores/pain-tracker-store';
@@ -111,6 +112,7 @@ export default function SettingsPage() {
               </h3>
             </div>
             <ExportSettings />
+            <WorkflowPreferencesPanel />
             
             <div className="flex items-center gap-2 mt-8">
               <Stethoscope className="h-4 w-4 text-pink-600 dark:text-pink-400" />

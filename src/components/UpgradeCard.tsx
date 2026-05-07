@@ -56,7 +56,7 @@ export const UpgradeCard: React.FC<UpgradeCardProps> = ({ moduleId, className = 
 
         <div className="flex flex-wrap items-center gap-2">
           <Button onClick={() => (globalThis.location.href = '/pricing')}>
-            {requiredTier ? `Unlock with ${requiredTier}` : 'View pricing'}
+            {requiredTier ? 'See upgrade options' : 'View pricing'}
           </Button>
           <Button
             variant="outline"

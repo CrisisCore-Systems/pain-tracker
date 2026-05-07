@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, Calendar, ClipboardList, Download, FileText } from 'lucide-react';
 import { SEOPageLayout, type SEOPageContent } from '../../components/seo';
 
+const STARTER_PACK_ASSET_PATH = '/assets/free-pain-tracking-starter-pack.zip';
+const STARTER_PACK_DOWNLOAD_NAME = 'free-pain-tracking-starter-pack.zip';
+
 const painDiaryStarterPackResources = [
   {
     title: 'Daily Pain Tracker Template',
@@ -53,20 +56,33 @@ type ResourcePageConfig = {
   opening: string;
   ctaHref: string;
   ctaText: string;
+  ctaDownload?: boolean;
+  children?: React.ReactNode;
 };
 
-function ResourcePageTemplate({ content, opening, ctaHref, ctaText }: Readonly<ResourcePageConfig>) {
+function ResourcePageTemplate({ content, opening, ctaHref, ctaText, ctaDownload = false, children }: Readonly<ResourcePageConfig>) {
   return (
     <SEOPageLayout content={content}>
       <section className="rounded-xl border border-sky-200 bg-sky-50 p-5 text-left">
         <p className="text-sm leading-relaxed text-slate-700">{opening}</p>
-        <Link
-          to={ctaHref}
-          className="mt-4 inline-flex items-center gap-2 rounded-lg bg-sky-700 px-4 py-2 text-sm font-semibold text-white hover:bg-sky-800"
-        >
-          {ctaText}
-        </Link>
+        {ctaDownload ? (
+          <a
+            href={ctaHref}
+            download={STARTER_PACK_DOWNLOAD_NAME}
+            className="mt-4 inline-flex items-center gap-2 rounded-lg bg-sky-700 px-4 py-2 text-sm font-semibold text-white hover:bg-sky-800"
+          >
+            {ctaText}
+          </a>
+        ) : (
+          <Link
+            to={ctaHref}
+            className="mt-4 inline-flex items-center gap-2 rounded-lg bg-sky-700 px-4 py-2 text-sm font-semibold text-white hover:bg-sky-800"
+          >
+            {ctaText}
+          </Link>
+        )}
       </section>
+      {children}
     </SEOPageLayout>
   );
 }
@@ -628,7 +644,7 @@ const painDiaryTemplateFreeDownloadContent: SEOPageContent = {
   title: 'Pain Diary Template Free Download Starter Pack',
   metaTitle: 'Pain Diary Template Free Download Starter Pack: Daily, Weekly, and Monthly Formats',
   metaDescription:
-    'Open the free pain diary starter pack with daily, weekly, monthly, medication, function, and doctor-visit templates. Printable pain tracker PDFs for private tracking, appointments, and documentation.',
+    'Download the free pain diary starter pack with daily, weekly, monthly, medication, function, and doctor-visit templates. Printable pain tracker PDFs for private tracking, appointments, and documentation.',
   keywords: [
     'pain diary template free download',
     'free pain diary template',
@@ -640,9 +656,9 @@ const painDiaryTemplateFreeDownloadContent: SEOPageContent = {
   badge: 'Printable',
   headline: 'Pain Diary Starter Pack — Free Download',
   subheadline: 'Start with a printable bundle of daily, weekly, monthly, medication, function, and appointment templates so you can track pain on paper before moving to the app.',
-  primaryCTA: { text: 'Download the daily pain tracker', href: '/resources/daily-pain-tracker-printable' },
-  secondaryCTA: { text: 'Track digitally instead', href: '/start' },
-  utilityBlock: { type: 'download', downloadUrl: '/resources/pain-diary-template-pdf', downloadFileName: 'pain-diary-starter-pack' },
+  primaryCTA: { text: 'Download starter pack ZIP (6 PDFs)', href: STARTER_PACK_ASSET_PATH, download: true },
+  secondaryCTA: { text: 'Start tracking free', href: '/start' },
+  utilityBlock: { type: 'download', downloadUrl: STARTER_PACK_ASSET_PATH, downloadFileName: STARTER_PACK_DOWNLOAD_NAME },
   whatIsThis:
     'A printable starter pack that groups the most useful paper-first pain diary templates in one place: daily entries, weekly and monthly reviews, medication response notes, doctor-visit summaries, and function-impact logging. It is built for people who need a practical starting point, not another giant directory to sort through while tired or in pain.',
   whoShouldUse: [
@@ -665,7 +681,7 @@ const painDiaryTemplateFreeDownloadContent: SEOPageContent = {
     legalNote: 'Consistent, dated symptom and function notes can support disability, injury, or accommodation documentation, but the template itself does not guarantee any claim outcome.'
   },
   faqs: [
-    { question: 'What is included in the free pain diary starter pack?', answer: 'The starter pack points you to the core printable formats most people need first: daily, weekly, and monthly pain trackers plus appointment, medication, and function logs.' },
+    { question: 'What is included in the free pain diary starter pack?', answer: 'The starter pack includes six printable PDFs: daily, weekly, and monthly trackers plus a medication log, a doctor-visit summary sheet, and a function log.' },
     { question: 'What is the best free pain diary template?', answer: 'The best format depends on your goal. Daily sheets capture symptom detail, weekly sheets help with short appointment prep, monthly sheets show longer patterns, and the specialty logs support medication or function-focused documentation.' },
     { question: 'Can I use a printed pain diary for a disability claim?', answer: 'A printed pain diary can support disability or injury documentation when it is dated, consistent, and tied to function. The stronger record is usually the one that shows the pattern over time, not just a single bad day.' },
     { question: 'Should I use digital or printable tracking?', answer: 'Printable tracking is often the easiest starting point because it works immediately and can be handed to a clinician. Digital tracking becomes useful when you want timestamps, local summaries, and export workflows. Many people use both.' }
@@ -690,8 +706,9 @@ export function PainDiaryTemplateFreeDownloadPage() {
     <ResourcePageTemplate
       content={painDiaryTemplateFreeDownloadContent}
       opening="The starter pack is built for the first decision, not the final one. Pick the one printable that matches your situation now, keep it near you, and add the specialty sheets only when you need stronger appointment or documentation detail."
-      ctaHref="/resources/daily-pain-tracker-printable"
-      ctaText="Download the daily pain diary template free"
+      ctaHref={STARTER_PACK_ASSET_PATH}
+      ctaText="Download starter pack ZIP (6 PDFs)"
+      ctaDownload
     >
       <section className="mt-8 rounded-2xl border border-slate-700 bg-slate-950/70 p-6 text-left">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">

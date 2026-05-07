@@ -98,7 +98,7 @@ describe('PricingPage checkout messaging', () => {
       </MemoryRouter>
     );
 
-    fireEvent.click(screen.getByRole('button', { name: 'Get Basic' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Make my records easier to use' }));
 
     expect(screen.getByTestId('location-probe')).toHaveTextContent(
       '/start?redirect=%2Fpricing%3FresumeCheckout%3D1%26tier%3Dbasic%26interval%3Dmonthly'

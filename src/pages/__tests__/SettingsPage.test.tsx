@@ -20,6 +20,9 @@ describe('SettingsPage', () => {
   // Backup & Export (section heading)
   expect(screen.getByRole('heading', { level: 3, name: /Backup & Export/i })).toBeInTheDocument();
 
+    // Workflow preferences panel
+    expect(screen.getByText(/Workflow & Field Mode/i)).toBeInTheDocument();
+
     // Alerts settings
     expect(screen.getByText(/Alerts settings/i)).toBeInTheDocument();
   });

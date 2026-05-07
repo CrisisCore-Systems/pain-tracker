@@ -7,9 +7,9 @@
 
 import React from 'react';
 import {
-  ArrowRight, Activity, AlertTriangle, CheckCircle, XCircle,
-  TrendingUp, Users, FileText, Clock, Shield,
-  Compass, Ruler, Dumbbell, MonitorSmartphone
+  AlertTriangle, XCircle,
+  TrendingUp, Users, FileText,
+  Compass, MonitorSmartphone
 } from 'lucide-react';
 import { SEOPageLayout, type SEOPageContent, StatsBanner, PdfContentsPreview, BottomCTACallout } from '../../components/seo';
 import type { StatItem, PdfPage } from '../../components/seo';
@@ -149,7 +149,7 @@ const pageContent: SEOPageContent = {
   headline: 'Chronic Back Pain Diary',
   subheadline: 'Track exactly where it hurts, what makes it worse, and what helps. Location-coded spine tracking, activity impact, and PT exercise logging — because "my back hurts" isn\'t enough for a diagnosis.',
   primaryCTA: { text: 'Download Free PDF (6 Pages)', href: '/assets/chronic-back-pain-diary.pdf', download: true },
-  secondaryCTA: { text: 'Try Digital Version', href: '/start' },
+  secondaryCTA: { text: 'Start tracking free', href: '/start' },
   utilityBlock: { type: 'download', downloadUrl: '/assets/chronic-back-pain-diary.pdf', downloadFileName: 'chronic-back-pain-diary.pdf' },
   whatIsThis: 'A chronic back pain diary designed specifically for spinal conditions. It uses location codes (C/T/L/S) to pinpoint pain by spine region, tracks radiation patterns that indicate nerve involvement, logs activity and posture impact, and includes a dedicated physical therapy exercise tracker. Your spine specialist, PT, or chiropractor gets the precise data they need — not vague descriptions of "back pain."',
   whoShouldUse: [
@@ -215,8 +215,8 @@ export const ChronicBackPainDiaryPage: React.FC = () => (
     />
     <BottomCTACallout
       icon={MonitorSmartphone}
-      heading="Track PT Progress Over Months, Not Just Days"
-      body={"The printable PDF captures daily details beautifully. When you need to see 3-month trends, position tolerance changes over time, or medication effectiveness patterns \u2014 the digital version adds what paper can't: visualization and pattern analysis."}
+      heading="Keep a back-pain record you can review before the next visit."
+      body={"Paper is a good place to start when you want something simple. If you want to review position tolerance, PT progress, or flare timing over longer stretches, the app can make that easier to follow. Use whichever format helps you keep the record going."}
       pdfUrl="/assets/chronic-back-pain-diary.pdf"
       gradientClasses="from-blue-600 to-indigo-600"
       tintClass="text-blue-100"

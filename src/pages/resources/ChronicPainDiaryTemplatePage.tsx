@@ -7,7 +7,7 @@
 
 import React from 'react';
 import {
-  ArrowRight, CheckCircle, Clock, Calendar,
+  CheckCircle, Clock, Calendar,
   TrendingUp, Activity, AlertTriangle, FileText,
   BarChart3, Flame, Thermometer, Shield
 } from 'lucide-react';
@@ -154,7 +154,7 @@ const pageContent: SEOPageContent = {
   headline: 'Chronic Pain Diary Template',
   subheadline: 'Chronic pain isn\'t one bad day — it\'s a pattern of baseline pain, flares, partial recoveries, and slow shifts. This 6-page diary template tracks all of it: daily symptoms, flare episodes, treatment responses, and monthly trends that reveal whether things are actually improving.',
   primaryCTA: { text: 'Download Free PDF', href: '/assets/chronic-pain-diary-template.pdf', download: true },
-  secondaryCTA: { text: 'Try Digital Version', href: '/start' },
+  secondaryCTA: { text: 'Start tracking free', href: '/start' },
   utilityBlock: { type: 'download', downloadUrl: '/assets/chronic-pain-diary-template.pdf', downloadFileName: 'chronic-pain-diary-template.pdf' },
   whatIsThis: 'A 6-page chronic pain diary template built specifically for the unique challenge of long-term pain tracking. Unlike generic pain diaries, this template distinguishes between baseline pain and flare episodes, tracks treatment responses over time, identifies flare triggers across physical, emotional, medical, and environmental categories, and provides weekly and monthly summary pages that reveal trends your daily experience can\'t. It\'s designed for people who\'ve been living with pain for months or years and need documentation that captures the full picture.',
   whoShouldUse: [
@@ -216,8 +216,8 @@ export const ChronicPainDiaryTemplatePage: React.FC = () => (
     <PdfContentsPreview pages={chronicPdfPages} accentColor="violet" variant="badge" heading="What's in Your 6-Page Chronic Pain Diary" subtitle="Every page designed for the unique needs of long-term chronic pain tracking." />
     <BottomCTACallout
       icon={TrendingUp}
-      heading="Chronic Pain Changes Slowly. Your Diary Catches What You Can't Feel."
-      body="After a few weeks of tracking, you'll have evidence your doctor can act on — not just 'it hurts' but exactly how, when, and what makes it worse or better."
+      heading="Make the pattern easier to see over time."
+      body="A few weeks of consistent entries are easier to review than trying to remember how the month felt. Start with the printable diary, or use the app if that makes daily tracking easier to keep."
       pdfUrl="/assets/chronic-pain-diary-template.pdf"
       gradientClasses="from-violet-600 to-purple-600"
       tintClass="text-violet-100"

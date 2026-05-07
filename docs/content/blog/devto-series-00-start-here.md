@@ -1,6 +1,6 @@
 ---
 title: "Start Here: PainTracker and the CrisisCore Build Log"
-description: "Start here for PainTracker: privacy-first, offline-first architecture patterns and the CrisisCore build log."
+description: "A protocol-first table of contents for Protective Computing, PainTracker, and the CrisisCore implementation stack."
 tags:
   - pwa
   - privacy
@@ -10,80 +10,94 @@ canonical_url: "https://github.com/CrisisCore-Systems/pain-tracker"
 published: false
 ---
 
-PainTracker is a privacy first, offline first pain tracker built for the moments that matter.
-No cloud dependency. No surveillance business model. Client side encryption where it counts.
+PainTracker is a privacy-first, offline-first pain tracker built for moments where stability has already failed.
+No cloud dependency for the core workflow. No surveillance business model. Client-side protection where the data boundary demands it.
 
-This page is the front door for the CrisisCore catalog around PainTracker,
-Protective Computing, and trustworthy offline-first systems.
+This page is no longer just a list of posts.
+It is the front-door protocol map for the CrisisCore catalog around Protective Computing, PainTracker, and the implementation evidence behind both.
 
-If you are living with chronic pain, start with the product and the evidence.
-If you are building health software, start with the architectural constraints.
-If you are auditing claims, start with the failure modes and the proof.
+If you are here to understand the doctrine, start at Layer 0.
+If you are here to audit the engineering, walk the stack from Layer 1 through Layer 4.
+If you are here to decide whether these claims are earned, follow the artifact and release path, not just the rhetoric.
 
-## Start with the route that matches your goal
+## The protocol stack
 
-### 1. If you want the Protective Computing doctrine
+| Layer | Component | Function | Start here |
+| --- | --- | --- | --- |
+| 0 | The Protocol | The doctrine, threat model, and legitimacy test. | [Architecting for Vulnerability: Introducing Protective Computing Core v1.0](https://dev.to/crisiscoresystems/architecting-for-vulnerability-introducing-protective-computing-core-v10-91g) |
+| 1 | The Cryptography | Local authority, subpoena resistance, and explainable client-side protection. | [Client-Side Encryption for Healthcare Apps](https://dev.to/crisiscoresystems/client-side-encryption-for-healthcare-apps-dhm) |
+| 2 | The Resilience | Offline-first storage, deterministic caching, and degraded-mode behavior. | [Offline-first without a backend: a local-first PWA architecture you can trust](https://dev.to/crisiscoresystems/offline-first-without-a-backend-a-local-first-pwa-architecture-you-can-trust-3j15) |
+| 3 | The Human UX | Trauma-informed interaction, coercion resistance, and protective friction. | [Trauma-Informed React Hooks](https://dev.to/crisiscoresystems/trauma-informed-react-hooks-483n) |
+| 4 | The Artifacts | Export boundaries, release proofs, and evidence users can carry out of the app. | [ProofVault as a Release Artifact: Turning Trust Into Something You Can Verify](https://dev.to/crisiscoresystems/how-proofvault-turned-trust-from-a-documentation-claim-into-a-reproducible-release-artifact-22pb) |
 
-Start here:
-[Architecting for Vulnerability: Introducing Protective Computing Core v1.0](https://dev.to/crisiscoresystems/architecting-for-vulnerability-introducing-protective-computing-core-v10-91g)
+## Layer 0: The Protocol
 
-Then read:
-[Protective Computing Is Not Privacy Theater](https://dev.to/crisiscoresystems/protective-computing-is-not-privacy-theater-2job)
+This is the doctrine layer. Read this path first if you want the argument underneath the rest of the system.
 
-Then close with:
-[The Stability Assumption: The Hidden Defect Source](https://dev.to/crisiscoresystems/the-stability-assumption-the-hidden-defect-source-5cpd)
+1. [Architecting for Vulnerability: Introducing Protective Computing Core v1.0](https://dev.to/crisiscoresystems/architecting-for-vulnerability-introducing-protective-computing-core-v10-91g)
+2. [Protective Computing Is Not Privacy Theater](https://dev.to/crisiscoresystems/protective-computing-is-not-privacy-theater-2job)
+3. [The Stability Assumption: The Hidden Defect Source](https://dev.to/crisiscoresystems/the-stability-assumption-the-hidden-defect-source-5cpd)
+4. [Protective Computing Canon v1.0 is now DOI-backed](https://dev.to/crisiscoresystems/the-overton-framework-is-now-doi-backed-ko7)
 
-Then use the citable canon:
-[The Overton Framework is now DOI-backed](https://dev.to/crisiscoresystems/the-overton-framework-is-now-doi-backed-ko7)
+## Layer 1: The Cryptography
 
-### 2. If you want the reference implementation path
+This layer answers the hard question: what makes the system harder to seize, subpoena, or casually over-collect?
 
-Start with the architecture:
-[Offline-first without a backend: a local-first PWA architecture you can trust](https://dev.to/crisiscoresystems/offline-first-without-a-backend-a-local-first-pwa-architecture-you-can-trust-3j15)
+1. [Client-Side Encryption for Healthcare Apps](https://dev.to/crisiscoresystems/client-side-encryption-for-healthcare-apps-dhm)
+2. [If Your Health App Can't Explain Its Encryption, It Doesn't Have Any](https://dev.to/crisiscoresystems/if-your-health-app-cant-explain-its-encryption-it-doesnt-have-any-1647)
+3. [No Backend, No Excuses: The Architecture Behind a Private Health App](https://dev.to/crisiscoresystems/no-backend-no-excuses-the-architecture-behind-a-private-health-app-1g52)
+4. [Keeping Your Health Data Out of Court](https://dev.to/crisiscoresystems/keeping-your-health-data-out-of-court-3f0m)
+5. Coming next: Subpoena-Proofing by Design: Why Real Zero-Knowledge Has No Back Door
 
-Then read the boundaries underneath it:
-[Three storage layers in an offline-first health PWA: state cache vs IndexedDB vs encrypted vault](https://dev.to/crisiscoresystems/three-storage-layers-in-an-offline-first-health-pwa-state-cache-vs-indexeddb-vs-encrypted-vault-19b7)
+## Layer 2: The Resilience
 
-[Service workers that don't surprise you: deterministic caching for offline-first PWAs](https://dev.to/crisiscoresystems/service-workers-that-dont-surprise-you-deterministic-caching-for-offline-first-pwas-5480)
+This layer covers degraded-mode behavior. It is where the system proves it still works when signal, battery, or continuity starts collapsing.
 
-[Exports are a security boundary: the moment local-first becomes shareable](https://dev.to/crisiscoresystems/exports-are-a-security-boundary-the-moment-local-first-becomes-shareable-3gj9)
+1. [Offline-first without a backend: a local-first PWA architecture you can trust](https://dev.to/crisiscoresystems/offline-first-without-a-backend-a-local-first-pwa-architecture-you-can-trust-3j15)
+2. [Three storage layers in an offline-first health PWA: state cache vs IndexedDB vs encrypted vault](https://dev.to/crisiscoresystems/three-storage-layers-in-an-offline-first-health-pwa-state-cache-vs-indexeddb-vs-encrypted-vault-19b7)
+3. [Service workers that don't surprise you: deterministic caching for offline-first PWAs](https://dev.to/crisiscoresystems/service-workers-that-dont-surprise-you-deterministic-caching-for-offline-first-pwas-5480)
+4. [Service Worker Failure Modes in Offline-First PWAs](https://dev.to/crisiscoresystems/service-worker-failure-modes-in-offline-first-pwas-3dnp)
+5. [Rollback Patterns in Offline-First PWAs](https://dev.to/crisiscoresystems/rollback-patterns-in-offline-first-pwas-13f9)
 
-[Maintaining truthful docs over time: how to keep security claims honest](https://dev.to/crisiscoresystems/maintaining-truthful-docs-over-time-how-to-keep-security-claims-honest-2778)
+## Layer 3: The Human UX
 
-### 3. If you want the failure-mode and testing path
+This layer explains why the interface is allowed to resist speed, reduce pressure, and adapt to instability instead of optimizing for throughput.
 
-Start with what breaks in the wild:
-[Service Worker Failure Modes in Offline-First PWAs](https://dev.to/crisiscoresystems/service-worker-failure-modes-in-offline-first-pwas-3dnp)
+1. [Trauma-Informed React Hooks](https://dev.to/crisiscoresystems/trauma-informed-react-hooks-483n)
+2. [Trauma-Informed UX: Accessibility as Architecture](https://dev.to/crisiscoresystems/trauma-informed-ux-accessibility-as-architecture-3j0d)
+3. [The Micro-Coercion of Speed: Why Friction Is an Engineering Prerequisite](https://dev.to/crisiscoresystems/the-micro-coercion-of-speed-why-friction-is-an-engineering-prerequisite-g4j)
+4. [Coercion-Resistant UX: Designing Interfaces That Don't Pressure Users Under Stress](https://dev.to/crisiscoresystems/coercion-resistant-ux-designing-interfaces-that-dont-pressure-users-under-stress-18m9)
+5. Coming next: The Friction Prerequisite: Why We Intentionally Slowed Down the UI
 
-Then read the recovery and migration boundaries:
-[Rollback Patterns in Offline-First PWAs](https://dev.to/crisiscoresystems/rollback-patterns-in-offline-first-pwas-13f9)
+## Layer 4: The Artifacts
 
-[Testing IndexedDB Schema Migrations in Offline-First PWAs](https://dev.to/crisiscoresystems/testing-indexeddb-schema-migrations-in-offline-first-pwas-26m8)
+This layer is where claims become evidence. If you want to know whether the system can produce legible proof without leaking everything else, read here.
 
-[Offline Queue Replay and Idempotency in Offline-First PWAs](https://dev.to/crisiscoresystems/offline-queue-replay-and-idempotency-in-offline-first-pwas-3hpg)
+1. [Exports are a security boundary: the moment local-first becomes shareable](https://dev.to/crisiscoresystems/exports-are-a-security-boundary-the-moment-local-first-becomes-shareable-3gj9)
+2. [WorkSafeBC-Oriented Workflows: Careful Language, Better Evidence](https://dev.to/crisiscoresystems/worksafebc-oriented-workflows-careful-language-better-evidence-5e3n)
+3. [Quality gates that earn trust: checks you can run, not promises you can't](https://dev.to/crisiscoresystems/quality-gates-that-earn-trust-checks-you-can-run-not-promises-you-cant-58a3)
+4. [ProofVault as a Release Artifact: Turning Trust Into Something You Can Verify](https://dev.to/crisiscoresystems/how-proofvault-turned-trust-from-a-documentation-claim-into-a-reproducible-release-artifact-22pb)
+5. [Maintaining truthful docs over time: how to keep security claims honest](https://dev.to/crisiscoresystems/maintaining-truthful-docs-over-time-how-to-keep-security-claims-honest-2778)
+6. Coming next: Bureaucratic Combat: Turning Pain Into a WorkSafeBC-Ready Audit
 
-If you want the boundary question that sits under those tests, add:
-[Trust Boundaries in Client-Side Health Apps](https://dev.to/crisiscoresystems/trust-boundaries-in-client-side-health-apps-2pa9)
+## Two series, two jobs
 
-### 4. If you want the trust and release path
+Use the series pages as operating modes, not just categories.
 
-Start with:
-[Quality gates that earn trust: checks you can run, not promises you can't](https://dev.to/crisiscoresystems/quality-gates-that-earn-trust-checks-you-can-run-not-promises-you-cant-58a3)
+- [Protective Computing in Practice](https://dev.to/crisiscoresystems/series/35109) is the theory and doctrine path.
+- [CrisisCore Build Log](https://dev.to/crisiscoresystems/series/34363) is the implementation and verification path.
 
-Then read:
-[ProofVault as a Release Artifact: Turning Trust Into Something You Can Verify](https://dev.to/crisiscoresystems/how-proofvault-turned-trust-from-a-documentation-claim-into-a-reproducible-release-artifact-22pb)
+## What this front door is doing now
 
-[Preview Mode First: Agent Plans as PRs](https://dev.to/crisiscoresystems/preview-mode-first-agent-plans-as-prs-plan-diff-invariants-4ikd)
+This index is meant to move the catalog away from a chronological feed and toward a structured engineering protocol.
+The point is not to explain taste. The point is to show which layer a post belongs to, what threat model it addresses, and what kind of proof it contributes.
 
-[The Overton Framework is now DOI-backed](https://dev.to/crisiscoresystems/the-overton-framework-is-now-doi-backed-ko7)
+The next gaps to close are two bridge posts that turn the protocol map into a cleaner sequence.
+The Layer 1 bridge belongs immediately after the cryptography posts above.
+The working title is: Subpoena-Proofing by Design: Why Real Zero-Knowledge Has No Back Door.
 
-## If you want the raw series pages
-
-CrisisCore Build Log:
-[dev.to/crisiscoresystems/series/34363](https://dev.to/crisiscoresystems/series/34363)
-
-Protective Computing in Practice:
-[dev.to/crisiscoresystems/series/35109](https://dev.to/crisiscoresystems/series/35109)
+The Layer 4 bridge belongs immediately after the artifact and WorkSafeBC workflow posts above.
+The working title is: Bureaucratic Combat: Turning Pain Into a WorkSafeBC-Ready Audit.
 
 ## Try it or support it
 
@@ -99,8 +113,9 @@ Sponsor
 ## One honest note about scope
 
 This is not medical advice.
-This is infrastructure. The goal is to help you track reality without giving away control of your data.
+This is not a claim of perfect security.
+This is infrastructure intended to help people track reality without surrendering unnecessary control.
 
 ## If you are building something similar
 
-What is the one rule you use to make sure your offline features never surprise the user
+Which layer is still weakest in your system: doctrine, cryptography, resilience, human UX, or artifacts?

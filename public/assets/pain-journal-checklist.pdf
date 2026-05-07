@@ -10,7 +10,7 @@
 endobj
 4 0 obj
 <<
-/Length 5918
+/Length 6548
 >>
 stream
 0.200025 w
@@ -36,30 +36,30 @@ BT
 (paintracker.ca) Tj
 ET
 0.23 0.51 0.96 rg
-524.2200000000000273 772. m
+524.5800000000000409 772. m
 572. 772. l
 574.2091389993231587 772. 576. 770.2091389993231587 576. 768. c
 576. 754. l
 576. 751.7908610006768413 573.7908610006768413 750. 572. 750. c
-524.2200000000000273 750. l
-522.0108610006768686 750. 520.2200000000000273 752.2091389993231587 520.2200000000000273 754. c
-520.2200000000000273 768. l
-520.2200000000000273 770.2091389993231587 522.429138999323186 772. 524.2200000000000273 772. c
+524.5800000000000409 750. l
+522.3708610006768822 750. 520.5800000000000409 752.2091389993231587 520.5800000000000409 754. c
+520.5800000000000409 768. l
+520.5800000000000409 770.2091389993231587 522.7891389993231996 772. 524.5800000000000409 772. c
 h
 f
 BT
 /F2 9 Tf
 10.3499999999999996 TL
 1. g
-528.2200000000000273 757. Td
-(Checklist) Tj
+528.5800000000000409 757. Td
+(Field List) Tj
 ET
 BT
 /F2 8 Tf
 9.1999999999999993 TL
 0.58 0.639 0.722 rg
-511.1999999999999886 737. Td
-(FREE TEMPLATE) Tj
+507.6800000000000068 737. Td
+(FREE PRINTABLE) Tj
 ET
 BT
 /F2 22 Tf
@@ -73,7 +73,7 @@ BT
 11.5 TL
 0.278 0.333 0.412 rg
 36. 674. Td
-(Complete checklist of information that makes pain tracking clinically useful.) Tj
+(A field list for the facts that make tracking clinically useful instead of decorative.) Tj
 ET
 0.89 0.91 0.94 RG
 1. w
@@ -81,344 +81,450 @@ ET
 576. 648. l
 S
 0.97 0.98 0.99 rg
-36. 636. 540. -22. re
+0.89 0.91 0.94 RG
+0.75 w
+42. 632. m
+570. 632. l
+573.3137084989847381 632. 576. 629.3137084989847381 576. 626. c
+576. 564. l
+576. 560.6862915010152619 572.6862915010152619 558. 570. 558. c
+42. 558. l
+38.6862915010152406 558. 36. 561.3137084989847381 36. 564. c
+36. 626. l
+36. 629.3137084989847381 39.3137084989847594 632. 42. 632. c
+h
+B
+BT
+/F2 8 Tf
+9.1999999999999993 TL
+0.145 0.388 0.922 rg
+48. 618. Td
+(Routing Note) Tj
+ET
+BT
+/F2 8.5 Tf
+9.7749999999999986 TL
+0.059 0.09 0.165 rg
+48. 604. Td
+(Need:) Tj
+ET
+BT
+/F1 8.5 Tf
+9.7749999999999986 TL
+0.278 0.333 0.412 rg
+114. 604. Td
+(When everything hurts, a blank page can feel like a dare. A checklist is simpler and more honest.) Tj
+ET
+BT
+/F2 8.5 Tf
+9.7749999999999986 TL
+0.059 0.09 0.165 rg
+48. 590. Td
+(Tool:) Tj
+ET
+BT
+/F1 8.5 Tf
+9.7749999999999986 TL
+0.278 0.333 0.412 rg
+114. 590. Td
+(Use it to strip tracking down to what is essential now and ignore the rest until it becomes necessary.) Tj
+ET
+BT
+/F2 8.5 Tf
+9.7749999999999986 TL
+0.059 0.09 0.165 rg
+48. 576. Td
+(Rule:) Tj
+ET
+BT
+/F1 8.5 Tf
+9.7749999999999986 TL
+0.278 0.333 0.412 rg
+114. 576. Td
+(A shorter system you can survive is better than a perfect system you abandon.) Tj
+ET
+0.97 0.98 0.99 rg
+36. 550. 540. -22. re
 f
 BT
 /F2 11 Tf
 12.6499999999999986 TL
 0.145 0.388 0.922 rg
-44. 620. Td
+44. 534. Td
 (Essential \(Track Daily\)) Tj
 ET
 0.58 0.64 0.72 RG
 0.5 w
-52. 610. 10. -10. re
+52. 524. 10. -10. re
 S
 BT
 /F1 9 Tf
 10.3499999999999996 TL
 0.059 0.09 0.165 rg
-70. 602. Td
+70. 516. Td
 (Pain intensity \(0–10 scale\)) Tj
 ET
 0.58 0.64 0.72 RG
 0.5 w
-52. 594. 10. -10. re
+52. 508. 10. -10. re
 S
 BT
 /F1 9 Tf
 10.3499999999999996 TL
 0.059 0.09 0.165 rg
-70. 586. Td
+70. 500. Td
 (Pain location \(be specific\)) Tj
 ET
 0.58 0.64 0.72 RG
 0.5 w
-52. 578. 10. -10. re
+52. 492. 10. -10. re
 S
 BT
 /F1 9 Tf
 10.3499999999999996 TL
 0.059 0.09 0.165 rg
-70. 570. Td
+70. 484. Td
 (Pain type \(sharp, dull, burning, throbbing, etc.\)) Tj
 ET
 0.58 0.64 0.72 RG
 0.5 w
-52. 562. 10. -10. re
+52. 476. 10. -10. re
 S
 BT
 /F1 9 Tf
 10.3499999999999996 TL
 0.059 0.09 0.165 rg
-70. 554. Td
+70. 468. Td
 (Time of day pain occurs) Tj
 ET
 0.58 0.64 0.72 RG
 0.5 w
-52. 546. 10. -10. re
+52. 460. 10. -10. re
 S
 BT
 /F1 9 Tf
 10.3499999999999996 TL
 0.059 0.09 0.165 rg
-70. 538. Td
+70. 452. Td
 (Duration of each episode) Tj
 ET
 0.97 0.98 0.99 rg
-36. 520. 540. -22. re
+36. 434. 540. -22. re
 f
 BT
 /F2 11 Tf
 12.6499999999999986 TL
 0.145 0.388 0.922 rg
-44. 504. Td
+44. 418. Td
 (Important \(Track Daily\)) Tj
 ET
 0.58 0.64 0.72 RG
 0.5 w
-52. 494. 10. -10. re
+52. 408. 10. -10. re
 S
 BT
 /F1 9 Tf
 10.3499999999999996 TL
 0.059 0.09 0.165 rg
-70. 486. Td
+70. 400. Td
 (Medications taken \(name, dose, time\)) Tj
 ET
 0.58 0.64 0.72 RG
 0.5 w
-52. 478. 10. -10. re
+52. 392. 10. -10. re
 S
 BT
 /F1 9 Tf
 10.3499999999999996 TL
 0.059 0.09 0.165 rg
-70. 470. Td
+70. 384. Td
 (Medication effectiveness \(% relief, duration\)) Tj
 ET
 0.58 0.64 0.72 RG
 0.5 w
-52. 462. 10. -10. re
+52. 376. 10. -10. re
 S
 BT
 /F1 9 Tf
 10.3499999999999996 TL
 0.059 0.09 0.165 rg
-70. 454. Td
+70. 368. Td
 (Sleep quality and hours) Tj
 ET
 0.58 0.64 0.72 RG
 0.5 w
-52. 446. 10. -10. re
+52. 360. 10. -10. re
 S
 BT
 /F1 9 Tf
 10.3499999999999996 TL
 0.059 0.09 0.165 rg
-70. 438. Td
+70. 352. Td
 (Activities attempted and completed) Tj
 ET
 0.58 0.64 0.72 RG
 0.5 w
-52. 430. 10. -10. re
+52. 344. 10. -10. re
 S
 BT
 /F1 9 Tf
 10.3499999999999996 TL
 0.059 0.09 0.165 rg
-70. 422. Td
+70. 336. Td
 (What made pain better or worse) Tj
 ET
 0.97 0.98 0.99 rg
-36. 404. 540. -22. re
+36. 318. 540. -22. re
 f
 BT
 /F2 11 Tf
 12.6499999999999986 TL
 0.145 0.388 0.922 rg
-44. 388. Td
+44. 302. Td
 (Valuable \(Track When Relevant\)) Tj
 ET
 0.58 0.64 0.72 RG
 0.5 w
-52. 378. 10. -10. re
+52. 292. 10. -10. re
 S
 BT
 /F1 9 Tf
 10.3499999999999996 TL
 0.059 0.09 0.165 rg
-70. 370. Td
+70. 284. Td
 (Mood and emotional state) Tj
 ET
 0.58 0.64 0.72 RG
 0.5 w
-52. 362. 10. -10. re
+52. 276. 10. -10. re
 S
 BT
 /F1 9 Tf
 10.3499999999999996 TL
 0.059 0.09 0.165 rg
-70. 354. Td
+70. 268. Td
 (Stress level) Tj
 ET
 0.58 0.64 0.72 RG
 0.5 w
-52. 346. 10. -10. re
+52. 260. 10. -10. re
 S
 BT
 /F1 9 Tf
 10.3499999999999996 TL
 0.059 0.09 0.165 rg
-70. 338. Td
+70. 252. Td
 (Weather/barometric pressure) Tj
 ET
 0.58 0.64 0.72 RG
 0.5 w
-52. 330. 10. -10. re
+52. 244. 10. -10. re
 S
 BT
 /F1 9 Tf
 10.3499999999999996 TL
 0.059 0.09 0.165 rg
-70. 322. Td
+70. 236. Td
 (Menstrual cycle day \(if applicable\)) Tj
 ET
 0.58 0.64 0.72 RG
 0.5 w
-52. 314. 10. -10. re
+52. 228. 10. -10. re
 S
 BT
 /F1 9 Tf
 10.3499999999999996 TL
 0.059 0.09 0.165 rg
-70. 306. Td
+70. 220. Td
 (Food and hydration) Tj
 ET
 0.58 0.64 0.72 RG
 0.5 w
-52. 298. 10. -10. re
+52. 212. 10. -10. re
 S
 BT
 /F1 9 Tf
 10.3499999999999996 TL
 0.059 0.09 0.165 rg
-70. 290. Td
+70. 204. Td
 (Exercise or physical therapy) Tj
 ET
 0.97 0.98 0.99 rg
-36. 272. 540. -22. re
+36. 186. 540. -22. re
 f
 BT
 /F2 11 Tf
 12.6499999999999986 TL
 0.145 0.388 0.922 rg
-44. 256. Td
+44. 170. Td
 (For Appointments \(Weekly Summary\)) Tj
 ET
 0.58 0.64 0.72 RG
 0.5 w
-52. 246. 10. -10. re
+52. 160. 10. -10. re
 S
 BT
 /F1 9 Tf
 10.3499999999999996 TL
 0.059 0.09 0.165 rg
-70. 238. Td
+70. 152. Td
 (Average pain level this week) Tj
 ET
 0.58 0.64 0.72 RG
 0.5 w
-52. 230. 10. -10. re
+52. 144. 10. -10. re
 S
 BT
 /F1 9 Tf
 10.3499999999999996 TL
 0.059 0.09 0.165 rg
-70. 222. Td
+70. 136. Td
 (Worst and best days) Tj
 ET
 0.58 0.64 0.72 RG
 0.5 w
-52. 214. 10. -10. re
+52. 128. 10. -10. re
 S
 BT
 /F1 9 Tf
 10.3499999999999996 TL
 0.059 0.09 0.165 rg
-70. 206. Td
+70. 120. Td
 (Functional limitations) Tj
 ET
 0.58 0.64 0.72 RG
 0.5 w
-52. 198. 10. -10. re
+52. 112. 10. -10. re
 S
 BT
 /F1 9 Tf
 10.3499999999999996 TL
 0.059 0.09 0.165 rg
-70. 190. Td
+70. 104. Td
 (Questions for your doctor) Tj
 ET
 0.58 0.64 0.72 RG
 0.5 w
-52. 182. 10. -10. re
+52. 96. 10. -10. re
 S
 BT
 /F1 9 Tf
 10.3499999999999996 TL
 0.059 0.09 0.165 rg
-70. 174. Td
+70. 88. Td
 (Treatment changes to discuss) Tj
 ET
-BT
-/F2 9 Tf
-10.3499999999999996 TL
-0.059 0.09 0.165 rg
-44. 152. Td
-(Your Tracking Priorities) Tj
-ET
-0.89 0.91 0.94 RG
-1. g
-0.5 w
-40. 144. m
-572. 144. l
-574.2091389993231587 144. 576. 142.2091389993231587 576. 140. c
-576. 76. l
-576. 73.7908610006768413 573.7908610006768413 72. 572. 72. c
-40. 72. l
-37.7908610006768271 72. 36. 74.2091389993231587 36. 76. c
-36. 140. l
-36. 142.2091389993231587 38.2091389993231729 144. 40. 144. c
-h
-B
-0.89 0.91 0.94 RG
-44. 126. m
-568. 126. l
-S
-0.89 0.91 0.94 RG
-44. 108. m
-568. 108. l
-S
-0.89 0.91 0.94 RG
-44. 90. m
-568. 90. l
-S
 0.89 0.91 0.94 RG
 0.5 w
-36. 48. m
-576. 48. l
+36. 58. m
+576. 58. l
 S
 BT
 /F1 7.5 Tf
 8.625 TL
 0.58 0.639 0.722 rg
-36. 34. Td
-(PainTracker  •  paintracker.ca  •  Private Offline-First Pain Tracking) Tj
+36. 38. Td
+(PainTracker  •  paintracker.ca  •  Private, offline-first pain tracking) Tj
 ET
 BT
 /F1 7.5 Tf
 8.625 TL
 0.58 0.639 0.722 rg
-537.8999999999999773 34. Td
-(Page 1 of 1) Tj
+537.8999999999999773 38. Td
+(Page 1 of 2) Tj
 ET
 BT
 /F1 7.5 Tf
 8.625 TL
 0.58 0.639 0.722 rg
 36. 22. Td
-(This template is free to use, print, and share. Not medical advice.) Tj
+(Free to print and share. Not medical advice.) Tj
+ET
+endstream
+endobj
+5 0 obj
+<</Type /Page
+/Parent 1 0 R
+/Resources 2 0 R
+/MediaBox [0 0 612. 792.]
+/Contents 6 0 R
+>>
+endobj
+6 0 obj
+<<
+/Length 971
+>>
+stream
+0.5 w
+0.58 0.64 0.72 RG
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.059 0.09 0.165 rg
+44. 752. Td
+(Your Tracking Priorities) Tj
+ET
+0.89 0.91 0.94 RG
+1. g
+0.5 w
+40. 744. m
+572. 744. l
+574.2091389993231587 744. 576. 742.2091389993231587 576. 740. c
+576. 676. l
+576. 673.7908610006768413 573.7908610006768413 672. 572. 672. c
+40. 672. l
+37.7908610006768271 672. 36. 674.2091389993231587 36. 676. c
+36. 740. l
+36. 742.2091389993231587 38.2091389993231729 744. 40. 744. c
+h
+B
+0.89 0.91 0.94 RG
+44. 726. m
+568. 726. l
+S
+0.89 0.91 0.94 RG
+44. 708. m
+568. 708. l
+S
+0.89 0.91 0.94 RG
+44. 690. m
+568. 690. l
+S
+0.89 0.91 0.94 RG
+0.5 w
+36. 58. m
+576. 58. l
+S
+BT
+/F1 7.5 Tf
+8.625 TL
+0.58 0.639 0.722 rg
+36. 38. Td
+(PainTracker  •  paintracker.ca  •  Private, offline-first pain tracking) Tj
+ET
+BT
+/F1 7.5 Tf
+8.625 TL
+0.58 0.639 0.722 rg
+537.8999999999999773 38. Td
+(Page 2 of 2) Tj
+ET
+BT
+/F1 7.5 Tf
+8.625 TL
+0.58 0.639 0.722 rg
+36. 22. Td
+(Free to print and share. Not medical advice.) Tj
 ET
 endstream
 endobj
 1 0 obj
 <</Type /Pages
-/Kids [3 0 R ]
-/Count 1
+/Kids [3 0 R 5 0 R ]
+/Count 2
 >>
 endobj
-5 0 obj
+7 0 obj
 <<
 /Type /Font
 /BaseFont /Helvetica
@@ -428,7 +534,7 @@ endobj
 /LastChar 255
 >>
 endobj
-6 0 obj
+8 0 obj
 <<
 /Type /Font
 /BaseFont /Helvetica-Bold
@@ -438,7 +544,7 @@ endobj
 /LastChar 255
 >>
 endobj
-7 0 obj
+9 0 obj
 <<
 /Type /Font
 /BaseFont /Helvetica-Oblique
@@ -448,7 +554,7 @@ endobj
 /LastChar 255
 >>
 endobj
-8 0 obj
+10 0 obj
 <<
 /Type /Font
 /BaseFont /Helvetica-BoldOblique
@@ -458,7 +564,7 @@ endobj
 /LastChar 255
 >>
 endobj
-9 0 obj
+11 0 obj
 <<
 /Type /Font
 /BaseFont /Courier
@@ -468,7 +574,7 @@ endobj
 /LastChar 255
 >>
 endobj
-10 0 obj
+12 0 obj
 <<
 /Type /Font
 /BaseFont /Courier-Bold
@@ -478,7 +584,7 @@ endobj
 /LastChar 255
 >>
 endobj
-11 0 obj
+13 0 obj
 <<
 /Type /Font
 /BaseFont /Courier-Oblique
@@ -488,7 +594,7 @@ endobj
 /LastChar 255
 >>
 endobj
-12 0 obj
+14 0 obj
 <<
 /Type /Font
 /BaseFont /Courier-BoldOblique
@@ -498,7 +604,7 @@ endobj
 /LastChar 255
 >>
 endobj
-13 0 obj
+15 0 obj
 <<
 /Type /Font
 /BaseFont /Times-Roman
@@ -508,7 +614,7 @@ endobj
 /LastChar 255
 >>
 endobj
-14 0 obj
+16 0 obj
 <<
 /Type /Font
 /BaseFont /Times-Bold
@@ -518,7 +624,7 @@ endobj
 /LastChar 255
 >>
 endobj
-15 0 obj
+17 0 obj
 <<
 /Type /Font
 /BaseFont /Times-Italic
@@ -528,7 +634,7 @@ endobj
 /LastChar 255
 >>
 endobj
-16 0 obj
+18 0 obj
 <<
 /Type /Font
 /BaseFont /Times-BoldItalic
@@ -538,7 +644,7 @@ endobj
 /LastChar 255
 >>
 endobj
-17 0 obj
+19 0 obj
 <<
 /Type /Font
 /BaseFont /ZapfDingbats
@@ -547,7 +653,7 @@ endobj
 /LastChar 255
 >>
 endobj
-18 0 obj
+20 0 obj
 <<
 /Type /Font
 /BaseFont /Symbol
@@ -560,32 +666,32 @@ endobj
 <<
 /ProcSet [/PDF /Text /ImageB /ImageC /ImageI]
 /Font <<
-/F1 5 0 R
-/F2 6 0 R
-/F3 7 0 R
-/F4 8 0 R
-/F5 9 0 R
-/F6 10 0 R
-/F7 11 0 R
-/F8 12 0 R
-/F9 13 0 R
-/F10 14 0 R
-/F11 15 0 R
-/F12 16 0 R
-/F13 17 0 R
-/F14 18 0 R
+/F1 7 0 R
+/F2 8 0 R
+/F3 9 0 R
+/F4 10 0 R
+/F5 11 0 R
+/F6 12 0 R
+/F7 13 0 R
+/F8 14 0 R
+/F9 15 0 R
+/F10 16 0 R
+/F11 17 0 R
+/F12 18 0 R
+/F13 19 0 R
+/F14 20 0 R
 >>
 /XObject <<
 >>
 >>
 endobj
-19 0 obj
+21 0 obj
 <<
-/Producer (jsPDF 4.2.0)
-/CreationDate (D:20260320212844-07'00')
+/Producer (jsPDF 4.2.1)
+/CreationDate (D:20260504143342-07'00')
 >>
 endobj
-20 0 obj
+22 0 obj
 <<
 /Type /Catalog
 /Pages 1 0 R
@@ -594,35 +700,37 @@ endobj
 >>
 endobj
 xref
-0 21
+0 23
 0000000000 65535 f 
-0000006090 00000 n 
-0000007907 00000 n 
+0000007847 00000 n 
+0000009672 00000 n 
 0000000015 00000 n 
 0000000120 00000 n 
-0000006147 00000 n 
-0000006272 00000 n 
-0000006402 00000 n 
-0000006535 00000 n 
-0000006672 00000 n 
-0000006795 00000 n 
-0000006924 00000 n 
-0000007056 00000 n 
-0000007192 00000 n 
-0000007320 00000 n 
-0000007447 00000 n 
-0000007576 00000 n 
-0000007709 00000 n 
-0000007811 00000 n 
-0000008155 00000 n 
-0000008241 00000 n 
+0000006720 00000 n 
+0000006825 00000 n 
+0000007910 00000 n 
+0000008035 00000 n 
+0000008165 00000 n 
+0000008298 00000 n 
+0000008436 00000 n 
+0000008560 00000 n 
+0000008689 00000 n 
+0000008821 00000 n 
+0000008957 00000 n 
+0000009085 00000 n 
+0000009212 00000 n 
+0000009341 00000 n 
+0000009474 00000 n 
+0000009576 00000 n 
+0000009922 00000 n 
+0000010008 00000 n 
 trailer
 <<
-/Size 21
-/Root 20 0 R
-/Info 19 0 R
-/ID [ <1D51D4C384335C6C9F88C556CCD73F57> <1D51D4C384335C6C9F88C556CCD73F57> ]
+/Size 23
+/Root 22 0 R
+/Info 21 0 R
+/ID [ <A282EDD20F2D697211F9976CD1F81EA2> <A282EDD20F2D697211F9976CD1F81EA2> ]
 >>
 startxref
-8345
+10112
 %%EOF

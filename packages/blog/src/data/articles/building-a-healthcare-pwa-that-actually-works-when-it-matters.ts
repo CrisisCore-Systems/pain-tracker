@@ -2,10 +2,10 @@ import type { ArticleData } from './types';
 
 const article: ArticleData = {
   slug: 'building-a-healthcare-pwa-that-actually-works-when-it-matters',
-  title: 'Building an Offline-First Healthcare PWA: Lessons from PainTracker',
+  title: 'How to Track Pain Without Data Leaks: Offline-First Health App Lessons',
   description:
-    'A technical breakdown of how PainTracker uses offline-first architecture, local storage, and privacy-preserving design for health documentation under real-world conditions.',
-  h1: 'Building an Offline-First Healthcare PWA: Lessons from PainTracker',
+    'A technical breakdown of how PainTracker uses offline-first architecture, local storage, and privacy-preserving design so pain tracking still works without turning into a data leak.',
+  h1: 'How to Track Pain Without Data Leaks: Offline-First Health App Lessons',
   cluster: 'transparency',
   isPillar: false,
   schemaTypes: ['Article'],

@@ -26,6 +26,12 @@ import {
   buildExportFailedMessage,
   buildExportNoDataMessage,
 } from '../export/exportCopy';
+import {
+  DEFAULT_WORKFLOW_PREFERENCES,
+  readWorkflowPreferences,
+  writeWorkflowPreferences,
+  type WcbTemplateStyle,
+} from '../../utils/workflowPreferences';
 
 interface ReportsPageProps {
   entries: PainEntry[];
@@ -54,6 +60,11 @@ export function ReportsPage({ entries }: Readonly<ReportsPageProps>) {
   const [isExporting, setIsExporting] = useState<string | null>(null);
   const [dateRange, setDateRange] = useState<'all' | '7d' | '30d' | '90d'>('7d');
   const [showExportPreview, setShowExportPreview] = useState(false);
+  const [wcbTemplateStyle, setWcbTemplateStyle] = useState<WcbTemplateStyle>(() =>
+    typeof window === 'undefined'
+      ? DEFAULT_WORKFLOW_PREFERENCES.defaultWcbTemplateStyle
+      : readWorkflowPreferences().defaultWcbTemplateStyle
+  );
   const hasWcbReports = entitlementService.hasEntitlement('reports_wcb_forms');
 
   const buildNotOpenYetMessage = (label: string) =>
@@ -158,6 +169,7 @@ export function ReportsPage({ entries }: Readonly<ReportsPageProps>) {
         startDate,
         endDate,
         includeDetailedEntries: true,
+        templateStyle: wcbTemplateStyle,
       });
       toast.success('Export Complete', buildExportDownloadedMessage('WorkSafe BC report'));
     } catch (error) {
@@ -166,6 +178,11 @@ export function ReportsPage({ entries }: Readonly<ReportsPageProps>) {
     } finally {
       setIsExporting(null);
     }
+  };
+
+  const handleTemplateStyleChange = (nextStyle: WcbTemplateStyle) => {
+    setWcbTemplateStyle(nextStyle);
+    writeWorkflowPreferences({ defaultWcbTemplateStyle: nextStyle });
   };
 
   const reportTypes: ReportType[] = [
@@ -478,6 +495,38 @@ export function ReportsPage({ entries }: Readonly<ReportsPageProps>) {
           </CardTitle>
         </CardHeader>
         <CardContent>
+          <div className="mb-5 rounded-xl border border-border/60 bg-muted/20 p-4">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <div className="text-sm font-medium text-foreground">WorkSafeBC export style</div>
+                <div className="text-xs text-muted-foreground mt-1">
+                  Choose the export presentation you want before generating the report.
+                </div>
+              </div>
+              <div className="inline-flex items-center gap-1 rounded-xl bg-muted/50 p-1">
+                {([
+                  { value: 'standard', label: 'Standard' },
+                  { value: 'hostile-bureaucracy', label: 'Hostile bureaucracy' },
+                ] as const).map(option => (
+                  <button
+                    key={option.value}
+                    type="button"
+                    onClick={() => handleTemplateStyleChange(option.value)}
+                    className={cn(
+                      'px-3 py-1.5 rounded-lg text-sm font-medium transition-colors',
+                      wcbTemplateStyle === option.value
+                        ? 'bg-primary/15 text-primary shadow-sm ring-1 ring-primary/20'
+                        : 'text-muted-foreground hover:text-foreground hover:bg-muted/80'
+                    )}
+                    aria-pressed={wcbTemplateStyle === option.value}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
           <div className="space-y-3">
             {specializedReports.map((report) => (
               <button

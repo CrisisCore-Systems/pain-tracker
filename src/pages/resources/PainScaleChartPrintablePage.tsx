@@ -45,7 +45,7 @@ const pageContent: SEOPageContent = {
     download: true,
   },
   secondaryCTA: {
-    text: 'Try Digital Version',
+    text: 'Start tracking free',
     href: '/start',
   },
 

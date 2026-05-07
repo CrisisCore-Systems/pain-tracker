@@ -7,12 +7,17 @@
 
 import React from 'react';
 import {
-  ArrowRight, FileText, ShieldCheck, AlertTriangle, CheckCircle,
-  Calendar, TrendingUp, Users, Scale, ClipboardList,
-  MonitorSmartphone, XCircle, BookOpen
+  ArrowRight, FileText, AlertTriangle, CheckCircle,
+  Calendar, TrendingUp, Scale, ClipboardList,
+  MonitorSmartphone, XCircle
 } from 'lucide-react';
-import { SEOPageLayout, type SEOPageContent, StatsBanner, BottomCTACallout } from '../../components/seo';
-import type { StatItem } from '../../components/seo';
+import {
+  SEOPageLayout,
+  type SEOPageContent,
+  type StatItem,
+  StatsBanner,
+  BottomCTACallout,
+} from '../../components/seo';
 
 /* ── Custom Visual Components ─────────────────────────────────────────────── */
 
@@ -30,18 +35,26 @@ const EvidencePyramid: React.FC = () => {
       <h3 className="text-xl font-bold text-slate-800 mb-2">Evidence Strength: What Adjusters Find Most Persuasive</h3>
       <p className="text-sm text-slate-500 mb-6">Not all evidence is equal. Here's what disability evaluators weigh most heavily, from strongest to weakest.</p>
       <div className="space-y-3">
-        {tiers.map((t) => (
-          <div key={t.rank} className="flex gap-3 items-start">
-            <span className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 ${t.color}`}>{t.rank}</span>
-            <div className="flex-1">
-              <div className="flex items-center gap-2">
-                <h4 className="font-semibold text-slate-800 text-sm">{t.label}</h4>
-                <span className={`text-xs px-2 py-0.5 rounded-full ${t.rank <= 2 ? 'bg-emerald-100 text-emerald-700' : t.rank <= 4 ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700'}`}>{t.weight}</span>
+        {tiers.map((t) => {
+          const weightClass = t.rank <= 2
+            ? 'bg-emerald-100 text-emerald-700'
+            : t.rank <= 4
+              ? 'bg-amber-100 text-amber-700'
+              : 'bg-red-100 text-red-700';
+
+          return (
+            <div key={t.rank} className="flex gap-3 items-start">
+              <span className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 ${t.color}`}>{t.rank}</span>
+              <div className="flex-1">
+                <div className="flex items-center gap-2">
+                  <h4 className="font-semibold text-slate-800 text-sm">{t.label}</h4>
+                  <span className={`text-xs px-2 py-0.5 rounded-full ${weightClass}`}>{t.weight}</span>
+                </div>
+                <p className="text-xs text-slate-500 mt-0.5">{t.desc}</p>
               </div>
-              <p className="text-xs text-slate-500 mt-0.5">{t.desc}</p>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
@@ -149,9 +162,9 @@ const disabilityStats: StatItem[] = [
 
 const pageContent: SEOPageContent = {
   slug: 'documenting-pain-for-disability-claim',
-  title: 'How to Document Pain for a Disability Claim',
-  metaTitle: 'Documenting Pain for Disability Claim — Complete Evidence Guide | PainTracker.ca',
-  metaDescription: 'Learn exactly how to document chronic pain for disability claims. What adjusters look for, 6 mistakes that get claims denied, evidence pyramid, and free templates to build your case.',
+  title: 'How to Document Pain for a Disability Claim in 2026',
+  metaTitle: 'Documenting Pain for Disability Claim in 2026 | Evidence Guide',
+  metaDescription: 'Learn how to document chronic pain for disability claims in 2026. See what adjusters look for, common denial mistakes, and the templates that help build a stronger record.',
   keywords: [
     'documenting pain for disability claim', 'pain diary for disability',
     'chronic pain disability evidence', 'pain journal disability benefits',
@@ -162,10 +175,10 @@ const pageContent: SEOPageContent = {
     'long term disability pain', 'pain diary adjuster'
   ],
   badge: 'Essential Guide',
-  headline: 'How to Document Pain for a Disability Claim',
+  headline: 'How to Document Pain for a Disability Claim in 2026',
   subheadline: 'Disability claims fail not because the pain isn\'t real — but because the documentation doesn\'t prove it. Here\'s exactly what adjusters look for, what mistakes get claims denied, and how to build evidence that stands up to scrutiny.',
   primaryCTA: { text: 'Get Free Documentation Templates', href: '/resources/pain-diary-template-pdf' },
-  secondaryCTA: { text: 'Start Digital Tracking', href: '/start' },
+  secondaryCTA: { text: 'Start tracking free', href: '/start' },
   utilityBlock: { type: 'download', downloadUrl: '/assets/disability-documentation-guide.pdf', downloadFileName: 'disability-documentation-guide.pdf' },
   whatIsThis: 'A comprehensive guide to building the evidence package that supports chronic pain disability claims, whether for WorkSafeBC, SSDI, long-term disability insurance, or veterans\' benefits. It covers what adjusters often review, the mistakes that commonly weaken a file, how long to track before filing, and how to keep daily documentation aligned with medical records. The free guide PDF walks through the process step by step. It helps organize records for appointments or claim-related discussions.',
   whoShouldUse: [
@@ -205,6 +218,8 @@ const pageContent: SEOPageContent = {
   ],
   relatedLinks: [
     { title: 'Pain Journal for Disability Benefits', description: 'Specific journal format for benefit applications', href: '/resources/pain-journal-for-disability-benefits' },
+    { title: 'Daily Functioning Log for Disability', description: 'Capture the functional limits evaluators actually look for day to day.', href: '/resources/daily-functioning-log-for-disability' },
+    { title: 'Best Pain Tracking Apps in 2026', description: 'Compare printable, local-first, and no-account tracking options before committing your records.', href: '/pain-tracking-apps-comparison' },
     { title: 'Daily Functioning Log for Disability', description: 'Track functional limitations systematically', href: '/resources/daily-functioning-log-for-disability' },
     { title: 'WorkSafeBC Pain Journal Template', description: 'BC workplace injury claims', href: '/resources/worksafebc-pain-journal-template' },
     { title: 'Pain Diary Template PDF', description: 'Comprehensive daily tracking template', href: '/resources/pain-diary-template-pdf' },
@@ -227,15 +242,15 @@ export const DocumentingPainForDisabilityClaimPage: React.FC = () => (
     <DocumentationTimeline />
     <BottomCTACallout
       icon={MonitorSmartphone}
-      heading="Building Your Evidence Package Starts With One Entry."
-      body="Every day of tracking helps organize your records. Download the guide PDF, print the daily templates, or start digital tracking — whichever you can keep up with consistently."
+      heading="Start with one record you can keep up with."
+      body="The goal is a clearer day-by-day record of pain, function, treatment response, and limits. Use the guide, print the templates, or start tracking digitally if that makes the routine easier to maintain."
       pdfUrl="/assets/disability-documentation-guide.pdf"
       gradientClasses="from-emerald-600 to-teal-600"
       tintClass="text-emerald-100"
       buttonTextClass="text-emerald-700"
       buttonHoverClass="hover:bg-emerald-50"
-      primaryLabel="Download Guide PDF"
-      secondaryLabel="Start Digital Tracking"
+      primaryLabel="Download the guide"
+      secondaryLabel="Start tracking free"
     />
   </SEOPageLayout>
 );

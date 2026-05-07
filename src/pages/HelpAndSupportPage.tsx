@@ -53,12 +53,13 @@ export default function HelpAndSupportPage() {
               </p>
             </div>
             <div className="flex flex-wrap gap-2">
-              <Link
-                to="/resources/pain-diary-template-free-download"
+              <a
+                href="/assets/free-pain-tracking-starter-pack.zip"
+                download="free-pain-tracking-starter-pack.zip"
                 className="inline-flex items-center rounded-lg bg-sky-600 px-4 py-2 text-sm font-medium text-white hover:bg-sky-700"
               >
-                Open starter pack
-              </Link>
+                Download starter pack ZIP
+              </a>
               <Link
                 to="/resources"
                 className="inline-flex items-center rounded-lg border border-sky-300 px-4 py-2 text-sm font-medium text-sky-700 hover:bg-sky-100 dark:border-sky-400/30 dark:text-sky-300 dark:hover:bg-sky-500/10"
@@ -163,14 +164,15 @@ export default function HelpAndSupportPage() {
             <h3 className="font-semibold text-gray-900 dark:text-white">Printable starter pack</h3>
           </div>
           <p className="text-sm text-gray-600 dark:text-slate-400 mb-4 leading-relaxed">
-            Open a paper-first bundle with daily, weekly, monthly, medication, function, and appointment templates.
+            Download a paper-first bundle with daily, weekly, monthly, medication, function, and appointment templates.
           </p>
-          <Link
-            to="/resources/pain-diary-template-free-download"
+          <a
+            href="/assets/free-pain-tracking-starter-pack.zip"
+            download="free-pain-tracking-starter-pack.zip"
             className="inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 bg-cyan-100 dark:bg-cyan-500/15 border border-cyan-200 dark:border-cyan-500/30 text-cyan-700 dark:text-cyan-400 hover:bg-cyan-200 dark:hover:bg-cyan-500/25"
           >
-            Open starter pack
-          </Link>
+            Download starter pack ZIP
+          </a>
         </div>
       </div>
 

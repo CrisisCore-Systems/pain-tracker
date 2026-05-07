@@ -52,10 +52,10 @@ import '../../styles/pages/landing.css';
 // ---------------------------------------------------------------------------
 const SEO = {
   slug: 'pain-diary-template-pdf',
-  title: 'Free Daily Pain Tracker Printable PDF',
-  metaTitle: 'Free Daily Pain Tracker Printable PDF',
+  title: 'Pain Diary Template PDF in 2026',
+  metaTitle: 'Pain Diary Template PDF (2026) | Free PDF, No Email Required',
   metaDescription:
-    'Download a free, clinician-designed pain diary template PDF. Tracks pain intensity, location, medications, triggers, sleep, and mood — ready for doctor appointments, WorkSafeBC claims, and disability documentation.',
+    'Download a free, clinician-designed pain diary template PDF for 2026. No email required. Tracks pain intensity, location, medications, triggers, sleep, and mood for appointments, WorkSafeBC claims, and disability documentation.',
   keywords: [
     'pain diary template pdf',
     'printable pain diary',
@@ -502,15 +502,18 @@ export const PainDiaryTemplatePdfPage: React.FC = () => {
               id="hero-heading"
               className="landing-headline landing-headline-lg text-white mb-6"
             >
-              Free daily pain tracker{' '}
+              Free pain diary template{' '}
               <span className="bg-gradient-to-r from-sky-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">
-                printable.
+                PDF in 2026.
               </span>
             </h1>
 
             <p className="landing-subhead text-lg sm:text-xl max-w-2xl mx-auto mb-4">
               Track pain intensity, location, medications, triggers, sleep, and mood — all on one page.
               Designed with pain management specialists so it captures exactly what clinicians need.
+            </p>
+            <p className="text-slate-300 text-base sm:text-lg max-w-2xl mx-auto mb-4">
+              Start with the printable if you need something today. Move to the offline-first app when paper starts getting harder to review, summarize, or carry forward.
             </p>
             <p className="text-slate-500 text-sm mb-8">
               100% free &bull; No email required &bull; No tracking &bull; Prints on standard letter paper

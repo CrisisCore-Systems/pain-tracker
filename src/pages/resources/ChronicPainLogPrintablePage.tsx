@@ -166,7 +166,7 @@ const pageContent: SEOPageContent = {
   headline: 'Chronic Pain Log — Free Printable',
   subheadline: 'A chronic pain log needs to work on good days, bad days, flare days, and the quiet weeks in between. This free printable set includes four formats — daily, flare episode, weekly, and monthly — so your log fits your pain, not the other way around.',
   primaryCTA: { text: 'Download free PDF', href: '/assets/chronic-pain-log-printable.pdf', download: true },
-  secondaryCTA: { text: 'Try digital version', href: '/start' },
+  secondaryCTA: { text: 'Start tracking free', href: '/start' },
   utilityBlock: { type: 'download', downloadUrl: '/assets/chronic-pain-log-printable.pdf', downloadFileName: 'chronic-pain-log-printable.pdf' },
   whatIsThis: 'A 4-format printable chronic pain log designed for long-term daily use. The daily log sheet takes under 2 minutes with fields for morning/afternoon/evening pain levels, medications and timing, sleep quality, and one sentence of functional impact. When flares occur, a dedicated flare episode record captures onset, peak severity, duration, potential triggers, and treatment response. The weekly summary condenses seven days of data into a one-page snapshot, and the monthly trend log shows month-over-month change — the view your doctor needs to make treatment decisions.',
   whoShouldUse: [
@@ -227,15 +227,15 @@ export const ChronicPainLogPrintablePage: React.FC = () => (
     <PdfContentsPreview pages={pdfPages} accentColor="emerald" variant="badge" heading="What\'s in Your Chronic Pain Log" subtitle="Four formats, one printable set. Use the daily log every day; the others as needed." />
     <BottomCTACallout
       icon={TrendingUp}
-      heading="Chronic Pain Hides Its Patterns. Your Log Reveals Them."
-      body="Two minutes a day for a month produces data your doctor can act on and that you can\'t hold in memory alone."
+      heading="Keep the habit simple enough to continue."
+      body="A short daily record is enough to spot patterns and bring something concrete to appointments. Start with paper, or use the app if that makes the routine easier to keep."
       pdfUrl="/assets/chronic-pain-log-printable.pdf"
       gradientClasses="from-emerald-600 to-teal-600"
       tintClass="text-emerald-100"
       buttonTextClass="text-emerald-700"
       buttonHoverClass="hover:bg-emerald-50"
       primaryLabel="Download Free Log"
-      secondaryLabel="Try Digital Tracking"
+      secondaryLabel="Start tracking free"
     />
   </SEOPageLayout>
 );

@@ -2,7 +2,7 @@
 
 > Note: Forem API v1 does not expose endpoints to create/pin comments. This file is generated to make manual pinning fast.
 
-## Privacy-first, offline-capable, trauma-informed, open-source health tools should be the default
+## The Friction Prerequisite: Why We Intentionally Slowed Down the UI
 
 ```md
 TL;DR
@@ -13,5 +13,5 @@ TL;DR
 Why this matters
 - (one line)
 
-Sponsor the build → https://github.com/sponsors/CrisisCore-Systems
+Sponsor the build → https://paintracker.ca/sponsor
 ```

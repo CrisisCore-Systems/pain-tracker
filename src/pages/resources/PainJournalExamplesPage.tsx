@@ -8,7 +8,7 @@
 import React from 'react';
 import {
   FileText, MessageSquare, CheckCircle, TrendingUp,
-  Clock, Activity, Brain, Pill,
+  Clock,
 } from 'lucide-react';
 import {
   SEOPageLayout,
@@ -244,15 +244,15 @@ export const PainJournalExamplesPage: React.FC = () => (
     <CommonMistakes />
     <BottomCTACallout
       icon={MessageSquare}
-      heading="Now You Know What Good Looks Like — Start Writing."
-      body="Download a blank template, open the app, or just grab a notebook. The format doesn't matter. Starting does."
+      heading="Start with one clear entry."
+      body="Download a blank template or use the app if that makes the habit easier to keep. The important part is having a simple record you can build on before your next appointment."
       pdfUrl="/assets/pain-journal-checklist.pdf"
       gradientClasses="from-amber-600 to-orange-600"
       tintClass="text-amber-100"
       buttonTextClass="text-amber-700"
       buttonHoverClass="hover:bg-amber-50"
       primaryLabel="Get Blank Template"
-      secondaryLabel="Start Digitally"
+      secondaryLabel="Start tracking free"
     />
   </SEOPageLayout>
 );

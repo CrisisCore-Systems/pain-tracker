@@ -2,6 +2,9 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { ReportsPage } from './ReportsPage';
 import type { PainEntry } from '../../types';
+import { entitlementService } from '../../services/EntitlementService';
+import { downloadWorkSafeBCPDF } from '../../utils/pain-tracker/wcb-export';
+import { readWorkflowPreferences, writeWorkflowPreferences } from '../../utils/workflowPreferences';
 
 const toastSuccess = vi.fn();
 const toastError = vi.fn();
@@ -36,6 +39,18 @@ vi.mock('../../services/EntitlementService', () => ({
 
 vi.mock('../../utils/pain-tracker/wcb-export', () => ({
   downloadWorkSafeBCPDF: vi.fn(),
+}));
+
+vi.mock('../../utils/workflowPreferences', () => ({
+  DEFAULT_WORKFLOW_PREFERENCES: {
+    defaultWcbTemplateStyle: 'hostile-bureaucracy',
+    industrialFieldMode: false,
+  },
+  readWorkflowPreferences: vi.fn(() => ({
+    defaultWcbTemplateStyle: 'hostile-bureaucracy',
+    industrialFieldMode: false,
+  })),
+  writeWorkflowPreferences: vi.fn(),
 }));
 
 const createMockEntry = (overrides: Partial<PainEntry> = {}): PainEntry => ({
@@ -128,6 +143,8 @@ describe('ReportsPage', () => {
     expect(screen.getByText('Insurance Report')).toBeInTheDocument();
     expect(screen.getByText('Clinical Summary')).toBeInTheDocument();
     expect(screen.getAllByText('Not open yet').length).toBeGreaterThan(0);
+    expect(screen.getByText('WorkSafeBC export style')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /hostile bureaucracy/i })).toHaveAttribute('aria-pressed', 'true');
   });
 
   it('has date range filter', () => {
@@ -217,5 +234,39 @@ describe('ReportsPage', () => {
       'Upgrade Required',
       'WorkSafeBC export stays closed on your current plan. Upgrade to Basic or higher to unlock it.'
     );
+  });
+
+  it('requests the hostile-bureaucracy export template for entitled users', async () => {
+    vi.mocked(entitlementService.hasEntitlement).mockReturnValue(true);
+
+    render(<ReportsPage entries={[createMockEntry()]} />);
+
+    fireEvent.click(screen.getByRole('button', { name: /worksafe bc report/i }));
+
+    await waitFor(() => {
+      expect(downloadWorkSafeBCPDF).toHaveBeenCalledWith(
+        expect.any(Array),
+        expect.objectContaining({ templateStyle: 'hostile-bureaucracy' })
+      );
+    });
+  });
+
+  it('lets the user switch to the standard template in the reports UI', async () => {
+    vi.mocked(entitlementService.hasEntitlement).mockReturnValue(true);
+
+    render(<ReportsPage entries={[createMockEntry()]} />);
+
+    fireEvent.click(screen.getByRole('button', { name: /^standard$/i }));
+
+    expect(writeWorkflowPreferences).toHaveBeenCalledWith({ defaultWcbTemplateStyle: 'standard' });
+
+    fireEvent.click(screen.getByRole('button', { name: /worksafe bc report/i }));
+
+    await waitFor(() => {
+      expect(downloadWorkSafeBCPDF).toHaveBeenCalledWith(
+        expect.any(Array),
+        expect.objectContaining({ templateStyle: 'standard' })
+      );
+    });
   });
 });

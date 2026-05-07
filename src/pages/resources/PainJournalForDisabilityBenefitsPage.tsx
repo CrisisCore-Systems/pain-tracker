@@ -7,9 +7,8 @@
 
 import React from 'react';
 import {
-  ArrowRight, FileText, CheckCircle, Calendar, TrendingUp,
-  Users, Scale, Shield, BookOpen, ClipboardCheck,
-  MonitorSmartphone, AlertTriangle, Briefcase
+  FileText, CheckCircle, Calendar,
+  Users, MonitorSmartphone, AlertTriangle
 } from 'lucide-react';
 import { SEOPageLayout, type SEOPageContent, StatsBanner, BottomCTACallout, PdfContentsPreview } from '../../components/seo';
 import type { StatItem, PdfPage } from '../../components/seo';
@@ -133,9 +132,9 @@ const benefitsStats: StatItem[] = [
 
 const pageContent: SEOPageContent = {
   slug: 'pain-journal-for-disability-benefits',
-  title: 'Pain Journal for Disability Benefits (Free)',
-  metaTitle: 'Pain Journal for Disability Benefits — Free Benefits-Ready Template | PainTracker.ca',
-  metaDescription: 'Download a free pain journal template designed specifically for disability benefits applications. Covers SSDI, LTD, WorkSafeBC. Includes functional limitation tracking and evidence-ready formatting.',
+  title: 'Pain Journal for Disability Benefits in 2026',
+  metaTitle: 'Pain Journal for Disability Benefits (2026) | Free Benefits Template',
+  metaDescription: 'Download a free pain journal template for disability benefits applications in 2026. Covers SSDI, LTD, and WorkSafeBC with functional limitation tracking and evidence-ready formatting.',
   keywords: [
     'pain journal for disability benefits', 'disability pain journal',
     'SSDI pain diary', 'disability benefits pain documentation',
@@ -146,10 +145,10 @@ const pageContent: SEOPageContent = {
     'workers comp pain journal', 'disability benefits evidence'
   ],
   badge: 'Free Download',
-  headline: 'Pain Journal for Disability Benefits',
-  subheadline: 'A journal template built for disability evaluators: SSDI, SSI, LTD insurance, and workers\' compensation. It captures functional limits, treatment history, and daily impact in a format that is easier to review later.',
+  headline: 'Pain Journal for Disability Benefits in 2026',
+  subheadline: 'A journal template built for disability evaluators: SSDI, SSI, LTD insurance, and workers\' compensation. Use the printable if you need something today. Use the free app when you need patterns, summaries, and records you can bring into appointments, appeals, or claim discussions.',
   primaryCTA: { text: 'Download Free Journal PDF', href: '/assets/disability-pain-journal-guide.pdf', download: true },
-  secondaryCTA: { text: 'Start Digital Tracking', href: '/start' },
+  secondaryCTA: { text: 'Start tracking free', href: '/start' },
   utilityBlock: { type: 'download', downloadUrl: '/assets/disability-pain-journal-guide.pdf', downloadFileName: 'disability-pain-journal-guide.pdf' },
   whatIsThis: 'A pain journal template specifically formatted for disability benefits applications. It is not a generic pain diary. Each section focuses on functional limitations, treatment history, and daily impact patterns so your records are easier to use in benefits applications, appointments, or claim-related discussions. Whether you\'re applying for SSDI, SSI, long-term disability insurance, or workers\' compensation, it helps organize the details reviewers commonly look for.',
   whoShouldUse: [
@@ -191,6 +190,7 @@ const pageContent: SEOPageContent = {
     { title: 'Documenting Pain for Disability', description: 'Complete evidence-building guide', href: '/resources/documenting-pain-for-disability-claim' },
     { title: 'Daily Functioning Log', description: 'Detailed functional capacity tracking', href: '/resources/daily-functioning-log-for-disability' },
     { title: 'WorkSafeBC Pain Journal', description: 'BC workplace injury claims', href: '/resources/worksafebc-pain-journal-template' },
+    { title: 'Zero-Knowledge Health Tracking FAQ', description: 'Read the technical privacy FAQ if you want the local-first and no-cloud architecture explained plainly.', href: '/zero-knowledge-health-tracking-faq' },
     { title: 'Pain Diary Template PDF', description: 'Comprehensive daily tracking', href: '/resources/pain-diary-template-pdf' },
     { title: 'How to Track Pain for Doctors', description: 'Align with medical records', href: '/resources/how-to-track-pain-for-doctors' },
     { title: 'Weekly Pain Log PDF', description: 'Weekly pattern tracking', href: '/resources/weekly-pain-log-pdf' }
@@ -211,15 +211,15 @@ export const PainJournalForDisabilityBenefitsPage: React.FC = () => (
     <PdfContentsPreview pages={benefitsPdfPages} accentColor="emerald" heading="What's in the Journal Template (6 Pages)" />
     <BottomCTACallout
       icon={MonitorSmartphone}
-      heading="Your Claim Depends on What You Document Starting Today."
-      body="Every day without documentation is evidence you don't have. Download the benefits-ready journal or start digital tracking — either format builds the case. What matters is starting now."
+      heading="Start building a record you can review and share later."
+      body="A steady record of daily limits, treatment, and missed activities is easier to use in appointments, appeals, or claim discussions than trying to rebuild events later. Start with paper, or use the app if that helps you keep the routine."
       pdfUrl="/assets/disability-pain-journal-guide.pdf"
       gradientClasses="from-emerald-600 to-green-600"
       tintClass="text-emerald-100"
       buttonTextClass="text-emerald-700"
       buttonHoverClass="hover:bg-emerald-50"
       primaryLabel="Download Journal PDF"
-      secondaryLabel="Start Digital Tracking"
+      secondaryLabel="Start tracking free"
     />
   </SEOPageLayout>
 );

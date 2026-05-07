@@ -4,8 +4,15 @@ import userEvent from '@testing-library/user-event';
 import { render, screen, waitFor } from '../../test/test-utils';
 import { PainTrackerContainer } from '../PainTrackerContainer';
 import { usePainTrackerStore } from '../../stores/pain-tracker-store';
+import { readWorkflowPreferences } from '../../utils/workflowPreferences';
 
 vi.mock('../../stores/pain-tracker-store');
+vi.mock('../../utils/workflowPreferences', () => ({
+  readWorkflowPreferences: vi.fn(() => ({
+    defaultWcbTemplateStyle: 'hostile-bureaucracy',
+    industrialFieldMode: false,
+  })),
+}));
 
 // Mock heavy UI surfaces to keep this test fast and deterministic.
 vi.mock('../../design-system/fused-v2', () => ({
@@ -72,7 +79,81 @@ vi.mock('../../lib/storage/secureStorage', () => ({
 }));
 
 describe('PainTrackerContainer - entry success toast', () => {
+  it('opens quick log first when industrial field mode is enabled even with existing entries', async () => {
+    vi.mocked(readWorkflowPreferences).mockReturnValue({
+      defaultWcbTemplateStyle: 'hostile-bureaucracy',
+      industrialFieldMode: true,
+    });
+
+    const storeState = {
+      entries: [
+        {
+          id: 'sample-1',
+          timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
+          baselineData: { pain: 5, locations: [], symptoms: [] },
+          notes: '',
+        },
+      ],
+      ui: { showOnboarding: false, showWalkthrough: false },
+      addEntry: vi.fn(),
+      updateEntry: vi.fn(),
+      setShowOnboarding: vi.fn(),
+      setShowWalkthrough: vi.fn(),
+      setError: vi.fn(),
+      loadSampleData: vi.fn(),
+    };
+
+    (usePainTrackerStore as unknown as { mockImplementation: (fn: unknown) => void }).mockImplementation(
+      (selector: unknown) => {
+        if (typeof selector === 'function') {
+          return (selector as (s: typeof storeState) => unknown)(storeState);
+        }
+        return storeState;
+      }
+    );
+
+    render(<PainTrackerContainer />);
+
+    expect(await screen.findByRole('button', { name: /log pain now/i })).toBeInTheDocument();
+  });
+
+  it('opens quick log first when there are no saved entries', async () => {
+    vi.mocked(readWorkflowPreferences).mockReturnValue({
+      defaultWcbTemplateStyle: 'hostile-bureaucracy',
+      industrialFieldMode: false,
+    });
+
+    const storeState = {
+      entries: [],
+      ui: { showOnboarding: false, showWalkthrough: false },
+      addEntry: vi.fn(),
+      updateEntry: vi.fn(),
+      setShowOnboarding: vi.fn(),
+      setShowWalkthrough: vi.fn(),
+      setError: vi.fn(),
+      loadSampleData: vi.fn(),
+    };
+
+    (usePainTrackerStore as unknown as { mockImplementation: (fn: unknown) => void }).mockImplementation(
+      (selector: unknown) => {
+        if (typeof selector === 'function') {
+          return (selector as (s: typeof storeState) => unknown)(storeState);
+        }
+        return storeState;
+      }
+    );
+
+    render(<PainTrackerContainer />);
+
+    expect(await screen.findByRole('button', { name: /log pain now/i })).toBeInTheDocument();
+  });
+
   it('shows gentle success toast after a valid entry is added', async () => {
+    vi.mocked(readWorkflowPreferences).mockReturnValue({
+      defaultWcbTemplateStyle: 'hostile-bureaucracy',
+      industrialFieldMode: false,
+    });
+
     const user = userEvent.setup();
     const addEntry = vi.fn();
     const setShowOnboarding = vi.fn();
@@ -88,6 +169,7 @@ describe('PainTrackerContainer - entry success toast', () => {
           timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
           baselineData: { pain: 5, locations: [], symptoms: [] },
           notes: '',
+          occupationalImpact: {},
         },
       ],
       ui: { showOnboarding: false, showWalkthrough: false },

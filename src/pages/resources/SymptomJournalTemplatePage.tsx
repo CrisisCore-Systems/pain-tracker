@@ -228,7 +228,7 @@ const pageContent: SEOPageContent = {
   headline: 'Symptom Journal Template',
   subheadline: 'A symptom journal that only tracks pain misses half the picture. This template covers six categories — physical symptoms, cognitive changes, sleep, medications, functional impact, and triggers — in a format that takes 3 minutes daily and produces data your doctor can actually use.',
   primaryCTA: { text: 'Download free PDF', href: '/assets/symptom-journal-template.pdf', download: true },
-  secondaryCTA: { text: 'Track digitally instead', href: '/start' },
+  secondaryCTA: { text: 'Start tracking free', href: '/start' },
   utilityBlock: { type: 'download', downloadUrl: '/assets/symptom-journal-template.pdf', downloadFileName: 'symptom-journal-template.pdf' },
   whatIsThis: 'A comprehensive symptom journal template covering all six domains relevant to chronic illness: physical symptoms (pain, fatigue, nausea, and more), cognitive and neurological symptoms (brain fog, sensory sensitivities, tingling), sleep and recovery quality, medication and intervention tracking, functional impact on daily activities, and context and triggers. Three entry levels let you track what you can — minimal (1 minute), standard (3 minutes), or detailed (5–7 minutes) — so your journal works on your worst days as well as your best ones.',
   whoShouldUse: [
@@ -286,15 +286,15 @@ export const SymptomJournalTemplatePage: React.FC = () => (
     <EntryLevelSelector />
     <BottomCTACallout
       icon={Activity}
-      heading="Your Symptoms Are More Than Just Pain."
-      body="A symptom journal that covers all six domains gives your doctor the full picture — and gives you the evidence to describe what's actually happening."
+      heading="Capture the full picture in a format you can keep using."
+      body="A short symptom record is easier to bring into appointments than trying to reconstruct the month later. Start with paper, or use the app if that makes daily tracking easier to keep."
       pdfUrl="/assets/symptom-journal-template.pdf"
       gradientClasses="from-purple-600 to-violet-600"
       tintClass="text-purple-100"
       buttonTextClass="text-purple-700"
       buttonHoverClass="hover:bg-purple-50"
       primaryLabel="Download Template"
-      secondaryLabel="Track Digitally"
+      secondaryLabel="Start tracking free"
     />
   </SEOPageLayout>
 );

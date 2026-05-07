@@ -34,6 +34,7 @@ const SubscriptionManagementPage = lazy(() => import('./pages/SubscriptionManage
 const SubmitStoryPage = lazy(() => import('./pages/SubmitStoryPage').then(m => ({ default: m.SubmitStoryPage })));
 const DownloadPage = lazy(() => import('./pages/DownloadPage').then(m => ({ default: m.DownloadPage })));
 const PrivacyArchitecturePage = lazy(() => import('./pages/PrivacyArchitecturePage').then(m => ({ default: m.PrivacyArchitecturePage })));
+const ZeroKnowledgeHealthTrackingFaqPage = lazy(() => import('./pages/ZeroKnowledgeHealthTrackingFaqPage').then(m => ({ default: m.ZeroKnowledgeHealthTrackingFaqPage })));
 const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage').then(m => ({ default: m.PrivacyPolicyPage })));
 const TrackingDataPolicyPage = lazy(() => import('./pages/TrackingDataPolicyPage').then(m => ({ default: m.TrackingDataPolicyPage })));
 const PainTrackerAppPage = lazy(() => import('./pages/PainTrackerAppPage').then(m => ({ default: m.PainTrackerAppPage })));
@@ -152,6 +153,13 @@ const LoadingFallback = () => {
   return <BlackBoxSplashScreen message="Loading..." />;
 };
 
+function withSubscription(
+  userId: string,
+  element: React.ReactElement
+): React.ReactElement {
+  return <SubscriptionProvider userId={userId}>{element}</SubscriptionProvider>;
+}
+
 function isDevTestModeEnabled(): boolean {
   if (!import.meta.env.DEV) {
     return false;
@@ -232,23 +240,23 @@ function App() {
     <BrowserRouter>
       <CanonicalUrlManager />
       <ThemeProvider>
-        <SubscriptionProvider userId={userId}>
-          <TraumaInformedProvider>
-            <ToastProvider>
-              <AuditSinkAlertBridge />
-              <Suspense fallback={<LoadingFallback />}>
-                <Routes>
+        <TraumaInformedProvider>
+          <ToastProvider>
+            <AuditSinkAlertBridge />
+            <Suspense fallback={<LoadingFallback />}>
+              <Routes>
                       {/* Landing Page - Public */}
                       <Route path="/" element={<LandingPage />} />
 
                       {/* Pricing Page - Public */}
-                      <Route path="/pricing" element={<PricingPage />} />
+                      <Route path="/pricing" element={withSubscription(userId, <PricingPage />)} />
 
                       {/* Category and intent pages - Public */}
                       <Route path="/pain-tracker-app" element={<PainTrackerAppPage />} />
                       <Route path="/pain-tracking-app" element={<PainTrackingAppPage />} />
                       <Route path="/pain-management-tracker" element={<PainManagementTrackerPage />} />
                       <Route path="/pain-locator-app" element={<PainLocatorAppPage />} />
+                      <Route path="/zero-knowledge-health-tracking-faq" element={<ZeroKnowledgeHealthTrackingFaqPage />} />
                       <Route path="/share-pain-records-with-doctor-without-giving-an-app-your-data" element={<SharePainRecordsPrivatelyPage />} />
                       <Route path="/pain-diary-template" element={<PainDiaryTemplatePage />} />
                       <Route path="/pain-tracking-apps-comparison" element={<PainTrackingAppsComparisonPage />} />
@@ -273,9 +281,12 @@ function App() {
                       <Route
                         path="/subscription"
                         element={
-                          <VaultGate>
-                            <SubscriptionManagementPage />
-                          </VaultGate>
+                          withSubscription(
+                            userId,
+                            <VaultGate>
+                              <SubscriptionManagementPage />
+                            </VaultGate>
+                          )
                         }
                     />
 
@@ -291,18 +302,24 @@ function App() {
 
                     {/* Main Application - Protected */}
                     <Route path="/app" element={
-                      <VaultGate>
-                        <ProtectedAppShell />
-                      </VaultGate>
+                      withSubscription(
+                        userId,
+                        <VaultGate>
+                          <ProtectedAppShell />
+                        </VaultGate>
+                      )
                     } />
 
                     {/* Route to open app and start daily check-in (used by notifications) */}
                     <Route
                       path="/app/checkin"
                       element={
-                        <VaultGate>
-                          <ProtectedAppShell initialView="daily-checkin" />
-                        </VaultGate>
+                        withSubscription(
+                          userId,
+                          <VaultGate>
+                            <ProtectedAppShell initialView="daily-checkin" />
+                          </VaultGate>
+                        )
                       }
                     />
 
@@ -424,11 +441,10 @@ function App() {
 
                     {/* Fallback - redirect to landing */}
                     <Route path="*" element={<Navigate to="/" replace />} />
-                </Routes>
-              </Suspense>
-            </ToastProvider>
-          </TraumaInformedProvider>
-        </SubscriptionProvider>
+              </Routes>
+            </Suspense>
+          </ToastProvider>
+        </TraumaInformedProvider>
       </ThemeProvider>
     </BrowserRouter>
   );

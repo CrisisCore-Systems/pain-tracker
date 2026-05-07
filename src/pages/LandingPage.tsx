@@ -88,8 +88,9 @@ const pathCards = [
   {
     title: 'Compare free templates first',
     text: 'Browse the full resource hub or open the printable starter pack if you want the shortest paper-first path.',
-    href: '/resources/pain-diary-template-free-download',
-    cta: 'Open Starter Pack',
+    href: '/assets/free-pain-tracking-starter-pack.zip',
+    cta: 'Download Starter Pack ZIP',
+    download: 'free-pain-tracking-starter-pack.zip',
   },
   {
     title: 'Prepare for an appointment',
@@ -108,6 +109,39 @@ const pathCards = [
     text: 'See how PainTracker.ca is built around local control.',
     href: '/privacy-architecture',
     cta: 'Read Privacy Architecture',
+  },
+] as const;
+
+const essentialGuides = [
+  {
+    title: 'What to Include in a Pain Journal',
+    text: 'Use the highest-signal checklist before your next appointment so each entry is easier to review later.',
+    href: '/resources/what-to-include-in-pain-journal',
+    cta: 'Open the guide',
+  },
+  {
+    title: 'Pain Diary Template PDF',
+    text: 'Start with the free printable PDF when you need a no-email, paper-first tracking lane today.',
+    href: '/resources/pain-diary-template-pdf',
+    cta: 'Download the template',
+  },
+  {
+    title: 'Best Pain Tracking Apps in 2026',
+    text: 'Compare paper, local-first apps, and no-account options before you commit your records to one workflow.',
+    href: '/pain-tracking-apps-comparison',
+    cta: 'See the comparison',
+  },
+  {
+    title: 'WorkSafeBC Pain Journal Template',
+    text: 'Use the local utility lane for injury documentation, work impact notes, and claim-facing symptom records.',
+    href: '/resources/worksafebc-pain-journal-template',
+    cta: 'Open WorkSafeBC template',
+  },
+  {
+    title: 'Zero-Knowledge Health Tracking FAQ',
+    text: 'Read the technical privacy FAQ if you want the no-cloud, local-first, and zero-knowledge boundary explained plainly.',
+    href: '/zero-knowledge-health-tracking-faq',
+    cta: 'Read the FAQ',
   },
 ] as const;
 
@@ -190,10 +224,10 @@ export const LandingPage: React.FC = () => {
                 Browse free pain tracker templates
                 <ArrowRight className="h-3.5 w-3.5" />
               </Link>
-              <Link to="/resources/pain-diary-template-free-download" className="inline-flex items-center gap-2 hover:text-sky-300 transition-colors">
-                Open the printable starter pack
+              <a href="/assets/free-pain-tracking-starter-pack.zip" download="free-pain-tracking-starter-pack.zip" className="inline-flex items-center gap-2 hover:text-sky-300 transition-colors">
+                Download the printable starter pack
                 <ArrowRight className="h-3.5 w-3.5" />
-              </Link>
+              </a>
             </div>
           </div>
         </section>
@@ -280,12 +314,54 @@ export const LandingPage: React.FC = () => {
           <div className="container mx-auto px-4 py-14 lg:py-16 max-w-5xl">
             <h2 className="landing-headline landing-headline-md mb-7 text-white text-center">Choose your path</h2>
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {pathCards.map((path) => (
-                <Link key={path.href} to={path.href} className="rounded-xl border border-white/10 bg-white/5 p-5 hover:border-sky-400/40 transition-colors">
-                  <h3 className="text-white font-semibold mb-1.5">{path.title}</h3>
-                  <p className="text-sm text-slate-300 mb-4">{path.text}</p>
+              {pathCards.map((path) => {
+                const cardContent = (
+                  <>
+                    <h3 className="text-white font-semibold mb-1.5">{path.title}</h3>
+                    <p className="text-sm text-slate-300 mb-4">{path.text}</p>
+                    <span className="text-sm text-sky-300 inline-flex items-center gap-1">
+                      {path.cta}
+                      <ArrowRight className="h-3.5 w-3.5" />
+                    </span>
+                  </>
+                );
+
+                return 'download' in path ? (
+                  <a
+                    key={path.href}
+                    href={path.href}
+                    download={path.download}
+                    className="rounded-xl border border-white/10 bg-white/5 p-5 hover:border-sky-400/40 transition-colors"
+                  >
+                    {cardContent}
+                  </a>
+                ) : (
+                  <Link key={path.href} to={path.href} className="rounded-xl border border-white/10 bg-white/5 p-5 hover:border-sky-400/40 transition-colors">
+                    {cardContent}
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        <section className="border-b border-white/10">
+          <div className="container mx-auto px-4 py-14 lg:py-16 max-w-5xl">
+            <h2 className="landing-headline landing-headline-md mb-4 text-white text-center">Essential resources</h2>
+            <p className="landing-subhead text-center max-w-3xl mx-auto mb-8">
+              Start with the highest-signal guides if you want the shortest path from a printable sheet into private, appointment-ready records.
+            </p>
+            <div className="grid gap-4 md:grid-cols-2">
+              {essentialGuides.map((guide) => (
+                <Link
+                  key={guide.href}
+                  to={guide.href}
+                  className="rounded-xl border border-white/10 bg-white/5 p-5 hover:border-sky-400/40 transition-colors"
+                >
+                  <h3 className="text-white font-semibold mb-1.5">{guide.title}</h3>
+                  <p className="text-sm text-slate-300 mb-4">{guide.text}</p>
                   <span className="text-sm text-sky-300 inline-flex items-center gap-1">
-                    {path.cta}
+                    {guide.cta}
                     <ArrowRight className="h-3.5 w-3.5" />
                   </span>
                 </Link>

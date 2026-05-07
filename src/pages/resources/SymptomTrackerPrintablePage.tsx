@@ -40,6 +40,7 @@ import {
   Cloudy,
 } from 'lucide-react';
 import { LandingFooter } from '../../components/landing/LandingFooter';
+import { ResourceOutcomeBridge, ResourceWorkflowSteps } from '../../components/seo';
 import {
   generateMedicalWebPageSchema,
   generateFAQSchema,
@@ -55,11 +56,11 @@ import '../../styles/pages/landing.css';
 // ---------------------------------------------------------------------------
 const SEO = {
   slug: 'symptom-tracker-printable',
-  title: 'Symptom Tracker Printable (Free)',
+  title: 'Symptom Tracker Printable in 2026',
   metaTitle:
-    'Symptom Tracker Printable — Free Comprehensive Daily Symptom Log | PainTracker.ca',
+    'Symptom Tracker Printable (2026) | Free PDF, No Email Required',
   metaDescription:
-    'Download a free symptom tracker printable. Track fatigue, sleep quality, mood, brain fog, energy, and more alongside pain — the complete picture your doctor needs for chronic illness management.',
+    'Download a free symptom tracker printable for 2026. No email required. Track fatigue, sleep quality, mood, brain fog, energy, and pain in one symptom log for chronic illness management.',
   keywords: [
     'symptom tracker printable',
     'daily symptom log',
@@ -530,7 +531,7 @@ export const SymptomTrackerPrintablePage: React.FC = () => {
             >
               Track the{' '}
               <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-amber-400 bg-clip-text text-transparent">
-                Complete Picture
+                Complete Picture in 2026
               </span>{' '}
               of Chronic Illness
             </h1>
@@ -538,6 +539,9 @@ export const SymptomTrackerPrintablePage: React.FC = () => {
             <p className="landing-subhead text-lg sm:text-xl max-w-2xl mx-auto mb-4">
               Pain, fatigue, sleep, brain fog, mood, and functional impact — structured so
               your provider sees the connections that standard pain diaries miss.
+            </p>
+            <p className="text-slate-300 text-base sm:text-lg max-w-2xl mx-auto mb-4">
+              Use the printable if you need the full symptom picture on paper first. Move to the offline-first app when you want ongoing review, cleaner history, and easier summaries.
             </p>
             <p className="text-slate-500 text-sm mb-8">
               100% free &bull; No email required &bull; No tracking &bull; Prints on standard letter paper
@@ -600,6 +604,13 @@ export const SymptomTrackerPrintablePage: React.FC = () => {
             </div>
           </div>
         </section>
+
+        <ResourceOutcomeBridge
+          downloadUrl="/assets/symptom-tracker.pdf"
+          downloadFileName="symptom-tracker.pdf"
+        />
+
+        <ResourceWorkflowSteps intent="printable" />
 
         {/* ═══ WHAT'S INSIDE ═══ */}
         <section className="py-16 sm:py-20 bg-slate-900" aria-labelledby="whats-inside">

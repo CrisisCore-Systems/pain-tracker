@@ -54,11 +54,11 @@ import '../../styles/pages/landing.css';
 // ---------------------------------------------------------------------------
 const SEO = {
   slug: 'weekly-pain-log-pdf',
-  title: 'Weekly Pain Log PDF (Free 7-Day Template)',
+  title: 'Weekly Pain Log PDF in 2026',
   metaTitle:
-    'Weekly Pain Log PDF — Free 7-Day Pain Tracker Template | PainTracker.ca',
+    'Weekly Pain Log PDF (2026) | Free 7-Day Template, No Email',
   metaDescription:
-    'Download a free weekly pain log PDF. 8-section 7-day spread tracks daily pain, sleep, medications, activity, mood, triggers, and weekly patterns — ideal for appointments and disability claims.',
+    'Download a free weekly pain log PDF for 2026. No email required. This 7-day spread tracks daily pain, sleep, medications, activity, mood, triggers, and weekly patterns for appointments and disability claims.',
   keywords: [
     'weekly pain log pdf',
     '7 day pain diary',
@@ -520,13 +520,16 @@ export const WeeklyPainLogPdfPage: React.FC = () => {
             >
               See Your Pain Patterns{' '}
               <span className="bg-gradient-to-r from-sky-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">
-                Across an Entire Week
+                Across an Entire Week in 2026
               </span>
             </h1>
 
             <p className="landing-subhead text-lg sm:text-xl max-w-2xl mx-auto mb-4">
               Daily pain, sleep, medications, activity impact, triggers, mood,
               and a weekly pattern analysis — 8 structured sections on one printable spread.
+            </p>
+            <p className="text-slate-300 text-base sm:text-lg max-w-2xl mx-auto mb-4">
+              Use the printable if you need a paper-first weekly view. Switch to the app when you want trends, exports, and less manual review work before appointments.
             </p>
             <p className="text-slate-500 text-sm mb-8">
               100% free &bull; No email required &bull; No tracking &bull; Prints on standard letter paper

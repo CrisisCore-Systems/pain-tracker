@@ -4,10 +4,10 @@ import { SEOPageLayout, type SEOPageContent } from '../components/seo';
 const pageContent: SEOPageContent = {
   slug: 'pain-diary-template',
   canonicalPath: '/pain-diary-template',
-  title: 'Pain Diary Template',
-  metaTitle: 'Pain Diary Template: Daily, Weekly, and Monthly Printable Logs (Free)',
+  title: 'Pain Diary Template in 2026',
+  metaTitle: 'Free Pain Diary Template PDF (2026) | No Email Required, Privacy-First',
   metaDescription:
-    'Download free pain diary templates for daily, weekly, and monthly tracking. Includes pain level, location, triggers, medication, sleep, and function notes.',
+    'Download a free pain diary template PDF with no email required. Privacy-first printable logs for daily, weekly, and monthly pain, symptom, medication, sleep, and function tracking.',
   keywords: [
     'pain diary template',
     'free printable pain diary template',
@@ -19,9 +19,9 @@ const pageContent: SEOPageContent = {
     'printable pain diary',
   ],
   badge: 'Printable Template',
-  headline: 'Free Pain Diary Template and Printable Pain Log',
+  headline: 'Free Pain Diary Template and Printable Pain Log in 2026',
   subheadline:
-    'Start with printable pain diary templates if paper is easiest now. Move to the app later when you want searchable records and local-first exports.',
+    'Start with a free printable if paper is easiest now. Move to the offline-first app later when you want searchable records, cleaner summaries, and local-first exports.',
   primaryCTA: {
     text: 'Download Free PDF',
     href: '/assets/pain-diary-template.pdf',
@@ -87,6 +87,11 @@ const pageContent: SEOPageContent = {
     },
   ],
   relatedLinks: [
+    {
+      title: 'What to Include in a Pain Journal',
+      description: 'Use the companion guide to make each printable entry more clinically useful before your next appointment.',
+      href: '/resources/what-to-include-in-pain-journal',
+    },
     {
       title: 'Pain Diary Template PDF',
       description: 'Go straight to the dedicated printable page and related template resources.',

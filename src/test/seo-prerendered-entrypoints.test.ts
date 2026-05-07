@@ -37,7 +37,7 @@ describe('SEO prerendered entrypoints', () => {
     expect(resourcesRoute?.prerenderBodyHtml).toContain('Printable Pain Tracker Templates');
     expect(resourcesRoute?.prerenderBodyHtml).toContain('/resources/monthly-pain-tracker-printable');
     expect(resourcesRoute?.prerenderBodyHtml).toContain('/resources/pain-tracking-for-migraines');
-    expect(resourcesRoute?.prerenderBodyHtml).toContain('Download the free pain tracking starter pack');
+    expect(resourcesRoute?.prerenderBodyHtml).toContain('Download the Free Pain Tracking Starter Pack ZIP');
     expect(resourcesRoute?.prerenderBodyHtml).toContain('Choose the right pain tracker');
     expect(resourcesRoute?.prerenderBodyHtml).toContain('How to start tracking pain without overthinking it');
     expect(resourcesRoute?.prerenderBodyHtml).toContain('What is a pain tracker template?');
@@ -52,7 +52,13 @@ describe('SEO prerendered entrypoints', () => {
       .map((route) => route.path)
       .sort((left, right) => left.localeCompare(right));
 
+    expect(new Set(sitemapPaths).size).toBe(sitemapPaths.length);
     expect(metadataPaths).toEqual(sitemapPaths);
+    expect(sitemapPaths).not.toContain('/resources-query');
+
+    for (const route of privateRouteMetadata) {
+      expect(sitemapPaths).not.toContain(route.path);
+    }
 
     for (const route of publicRouteMetadata) {
       expect(route.title.length).toBeGreaterThan(10);
@@ -68,7 +74,11 @@ describe('SEO prerendered entrypoints', () => {
 
     for (const route of privateRouteMetadata) {
       expect(route.noindex).toBe(true);
-      expect(route.canonicalUrl).toBe(`https://www.paintracker.ca${route.path}`);
+      if (route.path === '/resources-query') {
+        expect(route.canonicalUrl).toBe('https://www.paintracker.ca/resources');
+      } else {
+        expect(route.canonicalUrl).toBe(`https://www.paintracker.ca${route.path}`);
+      }
     }
 
     expect(rewrites.some((entry: RewriteEntry) => entry.destination === '/clinic/login/index.html')).toBe(true);

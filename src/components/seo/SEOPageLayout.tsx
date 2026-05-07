@@ -35,6 +35,12 @@ import {
   type BreadcrumbItem
 } from '../../lib/seo';
 import { ResourceCtaStack } from './ResourceCtaStack';
+import { ResourceOutcomeBridge } from './ResourceOutcomeBridge';
+import { ResourceWorkflowSteps, type ResourcePageIntent } from './ResourceWorkflowSteps';
+import {
+  trackResourcePrintableDownloadClick,
+  trackResourceStartTrackingFreeClick,
+} from '../../analytics/resource-funnel-events';
 import '../../styles/pages/landing.css';
 
 export interface SEOPageContent {
@@ -61,7 +67,7 @@ export interface SEOPageContent {
   };
   
   // Utility block
-  utilityBlock: {
+  utilityBlock?: {
     type: 'pdf-preview' | 'tool-embed' | 'download';
     previewImage?: string;
     downloadUrl?: string;
@@ -100,8 +106,48 @@ interface SEOPageLayoutProps {
   children?: React.ReactNode;
 }
 
+const inferResourceIntent = (slug: string): ResourcePageIntent => {
+  if (/worksafebc|disability|claim|injury|functioning|benefits/i.test(slug)) {
+    return 'claims';
+  }
+
+  if (/doctor|appointment|specialist|share-pain-records/i.test(slug)) {
+    return 'doctor';
+  }
+
+  if (/printable|template|pdf|diary|journal|tracker/i.test(slug)) {
+    return 'printable';
+  }
+
+  return 'general';
+};
+
 export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children }) => {
-  const canonicalUrl = `${defaultSEOConfig.siteUrl}${content.canonicalPath ?? `/resources/${content.slug}`}`;
+  const resourcePath = content.canonicalPath ?? '/resources/' + content.slug;
+  const canonicalUrl = `${defaultSEOConfig.siteUrl}${resourcePath}`;
+  const resourceIntent = inferResourceIntent(content.slug);
+
+  const trackStartClick = (resourceCtaLocation: string, routeTarget = '/start') => {
+    trackResourceStartTrackingFreeClick({
+      resourcePageSlug: content.slug,
+      resourcePageType: resourceIntent,
+      resourceCtaLocation,
+      routeTarget,
+    });
+  };
+
+  const trackPrintableClick = (resourceCtaLocation: string, routeTarget?: string) => {
+    if (!routeTarget) {
+      return;
+    }
+
+    trackResourcePrintableDownloadClick({
+      resourcePageSlug: content.slug,
+      resourcePageType: resourceIntent,
+      resourceCtaLocation,
+      routeTarget,
+    });
+  };
   
   // Set document title and meta tags
   useEffect(() => {
@@ -239,6 +285,7 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
               </Link>
               <Link
                 to="/start"
+                onClick={() => trackStartClick('top_nav_start_free')}
                 className="btn-cta-primary px-4 py-2 text-sm font-medium rounded-lg"
               >
                 Use the free pain tracker
@@ -306,7 +353,8 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
               {content.primaryCTA.download ? (
                 <a
                   href={content.primaryCTA.href}
-                  download={content.utilityBlock.downloadFileName}
+                  download={content.utilityBlock?.downloadFileName}
+                  onClick={() => trackPrintableClick('hero_primary_download', content.primaryCTA.href)}
                   className="btn-cta-primary px-8 py-4 text-lg font-semibold rounded-xl flex items-center gap-3"
                 >
                   <Download className="w-5 h-5" />
@@ -315,6 +363,11 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
               ) : (
                 <Link
                   to={content.primaryCTA.href}
+                  onClick={() => {
+                    if (content.primaryCTA.href === '/start') {
+                      trackStartClick('hero_primary_start_free', content.primaryCTA.href);
+                    }
+                  }}
                   className="btn-cta-primary px-8 py-4 text-lg font-semibold rounded-xl flex items-center gap-3"
                 >
                   {content.primaryCTA.text}
@@ -325,6 +378,11 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
               {content.secondaryCTA && (
                 <Link
                   to={content.secondaryCTA.href}
+                  onClick={() => {
+                    if (content.secondaryCTA?.href === '/start') {
+                      trackStartClick('hero_secondary_start_free', content.secondaryCTA.href);
+                    }
+                  }}
                   className="px-8 py-4 text-lg font-medium text-slate-300 hover:text-white border border-slate-600 hover:border-slate-500 rounded-xl transition-all"
                 >
                   {content.secondaryCTA.text}
@@ -337,18 +395,18 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
         {/* ===== SECTION 2: Instant Utility Block ===== */}
         <section className="py-12 bg-slate-900 border-y border-slate-800">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            {content.utilityBlock.type === 'pdf-preview' && content.utilityBlock.previewImage && (
+            {content.utilityBlock?.type === 'pdf-preview' && content.utilityBlock.previewImage && (
               <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
                 <img
                   src={content.utilityBlock.previewImage}
-                  alt={`Preview of ${content.title}`}
+                  alt={`${content.slug}-printable-pdf-preview`}
                   className="w-full h-auto"
                   loading="eager"
                 />
               </div>
             )}
             
-            {content.utilityBlock.type === 'download' && (
+            {content.utilityBlock?.type === 'download' && (
               <div className="text-center">
                 <div className="inline-flex items-center gap-4 bg-slate-800 rounded-2xl p-6 border border-slate-700">
                   <div className="w-16 h-16 bg-primary/20 rounded-xl flex items-center justify-center">
@@ -363,6 +421,7 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
                   <a
                     href={content.utilityBlock.downloadUrl}
                     download={content.utilityBlock.downloadFileName}
+                    onClick={() => trackPrintableClick('utility_download', content.utilityBlock?.downloadUrl)}
                     className="btn-cta-primary px-6 py-3 rounded-xl flex items-center gap-2"
                   >
                     <Download className="w-5 h-5" />
@@ -376,6 +435,15 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
             {children}
           </div>
         </section>
+
+        <ResourceOutcomeBridge
+          downloadUrl={content.utilityBlock?.downloadUrl}
+          downloadFileName={content.utilityBlock?.downloadFileName}
+          resourcePageSlug={content.slug}
+          resourcePageType={resourceIntent}
+        />
+
+        <ResourceWorkflowSteps intent={resourceIntent} />
         
         {/* ===== SECTION 3: Ultra-Clear Explanation ===== */}
         <section className="py-16 bg-slate-900">
@@ -553,7 +621,11 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
           </div>
         </section>
 
-        <ResourceCtaStack />
+        <ResourceCtaStack
+          intent={resourceIntent}
+          resourcePageSlug={content.slug}
+          resourcePageType={resourceIntent}
+        />
 
         <section className="py-10 bg-slate-950 border-t border-slate-800">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">

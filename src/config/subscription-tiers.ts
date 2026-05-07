@@ -1,6 +1,6 @@
 /**
- * SaaS Subscription Tiers Configuration
- * Defines the specific features, limits, and pricing for each tier
+ * Subscription tier configuration
+ * Defines the specific capabilities, limits, and pricing for each tier
  */
 
 import type {
@@ -11,9 +11,8 @@ import type {
 } from '../types/subscription';
 
 /**
- * Free Tier Features
- * Perfect for individuals trying out pain tracking
- * Core tracking is unlimited - upgrade for advanced analytics and sharing
+ * Free tier features
+ * Core tracking stays available without turning the free plan into a trial
  */
 const FREE_FEATURES: TierFeatures = {
   // Storage Limits - Unlimited core tracking
@@ -87,9 +86,8 @@ const FREE_FEATURES: TierFeatures = {
 };
 
 /**
- * Basic Tier Features
- * For individuals committed to chronic pain management
- * Includes advanced analytics and exports
+ * Basic tier features
+ * Adds cleaner summaries and easier preparation for appointments and reviews
  */
 const BASIC_FEATURES: TierFeatures = {
   // Storage Limits - Unlimited entries, more storage
@@ -163,8 +161,8 @@ const BASIC_FEATURES: TierFeatures = {
 };
 
 /**
- * Pro Tier Features
- * For power users, caregivers, and healthcare coordination
+ * Pro tier features
+ * Supports heavier documentation and coordination workflows
  */
 const PRO_FEATURES: TierFeatures = {
   // Storage Limits
@@ -403,9 +401,9 @@ export const SUBSCRIPTION_PLANS: Record<SubscriptionTier, SubscriptionPlan> = {
   free: {
     tier: 'free',
     name: 'Free',
-    tagline: 'Unlimited pain tracking, forever free',
+    tagline: 'For starting and staying consistent',
     description:
-      'Complete pain, mood, and activity tracking with no entry limits. Upgrade for advanced analytics, automated insights, and clinical reports.',
+      'Use PainTracker privately without needing to upgrade first. Track pain, build the habit, and keep control of your records.',
     features: FREE_FEATURES,
     pricing: FREE_PRICING,
     limits: {
@@ -421,9 +419,9 @@ export const SUBSCRIPTION_PLANS: Record<SubscriptionTier, SubscriptionPlan> = {
   basic: {
     tier: 'basic',
     name: 'Basic',
-    tagline: 'Comprehensive pain management',
+    tagline: 'For turning your pain history into cleaner summaries',
     description:
-      'For individuals committed to understanding and managing chronic pain. Includes advanced analytics, PDF reports, and family sharing.',
+      'Basic is for people who already track pain and want less manual work before appointments, personal reviews, or support conversations.',
     features: BASIC_FEATURES,
     pricing: BASIC_PRICING,
     popular: true,
@@ -440,9 +438,9 @@ export const SUBSCRIPTION_PLANS: Record<SubscriptionTier, SubscriptionPlan> = {
   pro: {
     tier: 'pro',
     name: 'Pro',
-    tagline: 'Clinic-ready exports & insights',
+    tagline: 'For serious documentation workflows',
     description:
-      'Power users and healthcare coordination. Unlimited entries, pattern-based alerts, clinical PDF exports, and privacy-aligned security controls.',
+      'Pro is for people using pain records around disability notes, WorkSafeBC preparation, medication response, functional impact, or long-term care conversations.',
     features: PRO_FEATURES,
     pricing: PRO_PRICING,
     recommended: true,
@@ -459,9 +457,9 @@ export const SUBSCRIPTION_PLANS: Record<SubscriptionTier, SubscriptionPlan> = {
   enterprise: {
     tier: 'enterprise',
     name: 'Enterprise',
-    tagline: 'Healthcare organization solution',
+    tagline: 'Organization workflows without weakening trust',
     description:
-      'For clinics, healthcare organizations, and large-scale deployments. Custom features, organization-level customization, and dedicated support.',
+      'For clinics and organizations that need structured deployment, custom workflows, and dedicated support while preserving the product\'s local-first posture.',
     features: ENTERPRISE_FEATURES,
     pricing: ENTERPRISE_PRICING,
     limits: {
@@ -480,24 +478,24 @@ export const SUBSCRIPTION_PLANS: Record<SubscriptionTier, SubscriptionPlan> = {
  */
 export const FEATURE_COMPARISON = {
   storage: {
-    category: 'Storage & Data',
+    category: 'Your Record',
     items: [
       {
-        name: 'Pain Entries',
+        name: 'Daily tracking entries',
         free: 'Unlimited',
         basic: 'Unlimited',
         pro: 'Unlimited',
         enterprise: 'Unlimited',
       },
       {
-        name: 'Data Retention',
+        name: 'Record retention',
         free: 'Unlimited',
         basic: 'Unlimited',
         pro: 'Unlimited',
         enterprise: 'Unlimited + Custom',
       },
       {
-        name: 'Storage Space',
+        name: 'Attachment and storage space',
         free: '100 MB',
         basic: '500 MB',
         pro: '5 GB',
@@ -506,31 +504,31 @@ export const FEATURE_COMPARISON = {
     ],
   },
   analytics: {
-    category: 'Analytics & Insights',
+    category: 'Pattern Review & Summaries',
     items: [
       {
-        name: 'Basic Analytics',
+        name: 'Basic pattern review',
         free: true,
         basic: true,
         pro: true,
         enterprise: true,
       },
       {
-        name: 'Advanced Analytics',
+        name: 'Deeper pattern review',
         free: false,
         basic: true,
         pro: true,
         enterprise: true,
       },
       {
-        name: 'Pattern-based alerts',
+        name: 'Pattern alerts',
         free: false,
         basic: false,
         pro: true,
         enterprise: true,
       },
       {
-        name: 'Pattern-aware insights',
+        name: 'Summary insights',
         free: false,
         basic: true,
         pro: true,
@@ -539,31 +537,31 @@ export const FEATURE_COMPARISON = {
     ],
   },
   export: {
-    category: 'Reports & Export',
+    category: 'Exports & Documentation',
     items: [
       {
-        name: 'CSV Export',
+        name: 'CSV export',
         free: true,
         basic: true,
         pro: true,
         enterprise: true,
       },
       {
-        name: 'PDF Reports',
+        name: 'PDF summaries',
         free: true,
         basic: true,
         pro: true,
         enterprise: true,
       },
       {
-        name: 'WorkSafe BC Reports',
+        name: 'WorkSafeBC reports',
         free: true,
         basic: true,
         pro: true,
         enterprise: true,
       },
       {
-        name: 'Clinical PDF Export',
+        name: 'Clinician-friendly PDF export',
         free: false,
         basic: false,
         pro: true,
@@ -572,7 +570,7 @@ export const FEATURE_COMPARISON = {
     ],
   },
   collaboration: {
-    category: 'Sharing & Collaboration',
+    category: 'Shared Review',
     items: [
       {
         name: 'Family Sharing',
@@ -582,7 +580,7 @@ export const FEATURE_COMPARISON = {
         enterprise: true,
       },
       {
-        name: 'Shared Users',
+        name: 'Shared access seats',
         free: '0',
         basic: '2',
         pro: '5',
@@ -598,17 +596,17 @@ export const FEATURE_COMPARISON = {
     ],
   },
   security: {
-    category: 'Security & Compliance',
+    category: 'Privacy & Protection',
     items: [
       {
-        name: 'Encryption',
+        name: 'At-rest protection',
         free: 'Basic',
         basic: 'Advanced',
         pro: 'Advanced',
         enterprise: 'Enterprise',
       },
       {
-        name: 'Two-Factor Auth',
+        name: 'Two-factor sign-in',
         free: false,
         basic: true,
         pro: true,
@@ -627,14 +625,14 @@ export const FEATURE_COMPARISON = {
     category: 'Support',
     items: [
       {
-        name: 'Support Level',
+        name: 'Support route',
         free: 'Community',
         basic: 'Email',
         pro: 'Priority',
         enterprise: 'Dedicated',
       },
       {
-        name: 'Response Time',
+        name: 'Response target',
         free: '72 hours',
         basic: '24 hours',
         pro: '4 hours',

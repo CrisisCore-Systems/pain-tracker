@@ -3,7 +3,7 @@
  * Landing page listing all free resources, templates, and guides
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
   FileText, 
@@ -28,7 +28,7 @@ import {
   generateItemListSchema,
   type FAQItem,
 } from '../../lib/seo';
-import { ResourceCtaStack } from '../../components/seo';
+import { ResourceCtaStack, ResourceWorkflowSteps } from '../../components/seo';
 import { applyPageMetadata } from '../../components/seo/applyPageMetadata';
 
 interface ResourceCard {
@@ -54,16 +54,27 @@ interface FeaturedResource {
 }
 
 interface FeaturedSection {
+  id: string;
   title: string;
   description: string;
   ctaText: string;
   ctaHref: string;
+  ctaDownload?: boolean;
   resources: FeaturedResource[];
+}
+
+interface ResourceSectionNavItem {
+  id: string;
+  label: string;
+  description: string;
+  icon: React.ReactNode;
 }
 
 const RESOURCES_HUB_TITLE = 'Free Pain Tracker Templates & Pain Journal Printables | PainTracker.ca';
 const RESOURCES_HUB_DESCRIPTION = 'Download free pain tracker templates, printable pain journals, condition-specific pain logs, and private tracking guides for chronic pain, doctor visits, disability documentation, and daily symptom tracking.';
 const RESOURCES_HUB_HEADING = 'Free Pain Tracker Templates, Printable Pain Journals, and Private Tracking Guides';
+const STARTER_PACK_ASSET_PATH = '/assets/free-pain-tracking-starter-pack.zip';
+const STARTER_PACK_DOWNLOAD_NAME = 'free-pain-tracking-starter-pack.zip';
 
 const painJournalChecklist = [
   'Pain level',
@@ -183,12 +194,59 @@ const resourcesHubFaqs: FAQItem[] = [
   },
 ];
 
+const resourceSectionNavItems: ResourceSectionNavItem[] = [
+  {
+    id: 'choose-tracker',
+    label: 'Start here',
+    description: 'Match the page to the job you need done first.',
+    icon: <ClipboardList className="h-4 w-4" />,
+  },
+  {
+    id: 'printable-pain-templates',
+    label: 'Printables',
+    description: 'Daily, weekly, and monthly templates plus the starter pack.',
+    icon: <Download className="h-4 w-4" />,
+  },
+  {
+    id: 'doctor-disability-documentation',
+    label: 'Doctor and disability',
+    description: 'Appointment prep, function logs, and documentation lanes.',
+    icon: <Shield className="h-4 w-4" />,
+  },
+  {
+    id: 'condition-specific-pain-logs',
+    label: 'Condition-specific',
+    description: 'Migraine, fibro, arthritis, CRPS, back pain, and more.',
+    icon: <Heart className="h-4 w-4" />,
+  },
+  {
+    id: 'resources-quick-start',
+    label: 'Quick start',
+    description: 'Use one simple routine instead of overbuilding the workflow.',
+    icon: <Calendar className="h-4 w-4" />,
+  },
+  {
+    id: 'resource-library',
+    label: 'Full library',
+    description: 'Jump to the full templates and guides archive.',
+    icon: <BookOpen className="h-4 w-4" />,
+  },
+  {
+    id: 'resources-faq',
+    label: 'FAQ',
+    description: 'Clarify printables, privacy, offline use, and the app.',
+    icon: <FileText className="h-4 w-4" />,
+  },
+];
+
 const featuredSections: FeaturedSection[] = [
   {
+    id: 'printable-pain-templates',
     title: 'Printable Pain Tracker Templates',
     description: 'Start with a printable format you can use immediately, then build the habit before moving to digital tracking. These templates align the hub with pain tracker, chronic pain journal template, free printable pain tracker, and pain journal template searches.',
-    ctaText: 'Download free printable templates',
-    ctaHref: '/resources/pain-diary-template-free-download',
+    ctaText: 'Download the Free Pain Tracking Starter Pack ZIP',
+    ctaHref: STARTER_PACK_ASSET_PATH,
+    ctaDownload: true,
     resources: [
       {
         title: 'Monthly Pain Tracker Printable',
@@ -234,6 +292,7 @@ const featuredSections: FeaturedSection[] = [
     ],
   },
   {
+    id: 'doctor-disability-documentation',
     title: 'Doctor Visit and Disability Documentation',
     description: 'This is the documentation lane. Use these pages when you need records that show daily function, appointment trends, medication response, or WorkSafeBC and disability-relevant limitations instead of vague symptom summaries.',
     ctaText: 'See documentation-focused resources',
@@ -293,6 +352,7 @@ const featuredSections: FeaturedSection[] = [
     ],
   },
   {
+    id: 'condition-specific-pain-logs',
     title: 'Condition Specific Pain Logs',
     description: 'Condition-specific pages show that PainTracker is not just a generic journal. These templates keep the core daily tracking pattern while emphasizing the details different specialists and diagnoses care about most.',
     ctaText: 'Browse condition-specific logs',
@@ -361,6 +421,7 @@ const featuredSections: FeaturedSection[] = [
     ],
   },
   {
+    id: 'private-offline-app-guides',
     title: 'Private Offline App Guides',
     description: 'The product lane starts after the habit forms. Start with a printable, keep control of your records, then move into private digital tracking when paper stops being enough or you want easier summaries and exports.',
     ctaText: 'Use the private app free',
@@ -1192,6 +1253,7 @@ export const ResourcesIndexPage: React.FC = () => {
   const navigate = useNavigate();
   const searchQuery = new URLSearchParams(location.search).get('q')?.trim() ?? '';
   const isPlaceholderSearch = ['{search_term_string}', 'search_term_string'].includes(searchQuery);
+  const [activeSectionId, setActiveSectionId] = useState(() => location.hash.replace('#', '') || resourceSectionNavItems[0].id);
 
   useEffect(() => {
     if (isPlaceholderSearch) {
@@ -1207,6 +1269,39 @@ export const ResourcesIndexPage: React.FC = () => {
       description: RESOURCES_HUB_DESCRIPTION,
       canonicalUrl: 'https://www.paintracker.ca/resources',
     });
+  }, []);
+
+  useEffect(() => {
+    if (location.hash) {
+      setActiveSectionId(location.hash.replace('#', ''));
+    }
+  }, [location.hash]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visibleEntries = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((left, right) => Math.abs(left.boundingClientRect.top) - Math.abs(right.boundingClientRect.top));
+
+        if (visibleEntries.length > 0) {
+          setActiveSectionId(visibleEntries[0].target.id);
+        }
+      },
+      {
+        rootMargin: '-20% 0px -55% 0px',
+        threshold: [0.1, 0.25, 0.5],
+      }
+    );
+
+    resourceSectionNavItems.forEach((item) => {
+      const section = document.getElementById(item.id);
+      if (section) {
+        observer.observe(section);
+      }
+    });
+
+    return () => observer.disconnect();
   }, []);
 
   const schema = combineSchemas(
@@ -1419,10 +1514,62 @@ export const ResourcesIndexPage: React.FC = () => {
                 Use PainTracker offline
               </Link>
             </div>
+
+            <div className="mt-5 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-slate-200">
+              <Link to="/pain-tracking-apps-comparison" className="inline-flex items-center gap-2 hover:text-sky-300 transition-colors">
+                Compare private pain tracking apps
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+              <Link to="/resources/what-to-include-in-pain-journal" className="inline-flex items-center gap-2 hover:text-sky-300 transition-colors">
+                See what to include in a pain journal
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            </div>
           </div>
         </section>
 
-        <section className="py-16 bg-slate-900 border-t border-slate-800">
+        <section className="sticky top-16 z-40 border-y border-slate-800 bg-slate-950/95 backdrop-blur-sm">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+              <div className="max-w-2xl">
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-sky-300">Resources navigation</p>
+                <p className="mt-2 text-sm text-slate-300">
+                  Move by task instead of scrolling blind. Each lane below maps to a real pain-tracking job.
+                </p>
+              </div>
+              <a href="#resource-library" className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:text-sky-300 transition-colors">
+                <span>Jump to full library</span>
+                <ArrowRight className="h-4 w-4" />
+              </a>
+            </div>
+
+            <nav aria-label="Resources sections" className="mt-4 overflow-x-auto pb-1">
+              <ul className="flex min-w-max gap-3">
+                {resourceSectionNavItems.map((item) => {
+                  const isActive = activeSectionId === item.id;
+
+                  return (
+                  <li key={item.id}>
+                    <a
+                      href={`#${item.id}`}
+                      onClick={() => setActiveSectionId(item.id)}
+                      aria-current={isActive ? 'location' : undefined}
+                      className={`group flex min-w-[176px] flex-col rounded-2xl border px-3 py-2.5 text-left transition-colors sm:min-w-[220px] sm:px-4 sm:py-3 ${isActive ? 'border-primary/60 bg-sky-500/10 shadow-[0_0_0_1px_rgba(14,165,233,0.18)]' : 'border-slate-700 bg-slate-900/80 hover:border-primary/50 hover:bg-slate-900'}`}
+                    >
+                      <span className={`flex items-center gap-2 text-sm font-semibold ${isActive ? 'text-primary' : 'text-white group-hover:text-primary'}`}>
+                        {item.icon}
+                        {item.label}
+                      </span>
+                      <span className={`mt-1.5 line-clamp-2 text-[11px] leading-relaxed sm:mt-2 sm:text-xs ${isActive ? 'text-sky-100' : 'text-slate-400'}`}>{item.description}</span>
+                    </a>
+                  </li>
+                );})}
+              </ul>
+            </nav>
+          </div>
+        </section>
+
+        <section id="choose-tracker" className="scroll-mt-32 py-16 bg-slate-900 border-t border-slate-800">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-3xl mb-8">
               <h2 className="text-3xl font-bold text-white">Choose the right pain tracker</h2>
@@ -1469,9 +1616,13 @@ export const ResourcesIndexPage: React.FC = () => {
                 ))}
               </ul>
               <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-                <Link to="/resources/pain-diary-template-free-download" className="btn-cta-primary px-6 py-3 rounded-xl font-medium text-center">
-                  Download free starter pack
-                </Link>
+                <a
+                  href={STARTER_PACK_ASSET_PATH}
+                  download={STARTER_PACK_DOWNLOAD_NAME}
+                  className="btn-cta-primary px-6 py-3 rounded-xl font-medium text-center"
+                >
+                  Download the Free Pain Tracking Starter Pack ZIP
+                </a>
                 <Link to="/start" className="px-6 py-3 rounded-xl border border-slate-600 text-white hover:border-primary hover:text-primary transition-colors text-center">
                   Use the private offline app
                 </Link>
@@ -1479,6 +1630,8 @@ export const ResourcesIndexPage: React.FC = () => {
             </div>
           </div>
         </section>
+
+        <ResourceWorkflowSteps intent="general" />
 
         <section className="py-16 bg-slate-950/70 border-y border-slate-800">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1518,8 +1671,9 @@ export const ResourcesIndexPage: React.FC = () => {
 
         {featuredSections.map((section, index) => (
           <section
-            key={section.title}
-            className={index % 2 === 0 ? 'py-16 bg-slate-900' : 'py-16 bg-slate-800/50 border-t border-slate-700'}
+            key={section.id}
+            id={section.id}
+            className={`${index % 2 === 0 ? 'py-16 bg-slate-900' : 'py-16 bg-slate-800/50 border-t border-slate-700'} scroll-mt-32`}
           >
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
@@ -1528,10 +1682,21 @@ export const ResourcesIndexPage: React.FC = () => {
                   <p className="mt-3 text-slate-300">{section.description}</p>
                 </div>
                 <div>
-                  <Link to={section.ctaHref} className="inline-flex items-center gap-2 text-primary hover:text-sky-300 transition-colors font-medium">
-                    <span>{section.ctaText}</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </Link>
+                  {section.ctaDownload ? (
+                    <a
+                      href={section.ctaHref}
+                      download={STARTER_PACK_DOWNLOAD_NAME}
+                      className="inline-flex items-center gap-2 text-primary hover:text-sky-300 transition-colors font-medium"
+                    >
+                      <span>{section.ctaText}</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </a>
+                  ) : (
+                    <Link to={section.ctaHref} className="inline-flex items-center gap-2 text-primary hover:text-sky-300 transition-colors font-medium">
+                      <span>{section.ctaText}</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </Link>
+                  )}
                 </div>
               </div>
 
@@ -1542,7 +1707,7 @@ export const ResourcesIndexPage: React.FC = () => {
           </section>
         ))}
 
-        <section className="py-16 bg-slate-950 border-y border-slate-800">
+        <section id="resources-faq" className="scroll-mt-32 py-16 bg-slate-950 border-y border-slate-800">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-3xl">
               <h2 className="text-3xl font-bold text-white">Frequently asked questions</h2>
@@ -1562,7 +1727,7 @@ export const ResourcesIndexPage: React.FC = () => {
           </div>
         </section>
 
-        <section className="py-16 bg-slate-900 border-t border-slate-800">
+        <section id="resources-quick-start" className="scroll-mt-32 py-16 bg-slate-900 border-t border-slate-800">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-3xl mb-8">
               <h2 className="text-3xl font-bold text-white">How to start tracking pain without overthinking it</h2>
@@ -1612,7 +1777,7 @@ export const ResourcesIndexPage: React.FC = () => {
           </div>
         </section>
 
-        <section className="py-16 bg-slate-900">
+        <section id="resource-library" className="scroll-mt-32 py-16 bg-slate-900">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-3xl mb-8">
               <h2 className="text-3xl font-bold text-white">Full resource library</h2>
@@ -1623,7 +1788,7 @@ export const ResourcesIndexPage: React.FC = () => {
           </div>
         </section>
 
-        <section id="printable-templates" className="py-16 bg-slate-900 pt-0">
+        <section id="printable-templates" className="scroll-mt-32 py-16 bg-slate-900 pt-0">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-2xl font-bold text-white mb-3">Printable templates and logs</h2>
             <p className="text-slate-300 mb-8 max-w-3xl">
@@ -1636,7 +1801,7 @@ export const ResourcesIndexPage: React.FC = () => {
           </div>
         </section>
 
-        <section className="py-16 bg-slate-800/50 border-t border-slate-700">
+        <section id="guides-and-app-help" className="scroll-mt-32 py-16 bg-slate-800/50 border-t border-slate-700">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-2xl font-bold text-white mb-3">Guides, condition pages, and app help</h2>
             <p className="text-slate-300 mb-8 max-w-3xl">
@@ -1650,6 +1815,7 @@ export const ResourcesIndexPage: React.FC = () => {
         </section>
 
         <ResourceCtaStack
+          intent="printable"
           heading="Use the resource funnel that matches real-life pain tracking"
           body="The patient lane starts with utility: use the app free, print a tracker, or prepare records for doctors, disability, or WorkSafeBC workflows."
         />

@@ -87,6 +87,11 @@ const pageContent: SEOPageContent = {
   ],
   relatedLinks: [
     {
+      title: 'Zero-Knowledge Health Tracking FAQ',
+      description: 'Read the technical privacy FAQ if you want the local-first and no-cloud boundary explained plainly.',
+      href: '/zero-knowledge-health-tracking-faq',
+    },
+    {
       title: 'Pain Diary Template',
       description: 'Start with a printable pain diary or pain log if paper fits better right now.',
       href: '/pain-diary-template',

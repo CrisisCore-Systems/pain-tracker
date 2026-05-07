@@ -43,7 +43,7 @@ export const linkingMap: Record<string, InternalLinks> = {
   'private-pain-tracker': {
     pillarUrl: PILLAR_URLS.privacy,
     pillarLabel: PILLAR_LABELS.privacy,
-    relatedSlug: 'encrypted-health-data-safety',
+    relatedSlug: 'best-pain-tracking-apps',
   },
   'pain-log-for-doctors': {
     pillarUrl: PILLAR_URLS.clinical,
@@ -65,12 +65,12 @@ export const linkingMap: Record<string, InternalLinks> = {
   'why-offline-health-apps-matter': {
     pillarUrl: PILLAR_URLS.offline,
     pillarLabel: PILLAR_LABELS.offline,
-    relatedSlug: 'cloud-vs-local-pain-tracking',
+    relatedSlug: 'best-pain-tracking-apps',
   },
   'zero-cloud-medical-privacy': {
     pillarUrl: PILLAR_URLS.offline,
     pillarLabel: PILLAR_LABELS.offline,
-    relatedSlug: 'encrypted-health-data-safety',
+    relatedSlug: 'best-pain-tracking-apps',
   },
   'pain-diary-template': {
     pillarUrl: PILLAR_URLS.clinical,
@@ -82,27 +82,27 @@ export const linkingMap: Record<string, InternalLinks> = {
   'encrypted-health-data-safety': {
     pillarUrl: PILLAR_URLS.privacy,
     pillarLabel: PILLAR_LABELS.privacy,
-    relatedSlug: 'local-only-encryption-explained',
+    relatedSlug: 'best-pain-tracking-apps',
   },
   'local-only-encryption-explained': {
     pillarUrl: PILLAR_URLS.privacy,
     pillarLabel: PILLAR_LABELS.privacy,
-    relatedSlug: 'encrypted-health-data-safety',
+    relatedSlug: 'best-pain-tracking-apps',
   },
   'health-data-threat-model': {
     pillarUrl: PILLAR_URLS.privacy,
     pillarLabel: PILLAR_LABELS.privacy,
-    relatedSlug: 'security-architecture',
+    relatedSlug: 'best-pain-tracking-apps',
   },
   'security-architecture': {
     pillarUrl: PILLAR_URLS.privacy,
     pillarLabel: PILLAR_LABELS.privacy,
-    relatedSlug: 'health-data-threat-model',
+    relatedSlug: 'best-pain-tracking-apps',
   },
   'why-paintracker-is-open-source': {
     pillarUrl: PILLAR_URLS.privacy,
     pillarLabel: PILLAR_LABELS.privacy,
-    relatedSlug: 'security-architecture',
+    relatedSlug: 'best-pain-tracking-apps',
   },
 
   // ── Clinical / Documentation cluster → Clinical pillar ─────────────
@@ -144,7 +144,7 @@ export const linkingMap: Record<string, InternalLinks> = {
   'sharing-symptom-data-safely': {
     pillarUrl: PILLAR_URLS.clinical,
     pillarLabel: PILLAR_LABELS.clinical,
-    relatedSlug: 'can-doctors-trust-offline-diaries',
+    relatedSlug: 'paintracker-worksafebc-claims',
   },
 
   // ── Chronic Conditions cluster → Chronic pillar ────────────────────
@@ -171,7 +171,7 @@ export const linkingMap: Record<string, InternalLinks> = {
   'tracking-recovery-after-injury': {
     pillarUrl: PILLAR_URLS.chronic,
     pillarLabel: PILLAR_LABELS.chronic,
-    relatedSlug: 'tracking-flare-ups-chronic-illness',
+    relatedSlug: 'paintracker-worksafebc-claims',
   },
 
   // ── Comparison cluster → Privacy pillar ────────────────────────────
@@ -190,6 +190,12 @@ export const linkingMap: Record<string, InternalLinks> = {
   'accessibility-in-pain-tracking': {
     pillarUrl: PILLAR_URLS.chronic,
     pillarLabel: PILLAR_LABELS.chronic,
+    relatedSlug: 'best-pain-tracking-apps',
+  },
+
+  'building-a-healthcare-pwa-that-actually-works-when-it-matters': {
+    pillarUrl: PILLAR_URLS.offline,
+    pillarLabel: PILLAR_LABELS.offline,
     relatedSlug: 'best-pain-tracking-apps',
   },
 

@@ -39,8 +39,10 @@
           "devto-architecting-vulnerability",
           "privacy-first-default-standard",
           "protective-computing-not-privacy-theater",
+          "subpoena-proofing-zero-knowledge",
           "micro-coercion-of-speed",
-          "coercion-resistant-ux"
+          "coercion-resistant-ux",
+          "friction-prerequisite-ui"
         ]
       },
       "release-and-trust-artifacts": {
@@ -49,7 +51,8 @@
         "orderedKeys": [
           "whitepaper-v1-3-0",
           "overton-framework-doi-backed",
-          "proofvault-trust-case-release-artifact"
+          "proofvault-trust-case-release-artifact",
+          "worksafebc-ready-audit"
         ]
       },
       "offline-first-failure-modes": {
@@ -102,7 +105,7 @@
         "webdev",
         "testing"
       ],
-      "description": "Start here for PainTracker: privacy-first, offline-first architecture patterns and the CrisisCore build log.",
+      "description": "A protocol-first table of contents for Protective Computing, PainTracker, and the CrisisCore implementation stack.",
       "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
       "articleId": 3104202,
       "devtoUrl": "https://dev.to/crisiscoresystems/start-here-paintracker-crisiscore-build-log-privacy-first-offline-first-no-surveillance-3h0k",
@@ -750,6 +753,25 @@
       "published": true
     },
     {
+      "key": "friction-prerequisite-ui",
+      "enabled": true,
+      "seriesProfile": "protective-computing-essays",
+      "title": "The Friction Prerequisite: Why We Intentionally Slowed Down the UI",
+      "sourceFile": "docs/content/blog/devto-friction-prerequisite-why-we-intentionally-slowed-down-the-ui.md",
+      "publishAt": "2026-06-23T16:00:00Z",
+      "tags": [
+        "design",
+        "accessibility",
+        "privacy",
+        "webdev"
+      ],
+      "description": "Fast is not always safe. In vulnerable-state software, some delays, confirmations, and extra steps are not UX debt. They are protective controls.",
+      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
+      "published": false,
+      "articleId": 3623050,
+      "devtoUrl": "https://dev.to/crisiscoresystems/the-friction-prerequisite-why-we-intentionally-slowed-down-the-ui-e8j-temp-slug-5879740"
+    },
+    {
       "key": "service-worker-failure-modes",
       "enabled": true,
       "seriesProfile": "offline-first-failure-modes",
@@ -866,6 +888,25 @@
       "published": true
     },
     {
+      "key": "worksafebc-ready-audit",
+      "enabled": true,
+      "seriesProfile": "release-and-trust-artifacts",
+      "title": "Bureaucratic Combat: Turning Pain Into a WorkSafeBC-Ready Audit",
+      "sourceFile": "docs/content/blog/devto-bureaucratic-combat-turning-pain-into-a-worksafebc-ready-audit.md",
+      "publishAt": "2026-06-16T16:00:00Z",
+      "tags": [
+        "privacy",
+        "documentation",
+        "healthtech",
+        "export"
+      ],
+      "description": "A protective documentation workflow is not just a PDF export. It is a local-first audit chain: repeatable entries, structured summaries, careful language, and user-controlled disclosure.",
+      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
+      "published": false,
+      "articleId": 3622730,
+      "devtoUrl": "https://dev.to/crisiscoresystems/bureaucratic-combat-turning-pain-into-a-worksafebc-ready-audit-ki4-temp-slug-151760"
+    },
+    {
       "key": "protective-computing-not-privacy-theater",
       "enabled": true,
       "seriesProfile": "protective-computing-essays",
@@ -883,6 +924,25 @@
       "articleId": 3385231,
       "devtoUrl": "https://dev.to/crisiscoresystems/protective-computing-is-not-privacy-theater-2job",
       "published": true
+    },
+    {
+      "key": "subpoena-proofing-zero-knowledge",
+      "enabled": true,
+      "seriesProfile": "protective-computing-essays",
+      "title": "Subpoena-Proofing by Design: Why Real Zero-Knowledge Has No Back Door",
+      "sourceFile": "docs/content/blog/devto-subpoena-proofing-by-design-technical-reality-zero-knowledge.md",
+      "publishAt": "2026-06-09T16:00:00Z",
+      "tags": [
+        "privacy",
+        "security",
+        "healthtech",
+        "architecture"
+      ],
+      "description": "Zero-knowledge is not encryption branding. It is a custody architecture: no operator-held plaintext, no silent mirror, and no privileged reset path when the records matter.",
+      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
+      "published": false,
+      "articleId": 3622426,
+      "devtoUrl": "https://dev.to/crisiscoresystems/subpoena-proofing-by-design-why-real-zero-knowledge-has-no-back-door-312i-temp-slug-2472855"
     },
     {
       "key": "stability-assumption-hidden-defect-source",

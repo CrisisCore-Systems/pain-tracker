@@ -46,7 +46,7 @@ import {
   generateBreadcrumbSchema,
   combineSchemas,
 } from '../../lib/seo';
-import { ResourceCtaStack } from '../../components/seo';
+import { ResourceCtaStack, ResourceOutcomeBridge, ResourceWorkflowSteps } from '../../components/seo';
 import '../../styles/pages/landing.css';
 
 // ---------------------------------------------------------------------------
@@ -54,11 +54,11 @@ import '../../styles/pages/landing.css';
 // ---------------------------------------------------------------------------
 const SEO = {
   slug: 'daily-pain-tracker-printable',
-  title: 'Daily Pain Tracker Printable (Free)',
+  title: 'Daily Pain Tracker Printable in 2026',
   metaTitle:
-    'Free Daily Pain Tracker Printable PDF | PainTracker.ca',
+    'Daily Pain Tracker Printable (2026) | Free PDF, No Email Required',
   metaDescription:
-    'Download the free PainTracker.ca daily pain tracker printable PDF to record pain levels, medications, flare ups, triggers, daily limits, mood, and notes for doctor visits.',
+    'Download the free daily pain tracker printable PDF for 2026. No email required. Record pain levels, medications, flare ups, triggers, daily limits, mood, and notes for doctor visits.',
   keywords: [
     'daily pain tracker printable',
     'daily pain log',
@@ -518,11 +518,14 @@ export const DailyPainTrackerPrintablePage: React.FC = () => {
               id="hero-heading"
               className="landing-headline landing-headline-lg text-white mb-6"
             >
-              Free Daily Pain Tracker Printable PDF
+              Free Daily Pain Tracker Printable PDF in 2026
             </h1>
 
             <p className="landing-subhead text-lg sm:text-xl max-w-2xl mx-auto mb-4">
               Use this printable pain tracker to log one full day of symptoms, medications, flare ups, activity limits, and notes in a format that is easy to keep and easy to bring to appointments.
+            </p>
+            <p className="text-slate-300 text-base sm:text-lg max-w-2xl mx-auto mb-4">
+              Start on paper if that is the easiest move today. Use the free app instead when you want less manual summarizing and a record that stays searchable on your device.
             </p>
             <p className="text-slate-500 text-sm mb-8">
               100% free &bull; No email required &bull; No tracking &bull; Prints on standard letter paper
@@ -585,6 +588,13 @@ export const DailyPainTrackerPrintablePage: React.FC = () => {
             </div>
           </div>
         </section>
+
+        <ResourceOutcomeBridge
+          downloadUrl="/assets/daily-pain-tracker.pdf"
+          downloadFileName="daily-pain-tracker.pdf"
+        />
+
+        <ResourceWorkflowSteps intent="printable" />
 
         {/* ═══ WHAT'S INSIDE ═══ */}
         <section className="py-16 sm:py-20 bg-slate-900" aria-labelledby="whats-inside">
@@ -948,6 +958,7 @@ export const DailyPainTrackerPrintablePage: React.FC = () => {
         </section>
 
         <ResourceCtaStack
+          intent="printable"
           heading="Keep the patient funnel moving"
           body="Use the app free, download a printable, or prepare records for appointments and documentation. The last step on the page should still match the real reason people searched."
         />

@@ -7,8 +7,8 @@
 
 import React from 'react';
 import {
-  ArrowRight, Activity, AlertTriangle, CheckCircle,
-  TrendingUp, Users, FileText, Clock, Heart,
+  Activity, AlertTriangle,
+  TrendingUp, Users, Clock, Heart,
   Calendar, Moon, Thermometer, MonitorSmartphone
 } from 'lucide-react';
 import { SEOPageLayout, type SEOPageContent, StatsBanner, PdfContentsPreview, BottomCTACallout } from '../../components/seo';
@@ -127,7 +127,7 @@ const pageContent: SEOPageContent = {
   headline: 'Endometriosis Pain Log',
   subheadline: 'Track endo symptoms across your entire cycle — pelvic pain, GI issues, fatigue, and the dozen other things that generic period trackers miss. Built to give your gynecologist evidence, not just numbers.',
   primaryCTA: { text: 'Download Free PDF (6 Pages)', href: '/assets/endometriosis-pain-log.pdf', download: true },
-  secondaryCTA: { text: 'Try Digital Version', href: '/start' },
+  secondaryCTA: { text: 'Start tracking free', href: '/start' },
   utilityBlock: { type: 'download', downloadUrl: '/assets/endometriosis-pain-log.pdf', downloadFileName: 'endometriosis-pain-log.pdf' },
   whatIsThis: 'An endometriosis symptom tracker that goes far beyond period tracking. It correlates pain with cycle phase, captures the full spectrum of endo symptoms (pelvic pain, GI issues, fatigue, dyspareunia, bladder symptoms, mood changes), and tracks treatment response including hormonal therapies. The average endo diagnosis takes 7-10 years — often because patients can\'t articulate the full pattern. This diary captures that pattern so your gynecologist or endo specialist can see it clearly.',
   whoShouldUse: [
@@ -193,8 +193,8 @@ export const EndometriosisPainLogPage: React.FC = () => (
     />
     <BottomCTACallout
       icon={MonitorSmartphone}
-      heading="Your Reproductive Data Belongs to You"
-      body={"We don't track your cycle in any cloud. Start with the paper PDF \u2014 it works without an account, without WiFi, and without anyone else having access to your reproductive health data. When you're ready, the digital version keeps everything encrypted on your device."}
+      heading="Keep a cycle record in the format you can sustain."
+      body={"Use the printable when paper feels easier to manage or share in appointments. If the app is simpler to keep up with across the month, it keeps the same cycle and symptom record on your device. What matters is having a clear pattern to review at your next visit."}
       pdfUrl="/assets/endometriosis-pain-log.pdf"
       gradientClasses="from-rose-600 to-pink-600"
       tintClass="text-rose-100"
