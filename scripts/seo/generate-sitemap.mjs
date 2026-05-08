@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { publicRouteMetadata, privateRouteMetadata } from '../../src/seo/publicRouteMetadata.js';
 
 const SITE_URL = 'https://www.paintracker.ca';
@@ -8,10 +9,13 @@ const today = new Date().toISOString().slice(0, 10);
 const publicDir = path.join(process.cwd(), 'public');
 const distDir = path.join(process.cwd(), 'dist');
 const sitemapPath = path.join(publicDir, 'sitemap.xml');
+const scriptPath = fileURLToPath(import.meta.url);
 
 const priorityOverrides = new Map([
   ['/', '1.0'],
   ['/pricing', '0.8'],
+  ['/case-study', '0.7'],
+  ['/proof', '0.6'],
   ['/download', '0.6'],
   ['/privacy', '0.4'],
   ['/privacy-architecture', '0.4'],
@@ -37,6 +41,8 @@ const priorityOverrides = new Map([
 const changefreqOverrides = new Map([
   ['/', 'weekly'],
   ['/pricing', 'monthly'],
+  ['/case-study', 'monthly'],
+  ['/proof', 'monthly'],
   ['/download', 'monthly'],
   ['/privacy', 'yearly'],
   ['/privacy-architecture', 'yearly'],
@@ -190,7 +196,7 @@ export function writeSitemapFiles(xml) {
 }
 
 function isDirectExecution() {
-  return process.argv[1] && path.resolve(process.argv[1]) === path.resolve(new URL(import.meta.url).pathname);
+  return Boolean(process.argv[1]) && path.resolve(process.argv[1]) === path.resolve(scriptPath);
 }
 
 if (isDirectExecution()) {

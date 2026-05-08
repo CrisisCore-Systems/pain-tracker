@@ -20,7 +20,7 @@ Current automated coverage includes 223 tests across the repository's tracked te
 </p>
 
 <p align="center">
-  <a href="https://paintracker.ca"><strong>Try It</strong></a> · <a href="docs/user-guide/INSTALL.md"><strong>Install</strong></a> · <a href="PRIVACY.md"><strong>Privacy</strong></a> · <a href="docs/user-guide/EXPORT_DATA.md"><strong>Export Guide</strong></a> · <a href="docs/README.md"><strong>Docs</strong></a>
+  <a href="https://paintracker.ca"><strong>Live Demo</strong></a> · <a href="https://paintracker.ca/case-study"><strong>Case Study</strong></a> · <a href="https://paintracker.ca/proof"><strong>Proof</strong></a> · <a href="docs/user-guide/INSTALL.md"><strong>Install</strong></a> · <a href="PRIVACY.md"><strong>Privacy</strong></a> · <a href="docs/user-guide/EXPORT_DATA.md"><strong>Export Guide</strong></a> · <a href="docs/README.md"><strong>Docs</strong></a>
 </p>
 
 ## Table of Contents

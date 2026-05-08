@@ -18,9 +18,18 @@ export const LandingFooter: React.FC = () => {
   const footerBlogLinkClass = 'group flex h-auto min-h-0 items-center border-0 bg-transparent p-0 text-left text-slate-400 transition-all duration-200 hover:text-purple-400';
 
   const socialLinks = [
-    { icon: Code, href: 'https://github.com/CrisisCore-Systems/pain-tracker', label: 'GitHub' },
-    { icon: BookOpen, href: 'https://blog.paintracker.ca', label: 'Blog' },
+    { icon: Code, href: 'https://github.com/CrisisCore-Systems', label: 'GitHub Org' },
+    { icon: BookOpen, href: 'https://dev.to/crisiscoresystems', label: 'DEV' },
+    { icon: Shield, href: 'https://protective-computing.github.io', label: 'Protective Computing' },
     { icon: Mail, href: 'mailto:support@paintracker.ca', label: 'Email' },
+  ];
+
+  const proofNetworkLinks: ResourceLink[] = [
+    { label: 'CrisisCore Systems', href: 'https://crisiscore-systems.ca' },
+    { label: 'GitHub Org', href: 'https://github.com/CrisisCore-Systems', icon: Code },
+    { label: 'DEV Essays', href: 'https://dev.to/crisiscoresystems', icon: BookOpen },
+    { label: 'Protective Computing Library', href: 'https://protective-computing.github.io', icon: Shield },
+    { label: 'PainTracker', href: 'https://paintracker.ca', icon: Heart },
   ];
 
   return (
@@ -224,21 +233,14 @@ export const LandingFooter: React.FC = () => {
               </ul>
             </div>
 
-            {/* Blog */}
+            {/* Proof Network */}
             <div className="space-y-5">
-              <h3 className="font-semibold text-sm uppercase tracking-wider flex items-center gap-2 text-purple-400">
-                <BookOpen className="h-4 w-4" />
-                Blog
+              <h3 className="font-semibold text-sm uppercase tracking-wider flex items-center gap-2 text-sky-300">
+                <Shield className="h-4 w-4" />
+                Proof Network
               </h3>
               <ul className="space-y-4 text-sm">
-                {[
-                  { label: 'All Posts', href: 'https://blog.paintracker.ca' },
-                  { label: 'Why We Built This', href: 'https://blog.paintracker.ca/building-a-pain-tracker-that-actually-gets-it-no-market-research-required' },
-                  { label: 'Crisis Detection', href: 'https://blog.paintracker.ca/i-built-a-crisis-detection-engine-that-never-phones-home' },
-                  { label: 'Trauma-Informed Design', href: 'https://blog.paintracker.ca/building-software-that-actually-gives-a-damn-my-journey-with-trauma-informed-design' },
-                  { label: 'Healthcare PWA', href: 'https://blog.paintracker.ca/building-a-healthcare-pwa-that-actually-works-when-it-matters' },
-                  { label: 'WorkSafe BC Auto-Fill', href: 'https://blog.paintracker.ca/stop-filling-worksafebc-forms-manually-this-auto-generates-them-for-free' },
-                ].map((item) => (
+                {proofNetworkLinks.map((item) => (
                   <li key={item.label}>
                     <a
                       href={item.href}
@@ -246,6 +248,7 @@ export const LandingFooter: React.FC = () => {
                       rel="noopener noreferrer"
                       className={footerBlogLinkClass}
                     >
+                      {item.icon && <item.icon className="h-4 w-4" />}
                       <span className="group-hover:translate-x-1 transition-transform truncate">{item.label}</span>
                     </a>
                   </li>

@@ -85,7 +85,11 @@ UX, exports treated as a security boundary).
 
 - Repo:
   [github.com/CrisisCore-Systems/pain-tracker](https://github.com/CrisisCore-Systems/pain-tracker)
-- Live app:
+- CrisisCore Systems:
+  [crisiscore-systems.ca](https://crisiscore-systems.ca)
+- Protective Computing library:
+  [protective-computing.github.io](https://protective-computing.github.io)
+- Reference app:
   [paintracker.ca](https://paintracker.ca)
 
 Important nuance: some integrations exist (for example correlation services and
@@ -108,6 +112,10 @@ useful feedback is specific:
   [doi.org/10.5281/zenodo.18887610](https://doi.org/10.5281/zenodo.18887610)
 - Canon (repo Markdown mirror):
   [github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/engineering/overton-framework-protective-computing-v1.3.md](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/engineering/overton-framework-protective-computing-v1.3.md)
+- CrisisCore Systems:
+  [crisiscore-systems.ca](https://crisiscore-systems.ca)
+- Protective Computing library:
+  [protective-computing.github.io](https://protective-computing.github.io)
 - Pain Tracker repo:
   [github.com/CrisisCore-Systems/pain-tracker](https://github.com/CrisisCore-Systems/pain-tracker)
 - Quality gates that earn trust:

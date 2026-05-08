@@ -35,7 +35,13 @@ https://dev.to/crisiscoresystems/series/34363
 
 ## Try it or support it
 
-Try PainTracker
+Start with CrisisCore Systems
+https://crisiscore-systems.ca
+
+Read the Protective Computing library
+https://protective-computing.github.io
+
+View PainTracker
 https://paintracker.ca
 
 Star the repo

@@ -329,6 +329,15 @@ Prev: [Part 1 — Offline-first without a backend](https://dev.to/crisiscoresyst
 
 ---
 
+## Proof network
+
+If you want the broader route around this series:
+
+- **Main site:** [CrisisCore Systems](https://crisiscore-systems.ca/)
+- **Framework:** [Protective Computing](https://protective-computing.github.io/)
+- **Reference implementation:** [PainTracker](https://paintracker.ca/)
+- **Proof route:** [paintracker.ca/proof](https://paintracker.ca/proof)
+
 If you want, I can also produce a **more SEO-tilted variant** with the same
 content and slightly different headings plus long-tail phrasing, *without*
 making it read like a keyword farm.

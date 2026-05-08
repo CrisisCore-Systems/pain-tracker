@@ -171,3 +171,12 @@ Class A fields in GA4 event params.
 
 Prev: [Part 6 — Exports as a security boundary](https://dev.to/crisiscoresystems/exports-are-a-security-boundary-the-moment-local-first-becomes-shareable-3gj9)
 Next: [Part 8 — Analytics without surveillance](https://dev.to/crisiscoresystems/analytics-without-surveillance-explicit-consent-layered-gates-and-never-sending-class-a-data-59f1)
+
+## Proof network
+
+If you want the broader trust path around this workflow:
+
+- **Main site:** [CrisisCore Systems](https://crisiscore-systems.ca/)
+- **Framework:** [Protective Computing](https://protective-computing.github.io/)
+- **Case study route:** [paintracker.ca/case-study](https://paintracker.ca/case-study)
+- **Proof route:** [paintracker.ca/proof](https://paintracker.ca/proof)

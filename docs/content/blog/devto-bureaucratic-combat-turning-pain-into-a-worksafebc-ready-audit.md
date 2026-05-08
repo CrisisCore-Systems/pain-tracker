@@ -265,3 +265,12 @@ If you want the boundary underneath the download step, read [Exports are a secur
 If you want the implementation-level framing for careful disclaimers and structured summaries, read [WorkSafeBC-oriented workflows without overclaims](https://dev.to/crisiscoresystems/worksafebc-oriented-workflows-without-overclaims-structured-summaries-careful-language-2n3i).
 
 If you want the worked example after the theory, read [How Pain Tracker Pro Streamlines WorkSafeBC Claims: A Composite Case Study](https://dev.to/crisiscoresystems/how-pain-tracker-pro-streamlines-worksafebc-claims-a-composite-case-study-4ce8).
+
+## Proof network
+
+If you want the broader trust path around this workflow:
+
+- **Main site:** [CrisisCore Systems](https://crisiscore-systems.ca/)
+- **Framework:** [Protective Computing](https://protective-computing.github.io/)
+- **Case study route:** [paintracker.ca/case-study](https://paintracker.ca/case-study)
+- **Proof route:** [paintracker.ca/proof](https://paintracker.ca/proof)

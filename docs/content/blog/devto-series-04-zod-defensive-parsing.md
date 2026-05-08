@@ -167,3 +167,12 @@ Part 5 covers why trauma-informed UX and accessibility aren’t “polish” in 
 
 Prev: [Part 3 — Service workers that don’t surprise you](https://dev.to/crisiscoresystems/service-workers-that-dont-surprise-you-deterministic-caching-for-offline-first-pwas-5480)
 Next: [Part 5 — Trauma-informed UX + accessibility as architecture](https://dev.to/crisiscoresystems/trauma-informed-ux-accessibility-as-architecture-not-polish-22jg)
+
+## Proof network
+
+If you want the broader route around this series:
+
+- **Main site:** [CrisisCore Systems](https://crisiscore-systems.ca/)
+- **Framework:** [Protective Computing](https://protective-computing.github.io/)
+- **Reference implementation:** [PainTracker](https://paintracker.ca/)
+- **Proof route:** [paintracker.ca/proof](https://paintracker.ca/proof)

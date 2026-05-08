@@ -282,3 +282,12 @@ If your product only works when the environment behaves, then the environment is
 The planet does not care about your happy path.
 
 BlackoutBench is an attempt to measure what survives after the happy path is gone.
+
+## Proof network
+
+If you want the broader work behind this resilience posture:
+
+- **Main site:** [CrisisCore Systems](https://crisiscore-systems.ca/)
+- **Framework:** [Protective Computing](https://protective-computing.github.io/)
+- **Reference implementation:** [PainTracker](https://paintracker.ca/)
+- **Proof route:** [paintracker.ca/proof](https://paintracker.ca/proof)

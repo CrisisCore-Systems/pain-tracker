@@ -1885,7 +1885,7 @@ function getRetrofitContext(schedule, retrofit) {
   const sponsorUrl =
     process.env.DEVTO_SPONSOR_URL ?? retrofit?.defaults?.sponsor_url ?? schedule.defaults?.sponsor_url ?? null;
   const tryUrl =
-    process.env.DEVTO_TRY_URL ?? retrofit?.defaults?.try_url ?? schedule.defaults?.try_url ?? 'https://paintracker.ca';
+    process.env.DEVTO_TRY_URL ?? retrofit?.defaults?.try_url ?? schedule.defaults?.try_url ?? 'https://crisiscore-systems.ca';
   const startHereUrl = resolveRetrofitStartHereUrl(retrofit, schedule);
   const trustBullets =
     (Array.isArray(retrofit?.defaults?.trust_bullets) ? retrofit.defaults.trust_bullets : null) ?? [
@@ -2317,7 +2317,7 @@ async function cmdPublishStartHere(schedule, { yes, write, writeMd }) {
 
   const sponsorUrl = process.env.DEVTO_SPONSOR_URL ?? retrofit?.defaults?.sponsor_url ?? schedule.defaults?.sponsor_url ?? null;
   const repoUrl = process.env.DEVTO_REPO_URL ?? schedule.defaults?.repo_url ?? retrofit?.defaults?.repo_url ?? null;
-  const tryUrl = process.env.DEVTO_TRY_URL ?? 'https://paintracker.ca';
+  const tryUrl = process.env.DEVTO_TRY_URL ?? schedule.defaults?.try_url ?? retrofit?.defaults?.try_url ?? 'https://crisiscore-systems.ca';
 
   if (!sponsorUrl) throw new Error('Missing sponsor URL. Set DEVTO_SPONSOR_URL (or retrofit.defaults.sponsor_url).');
   if (!repoUrl) throw new Error('Missing repo URL. Set DEVTO_REPO_URL (or schedule.defaults.repo_url).');

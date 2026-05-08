@@ -276,3 +276,12 @@ architecture far more than any framework decision ever does.
 ---
 
 Next: [Part 2 — Three storage layers (state cache vs offline DB vs encrypted vault)](https://dev.to/crisiscoresystems/three-storage-layers-in-an-offline-first-health-pwa-state-cache-vs-indexeddb-vs-encrypted-vault-19b7)
+
+## Proof network
+
+If you want the broader route around this series:
+
+- **Main site:** [CrisisCore Systems](https://crisiscore-systems.ca/)
+- **Framework:** [Protective Computing](https://protective-computing.github.io/)
+- **Reference implementation:** [PainTracker](https://paintracker.ca/)
+- **Proof route:** [paintracker.ca/proof](https://paintracker.ca/proof)

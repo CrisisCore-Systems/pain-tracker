@@ -11,6 +11,7 @@
     "organization_id": null,
     "sponsor_url": "https://github.com/sponsors/CrisisCore-Systems",
     "repo_url": "https://github.com/CrisisCore-Systems/pain-tracker",
+    "try_url": "https://crisiscore-systems.ca",
     "series_start_url": null,
     "series_profiles": {
       "crisiscore-build-log": {
@@ -39,6 +40,7 @@
           "devto-architecting-vulnerability",
           "privacy-first-default-standard",
           "protective-computing-not-privacy-theater",
+          "protective-legitimacy-score-how-it-works",
           "subpoena-proofing-zero-knowledge",
           "micro-coercion-of-speed",
           "coercion-resistant-ux",
@@ -961,6 +963,25 @@
       "canonical_url": null,
       "articleId": 3459426,
       "devtoUrl": "https://dev.to/crisiscoresystems/the-stability-assumption-the-hidden-defect-source-5cpd",
+      "published": true
+    },
+    {
+      "key": "protective-legitimacy-score-how-it-works",
+      "enabled": true,
+      "seriesProfile": "protective-computing-essays",
+      "title": "The Protective Legitimacy Score: How to Tell Whether a Trust Claim Is Structural",
+      "sourceFile": "docs/content/blog/devto-protective-legitimacy-score-how-it-works.md",
+      "publishAt": "2026-05-08T12:00:00Z",
+      "tags": [
+        "architecture",
+        "privacy",
+        "security",
+        "webdev"
+      ],
+      "description": "The Protective Legitimacy Score is a structural test for trust claims. It asks whether privacy, offline-first, and safety language is backed by architecture, defaults, and failure behavior.",
+      "canonical_url": null,
+      "articleId": 3635757,
+      "devtoUrl": "https://dev.to/crisiscoresystems/the-protective-legitimacy-score-how-to-tell-whether-a-trust-claim-is-structural-1lgm",
       "published": true
     }
   ]

@@ -179,3 +179,12 @@ Part 7 covers WorkSafeBC-oriented workflows — and how to keep language careful
 
 Prev: [Part 5 — Trauma-informed UX + accessibility as architecture](https://dev.to/crisiscoresystems/trauma-informed-ux-accessibility-as-architecture-not-polish-22jg)
 Next: [Part 7 — WorkSafeBC-oriented workflows (careful language)](https://dev.to/crisiscoresystems/worksafebc-oriented-workflows-without-overclaims-structured-summaries-careful-language-2n3i)
+
+## Proof network
+
+If you want the broader route around this series:
+
+- **Main site:** [CrisisCore Systems](https://crisiscore-systems.ca/)
+- **Framework:** [Protective Computing](https://protective-computing.github.io/)
+- **Reference implementation:** [PainTracker](https://paintracker.ca/)
+- **Proof route:** [paintracker.ca/proof](https://paintracker.ca/proof)

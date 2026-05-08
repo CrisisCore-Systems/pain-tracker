@@ -264,6 +264,25 @@ export const LandingPage: React.FC = () => {
               <li className="inline-flex items-center gap-2"><Smartphone className="h-4 w-4 text-emerald-300" />No required cloud login.</li>
               <li className="inline-flex items-center gap-2"><FileText className="h-4 w-4 text-emerald-300" />No forced sharing.</li>
             </ul>
+            <div className="mt-8 flex flex-col sm:flex-row sm:flex-wrap items-center justify-center gap-3">
+              <Link to="/case-study" className="inline-flex items-center gap-2 rounded-xl bg-sky-500 px-4 py-2 text-sm font-medium text-slate-950 hover:bg-sky-400 transition-colors">
+                Read the case study
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+              <Link to="/proof" className="inline-flex items-center gap-2 rounded-xl border border-white/15 px-4 py-2 text-sm font-medium text-white hover:border-sky-400/40 hover:text-sky-200 transition-colors">
+                Inspect proof materials
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+              <a
+                href="https://github.com/CrisisCore-Systems"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-xl border border-white/15 px-4 py-2 text-sm font-medium text-white hover:border-sky-400/40 hover:text-sky-200 transition-colors"
+              >
+                View GitHub org
+                <ArrowRight className="h-4 w-4" />
+              </a>
+            </div>
           </div>
         </section>
 

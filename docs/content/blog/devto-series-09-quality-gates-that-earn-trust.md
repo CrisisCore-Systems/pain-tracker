@@ -159,3 +159,12 @@ Part 10 is about keeping your docs truthful over time — especially for securit
 
 Prev: [Part 8 — Analytics without surveillance](https://dev.to/crisiscoresystems/analytics-without-surveillance-explicit-consent-layered-gates-and-never-sending-class-a-data-59f1)
 Next: [Part 10 — Maintaining truthful docs over time](https://dev.to/crisiscoresystems/maintaining-truthful-docs-over-time-how-to-keep-security-claims-honest-2778)
+
+## Proof network
+
+If you want the broader route around this series:
+
+- **Main site:** [CrisisCore Systems](https://crisiscore-systems.ca/)
+- **Framework:** [Protective Computing](https://protective-computing.github.io/)
+- **Reference implementation:** [PainTracker](https://paintracker.ca/)
+- **Proof route:** [paintracker.ca/proof](https://paintracker.ca/proof)

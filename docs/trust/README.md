@@ -13,6 +13,7 @@ Use these files to move from narrative claims to auditable evidence.
 - `verification-interlocks.md`: AI-speed safety controls and review gates
 - `pv-metric.md`: generation/verification pressure metric
 - `pls-rubric.md`: Protective Legitimacy Score framework
+- `protective-computing-design-patterns.md`: provisional design-pattern stub with scope and publication plan
 - `reversibility-contract.md`: live destructive/share action inventory, rollback requirements, and honest gaps
 - `reversibility-verification.md`: automated/manual verification procedure and required evidence outputs
 - `release-evidence-template.md`: required evidence bundle per release

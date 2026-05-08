@@ -33,6 +33,8 @@ const ClinicPortal = lazy(() => import('./pages/clinic/ClinicPortal').then(m => 
 const SubscriptionManagementPage = lazy(() => import('./pages/SubscriptionManagementPage').then(m => ({ default: m.SubscriptionManagementPage })));
 const SubmitStoryPage = lazy(() => import('./pages/SubmitStoryPage').then(m => ({ default: m.SubmitStoryPage })));
 const DownloadPage = lazy(() => import('./pages/DownloadPage').then(m => ({ default: m.DownloadPage })));
+const CaseStudyPage = lazy(() => import('./pages/CaseStudyPage').then(m => ({ default: m.CaseStudyPage })));
+const ProofPage = lazy(() => import('./pages/ProofPage').then(m => ({ default: m.ProofPage })));
 const PrivacyArchitecturePage = lazy(() => import('./pages/PrivacyArchitecturePage').then(m => ({ default: m.PrivacyArchitecturePage })));
 const ZeroKnowledgeHealthTrackingFaqPage = lazy(() => import('./pages/ZeroKnowledgeHealthTrackingFaqPage').then(m => ({ default: m.ZeroKnowledgeHealthTrackingFaqPage })));
 const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage').then(m => ({ default: m.PrivacyPolicyPage })));
@@ -328,6 +330,11 @@ function App() {
 
                     {/* Download Page - Public */}
                     <Route path="/download" element={<DownloadPage />} />
+
+                    {/* Proof path pages - Public */}
+                    <Route path="/case-study" element={<CaseStudyPage />} />
+                    <Route path="/proof" element={<ProofPage />} />
+                    <Route path="/artifact" element={<Navigate to="/proof" replace />} />
 
                     {/* Privacy Architecture - Public */}
                     <Route path="/privacy-architecture" element={<PrivacyArchitecturePage />} />

@@ -13,5 +13,7 @@ TL;DR
 Why this matters
 - (one line)
 
-Sponsor the build → https://paintracker.ca/sponsor
+Commercial front door → https://crisiscore-systems.ca
+Protective Computing library → https://protective-computing.github.io
+Sponsor the build → https://github.com/sponsors/CrisisCore-Systems
 ```

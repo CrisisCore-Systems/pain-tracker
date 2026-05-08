@@ -419,4 +419,13 @@ That is the whole move.
 
 Not trust as a promise.
 
+## Proof network
+
+If you want the broader commercial and doctrine path around this release work:
+
+- **Main site:** [CrisisCore Systems](https://crisiscore-systems.ca/)
+- **Framework:** [Protective Computing](https://protective-computing.github.io/)
+- **Reference implementation:** [PainTracker](https://github.com/CrisisCore-Systems/pain-tracker)
+- **Support the work:** [Sponsor CrisisCore-Systems](https://github.com/sponsors/CrisisCore-Systems)
+
 Trust as a verified release state.

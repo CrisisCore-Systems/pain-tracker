@@ -245,6 +245,8 @@ One of those is a posture. The other is a discipline.
 > **About Protective Computing:** A formally published systems engineering
 > discipline. Full canon at the
 > [Protective Computing Zenodo community](https://zenodo.org/communities/protective-computing).
+> Commercial front door at
+> [crisiscore-systems.ca](https://crisiscore-systems.ca).
 > Living specification at
 > [protective-computing.github.io](https://protective-computing.github.io).
 > PainTracker is the reference implementation.

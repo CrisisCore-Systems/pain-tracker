@@ -146,4 +146,4 @@ If this piece resonates, the broader work lives at **[CrisisCore Systems](https:
 - **Main site:** [CrisisCore Systems](https://crisiscore-systems.ca/)
 - **Framework:** [Protective Computing](https://protective-computing.github.io/)
 - **Reference implementation:** [PainTracker](https://github.com/CrisisCore-Systems/pain-tracker)
-- **Support the work:** [Sponsor CrisisCore-Systems](https://paintracker.ca/sponsor)
+- **Support the work:** [Sponsor CrisisCore-Systems](https://github.com/sponsors/CrisisCore-Systems)

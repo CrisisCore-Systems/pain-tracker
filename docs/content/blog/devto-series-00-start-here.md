@@ -47,7 +47,6 @@ This layer answers the hard question: what makes the system harder to seize, sub
 2. [If Your Health App Can't Explain Its Encryption, It Doesn't Have Any](https://dev.to/crisiscoresystems/if-your-health-app-cant-explain-its-encryption-it-doesnt-have-any-1647)
 3. [No Backend, No Excuses: The Architecture Behind a Private Health App](https://dev.to/crisiscoresystems/no-backend-no-excuses-the-architecture-behind-a-private-health-app-1g52)
 4. [Keeping Your Health Data Out of Court](https://dev.to/crisiscoresystems/keeping-your-health-data-out-of-court-3f0m)
-5. Coming next: Subpoena-Proofing by Design: Why Real Zero-Knowledge Has No Back Door
 
 ## Layer 2: The Resilience
 
@@ -67,7 +66,6 @@ This layer explains why the interface is allowed to resist speed, reduce pressur
 2. [Trauma-Informed UX: Accessibility as Architecture](https://dev.to/crisiscoresystems/trauma-informed-ux-accessibility-as-architecture-3j0d)
 3. [The Micro-Coercion of Speed: Why Friction Is an Engineering Prerequisite](https://dev.to/crisiscoresystems/the-micro-coercion-of-speed-why-friction-is-an-engineering-prerequisite-g4j)
 4. [Coercion-Resistant UX: Designing Interfaces That Don't Pressure Users Under Stress](https://dev.to/crisiscoresystems/coercion-resistant-ux-designing-interfaces-that-dont-pressure-users-under-stress-18m9)
-5. Coming next: The Friction Prerequisite: Why We Intentionally Slowed Down the UI
 
 ## Layer 4: The Artifacts
 
@@ -78,7 +76,6 @@ This layer is where claims become evidence. If you want to know whether the syst
 3. [Quality gates that earn trust: checks you can run, not promises you can't](https://dev.to/crisiscoresystems/quality-gates-that-earn-trust-checks-you-can-run-not-promises-you-cant-58a3)
 4. [ProofVault as a Release Artifact: Turning Trust Into Something You Can Verify](https://dev.to/crisiscoresystems/how-proofvault-turned-trust-from-a-documentation-claim-into-a-reproducible-release-artifact-22pb)
 5. [Maintaining truthful docs over time: how to keep security claims honest](https://dev.to/crisiscoresystems/maintaining-truthful-docs-over-time-how-to-keep-security-claims-honest-2778)
-6. Coming next: Bureaucratic Combat: Turning Pain Into a WorkSafeBC-Ready Audit
 
 ## Two series, two jobs
 
@@ -103,9 +100,15 @@ The working title is: Subpoena-Proofing by Design: Why Real Zero-Knowledge Has N
 The Layer 4 bridge belongs immediately after the artifact and WorkSafeBC workflow posts above.
 The working title is: Bureaucratic Combat: Turning Pain Into a WorkSafeBC-Ready Audit.
 
-## Try it or support it
+## Route into the proof network
 
-Try PainTracker
+Start with CrisisCore Systems
+[crisiscore-systems.ca](https://crisiscore-systems.ca)
+
+Read the Protective Computing library
+[protective-computing.github.io](https://protective-computing.github.io)
+
+View PainTracker
 [paintracker.ca](https://paintracker.ca)
 
 Star the repo
