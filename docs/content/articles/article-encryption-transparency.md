@@ -39,6 +39,9 @@ breached constantly. Banks also have your data in plaintext on the backend.
 None of this protects you from the company itself. None of it protects you from
 subpoenas. None of it protects you from the inevitable breach.
 
+If you want the courtroom version of that threat model instead of the abstract
+warning, read [Keeping Your Health Data Out of Court](https://blog.paintracker.ca/keeping-your-health-data-out-of-court).
+
 ---
 
 ## Why It Matters
@@ -357,6 +360,8 @@ verify, it doesn't have encryption. It has marketing.
 [github.com/CrisisCore-Systems/pain-tracker](https://github.com/CrisisCore-Systems/pain-tracker)
 
 The encryption implementation is in `src/services/EncryptionService.ts`. It's
-not perfect. It's auditable. That's the point.
+not perfect. It's auditable. That's the point. For the full Web Crypto API
+implementation behind Pain Tracker's encryption, read [Client-Side Encryption
+for Healthcare Apps](https://blog.paintracker.ca/client-side-encryption-for-healthcare-apps).
 
 Read it. Tell me what I missed. Build something better.

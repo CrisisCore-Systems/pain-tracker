@@ -11,7 +11,7 @@ If you want the trust and release path instead of a single artifact essay, use t
 2. [Maintaining truthful docs over time](https://dev.to/crisiscoresystems/maintaining-truthful-docs-over-time-how-to-keep-security-claims-honest-2778)
 3. ProofVault as a Release Artifact
 4. [Preview Mode First: Agent Plans as PRs (Plan Diff + Invariants)](https://dev.to/crisiscoresystems/preview-mode-first-agent-plans-as-prs-plan-diff-invariants-4ikd)
-5. [The Overton Framework is now DOI-backed](https://dev.to/crisiscoresystems/the-overton-framework-is-now-doi-backed-ko7)
+5. [Protective Computing Canon v1.0 is now DOI-backed](https://dev.to/crisiscoresystems/the-overton-framework-is-now-doi-backed-ko7)
 
 For the broader catalog route, start with [Start Here: PainTracker and the CrisisCore Build Log](https://dev.to/crisiscoresystems/start-here-paintracker-crisiscore-build-log-privacy-first-offline-first-no-surveillance-3h0k).
 
@@ -249,6 +249,10 @@ It is a concrete example that can be checked later.
 ## Drift detection is the enforcement layer
 
 A pinned specimen without drift detection decays into theater.
+
+If you want the documentation discipline that keeps those drift failures from
+turning into stale security claims, read
+[Maintaining truthful docs over time: how to keep security claims honest](https://dev.to/crisiscoresystems/maintaining-truthful-docs-over-time-how-to-keep-security-claims-honest-2778).
 
 Once you publish expected outputs, the obvious risk is that future code
 changes silently alter trust-critical behavior while the docs keep

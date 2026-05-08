@@ -19,6 +19,9 @@ I've had my data used against me in court.
 
 Not hypothetically. Actual court. Actual lawyers. Actual judge reading things I wrote during a pain flare, reframed as evidence of instability.
 
+If you want the threat model that explains why this level of encryption is
+necessary, read [Keeping Your Health Data Out of Court](https://blog.paintracker.ca/keeping-your-health-data-out-of-court).
+
 That's why I use a strong KDF configuration and authenticated encryption (for example, PBKDF2 + AES-GCM via Web Crypto). That's why key material is kept client-side in normal use, and why I treat offline attacks as a first-class threat.
 
 This isn't a tutorial. This is the architecture that keeps my health data out of discovery motions, custody disputes, and insurance fraud investigations. If you're building for people whose data could be weaponized—disability claimants, chronic pain patients, anyone the system has already decided to disbelieve—this is how you protect them.
@@ -34,6 +37,10 @@ The server decrypts to process. Your health data passes through corporate infras
 In a user-held-keys model, a server (if present) only sees ciphertext; the operator can’t read user content without the key.
 
 Local-first means your data can stay on-device by default, with sharing happening via explicit exports/imports. Encryption helps with lost/stolen device risk and casual inspection; it’s not a guarantee against a fully compromised OS or a determined forensic adversary.
+
+In Pain Tracker, that ciphertext lives inside the broader storage boundary
+described in [Three storage layers in an offline-first health PWA: state cache
+vs IndexedDB vs encrypted vault](https://dev.to/crisiscoresystems/three-storage-layers-in-an-offline-first-health-pwa-state-cache-vs-indexeddb-vs-encrypted-vault-19b7).
 
 ---
 

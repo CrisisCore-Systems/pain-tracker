@@ -34,7 +34,7 @@ Start here if your goal is day-to-day symptom tracking, appointment prep, and pr
 
 Start here if you want local-first architecture, reliability patterns, and implementation details.
 
-- [Why We Built a Local-First Pain App with No Backend](https://blog.paintracker.ca/the-day-i-decided-my-pain-app-didnt-need-a-server-what-i-learned-building-healthcare-software-that-lives-entirely-on-your-device)
+- [The Day I Decided My Pain App Didn't Need a Server: What I Learned Building Healthcare Software That Lives Entirely on Your Device](https://blog.paintracker.ca/the-day-i-decided-my-pain-app-didnt-need-a-server-what-i-learned-building-healthcare-software-that-lives-entirely-on-your-device)
 - [Offline-First PWAs: Why They Matter for Crisis-Responsive Health Tech](https://blog.paintracker.ca/offline-first-pwas-why-they-matter-for-crisis-responsive-health-tech)
 - [View the Source Code](https://github.com/CrisisCore-Systems/pain-tracker)
 
@@ -45,5 +45,5 @@ Start here if you want local-first architecture, reliability patterns, and imple
 Start here if your goal is WorkSafeBC-ready documentation using structured pain records.
 
 - [Generate WorkSafeBC-Ready Documentation with Pain Tracker](https://blog.paintracker.ca/stop-filling-worksafebc-forms-manually-this-auto-generates-them-for-free)
-- [WorkSafeBC Claims Case Study: Faster Documentation](https://blog.paintracker.ca/how-pain-tracker-pro-streamlines-worksafebc-claims-a-composite-case-study)
-- [WorkSafeBC Hub](https://blog.paintracker.ca/worksafebc)
+- [How Pain Tracker Pro Streamlines WorkSafeBC Claims: A Composite Case Study](https://blog.paintracker.ca/how-pain-tracker-pro-streamlines-worksafebc-claims-a-composite-case-study)
+- [WorkSafeBC Documentation Workflows: Start Here](https://blog.paintracker.ca/worksafebc-documentation-workflows-start-here)

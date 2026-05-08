@@ -136,6 +136,8 @@ export function useCrisisDetection(config: Partial<CrisisDetectionConfig> = {}) 
 
 High error rate + erratic clicking + high pain level = crisis mode.
 
+If you want the full stress formula, threshold logic, and privacy-preserving implementation that this hook layer carries into the component tree, read [Trauma-informed design left everyone asking: "How does it actually know I'm struggling without spying?"](https://dev.to/crisiscoresystems/trauma-informed-design-left-everyone-asking-how-does-it-actually-know-im-struggling-without-26a0).
+
 ---
 
 ## Emergency Mode
@@ -314,6 +316,8 @@ export function TraumaInformedProvider({ children }: { children: ReactNode }) {
 ```
 
 Wrap the app. Every component has access. Preferences persist locally.
+
+If you want the broader accessibility architecture this provider plugs into, read [Trauma-informed UX + accessibility as architecture (not polish)](https://dev.to/crisiscoresystems/trauma-informed-ux-accessibility-as-architecture-not-polish-22jg).
 
 ---
 

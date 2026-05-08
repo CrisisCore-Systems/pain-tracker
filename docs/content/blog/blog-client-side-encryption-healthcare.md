@@ -296,6 +296,9 @@ verify without trusting you either.
 Code's at github.com/CrisisCore-Systems/pain-tracker. Read it. Audit it. Find
 what I missed. Then read [If Your Health App Can't Explain Its Encryption, It
 Doesn't Have Any](https://blog.paintracker.ca/if-your-health-app-cant-explain-its-encryption-it-doesnt-have-any)
-for the audit questions that separate real encryption from marketing copy.
+for the audit questions that separate real encryption from marketing copy. And
+for the trust-boundary shift that starts the moment encrypted local data
+becomes a shareable file, read [Exports are a security boundary: the moment
+local-first becomes shareable](https://dev.to/crisiscoresystems/exports-are-a-security-boundary-the-moment-local-first-becomes-shareable-3gj9).
 
 Still unstable housing. Still shipping code. Take what works, build something better.

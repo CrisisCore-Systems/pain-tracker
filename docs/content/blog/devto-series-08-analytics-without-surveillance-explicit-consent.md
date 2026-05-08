@@ -143,6 +143,10 @@ separate and minimal at the exact point local-first data becomes shareable:
 
 ## Next up
 
+And if you want the verification layer that checks whether those analytics can
+still be used to re-identify people despite your design intent, read
+[Privacy-Preserving Analytics: Proving You Can Measure Without Identity](https://dev.to/crisiscoresystems/testing-privacy-preserving-analytics-verifying-that-insights-dont-leak-identity-e37).
+
 Part 9 is where these rules get teeth: tests and quality gates that keep privacy promises from drifting over time.
 
 Prev: [Part 7 — WorkSafeBC-oriented workflows without overclaims](https://dev.to/crisiscoresystems/worksafebc-oriented-workflows-without-overclaims-structured-summaries-careful-language-2n3i)

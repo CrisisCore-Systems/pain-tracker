@@ -117,6 +117,8 @@ const DEFAULT_CONFIG: CrisisDetectionConfig = {
 };
 ```
 
+If you want the calibration side of that sensitivity dial, read [The False Positive Problem](https://blog.paintracker.ca/false-positives-calibrating-crisis-detection).
+
 It looks for specific red flags:
 
 ```typescript
@@ -153,6 +155,8 @@ if (currentIndicators.inputErraticBehavior >= 0.7) {
   });
 }
 ```
+
+If you want the component-layer hook implementation that carries this logic into the UI, read [Trauma-Informed React Hooks](https://dev.to/crisiscoresystems/trauma-informed-react-hooks-483n).
 
 ### The Stress Formula (Because Math Should Be Transparent)
 

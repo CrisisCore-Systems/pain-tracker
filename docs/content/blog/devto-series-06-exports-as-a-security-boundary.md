@@ -111,6 +111,10 @@ This is good honesty:
 - the export is a faithful copy
 - the app isn’t claiming it can “anonymize” your narrative
 
+If you care about making that export/import round-trip trustworthy on the way
+back in, read
+[Zod + defensive parsing: make your offline data trustworthy](https://dev.to/crisiscoresystems/zod-defensive-parsing-in-a-local-first-app-make-your-offline-data-trustworthy-1016).
+
 If you need de-identification, that’s a different feature with a different risk profile.
 
 ---

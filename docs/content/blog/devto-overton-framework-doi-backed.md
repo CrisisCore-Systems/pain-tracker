@@ -112,3 +112,5 @@ useful feedback is specific:
   [github.com/CrisisCore-Systems/pain-tracker](https://github.com/CrisisCore-Systems/pain-tracker)
 - Quality gates that earn trust:
   [dev.to/crisiscoresystems/quality-gates-that-earn-trust-checks-you-can-run-not-promises-you-cant-58a3](https://dev.to/crisiscoresystems/quality-gates-that-earn-trust-checks-you-can-run-not-promises-you-cant-58a3)
+- Field Guide v0.1: the engineering practice companion to the canon:
+  [dev.to/crisiscoresystems/field-guide-v01-is-live-3f0a](https://dev.to/crisiscoresystems/field-guide-v01-is-live-3f0a)

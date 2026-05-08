@@ -98,6 +98,9 @@ const ciphertext = await crypto.subtle.encrypt(
 );
 ```
 
+If you want the complete client-side encryption implementation behind this
+snippet, read [Client-Side Encryption for Healthcare Apps](https://blog.paintracker.ca/client-side-encryption-for-healthcare-apps).
+
 Fresh IV every encryption. HMAC verification on decrypt. 150,000 PBKDF2 iterations for password-derived keys.
 
 That iteration count isn't best practice. It's the minimum I need to make brute-force take longer than I need to burn the key.

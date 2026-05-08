@@ -74,7 +74,7 @@ This layer explains why the interface is allowed to resist speed, reduce pressur
 This layer is where claims become evidence. If you want to know whether the system can produce legible proof without leaking everything else, read here.
 
 1. [Exports are a security boundary: the moment local-first becomes shareable](https://dev.to/crisiscoresystems/exports-are-a-security-boundary-the-moment-local-first-becomes-shareable-3gj9)
-2. [WorkSafeBC-Oriented Workflows: Careful Language, Better Evidence](https://dev.to/crisiscoresystems/worksafebc-oriented-workflows-careful-language-better-evidence-5e3n)
+2. [WorkSafeBC-oriented workflows without overclaims: structured summaries, careful language](https://dev.to/crisiscoresystems/worksafebc-oriented-workflows-without-overclaims-structured-summaries-careful-language-2n3i)
 3. [Quality gates that earn trust: checks you can run, not promises you can't](https://dev.to/crisiscoresystems/quality-gates-that-earn-trust-checks-you-can-run-not-promises-you-cant-58a3)
 4. [ProofVault as a Release Artifact: Turning Trust Into Something You Can Verify](https://dev.to/crisiscoresystems/how-proofvault-turned-trust-from-a-documentation-claim-into-a-reproducible-release-artifact-22pb)
 5. [Maintaining truthful docs over time: how to keep security claims honest](https://dev.to/crisiscoresystems/maintaining-truthful-docs-over-time-how-to-keep-security-claims-honest-2778)
@@ -86,6 +86,10 @@ Use the series pages as operating modes, not just categories.
 
 - [Protective Computing in Practice](https://dev.to/crisiscoresystems/series/35109) is the theory and doctrine path.
 - [CrisisCore Build Log](https://dev.to/crisiscoresystems/series/34363) is the implementation and verification path.
+
+If you want context first before the protocol map, start with
+[Two People, Same Body](https://dev.to/crisiscoresystems/two-people-same-body-a-developers-crisis-architecture-25ko),
+the origin story behind why Pain Tracker was built.
 
 ## What this front door is doing now
 
