@@ -52,6 +52,7 @@ const PrivacyOfflineFirstPainTrackerPage = lazy(() => import('./pages/PrivacyOff
 const VaultGate = lazy(() => import('./components/security/VaultGate').then(m => ({ default: m.VaultGate })));
 const StartRedirect = lazy(() => import('./components/security/StartRedirect').then(m => ({ default: m.StartRedirect })));
 const ProtectedAppShell = lazy(() => import('./routes/ProtectedAppShell').then(m => ({ default: m.ProtectedAppShell })));
+const SeoSearchConsoleDashboardPage = lazy(() => import('./pages/SeoSearchConsoleDashboardPage').then(m => ({ default: m.SeoSearchConsoleDashboardPage })));
 
 // SEO Resource Pages - Lazy loaded for code splitting
 // Tier 1: Printable/Download Intent
@@ -451,6 +452,7 @@ function App() {
                     <Route path="/resources/pain-diary-template-for-insurance" element={<PainDiaryTemplateForInsurancePage />} />
                     <Route path="/resources/pain-tracker-for-desktop" element={<PainTrackerForDesktopPage />} />
                     <Route path="/offline-pain-tracker-app" element={<OfflinePainTrackerAppPage />} />
+                    <Route path="/seo/search-console-dashboard" element={<SeoSearchConsoleDashboardPage />} />
 
                     {/* Fallback - redirect to landing */}
                     <Route path="*" element={<Navigate to="/" replace />} />
