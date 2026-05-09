@@ -6,7 +6,6 @@ import { LandingFooter } from '../components/landing';
 import {
   generateOrganizationSchema,
   generateWebSiteSchema,
-  generateSoftwareApplicationSchema,
   generateFAQSchema,
   combineSchemas,
   defaultSEOConfig,
@@ -148,11 +147,10 @@ const essentialGuides = [
 export const LandingPage: React.FC = () => {
   const organizationSchema = generateOrganizationSchema();
   const webSiteSchema = generateWebSiteSchema();
-  const softwareSchema = generateSoftwareApplicationSchema();
   const faqSchema = generateFAQSchema(
     homepageFaqs.map((faq) => ({ question: faq.question, answer: faq.answer }))
   );
-  const combinedSchema = combineSchemas(organizationSchema, webSiteSchema, softwareSchema, faqSchema);
+  const combinedSchema = combineSchemas(organizationSchema, webSiteSchema, faqSchema);
 
   useEffect(() => {
     const meta = {
@@ -207,7 +205,11 @@ export const LandingPage: React.FC = () => {
               PainTracker.ca helps you log pain levels, symptoms, medications, triggers, body locations, and daily function without creating an account. Your core records stay on your device unless you choose to export or share them.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4 mb-5">
-              <Link to="/start" className="btn-cta-primary inline-flex items-center justify-center gap-2 px-7 py-3">
+              <Link
+                to="/start"
+                data-testid="hero-cta-start"
+                className="btn-cta-primary inline-flex items-center justify-center gap-2 px-7 py-3"
+              >
                 Start Tracking Free
                 <ArrowRight className="h-4 w-4" />
               </Link>

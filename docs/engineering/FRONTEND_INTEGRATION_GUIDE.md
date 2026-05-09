@@ -352,7 +352,7 @@ If you're building a mobile app, httpOnly cookies may not work the same way. Con
 
 1. **Use token-based auth** for mobile apps
 2. **Create separate endpoints** for mobile vs web
-3. **Implement secure storage** (Keychain/Keystore)
+3. **Implement platform-appropriate secure storage** (PWA: Web Crypto + browser storage boundary; native wrappers only if a native build exists)
 
 Example:
 ```typescript

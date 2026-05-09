@@ -396,7 +396,7 @@
       "seriesProfile": "protective-computing-essays",
       "title": "Privacy-first, offline-capable, trauma-informed, open-source health tools should be the default",
       "sourceFile": "docs/content/articles/article-privacy-first-trauma-informed-open-source-digital-health.md",
-      "publishAt": "2026-02-05T17:00:00Z",
+      "publishAt": "2026-05-08T17:00:00Z",
       "tags": [
         "healthtech",
         "privacy",
@@ -406,8 +406,8 @@
       "description": "Why local-first, trauma-informed, open-source design should be the baseline for pain diaries and digital health tools.",
       "canonical_url": null,
       "articleId": 3597218,
-      "devtoUrl": "https://dev.to/crisiscoresystems/privacy-first-offline-capable-trauma-informed-open-source-health-tools-should-be-the-default-dhj-temp-slug-849014",
-      "published": false
+      "devtoUrl": "https://dev.to/crisiscoresystems/privacy-first-offline-capable-trauma-informed-open-source-health-tools-should-be-the-default-56jc",
+      "published": true
     },
     {
       "key": "article-encryption-transparency",
@@ -760,7 +760,7 @@
       "seriesProfile": "protective-computing-essays",
       "title": "The Friction Prerequisite: Why We Intentionally Slowed Down the UI",
       "sourceFile": "docs/content/blog/devto-friction-prerequisite-why-we-intentionally-slowed-down-the-ui.md",
-      "publishAt": "2026-06-23T16:00:00Z",
+      "publishAt": "2026-05-29T16:00:00Z",
       "tags": [
         "design",
         "accessibility",
@@ -768,7 +768,7 @@
         "webdev"
       ],
       "description": "Fast is not always safe. In vulnerable-state software, some delays, confirmations, and extra steps are not UX debt. They are protective controls.",
-      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
+      "canonical_url": null,
       "published": false,
       "articleId": 3623050,
       "devtoUrl": "https://dev.to/crisiscoresystems/the-friction-prerequisite-why-we-intentionally-slowed-down-the-ui-e8j-temp-slug-5879740"
@@ -895,7 +895,7 @@
       "seriesProfile": "release-and-trust-artifacts",
       "title": "Bureaucratic Combat: Turning Pain Into a WorkSafeBC-Ready Audit",
       "sourceFile": "docs/content/blog/devto-bureaucratic-combat-turning-pain-into-a-worksafebc-ready-audit.md",
-      "publishAt": "2026-06-16T16:00:00Z",
+      "publishAt": "2026-05-22T16:00:00Z",
       "tags": [
         "privacy",
         "documentation",
@@ -903,7 +903,7 @@
         "export"
       ],
       "description": "A protective documentation workflow is not just a PDF export. It is a local-first audit chain: repeatable entries, structured summaries, careful language, and user-controlled disclosure.",
-      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
+      "canonical_url": null,
       "published": false,
       "articleId": 3622730,
       "devtoUrl": "https://dev.to/crisiscoresystems/bureaucratic-combat-turning-pain-into-a-worksafebc-ready-audit-ki4-temp-slug-151760"
@@ -933,7 +933,7 @@
       "seriesProfile": "protective-computing-essays",
       "title": "Subpoena-Proofing by Design: Why Real Zero-Knowledge Has No Back Door",
       "sourceFile": "docs/content/blog/devto-subpoena-proofing-by-design-technical-reality-zero-knowledge.md",
-      "publishAt": "2026-06-09T16:00:00Z",
+      "publishAt": "2026-05-15T16:00:00Z",
       "tags": [
         "privacy",
         "security",
@@ -941,7 +941,7 @@
         "architecture"
       ],
       "description": "Zero-knowledge is not encryption branding. It is a custody architecture: no operator-held plaintext, no silent mirror, and no privileged reset path when the records matter.",
-      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
+      "canonical_url": null,
       "published": false,
       "articleId": 3622426,
       "devtoUrl": "https://dev.to/crisiscoresystems/subpoena-proofing-by-design-why-real-zero-knowledge-has-no-back-door-312i-temp-slug-2472855"

@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react';
+import { trackDataImport } from '../../analytics/ga4-events';
 import { secureStorage } from '../../lib/storage/secureStorage';
 import {
   SETTINGS_BACKUP_LIMITS,
@@ -207,6 +208,7 @@ export default function BackupSettings() {
                     setImportResult(
                       `Import applied (${res.written.length} keys).`
                     );
+                    trackDataImport('settings_backup', res.written.length);
                     setPendingImport(null);
                     setConfirmText('');
                   } catch {

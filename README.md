@@ -68,6 +68,12 @@ Deeper product detail lives in [docs/product](docs/product) and the broader docs
 
 Pain Tracker is local-first by default.
 
+The canonical PainTracker implementation artifact is the PainTracker Protective Computing Reference Packet v1.0. Legacy mappings are retained only as historical drafts until rewritten against the current repository, CI evidence, and claim badge taxonomy.
+
+Protective Computing Specification v1.0 is a founder-authored normative design specification. Current implementation claims are conformance claims, not certification. A system may be described as self-attested, repo backed, CI backed, externally reviewed, or certified only according to the published proof badge taxonomy.
+
+PainTracker is a candidate reference implementation with a public reference packet, explicit limitations, and bounded evidence anchors. It is not certified. Its current posture is Level 2 to Level 3 alignment where evidence exists, with unresolved gaps in active-coercion resistance, accessibility-complete degraded mode, and external review.
+
 | Boundary | Default | Notes |
 | --- | --- | --- |
 | Pain entries and symptom history | Local device storage | Sharing happens through explicit export flows |
@@ -77,7 +83,7 @@ Pain Tracker is local-first by default.
 | Payments | Not supported production path | GitHub Sponsors is the current funding path; historical Stripe or SaaS references are archived experiments |
 | Compliance posture | No compliance claim | Privacy-aligned architecture and controls only |
 
-For trust and reversibility framing, see [docs/trust/README.md](docs/trust/README.md) and [SECURITY_INVARIANTS.md](SECURITY_INVARIANTS.md).
+For trust and reversibility framing, see [docs/trust/paintracker-protective-computing-reference-packet-v1.0.md](docs/trust/paintracker-protective-computing-reference-packet-v1.0.md), [docs/trust/README.md](docs/trust/README.md), and [SECURITY_INVARIANTS.md](SECURITY_INVARIANTS.md).
 
 ## Privacy model
 

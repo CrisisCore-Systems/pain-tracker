@@ -7,7 +7,6 @@ tags:
   - healthtech
   - architecture
 published: false
-canonical_url: "https://github.com/CrisisCore-Systems/pain-tracker"
 ---
 
 If you want the short Layer 1 path into this argument, read these first:

@@ -4,7 +4,15 @@ This folder contains verification-first trust architecture artifacts for Pain Tr
 
 Use these files to move from narrative claims to auditable evidence.
 
+The canonical PainTracker implementation artifact is the PainTracker Protective Computing Reference Packet v1.0. Legacy mappings are retained only as historical drafts until rewritten against the current repository, CI evidence, and claim badge taxonomy.
+
+Protective Computing Specification v1.0 is a founder-authored normative design specification. Current implementation claims are conformance claims, not certification. A system may be described as self-attested, repo backed, CI backed, externally reviewed, or certified only according to the published proof badge taxonomy.
+
+PainTracker is a candidate reference implementation with a public reference packet, explicit limitations, and bounded evidence anchors. It is not certified. Its current posture is Level 2 to Level 3 alignment where evidence exists, with unresolved gaps in active-coercion resistance, accessibility-complete degraded mode, and external review.
+
 ## Core Artifacts
+
+- `paintracker-protective-computing-reference-packet-v1.0.md`: canonical versioned proof packet (not certification)
 
 - `defensibility-packet.md`: release-by-release trust summary with evidence links
 - `threat-model.md`: adversaries, assets, and mitigations

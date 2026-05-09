@@ -493,6 +493,14 @@ export const publicRouteMetadata = [
     breadcrumbName: 'Privacy Policy',
   },
   {
+    path: '/terms',
+    title: 'Terms of Service — Pain Tracker',
+    description: 'Terms of Service for Pain Tracker, including local-first usage boundaries, export responsibilities, and WorkSafeBC documentation disclaimers.',
+    canonicalUrl: `${SITE_URL}/terms`,
+    ogImage: DEFAULT_OG_IMAGE,
+    breadcrumbName: 'Terms of Service',
+  },
+  {
     path: '/privacy-architecture',
     title: 'Privacy Architecture | PainTracker.ca',
     description: 'See how PainTracker.ca approaches local-first storage, user-controlled exports, backup responsibility, and privacy tradeoffs without cloud-default data collection.',

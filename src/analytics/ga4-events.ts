@@ -30,6 +30,12 @@ export const GA4Events = {
   EXPORT_DATA: 'export_data',
   EXPORT_WCB_REPORT: 'export_wcb_report',
   GENERATE_CLINICAL_REPORT: 'generate_clinical_report',
+  PDF_EXPORT: 'pdf_export',
+
+  // Core Funnel Events
+  FIRST_LOG_SAVED: 'first_log_saved',
+  PWA_INSTALL_PROMPT: 'pwa_install_prompt',
+  DATA_IMPORT: 'data_import',
   
   // Body Map Events
   SELECT_BODY_LOCATION: 'select_body_location',
@@ -110,6 +116,9 @@ export interface GA4EventParams {
   // Mood parameters - REMOVED for Class A Protection
   
   // Generic parameters
+  prompt_status?: string;
+  import_scope?: string;
+  imported_count?: number;
   [key: string]: unknown;
 }
 
@@ -230,6 +239,46 @@ export function trackDataExported(format: 'csv' | 'json' | 'pdf' | 'fhir', entry
   trackGA4Event(GA4Events.EXPORT_DATA, {
     format,
     entry_count: entryCount,
+  });
+
+  if (format === 'pdf') {
+    trackPdfExport(entryCount);
+  }
+}
+
+/**
+ * Track first successful log save in the primary product loop.
+ */
+export function trackFirstLogSaved(): void {
+  trackGA4EventName(GA4Events.FIRST_LOG_SAVED);
+}
+
+/**
+ * Track PDF export completion in the primary product loop.
+ */
+export function trackPdfExport(entryCount?: number): void {
+  trackGA4EventName(GA4Events.PDF_EXPORT, {
+    format: 'pdf',
+    entry_count: entryCount,
+  });
+}
+
+/**
+ * Track PWA install prompt lifecycle events in the primary product loop.
+ */
+export function trackPwaInstallPrompt(status: 'available' | 'shown' | 'accepted' | 'dismissed' | 'error'): void {
+  trackGA4EventName(GA4Events.PWA_INSTALL_PROMPT, {
+    prompt_status: status,
+  });
+}
+
+/**
+ * Track import completion in the primary product loop.
+ */
+export function trackDataImport(importScope: string, importedCount?: number): void {
+  trackGA4EventName(GA4Events.DATA_IMPORT, {
+    import_scope: importScope,
+    imported_count: importedCount,
   });
 }
 
@@ -361,10 +410,14 @@ export function trackOnboardingSkipped(): void {
 export const ga4Analytics = {
   trackEvent: trackGA4Event,
   trackPainEntryLogged,
+  trackFirstLogSaved,
   trackValidationUsed,
   trackProgressViewed,
   trackAnalyticsTabViewed,
   trackDataExported,
+  trackPdfExport,
+  trackPwaInstallPrompt,
+  trackDataImport,
   trackWCBReportExported,
   trackClinicalReportGenerated,
   trackBodyLocationSelected,

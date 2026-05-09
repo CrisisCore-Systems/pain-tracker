@@ -3,6 +3,7 @@ import { formatNumber } from '../utils/formatting';
 import { devtools, persist, subscribeWithSelector, type PersistStorage } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 import type { PainEntry, EmergencyPanelData, ActivityLogEntry, ReportTemplate } from '../types';
+import type { EntryCaptureContext } from '../types/index';
 import type { MoodEntry } from '../types/quantified-empathy';
 import { makeMoodEntry } from '../utils/mood-entry-factory';
 import type { FibromyalgiaEntry } from '../types/fibromyalgia';
@@ -33,7 +34,9 @@ type PersistedPainTrackerSlice = Pick<
   'entries' | 'moodEntries' | 'emergencyData' | 'activityLogs' | 'scheduledReports' | 'retention'
 >;
 
-function captureEntryContext(captureChannel: 'quick-log' | 'manual' | 'unknown' = 'unknown') {
+function captureEntryContext(
+  captureChannel: 'quick-log' | 'manual' | 'unknown' = 'unknown'
+): EntryCaptureContext {
   const hasNavigator = typeof navigator !== 'undefined';
 
   return {

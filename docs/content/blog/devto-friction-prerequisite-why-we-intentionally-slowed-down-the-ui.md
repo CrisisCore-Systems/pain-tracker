@@ -7,7 +7,6 @@ tags:
   - privacy
   - webdev
 published: false
-canonical_url: "https://github.com/CrisisCore-Systems/pain-tracker"
 ---
 
 If you want the short route into this argument, read these first:

@@ -20,10 +20,17 @@ If you’re not sure where to start, use the **Canonical Start Here** list below
 
 ## ✅ Canonical Start Here
 
+The canonical PainTracker implementation artifact is the PainTracker Protective Computing Reference Packet v1.0. Legacy mappings are retained only as historical drafts until rewritten against the current repository, CI evidence, and claim badge taxonomy.
+
+Protective Computing Specification v1.0 is a founder-authored normative design specification. Current implementation claims are conformance claims, not certification. A system may be described as self-attested, repo backed, CI backed, externally reviewed, or certified only according to the published proof badge taxonomy.
+
+PainTracker is a candidate reference implementation with a public reference packet, explicit limitations, and bounded evidence anchors. It is not certified. Its current posture is Level 2 to Level 3 alignment where evidence exists, with unresolved gaps in active-coercion resistance, accessibility-complete degraded mode, and external review.
+
 - **Product overview**: [../README.md](../README.md)
 - **Getting running**: [../QUICKSTART.md](../QUICKSTART.md)
 - **Security policy**: [../SECURITY.md](../SECURITY.md)
 - **Contributing**: [../CONTRIBUTING.md](../CONTRIBUTING.md)
+- **Canonical trust packet**: [trust/paintracker-protective-computing-reference-packet-v1.0.md](trust/paintracker-protective-computing-reference-packet-v1.0.md)
 - **Architecture (overview)**: [engineering/ARCHITECTURE.md](engineering/ARCHITECTURE.md)
 - **Architecture (deep dive)**: [engineering/ARCHITECTURE_DEEP_DIVE.md](engineering/ARCHITECTURE_DEEP_DIVE.md)
 - **Roadmap (current)**: [planning/ROADMAP.md](planning/ROADMAP.md)

@@ -17,6 +17,7 @@ export {
   
   // Pain tracking events
   trackPainEntryLogged,
+  trackFirstLogSaved,
   
   // Validation events
   trackValidationUsed,
@@ -27,6 +28,9 @@ export {
   
   // Export events
   trackDataExported,
+  trackPdfExport,
+  trackPwaInstallPrompt,
+  trackDataImport,
   trackWCBReportExported,
   trackClinicalReportGenerated,
   

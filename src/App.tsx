@@ -12,6 +12,7 @@ import { ThemeProvider } from "./design-system/ThemeProvider";
 import { ToastProvider } from "./components/feedback/ToastProvider";
 import { TraumaInformedProvider } from "./components/accessibility/TraumaInformedContext";
 import { CanonicalUrlManager } from './components/seo/CanonicalUrlManager';
+import { GlobalSoftwareApplicationSchema } from './components/seo/GlobalSoftwareApplicationSchema';
 import { SubscriptionProvider } from "./contexts/SubscriptionContext";
 import { AuditSinkAlertBridge } from './components/security/AuditSinkAlertBridge';
 import { initializeToneEngine } from "./services/ToneEngine";
@@ -38,6 +39,7 @@ const ProofPage = lazy(() => import('./pages/ProofPage').then(m => ({ default: m
 const PrivacyArchitecturePage = lazy(() => import('./pages/PrivacyArchitecturePage').then(m => ({ default: m.PrivacyArchitecturePage })));
 const ZeroKnowledgeHealthTrackingFaqPage = lazy(() => import('./pages/ZeroKnowledgeHealthTrackingFaqPage').then(m => ({ default: m.ZeroKnowledgeHealthTrackingFaqPage })));
 const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage').then(m => ({ default: m.PrivacyPolicyPage })));
+const TermsOfServicePage = lazy(() => import('./pages/TermsOfServicePage').then(m => ({ default: m.TermsOfServicePage })));
 const TrackingDataPolicyPage = lazy(() => import('./pages/TrackingDataPolicyPage').then(m => ({ default: m.TrackingDataPolicyPage })));
 const PainTrackerAppPage = lazy(() => import('./pages/PainTrackerAppPage').then(m => ({ default: m.PainTrackerAppPage })));
 const PainTrackingAppPage = lazy(() => import('./pages/PainTrackingAppPage').then(m => ({ default: m.PainTrackingAppPage })));
@@ -241,6 +243,7 @@ function App() {
   return (
     <BrowserRouter>
       <CanonicalUrlManager />
+      <GlobalSoftwareApplicationSchema />
       <ThemeProvider>
         <TraumaInformedProvider>
           <ToastProvider>
@@ -341,6 +344,9 @@ function App() {
 
                     {/* Privacy Policy - Public */}
                     <Route path="/privacy" element={<PrivacyPolicyPage />} />
+
+                    {/* Terms of Service - Public */}
+                    <Route path="/terms" element={<TermsOfServicePage />} />
 
                     {/* Tracking & Data Policy - Public */}
                     <Route path="/tracking-data-policy" element={<TrackingDataPolicyPage />} />

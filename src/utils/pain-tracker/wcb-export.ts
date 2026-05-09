@@ -7,6 +7,24 @@ import { trackExport } from '../usage-tracking';
 import { analyticsLogger } from '../../lib/debug-logger';
 
 type WCBExportTemplateStyle = 'standard' | 'hostile-bureaucracy';
+type RgbColor = [number, number, number];
+
+type WCBPalette = {
+  ink: RgbColor;
+  muted: RgbColor;
+  soft: RgbColor;
+  border: RgbColor;
+  surface: RgbColor;
+  accent: RgbColor;
+  accentSoft: RgbColor;
+  warning: RgbColor;
+  warningSoft: RgbColor;
+  danger: RgbColor;
+  dangerSoft: RgbColor;
+  success: RgbColor;
+  successSoft: RgbColor;
+  slateBand: RgbColor;
+};
 
 const OCCUPATIONAL_LIMITATION_LABELS = {
   cannotLiftOver10Lbs: 'Incapable of lifting >10 lbs',
@@ -351,38 +369,38 @@ export async function exportWorkSafeBCPDF(
   const bottomLimit = pageHeight - 22;
   const reportId = `WCB-${Date.now().toString(36).toUpperCase()}`;
 
-  const palette = isHostileBureaucracy
+  const palette: WCBPalette = isHostileBureaucracy
     ? {
-        ink: [17, 17, 17] as const,
-        muted: [64, 64, 64] as const,
-        soft: [115, 115, 115] as const,
-        border: [161, 161, 161] as const,
-        surface: [245, 245, 245] as const,
-        accent: [38, 38, 38] as const,
-        accentSoft: [229, 229, 229] as const,
-        warning: [38, 38, 38] as const,
-        warningSoft: [240, 240, 240] as const,
-        danger: [23, 23, 23] as const,
-        dangerSoft: [235, 235, 235] as const,
-        success: [23, 23, 23] as const,
-        successSoft: [235, 235, 235] as const,
-        slateBand: [23, 23, 23] as const,
+        ink: [17, 17, 17],
+        muted: [64, 64, 64],
+        soft: [115, 115, 115],
+        border: [161, 161, 161],
+        surface: [245, 245, 245],
+        accent: [38, 38, 38],
+        accentSoft: [229, 229, 229],
+        warning: [38, 38, 38],
+        warningSoft: [240, 240, 240],
+        danger: [23, 23, 23],
+        dangerSoft: [235, 235, 235],
+        success: [23, 23, 23],
+        successSoft: [235, 235, 235],
+        slateBand: [23, 23, 23],
       }
     : {
-        ink: [15, 23, 42] as const,
-        muted: [71, 85, 105] as const,
-        soft: [100, 116, 139] as const,
-        border: [203, 213, 225] as const,
-        surface: [248, 250, 252] as const,
-        accent: [14, 165, 233] as const,
-        accentSoft: [224, 242, 254] as const,
-        warning: [180, 83, 9] as const,
-        warningSoft: [254, 243, 199] as const,
-        danger: [185, 28, 28] as const,
-        dangerSoft: [254, 226, 226] as const,
-        success: [22, 163, 74] as const,
-        successSoft: [220, 252, 231] as const,
-        slateBand: [30, 41, 59] as const,
+        ink: [15, 23, 42],
+        muted: [71, 85, 105],
+        soft: [100, 116, 139],
+        border: [203, 213, 225],
+        surface: [248, 250, 252],
+        accent: [14, 165, 233],
+        accentSoft: [224, 242, 254],
+        warning: [180, 83, 9],
+        warningSoft: [254, 243, 199],
+        danger: [185, 28, 28],
+        dangerSoft: [254, 226, 226],
+        success: [22, 163, 74],
+        successSoft: [220, 252, 231],
+        slateBand: [30, 41, 59],
       };
   const headingFont = isHostileBureaucracy ? 'courier' : 'helvetica';
   const bodyFont = isHostileBureaucracy ? 'courier' : 'helvetica';
@@ -448,8 +466,8 @@ export async function exportWorkSafeBCPDF(
     label: string,
     value: string,
     tone: {
-      bg: readonly [number, number, number];
-      text: readonly [number, number, number];
+      bg: RgbColor;
+      text: RgbColor;
     }
   ) => {
     doc.setFillColor(...tone.bg);
@@ -1134,35 +1152,33 @@ export async function downloadWorkSafeBCPDF(
     algorithm: 'SHA-256',
     byteLength: pdf.pdfBytes.byteLength,
   };
+
+  const triggerDownload = (blob: Blob, downloadFilename: string) => {
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = downloadFilename;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
+    // Mirror the shared export behavior: keep the blob URL alive briefly so
+    // browsers and test runners can observe the download before cleanup.
+    setTimeout(() => URL.revokeObjectURL(url), 60_000);
+  };
   
   // Download the PDF as a Blob so the bytes match the checksum exactly.
   // Ensure we hand the DOM a Uint8Array backed by an ArrayBuffer (not ArrayBufferLike)
   // to satisfy strict TS DOM typings.
   const pdfBytes = new Uint8Array(pdf.pdfBytes);
   const pdfBlob = new Blob([pdfBytes], { type: 'application/pdf' });
-  const pdfUrl = URL.createObjectURL(pdfBlob);
-
-  const pdfLink = document.createElement('a');
-  pdfLink.href = pdfUrl;
-  pdfLink.download = filename;
-  document.body.appendChild(pdfLink);
-  pdfLink.click();
-  pdfLink.remove();
-  URL.revokeObjectURL(pdfUrl);
+  triggerDownload(pdfBlob, filename);
 
   // Download sidecar manifest
   const manifestBlob = new Blob([JSON.stringify(manifest, null, 2)], {
     type: 'application/json',
   });
-  const manifestUrl = URL.createObjectURL(manifestBlob);
-
-  const manifestLink = document.createElement('a');
-  manifestLink.href = manifestUrl;
-  manifestLink.download = manifestFilename;
-  document.body.appendChild(manifestLink);
-  manifestLink.click();
-  manifestLink.remove();
-  URL.revokeObjectURL(manifestUrl);
+  triggerDownload(manifestBlob, manifestFilename);
 }
 
 export default exportWorkSafeBCPDF;

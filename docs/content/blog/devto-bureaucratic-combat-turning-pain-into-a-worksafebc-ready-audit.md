@@ -7,7 +7,6 @@ tags:
   - healthtech
   - export
 published: false
-canonical_url: "https://github.com/CrisisCore-Systems/pain-tracker"
 ---
 
 If you want the short route into this workflow cluster, read these first:

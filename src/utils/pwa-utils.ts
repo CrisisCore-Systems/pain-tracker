@@ -5,6 +5,7 @@ import { formatNumber } from './formatting';
 import { secureStorage } from '../lib/storage/secureStorage';
 import { offlineStorage } from '../lib/offline-storage';
 import { TeardownCoordinator } from './TeardownCoordinator';
+import { trackPwaInstallPrompt } from '../analytics/ga4-events';
 
 const isDev = import.meta.env.DEV;
 
@@ -347,6 +348,7 @@ export class PWAManager {
     globalThis.addEventListener('beforeinstallprompt', e => {
       e.preventDefault();
       this.installPromptEvent = e as BeforeInstallPromptEvent;
+      trackPwaInstallPrompt('available');
       if (isDev) {
         console.log('PWA: Install prompt available');
       }
@@ -369,22 +371,26 @@ export class PWAManager {
     }
 
     try {
+      trackPwaInstallPrompt('shown');
       await this.installPromptEvent.prompt();
       const choiceResult = await this.installPromptEvent.userChoice;
 
       if (choiceResult.outcome === 'accepted') {
+        trackPwaInstallPrompt('accepted');
         if (isDev) {
           console.log('PWA: User accepted install prompt');
         }
         return true;
       }
 
+      trackPwaInstallPrompt('dismissed');
       if (isDev) {
         console.log('PWA: User dismissed install prompt');
       }
 
       return false;
     } catch (error) {
+      trackPwaInstallPrompt('error');
       console.error('PWA: Error showing install prompt:', error);
       return false;
     }

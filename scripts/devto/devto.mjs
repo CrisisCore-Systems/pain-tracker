@@ -264,6 +264,10 @@ function resolvePostMainImage(post, currentArticle = null) {
 function resolvePostCanonicalUrl(post, currentArticle = null, explicitCanonical = undefined) {
   if (explicitCanonical !== undefined) return explicitCanonical;
 
+  // If the schedule explicitly sets canonical_url to null, honour that and clear
+  // whatever Dev.to has stored — prevents "has already been taken" conflicts.
+  if (Object.hasOwn(post ?? {}, 'canonical_url') && post.canonical_url === null) return null;
+
   const existingCanonical =
     (typeof currentArticle?.canonical_url === 'string' && currentArticle.canonical_url.trim()) || null;
 

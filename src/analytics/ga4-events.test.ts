@@ -7,8 +7,12 @@ import {
   trackProgressViewed,
   trackAnalyticsTabViewed,
   trackDataExported,
+  trackPdfExport,
   trackWCBReportExported,
   trackClinicalReportGenerated,
+  trackFirstLogSaved,
+  trackPwaInstallPrompt,
+  trackDataImport,
   trackBodyLocationSelected,
   trackEmpathyInsightViewed,
   trackTemplateApplied,
@@ -170,6 +174,49 @@ describe('GA4 Events Service', () => {
 
       expect(mockGtag).toHaveBeenCalledWith('event', 'export_data', expect.objectContaining({
         format: 'json',
+      }));
+    });
+
+    it('also emits pdf_export when format is pdf', () => {
+      trackDataExported('pdf', 12);
+
+      expect(mockGtag).toHaveBeenCalledWith('event', 'pdf_export', expect.objectContaining({
+        format: 'pdf',
+        entry_count: 12,
+      }));
+    });
+  });
+
+  describe('core funnel events', () => {
+    it('tracks first_log_saved', () => {
+      trackFirstLogSaved();
+
+      expect(mockGtag).toHaveBeenCalledWith('event', 'first_log_saved', expect.any(Object));
+    });
+
+    it('tracks explicit pdf_export helper', () => {
+      trackPdfExport(8);
+
+      expect(mockGtag).toHaveBeenCalledWith('event', 'pdf_export', expect.objectContaining({
+        format: 'pdf',
+        entry_count: 8,
+      }));
+    });
+
+    it('tracks pwa_install_prompt statuses', () => {
+      trackPwaInstallPrompt('available');
+
+      expect(mockGtag).toHaveBeenCalledWith('event', 'pwa_install_prompt', expect.objectContaining({
+        prompt_status: 'available',
+      }));
+    });
+
+    it('tracks data_import with coarse counts', () => {
+      trackDataImport('settings_backup', 4);
+
+      expect(mockGtag).toHaveBeenCalledWith('event', 'data_import', expect.objectContaining({
+        import_scope: 'settings_backup',
+        imported_count: 4,
       }));
     });
   });
@@ -338,9 +385,13 @@ describe('GA4 Events Service', () => {
     it('should expose all tracking functions', () => {
       expect(ga4Analytics.trackEvent).toBe(trackGA4Event);
       expect(ga4Analytics.trackPainEntryLogged).toBe(trackPainEntryLogged);
+      expect(ga4Analytics.trackFirstLogSaved).toBe(trackFirstLogSaved);
       expect(ga4Analytics.trackValidationUsed).toBe(trackValidationUsed);
       expect(ga4Analytics.trackProgressViewed).toBe(trackProgressViewed);
       expect(ga4Analytics.trackDataExported).toBe(trackDataExported);
+      expect(ga4Analytics.trackPdfExport).toBe(trackPdfExport);
+      expect(ga4Analytics.trackPwaInstallPrompt).toBe(trackPwaInstallPrompt);
+      expect(ga4Analytics.trackDataImport).toBe(trackDataImport);
       expect(typeof ga4Analytics.isAvailable).toBe('function');
     });
 

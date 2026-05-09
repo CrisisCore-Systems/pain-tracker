@@ -1,7 +1,7 @@
 {
   "short_name": "Pain Tracker",
   "name": "Pain Tracker - Comprehensive Pain Management",
-  "description": "Track and manage your chronic pain with comprehensive tracking and analytics",
+  "description": "Private offline pain tracking with no account required and user-controlled exports.",
   "version": "1.1.0",
   "icons": [
     {
@@ -44,8 +44,8 @@
   "display": "standalone",
   "display_override": ["window-controls-overlay", "standalone"],
   "orientation": "portrait-primary",
-  "theme_color": "#3B82F6",
-  "background_color": "#ffffff",
+  "theme_color": "#0f172a",
+  "background_color": "#0f172a",
   "categories": ["health", "medical", "productivity", "lifestyle"],
   "lang": "en",
   "dir": "ltr",

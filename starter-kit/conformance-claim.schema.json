@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://paintracker.ca/schemas/conformance-claim.schema.json",
+  "title": "Protective Computing Conformance Claim",
+  "type": "object",
+  "required": [
+    "system",
+    "version",
+    "commit",
+    "date",
+    "claimOwner",
+    "currentProofLevel",
+    "claims",
+    "explicitNonClaims",
+    "knownGaps"
+  ],
+  "properties": {
+    "system": { "type": "string", "minLength": 1 },
+    "version": { "type": "string", "minLength": 1 },
+    "commit": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{7,40}$"
+    },
+    "date": { "type": "string", "format": "date" },
+    "claimOwner": { "type": "string", "minLength": 1 },
+    "currentProofLevel": {
+      "type": "string",
+      "enum": [
+        "Self attested",
+        "Repo backed",
+        "CI backed",
+        "Externally reviewed",
+        "Certified"
+      ]
+    },
+    "claims": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["claim", "proofLevel", "evidence", "limitation"],
+        "properties": {
+          "claim": { "type": "string", "minLength": 1 },
+          "proofLevel": {
+            "type": "string",
+            "enum": [
+              "self-attested",
+              "repo-backed",
+              "ci-backed",
+              "externally-reviewed",
+              "certified"
+            ]
+          },
+          "evidence": {
+            "type": "array",
+            "items": { "type": "string", "minLength": 1 }
+          },
+          "limitation": { "type": "string", "minLength": 1 },
+          "workflowName": { "type": "string" },
+          "runLink": { "type": "string", "format": "uri" },
+          "commitSha": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{7,40}$"
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": { "proofLevel": { "const": "ci-backed" } },
+              "required": ["proofLevel"]
+            },
+            "then": {
+              "required": ["workflowName", "runLink", "commitSha"]
+            }
+          }
+        ]
+      }
+    },
+    "explicitNonClaims": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "knownGaps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["gap", "risk", "nextEvidenceNeeded"],
+        "properties": {
+          "gap": { "type": "string", "minLength": 1 },
+          "risk": {
+            "type": "string",
+            "enum": ["low", "medium", "high", "critical"]
+          },
+          "nextEvidenceNeeded": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}

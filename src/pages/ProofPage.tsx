@@ -20,6 +20,16 @@ const breadcrumbSchema = combineSchemas(
 
 const artifactGroups = [
   {
+    title: 'Canonical reference packet',
+    description: 'Primary implementation artifact. This is the canonical versioned proof packet and should be used before legacy mapping drafts.',
+    links: [
+      {
+        label: 'PainTracker Protective Computing Reference Packet v1.0',
+        href: `${REPO_BASE_URL}/docs/trust/paintracker-protective-computing-reference-packet-v1.0.md`,
+      },
+    ],
+  },
+  {
     title: 'Defensibility packet',
     description: 'Shortest release-evidence summary covering scope, checks run, provisional scoring, and gate decision.',
     links: [
@@ -140,6 +150,9 @@ export const ProofPage: React.FC = () => {
           <h2 className="text-2xl font-semibold mb-4">What this page is</h2>
           <p className="text-slate-300 leading-relaxed">
             This is an index of public materials that make trust claims inspectable: what the system says it does, what the threat model includes, what release evidence captured, what verification steps ran, and what non-guarantees still apply.
+          </p>
+          <p className="mt-4 text-slate-300 leading-relaxed">
+            The canonical PainTracker implementation artifact is the PainTracker Protective Computing Reference Packet v1.0. Legacy mappings are retained only as historical drafts until rewritten against the current repository, CI evidence, and claim badge taxonomy.
           </p>
         </section>
 
