@@ -1,9 +1,11 @@
 # Degraded-Mode Accessibility Review 0001
 
-Status: recruitment-ready scope (review not yet completed)
+Status: published scope packet (review not yet completed)
 Date: 2026-05-09
 
 Review type: Narrow degraded-mode accessibility review of PainTracker essential journaling path.
+
+Publication packet: `docs/reference-implementation/paintracker/external-reviews/degraded-mode-accessibility-review-0001-publication.md`
 
 ## Scope
 

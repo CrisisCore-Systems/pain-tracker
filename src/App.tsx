@@ -19,7 +19,10 @@ import { initializeToneEngine } from "./services/ToneEngine";
 import { useGlobalAccessibility } from "./hooks/useGlobalAccessibility";
 import './i18n/config';
 import { BlackBoxSplashScreen } from './components/branding/BlackBoxSplashScreen';
-import { trackSessionStart as trackUsageSessionStart } from './utils/usage-tracking';
+import {
+  trackSessionStart as trackUsageSessionStart,
+  trackSafeError,
+} from './utils/usage-tracking';
 import { getLocalUserId } from './utils/user-identity';
 
 // Lazy-loaded route components for code splitting
@@ -184,6 +187,14 @@ function App() {
   const [showSplash, setShowSplash] = useState(() => !isDevTestModeEnabled());
   const userId = getLocalUserId();
 
+  const classifyError = (value: unknown): string => {
+    if (value instanceof TypeError) return 'TypeError';
+    if (value instanceof RangeError) return 'RangeError';
+    if (value instanceof URIError) return 'URIError';
+    if (value instanceof Error && value.name) return value.name;
+    return 'UnknownError';
+  };
+
   // Ritual: Show splash screen for at least 2.5s on startup
   useEffect(() => {
     if (!showSplash) {
@@ -228,6 +239,32 @@ function App() {
     } else {
       setTimeout(initializeDeferred, 100);
     }
+  }, []);
+
+  useEffect(() => {
+    const onWindowError = (event: ErrorEvent) => {
+      const route = globalThis.location?.pathname || 'unknown';
+      trackSafeError(classifyError(event.error), route, 'window-error', {
+        route,
+        phase: 'runtime',
+      });
+    };
+
+    const onUnhandledRejection = (event: PromiseRejectionEvent) => {
+      const route = globalThis.location?.pathname || 'unknown';
+      trackSafeError(classifyError(event.reason), route, 'unhandled-rejection', {
+        route,
+        phase: 'promise',
+      });
+    };
+
+    globalThis.addEventListener('error', onWindowError);
+    globalThis.addEventListener('unhandledrejection', onUnhandledRejection);
+
+    return () => {
+      globalThis.removeEventListener('error', onWindowError);
+      globalThis.removeEventListener('unhandledrejection', onUnhandledRejection);
+    };
   }, []);
 
   // NOTE: Do NOT set basename when Vite handles the base path via VITE_BASE.

@@ -10,6 +10,7 @@ import {
   combineSchemas,
   defaultSEOConfig,
 } from '../lib/seo';
+import { trackUsageEvent } from '../utils/usage-tracking';
 
 const homepageFaqs = [
   {
@@ -145,6 +146,10 @@ const essentialGuides = [
 ] as const;
 
 export const LandingPage: React.FC = () => {
+  const trackFunnelEvent = (type: string, surface: string) => {
+    trackUsageEvent(type, 'funnel', { surface, route: '/' });
+  };
+
   const organizationSchema = generateOrganizationSchema();
   const webSiteSchema = generateWebSiteSchema();
   const faqSchema = generateFAQSchema(
@@ -208,12 +213,17 @@ export const LandingPage: React.FC = () => {
               <Link
                 to="/start"
                 data-testid="hero-cta-start"
+                onClick={() => trackFunnelEvent('app_open_intent', 'landing_hero')}
                 className="btn-cta-primary inline-flex items-center justify-center gap-2 px-7 py-3"
               >
                 Start Tracking Free
                 <ArrowRight className="h-4 w-4" />
               </Link>
-              <Link to="/resources/pain-diary-template-pdf" className="btn-cta-outline inline-flex items-center justify-center gap-2 px-7 py-3">
+              <Link
+                to="/resources/pain-diary-template-pdf"
+                onClick={() => trackFunnelEvent('resource_page_opened', 'landing_hero')}
+                className="btn-cta-outline inline-flex items-center justify-center gap-2 px-7 py-3"
+              >
                 <Download className="h-4 w-4" />
                 Download Printable Pain Journal
               </Link>
@@ -222,7 +232,11 @@ export const LandingPage: React.FC = () => {
               No account. No cloud pain database. Works offline after first load.
             </p>
             <div className="mt-5 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-slate-200">
-              <Link to="/resources" className="inline-flex items-center gap-2 hover:text-sky-300 transition-colors">
+              <Link
+                to="/resources"
+                onClick={() => trackFunnelEvent('resource_hub_opened', 'landing_hero')}
+                className="inline-flex items-center gap-2 hover:text-sky-300 transition-colors"
+              >
                 Browse free pain tracker templates
                 <ArrowRight className="h-3.5 w-3.5" />
               </Link>
@@ -271,7 +285,11 @@ export const LandingPage: React.FC = () => {
                 Read the case study
                 <ArrowRight className="h-4 w-4" />
               </Link>
-              <Link to="/proof" className="inline-flex items-center gap-2 rounded-xl border border-white/15 px-4 py-2 text-sm font-medium text-white hover:border-sky-400/40 hover:text-sky-200 transition-colors">
+              <Link
+                to="/proof"
+                onClick={() => trackFunnelEvent('proof_page_opened', 'landing_trust')}
+                className="inline-flex items-center gap-2 rounded-xl border border-white/15 px-4 py-2 text-sm font-medium text-white hover:border-sky-400/40 hover:text-sky-200 transition-colors"
+              >
                 Inspect proof materials
                 <ArrowRight className="h-4 w-4" />
               </Link>

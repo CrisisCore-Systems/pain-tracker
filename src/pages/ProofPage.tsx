@@ -8,6 +8,31 @@ import { LandingFooter } from '../components/landing/LandingFooter';
 const GITHUB_ORG_URL = 'https://github.com/CrisisCore-Systems';
 const REPO_BASE_URL = 'https://github.com/CrisisCore-Systems/pain-tracker/blob/main';
 
+const accessibilityRunCommand = 'npm run accessibility:scan';
+
+const launchReadinessLinks = [
+  {
+    label: 'Launch readiness verification (P1 technical checks)',
+    href: `${REPO_BASE_URL}/docs/trust/launch-readiness-verification-2026-05-09.md`,
+  },
+  {
+    label: 'Narrow degraded-mode accessibility review publication',
+    href: `${REPO_BASE_URL}/docs/reference-implementation/paintracker/external-reviews/degraded-mode-accessibility-review-0001-publication.md`,
+  },
+  {
+    label: 'Archived accessibility scan artifact index',
+    href: `${REPO_BASE_URL}/docs/reference-implementation/paintracker/external-reviews/archived-accessibility-scans-2026-05-09.md`,
+  },
+];
+
+const proofStack = [
+  'Claim language baseline and non-guarantee boundaries',
+  'Threat model + boundary statement',
+  'Release evidence snapshots and gate checklist',
+  'Launch-readiness verification checks (robots, sitemap, resource crawl, offline fallback, launch paths)',
+  'Narrow external review packet + archived scan artifacts',
+];
+
 const breadcrumbSchema = combineSchemas(
   generateBreadcrumbSchema(
     [
@@ -154,6 +179,40 @@ export const ProofPage: React.FC = () => {
           <p className="mt-4 text-slate-300 leading-relaxed">
             The canonical PainTracker implementation artifact is the PainTracker Protective Computing Reference Packet v1.0. Legacy mappings are retained only as historical drafts until rewritten against the current repository, CI evidence, and claim badge taxonomy.
           </p>
+        </section>
+
+        <section className="mb-12 rounded-2xl border border-sky-400/20 bg-sky-500/5 p-6 lg:p-8">
+          <h2 className="text-2xl font-semibold mb-4">Launch-readiness proof deltas</h2>
+          <p className="text-slate-300 leading-relaxed mb-4">
+            This section publishes the trust-proof deltas requested for launch readiness: explicit accessibility command surfaces, proof-stack framing, and direct evidence links for reviewers who do not need to inspect code first.
+          </p>
+          <div className="rounded-xl border border-white/10 bg-slate-900/70 p-4 mb-5">
+            <p className="text-sm uppercase tracking-wide text-sky-200 mb-2">Accessibility scan command</p>
+            <code className="text-sm text-sky-100">{accessibilityRunCommand}</code>
+          </div>
+          <ul className="space-y-2 text-slate-300 leading-relaxed mb-6">
+            {proofStack.map((item) => (
+              <li key={item} className="flex gap-3">
+                <span className="mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-sky-300" aria-hidden="true" />
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+          <ul className="space-y-3">
+            {launchReadinessLinks.map((link) => (
+              <li key={link.href}>
+                <a
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-sky-300 hover:text-sky-200 transition-colors"
+                >
+                  {link.label}
+                  <ArrowRight className="h-4 w-4" />
+                </a>
+              </li>
+            ))}
+          </ul>
         </section>
 
         <section className="mb-12 rounded-2xl border border-amber-400/20 bg-amber-500/5 p-6 lg:p-8">

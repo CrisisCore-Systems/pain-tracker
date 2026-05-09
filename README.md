@@ -80,7 +80,7 @@ PainTracker is a candidate reference implementation with a public reference pack
 | Analytics | Local-first | No surveillance analytics required for core use |
 | Weather correlation | Optional network call | Must be explicitly configured and treated as an external dependency |
 | Clinic workflows | Deployment-specific | Optional backend paths are not required for core tracking |
-| Payments | Not supported production path | GitHub Sponsors is the current funding path; historical Stripe or SaaS references are archived experiments |
+| Payments | Optional paid upgrade path | Basic/Pro upgrades are offered through `/pricing` with Stripe Checkout; GitHub Sponsors remains an optional support path |
 | Compliance posture | No compliance claim | Privacy-aligned architecture and controls only |
 
 For trust and reversibility framing, see [docs/trust/paintracker-protective-computing-reference-packet-v1.0.md](docs/trust/paintracker-protective-computing-reference-packet-v1.0.md), [docs/trust/README.md](docs/trust/README.md), and [SECURITY_INVARIANTS.md](SECURITY_INVARIANTS.md).

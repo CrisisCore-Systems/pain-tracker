@@ -18,6 +18,7 @@ import { createCheckoutSession, getTierForCheckout } from '../utils/stripe-check
 import { getLocalUserId } from '../utils/user-identity';
 import { combineSchemas, generateBreadcrumbSchema } from '../lib/seo';
 import { applyPageMetadata } from '../components/seo/applyPageMetadata';
+import { trackUsageEvent } from '../utils/usage-tracking';
 
 const PRICING_PAGE_TITLE = 'PainTracker Pricing | Track, Explain, Document | PainTracker.ca';
 
@@ -52,6 +53,10 @@ export const PricingPage: React.FC = () => {
   const [checkoutMessageTone, setCheckoutMessageTone] = useState<'info' | 'warning'>('info');
   const resumedCheckoutRef = useRef<string | null>(null);
 
+  const trackPricingEvent = (type: string, metadata?: Record<string, unknown>) => {
+    trackUsageEvent(type, 'commerce', { route: '/pricing', ...metadata });
+  };
+
   useEffect(() => applyPageMetadata({
     title: PRICING_PAGE_TITLE,
     description: 'Compare Free, Basic, Pro, and Enterprise plans for private, offline-capable pain tracking, clinician-friendly reports, and structured documentation workflows.',
@@ -65,12 +70,14 @@ export const PricingPage: React.FC = () => {
     if (checkoutState === 'canceled') {
       setCheckoutMessage('Checkout was canceled. Your current plan has not changed.');
       setCheckoutMessageTone('warning');
+      trackPricingEvent('checkout_canceled');
       return;
     }
 
     if (checkoutState === 'success') {
       setCheckoutMessage('Checkout completed. Your subscription status will refresh on this device as soon as Stripe confirms the payment.');
       setCheckoutMessageTone('info');
+      trackPricingEvent('checkout_success');
       return;
     }
 
@@ -82,6 +89,7 @@ export const PricingPage: React.FC = () => {
     setIsUpgrading(true);
     try {
       const userId = getLocalUserId();
+      trackPricingEvent('checkout_started', { tier: checkoutTier, interval });
 
       await createCheckoutSession({
         userId,
@@ -95,6 +103,11 @@ export const PricingPage: React.FC = () => {
         : 'Failed to start checkout. Please try again.';
       setCheckoutMessage(message);
       setCheckoutMessageTone('warning');
+      trackPricingEvent('checkout_failed', {
+        tier: checkoutTier,
+        interval,
+        errorClass: err instanceof Error ? err.name : 'UnknownError',
+      });
     } finally {
       setIsUpgrading(false);
     }
@@ -135,6 +148,8 @@ export const PricingPage: React.FC = () => {
 
   const handleUpgrade = async (tier: SubscriptionTier) => {
     try {
+      trackPricingEvent('upgrade_clicked', { tier, interval: billingInterval });
+
       // Free tier doesn't need payment
       if (tier === 'free') {
         alert('You are already on the Free plan!');
@@ -157,6 +172,7 @@ export const PricingPage: React.FC = () => {
       if (vaultStatus.state !== 'unlocked') {
         setCheckoutMessage('Please unlock your vault on this device before starting checkout.');
         setCheckoutMessageTone('warning');
+        trackPricingEvent('checkout_requires_unlock', { tier: checkoutTier, interval: billingInterval });
         const redirect = encodeURIComponent(buildResumeCheckoutPath(checkoutTier, billingInterval));
         navigate(`/start?redirect=${redirect}`);
         return;
@@ -170,6 +186,11 @@ export const PricingPage: React.FC = () => {
         : 'Failed to start checkout. Please try again.';
       setCheckoutMessage(message);
       setCheckoutMessageTone('warning');
+      trackPricingEvent('upgrade_failed', {
+        tier,
+        interval: billingInterval,
+        errorClass: err instanceof Error ? err.name : 'UnknownError',
+      });
     }
   };
 
@@ -219,7 +240,10 @@ export const PricingPage: React.FC = () => {
               </span>
             </button>
             <button
-              onClick={() => navigate('/start')}
+              onClick={() => {
+                trackPricingEvent('app_open_intent', { surface: 'pricing_nav' });
+                navigate('/start');
+              }}
               className="btn-cta-primary flex items-center gap-2 text-sm px-5 py-2.5"
             >
               Get Started
@@ -724,7 +748,7 @@ export const PricingPage: React.FC = () => {
             />
             <FAQItem
               question="What payment methods do you accept?"
-              answer="We accept all major credit cards, debit cards, and PayPal through our secure Stripe payment processing. Enterprise customers can pay via invoice."
+              answer="Paid upgrades run through Stripe Checkout. Available payment methods depend on your location and Stripe configuration at checkout time."
             />
           </div>
         </div>
@@ -739,7 +763,10 @@ export const PricingPage: React.FC = () => {
               Free is for starting and staying in control. Paid plans are for the moment when the record needs to become easier to use before appointments, documentation, or care coordination.
             </p>
             <button
-              onClick={() => navigate('/start')}
+              onClick={() => {
+                trackPricingEvent('app_open_intent', { surface: 'pricing_bottom_cta' });
+                navigate('/start');
+              }}
               className="btn-cta-primary text-lg px-10 py-4 inline-flex items-center gap-3"
             >
               Use the app free

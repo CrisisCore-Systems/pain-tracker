@@ -26,6 +26,23 @@ function parseSitemapPaths(xml: string) {
     .sort((left, right) => left.localeCompare(right));
 }
 
+function parseRobotsRules(contents: string) {
+  const lines = contents
+    .split('\n')
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0 && !line.startsWith('#'));
+
+  return {
+    hasWildcardAgent: lines.includes('User-agent: *'),
+    hasPublicAllow: lines.includes('Allow: /'),
+    hasResourcesAllow: lines.includes('Allow: /resources/'),
+    hasAppDisallow: lines.includes('Disallow: /app'),
+    hasApiDisallow: lines.includes('Disallow: /api'),
+    hasSitemap: lines.includes('Sitemap: https://www.paintracker.ca/sitemap.xml'),
+    hasHost: lines.includes('Host: www.paintracker.ca'),
+  };
+}
+
 describe('SEO prerendered entrypoints', () => {
   it('gives the resources hub FAQ schema and a prerendered body shell', () => {
     const resourcesRoute = publicRouteMetadata.find((route) => route.path === '/resources');
@@ -107,5 +124,65 @@ describe('SEO prerendered entrypoints', () => {
     for (const slug of publicResourcePrerenderSlugs) {
       expect(resourceRewrite.source).toContain(slug);
     }
+  });
+
+  it('keeps crawl controls explicit for launch-facing public routes', () => {
+    const robots = parseRobotsRules(readUtf8('public/robots.txt'));
+    const sitemapPaths = parseSitemapPaths(readUtf8('public/sitemap.xml'));
+
+    expect(robots.hasWildcardAgent).toBe(true);
+    expect(robots.hasPublicAllow).toBe(true);
+    expect(robots.hasResourcesAllow).toBe(true);
+    expect(robots.hasAppDisallow).toBe(true);
+    expect(robots.hasApiDisallow).toBe(true);
+    expect(robots.hasSitemap).toBe(true);
+    expect(robots.hasHost).toBe(true);
+
+    expect(sitemapPaths).toContain('/');
+    expect(sitemapPaths).toContain('/pricing');
+    expect(sitemapPaths).toContain('/proof');
+    expect(sitemapPaths).toContain('/resources');
+    expect(sitemapPaths).not.toContain('/app');
+    expect(sitemapPaths).not.toContain('/start');
+  });
+
+  it('keeps top resource metadata crawlable with canonical and prerendered heading shell', () => {
+    const topResourceRoutes = publicRouteMetadata
+      .filter((route) => route.path.startsWith('/resources/'))
+      .slice(0, 25);
+
+    expect(topResourceRoutes.length).toBe(25);
+
+    for (const route of topResourceRoutes) {
+      expect(route.title.length).toBeGreaterThan(20);
+      expect(route.description.length).toBeGreaterThan(40);
+      expect(route.canonicalUrl).toBe(`https://www.paintracker.ca${route.path}`);
+      expect(Array.isArray(route.structuredData)).toBe(true);
+      expect(route.structuredData.length).toBeGreaterThan(0);
+
+      if (typeof route.prerenderBodyHtml === 'string') {
+        expect(route.prerenderBodyHtml).toContain('initial-route-heading');
+      }
+    }
+  });
+
+  it('ships an offline fallback page with user recovery guidance', () => {
+    const offlineHtml = readUtf8('public/offline.html');
+
+    expect(offlineHtml).toContain('<title>');
+    expect(offlineHtml.toLowerCase()).toContain('offline');
+    expect(offlineHtml.toLowerCase()).toContain('pain tracker');
+    expect(offlineHtml).toContain('Retry');
+  });
+
+  it('keeps launch entry paths split between public home and protected app shell', () => {
+    const appRoutesSource = readUtf8('src/App.tsx');
+    const sitemapPaths = parseSitemapPaths(readUtf8('public/sitemap.xml'));
+
+    expect(appRoutesSource).toContain('<Route path="/" element={<LandingPage />} />');
+    expect(appRoutesSource).toMatch(/path="\/start"/);
+    expect(appRoutesSource).toMatch(/path="\/app"/);
+    expect(sitemapPaths).toContain('/');
+    expect(sitemapPaths).not.toContain('/app');
   });
 });
