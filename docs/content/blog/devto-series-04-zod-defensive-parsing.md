@@ -174,5 +174,5 @@ If you want the broader route around this series:
 
 - **Main site:** [CrisisCore Systems](https://crisiscore-systems.ca/)
 - **Framework:** [Protective Computing](https://protective-computing.github.io/)
-- **Reference implementation:** [PainTracker](https://paintracker.ca/)
+- **Reference implementation:** [private offline pain tracker](https://paintracker.ca/)
 - **Proof route:** [paintracker.ca/proof](https://paintracker.ca/proof)
