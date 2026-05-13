@@ -91,6 +91,158 @@
           "devto-sync-conflict-handling-offline-first-pwas"
         ]
       }
+    },
+    "target_link_map": {
+      "devto-series-start-here": {
+        "path": "/resources",
+        "anchorText": "chronic pain tracking resources",
+        "cue": "If you are starting from implementation evidence"
+      },
+      "devto-sync-conflict-handling-offline-first-pwas": {
+        "path": "/download",
+        "anchorText": "download a private pain tracker",
+        "cue": "See the production app behavior"
+      },
+      "devto-openclaw-boundary-problem": {
+        "path": "/resources/what-to-include-in-pain-journal",
+        "anchorText": "what to include in a pain journal",
+        "cue": "Use this practical checklist"
+      },
+      "privacy-first-default-standard": {
+        "path": "/download",
+        "anchorText": "private offline pain tracker",
+        "cue": "Try the local-first flow"
+      },
+      "privacy-preserving-analytics": {
+        "path": "/resources",
+        "anchorText": "chronic pain tracking resources",
+        "cue": "Patient-facing resources"
+      },
+      "performance-under-pressure": {
+        "path": "/download",
+        "anchorText": "download the free pain tracker",
+        "cue": "Measure real-world behavior"
+      },
+      "testing-across-the-stack": {
+        "path": "/download",
+        "anchorText": "private offline pain tracking app",
+        "cue": "Validate behavior end to end"
+      },
+      "testing-co-occurrence": {
+        "path": "/resources/doctor-visit-pain-summary-template",
+        "anchorText": "pain journal for appointments",
+        "cue": "Structured summary template"
+      },
+      "testing-recovery": {
+        "path": "/resources/daily-pain-tracker-printable",
+        "anchorText": "free pain journal templates",
+        "cue": "Printable fallback path"
+      },
+      "cross-crisis-calibration": {
+        "path": "/resources/what-to-include-in-pain-journal",
+        "anchorText": "what to include in a pain journal",
+        "cue": "Minimal capture guidance"
+      },
+      "testing-the-testing": {
+        "path": "/resources",
+        "anchorText": "chronic pain tracking resources",
+        "cue": "Reference resources and templates"
+      },
+      "internationalization-of-trauma": {
+        "path": "/resources/doctor-visit-pain-summary-template",
+        "anchorText": "pain journal for appointments",
+        "cue": "Appointment-ready structure"
+      },
+      "whitepaper-v1-3-0": {
+        "path": "/pricing",
+        "anchorText": "PainTracker pricing and upgrades",
+        "cue": "Support sustainability without surveillance"
+      },
+      "overton-framework-doi-backed": {
+        "path": "/pricing",
+        "anchorText": "PainTracker pricing and upgrades",
+        "cue": "Support ongoing protocol work"
+      },
+      "devto-architecting-vulnerability": {
+        "path": "/resources",
+        "anchorText": "private offline pain tracker resources",
+        "cue": "Human-state-first implementation references"
+      },
+      "anchor-preview-mode-first-agent-plans-as-prs": {
+        "path": "/download",
+        "anchorText": "download a private pain tracker",
+        "cue": "Reference implementation download"
+      },
+      "micro-coercion-of-speed": {
+        "path": "/resources/what-to-include-in-pain-journal",
+        "anchorText": "what to include in a pain journal",
+        "cue": "Reduce cognitive load with this template"
+      },
+      "coercion-resistant-ux": {
+        "path": "/resources/doctor-visit-pain-summary-template",
+        "anchorText": "pain journal for appointments",
+        "cue": "Low-friction summary format"
+      },
+      "friction-prerequisite-ui": {
+        "path": "/resources/daily-pain-tracker-printable",
+        "anchorText": "free pain journal templates",
+        "cue": "Printable flow with intentional friction"
+      },
+      "service-worker-failure-modes": {
+        "path": "/download",
+        "anchorText": "download the free pain tracker",
+        "cue": "Test offline update behavior"
+      },
+      "rollback-patterns-offline-first-pwas": {
+        "path": "/download",
+        "anchorText": "private offline pain tracking app",
+        "cue": "Verify rollback assumptions"
+      },
+      "testing-indexeddb-schema-migrations": {
+        "path": "/download",
+        "anchorText": "download a private pain tracker",
+        "cue": "Migration behavior in production build"
+      },
+      "trust-boundaries-client-side-health-apps": {
+        "path": "/resources",
+        "anchorText": "chronic pain tracking resources",
+        "cue": "Trust-boundary-aligned resource set"
+      },
+      "offline-queue-replay-idempotency": {
+        "path": "/download",
+        "anchorText": "download the free pain tracker",
+        "cue": "Observe retry behavior in app"
+      },
+      "proofvault-trust-case-release-artifact": {
+        "path": "/pricing",
+        "anchorText": "PainTracker pricing and upgrades",
+        "cue": "Funding trust evidence upkeep"
+      },
+      "worksafebc-ready-audit": {
+        "path": "/resources/worksafebc-pain-journal-template",
+        "anchorText": "WorkSafeBC pain documentation tool",
+        "cue": "WorkSafeBC-oriented template"
+      },
+      "protective-computing-not-privacy-theater": {
+        "path": "/resources/daily-pain-tracker-printable",
+        "anchorText": "free pain journal templates",
+        "cue": "Concrete artifact over claims"
+      },
+      "subpoena-proofing-zero-knowledge": {
+        "path": "/resources/worksafebc-pain-journal-template",
+        "anchorText": "WorkSafeBC pain documentation tool",
+        "cue": "User-controlled export boundary"
+      },
+      "stability-assumption-hidden-defect-source": {
+        "path": "/resources/daily-pain-tracker-printable",
+        "anchorText": "free pain journal templates",
+        "cue": "Fallback when conditions degrade"
+      },
+      "protective-legitimacy-score-how-it-works": {
+        "path": "/pricing",
+        "anchorText": "PainTracker pricing and upgrades",
+        "cue": "Support structural verification work"
+      }
     }
   },
   "posts": [
@@ -944,7 +1096,7 @@
       "canonical_url": null,
       "published": false,
       "articleId": 3622426,
-      "devtoUrl": "https://dev.to/crisiscoresystems/subpoena-proofing-by-design-why-real-zero-knowledge-has-no-back-door-312i-temp-slug-2472855"
+      "devtoUrl": "https://dev.to/crisiscoresystems/subpoena-proofing-by-design-why-real-zero-knowledge-has-no-back-door-21cg"
     },
     {
       "key": "stability-assumption-hidden-defect-source",

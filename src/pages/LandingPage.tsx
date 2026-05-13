@@ -257,19 +257,19 @@ export const LandingPage: React.FC = () => {
               PainTracker.ca is built around local control. You can begin without an account, log pain records on your device, and export only when you choose.
             </p>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 mb-6">
-              <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+              <div className="rounded-xl border border-white/10 bg-slate-900/70 p-4">
                 <h3 className="font-semibold text-white mb-1">No account required</h3>
                 <p className="text-sm text-slate-300">Start tracking without creating a profile, email login, or cloud identity.</p>
               </div>
-              <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+              <div className="rounded-xl border border-white/10 bg-slate-900/70 p-4">
                 <h3 className="font-semibold text-white mb-1">Local records</h3>
                 <p className="text-sm text-slate-300">Your core pain entries are stored on your device.</p>
               </div>
-              <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+              <div className="rounded-xl border border-white/10 bg-slate-900/70 p-4">
                 <h3 className="font-semibold text-white mb-1">Offline capable</h3>
                 <p className="text-sm text-slate-300">The app is designed to keep working after first load when your connection is unreliable.</p>
               </div>
-              <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+              <div className="rounded-xl border border-white/10 bg-slate-900/70 p-4">
                 <h3 className="font-semibold text-white mb-1">Export by choice</h3>
                 <p className="text-sm text-slate-300">Create a report only when you decide to share records with someone else.</p>
               </div>
@@ -313,7 +313,7 @@ export const LandingPage: React.FC = () => {
             </h2>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
               {trackingCards.map((card) => (
-                <article key={card.title} className="rounded-xl border border-white/10 bg-white/5 p-4">
+                <article key={card.title} className="rounded-xl border border-white/10 bg-slate-900/70 p-4">
                   <h3 className="font-semibold text-white mb-1.5">{card.title}</h3>
                   <p className="text-sm text-slate-300">{card.text}</p>
                 </article>
@@ -343,7 +343,7 @@ export const LandingPage: React.FC = () => {
             <p className="text-center text-slate-200 mb-5">
               PainTracker.ca helps organize your information. It does not decide what your records prove.
             </p>
-            <div className="rounded-xl border border-amber-300/30 bg-amber-500/10 p-4 text-sm text-amber-100">
+            <div className="rounded-xl border border-amber-300/40 bg-amber-900/60 p-4 text-sm text-amber-100">
               PainTracker.ca does not provide medical advice, diagnosis, treatment, legal advice, or guaranteed claim outcomes. Always review exports before sharing them.
             </div>
           </div>
@@ -370,12 +370,12 @@ export const LandingPage: React.FC = () => {
                     key={path.href}
                     href={path.href}
                     download={path.download}
-                    className="rounded-xl border border-white/10 bg-white/5 p-5 hover:border-sky-400/40 transition-colors"
+                    className="rounded-xl border border-white/10 bg-slate-900/70 p-5 hover:border-sky-400/40 transition-colors"
                   >
                     {cardContent}
                   </a>
                 ) : (
-                  <Link key={path.href} to={path.href} className="rounded-xl border border-white/10 bg-white/5 p-5 hover:border-sky-400/40 transition-colors">
+                  <Link key={path.href} to={path.href} className="rounded-xl border border-white/10 bg-slate-900/70 p-5 hover:border-sky-400/40 transition-colors">
                     {cardContent}
                   </Link>
                 );
@@ -395,7 +395,7 @@ export const LandingPage: React.FC = () => {
                 <Link
                   key={guide.href}
                   to={guide.href}
-                  className="rounded-xl border border-white/10 bg-white/5 p-5 hover:border-sky-400/40 transition-colors"
+                  className="rounded-xl border border-white/10 bg-slate-900/70 p-5 hover:border-sky-400/40 transition-colors"
                 >
                   <h3 className="text-white font-semibold mb-1.5">{guide.title}</h3>
                   <p className="text-sm text-slate-300 mb-4">{guide.text}</p>
@@ -423,7 +423,7 @@ export const LandingPage: React.FC = () => {
             <h2 className="landing-headline landing-headline-md mb-8 text-white text-center">FAQ</h2>
             <div className="space-y-3">
               {homepageFaqs.map((faq) => (
-                <details key={faq.question} className="rounded-xl border border-white/10 bg-white/5 p-4">
+                <details key={faq.question} className="rounded-xl border border-white/10 bg-slate-900/70 p-4">
                   <summary className="cursor-pointer font-semibold text-white">{faq.question}</summary>
                   <p className="text-sm text-slate-300 mt-3">{faq.answer}</p>
                 </details>

@@ -107,7 +107,7 @@ export default function AlertsSettings({
         </div>
         {showClose && (
           <button 
-            className="px-3 py-1.5 rounded-lg text-sm font-medium transition-all bg-gray-100 dark:bg-white/5 border border-gray-300 dark:border-white/10 text-gray-600 dark:text-slate-400 hover:bg-gray-200 dark:hover:bg-white/10"
+            className="px-3 py-1.5 rounded-lg text-sm font-medium transition-all bg-gray-100 dark:bg-white/10 border border-gray-300 dark:border-white/10 text-gray-600 dark:text-slate-300 hover:bg-gray-200 dark:hover:bg-white/20"
             onClick={handleClose}
           >
             Close

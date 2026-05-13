@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useToast } from './feedback';
 import { useStartupPrompts } from '../contexts/StartupPromptsContext';
+import { usePainTrackerStore } from '../stores/pain-tracker-store';
 
 const STORAGE_KEY = 'pain-tracker:notification-consent';
 
@@ -21,6 +22,9 @@ export default function NotificationConsentPrompt() {
   });
   const { bottomLeft } = useToast();
   const { requestPrompt, dismissPrompt, canShowPrompt } = useStartupPrompts();
+  const shouldPausePrompt = usePainTrackerStore(
+    state => state.ui.showOnboarding || state.ui.showWalkthrough
+  );
   // Track whether we've already shown the toast to prevent duplicate toasts
   const hasShownToast = useRef(false);
   // Use refs to avoid dependency changes causing infinite re-renders
@@ -45,11 +49,11 @@ export default function NotificationConsentPrompt() {
   }, []);
 
   useEffect(() => {
-    if (!consent && !isProtectiveModeActive) {
+    if (!consent && !isProtectiveModeActive && !shouldPausePrompt) {
       // Request to show this prompt with priority 2 (after beta warning)
       requestPrompt('notification-consent', 2);
     }
-  }, [consent, requestPrompt, isProtectiveModeActive]);
+  }, [consent, requestPrompt, isProtectiveModeActive, shouldPausePrompt]);
 
   useEffect(() => {
     // Check localStorage directly to avoid race conditions with React state
@@ -60,6 +64,10 @@ export default function NotificationConsentPrompt() {
     }
 
     if (isProtectiveModeActive) {
+      return;
+    }
+
+    if (shouldPausePrompt) {
       return;
     }
     
@@ -106,7 +114,7 @@ export default function NotificationConsentPrompt() {
     // because useToast returns a new object on each render. We use bottomLeft inside the effect
     // but guard against re-execution with hasShownToast ref and localStorage check.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [consent, canShowPrompt, isProtectiveModeActive]);
+  }, [consent, canShowPrompt, isProtectiveModeActive, shouldPausePrompt]);
 
   // Don't render anything - the toast handles the UI
   return null;

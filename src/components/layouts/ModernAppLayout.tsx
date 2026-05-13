@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   LayoutDashboard,
   Plus,
@@ -468,12 +468,44 @@ export function ModernAppLayout({
 }: Readonly<ModernAppLayoutProps>) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [panicModeActive, setPanicModeActive] = useState(false);
+  const [hasActiveModal, setHasActiveModal] = useState(false);
   const { mode, toggleMode } = useTheme();
   const currentTier = subscriptionService.getUserTier(getLocalUserId());
   const isDark = mode === 'dark';
   const themeClasses = getLayoutThemeClasses(isDark);
   const themeToggle = getThemeToggleProps(mode);
   const ThemeToggleIcon = themeToggle.icon;
+
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+
+    const hasVisibleModalDialog = () => {
+      const dialogs = Array.from(document.querySelectorAll<HTMLElement>('[role="dialog"][aria-modal="true"]'));
+      return dialogs.some(dialog => {
+        if (dialog.getAttribute('aria-hidden') === 'true') return false;
+        const style = window.getComputedStyle(dialog);
+        return style.display !== 'none' && style.visibility !== 'hidden';
+      });
+    };
+
+    const syncModalState = () => {
+      setHasActiveModal(hasVisibleModalDialog());
+    };
+
+    syncModalState();
+
+    const observer = new MutationObserver(syncModalState);
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['class', 'style', 'aria-hidden', 'aria-modal'],
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  const blockFloatingActions = panicModeActive || hasActiveModal;
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -625,11 +657,17 @@ export function ModernAppLayout({
       {/* Floating Action Button - Mobile - Premium */}
       <button
         onClick={() => onNavigate?.('new-entry')}
-        className="lg:hidden fixed bottom-6 right-6 z-50 p-4 rounded-2xl transition-all duration-300 hover:scale-110"
+        className={cn(
+          'lg:hidden fixed bottom-6 right-6 z-50 p-4 rounded-2xl transition-all duration-300 hover:scale-110',
+          blockFloatingActions && 'pointer-events-none opacity-0'
+        )}
         style={{
           background: 'linear-gradient(135deg, #0ea5e9 0%, #8b5cf6 100%)',
           boxShadow: '0 8px 30px rgba(14, 165, 233, 0.4), 0 0 40px rgba(139, 92, 246, 0.2)',
         }}
+        disabled={blockFloatingActions}
+        tabIndex={blockFloatingActions ? -1 : 0}
+        aria-hidden={blockFloatingActions}
         aria-label="Quick pain entry"
       >
         <Plus className="h-6 w-6 text-white" />
@@ -646,12 +684,16 @@ export function ModernAppLayout({
           'text-white',
           'transition-all duration-300',
           'hover:scale-110',
+          blockFloatingActions && 'pointer-events-none opacity-0',
           'focus:outline-none focus:ring-4 focus:ring-purple-500/50 focus:ring-offset-2 focus:ring-offset-slate-900'
         )}
         style={{
           background: 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)',
           boxShadow: '0 8px 30px rgba(139, 92, 246, 0.4)',
         }}
+        disabled={blockFloatingActions}
+        tabIndex={blockFloatingActions ? -1 : 0}
+        aria-hidden={blockFloatingActions}
         aria-label="Activate calm breathing mode"
         title="Need a moment? Click for breathing guide"
       >

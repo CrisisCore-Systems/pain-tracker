@@ -14,7 +14,7 @@
  *   $env:HASHNODE_TOKEN="<token>"; node scripts/publishing/hashnode/week1-p0-fix-rendered-metadata.cjs --dry-run
  */
 
-const https = require('node:https');
+const { gqlRequest, getEndpoint, getTransport } = require('./graphql-request.cjs');
 
 const TOKEN = process.env.HASHNODE_TOKEN || '';
 const HOST = 'blog.paintracker.ca';
@@ -35,42 +35,6 @@ const TARGETS = [
   },
 ];
 
-function gqlRequest(query, variables) {
-  return new Promise((resolve, reject) => {
-    const body = JSON.stringify({ query, variables });
-    const req = https.request(
-      {
-        hostname: 'gql.hashnode.com',
-        port: 443,
-        path: '/',
-        method: 'POST',
-        headers: {
-          Authorization: TOKEN,
-          'Content-Type': 'application/json',
-          'Content-Length': Buffer.byteLength(body),
-        },
-      },
-      (res) => {
-        let data = '';
-        res.on('data', (chunk) => {
-          data += chunk;
-        });
-        res.on('end', () => {
-          try {
-            resolve(JSON.parse(data));
-          } catch (err) {
-            reject(new Error(`Failed to parse GraphQL response: ${err.message}`));
-          }
-        });
-      }
-    );
-
-    req.on('error', reject);
-    req.write(body);
-    req.end();
-  });
-}
-
 async function getPostBySlug(slug) {
   const query = `
     query GetPost($host: String!, $slug: String!) {
@@ -85,7 +49,7 @@ async function getPostBySlug(slug) {
     }
   `;
 
-  const response = await gqlRequest(query, { host: HOST, slug });
+  const response = await gqlRequest(query, { host: HOST, slug }, TOKEN);
   if (response.errors) {
     return { ok: false, errors: response.errors };
   }
@@ -112,7 +76,7 @@ async function updatePostMetaTags(input) {
     }
   `;
 
-  const response = await gqlRequest(mutation, { input });
+  const response = await gqlRequest(mutation, { input }, TOKEN);
   if (response.errors) {
     return { ok: false, errors: response.errors };
   }
@@ -128,6 +92,8 @@ async function updatePostMetaTags(input) {
 async function main() {
   console.log('Week 1 P0 rendered metadata fixer');
   console.log('----------------------------------');
+  console.log(`GraphQL endpoint: ${getEndpoint()}`);
+  console.log(`Transport: ${getTransport()}`);
 
   if (!DRY_RUN && !TOKEN) {
     console.error('ERROR: HASHNODE_TOKEN is required.');

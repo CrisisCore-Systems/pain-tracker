@@ -109,8 +109,8 @@ export const ZeroKnowledgeHealthTrackingFaqPage: React.FC = () => {
 
         <section className="grid gap-6 md:grid-cols-3 mb-16 lg:mb-20">
           {trustPoints.map((point) => (
-            <article key={point.title} className="rounded-2xl border border-white/10 bg-white/5 p-6 lg:p-7">
-              <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-white/5">
+            <article key={point.title} className="rounded-2xl border border-white/10 bg-white/10 p-6 lg:p-7">
+              <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-white/10">
                 {point.icon}
               </div>
               <h2 className="text-xl font-semibold mb-3">{point.title}</h2>
@@ -119,7 +119,7 @@ export const ZeroKnowledgeHealthTrackingFaqPage: React.FC = () => {
           ))}
         </section>
 
-        <section className="mb-16 lg:mb-20 rounded-2xl border border-white/10 bg-white/5 p-6 lg:p-8">
+        <section className="mb-16 lg:mb-20 rounded-2xl border border-white/10 bg-white/10 p-6 lg:p-8">
           <h2 className="text-2xl font-semibold mb-6">Frequently asked questions</h2>
           <div className="space-y-5">
             {faqs.map((faq) => (
@@ -134,17 +134,17 @@ export const ZeroKnowledgeHealthTrackingFaqPage: React.FC = () => {
         <section className="mb-16 lg:mb-20 rounded-2xl border border-white/10 bg-slate-900/60 p-6 lg:p-8">
           <h2 className="text-2xl font-semibold mb-4">Where to go next</h2>
           <div className="grid gap-4 md:grid-cols-3">
-            <Link to="/privacy-architecture" className="rounded-xl border border-white/10 bg-white/5 p-5 hover:border-sky-400/40 transition-colors">
+            <Link to="/privacy-architecture" className="rounded-xl border border-white/10 bg-white/10 p-5 hover:border-sky-400/40 transition-colors">
               <Shield className="h-5 w-5 text-sky-300 mb-3" />
               <h3 className="font-semibold mb-2">Read the privacy architecture</h3>
               <p className="text-sm text-slate-300">See the narrower product boundary in detail, including exports, local storage, and backup responsibility.</p>
             </Link>
-            <Link to="/pain-tracking-apps-comparison" className="rounded-xl border border-white/10 bg-white/5 p-5 hover:border-sky-400/40 transition-colors">
+            <Link to="/pain-tracking-apps-comparison" className="rounded-xl border border-white/10 bg-white/10 p-5 hover:border-sky-400/40 transition-colors">
               <FileText className="h-5 w-5 text-emerald-300 mb-3" />
               <h3 className="font-semibold mb-2">Compare private pain tracking apps</h3>
               <p className="text-sm text-slate-300">Use the comparison page if you want the practical tradeoffs between paper, local-first apps, and cloud account apps.</p>
             </Link>
-            <Link to="/start" className="rounded-xl border border-white/10 bg-white/5 p-5 hover:border-sky-400/40 transition-colors">
+            <Link to="/start" className="rounded-xl border border-white/10 bg-white/10 p-5 hover:border-sky-400/40 transition-colors">
               <Download className="h-5 w-5 text-amber-300 mb-3" />
               <h3 className="font-semibold mb-2">Start tracking free</h3>
               <p className="text-sm text-slate-300">Open the app without an account if you want to test the local-first workflow directly instead of reading more theory.</p>

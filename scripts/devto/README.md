@@ -44,6 +44,30 @@ Live series audit:
 node scripts/devto/devto.mjs series-report
 ```
 
+Deep-link distribution audit (paintracker.ca targets found in mapped source markdown):
+
+```powershell
+node scripts/devto/link-distribution-report.mjs
+```
+
+Write JSON output for tracking and diffs:
+
+```powershell
+node scripts/devto/link-distribution-report.mjs --write
+```
+
+Create a timestamped snapshot for weekly comparisons:
+
+```powershell
+node scripts/devto/link-distribution-snapshot.mjs
+```
+
+Compare current vs previous snapshots and fail if homepage share rises:
+
+```powershell
+node scripts/devto/link-distribution-trend-check.mjs
+```
+
 ## Main commands
 
 Preview scheduled content changes:
@@ -88,6 +112,12 @@ Each mapped post may include:
 - `series`: per-post Dev.to series value, or `null`
 - `seriesProfile`: optional reference to `defaults.series_profiles.*`
 - `seriesChain`: optional logical chain name used for injected `Part X` / `Next up` markers
+
+Target-page mapping is now also schedule-backed under `defaults.target_link_map` and enforced during `sync-content`.
+
+- Every post in the current sync scope must have a `target_link_map` entry.
+- `sync-content` injects a per-post `target-link` block that points to the mapped `paintracker.ca` path.
+- Missing mappings hard-fail sync to prevent homepage-only drift.
 
 The schedule defaults may also include `series_profiles`, which define reusable series metadata once and let posts inherit it automatically.
 
@@ -179,3 +209,8 @@ If the chain can be defined centrally, prefer `defaults.series_profiles.*.chainK
 - Keep standalone mirrors mapped in the schedule even if they remain
   `enabled: false`; that preserves article IDs and keeps targeted syncs
   repeatable.
+- Use `link-distribution-report.mjs` before and after large content updates to keep homepage concentration from drifting upward.
+- Weekly sequence:
+  1. `npm run -s devto:link-distribution-report:write`
+  2. `npm run -s devto:link-distribution:snapshot`
+  3. `npm run -s devto:link-distribution:trend-check`

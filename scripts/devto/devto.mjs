@@ -176,12 +176,95 @@ function resolveSeriesStartUrl({ schedule, config, profile, orderedPosts }) {
   return orderedPosts[0]?.devtoUrl ?? config.seriesStartUrl ?? null;
 }
 
-function buildBodyMarkdown(md, post, { sponsorUrl, repoUrl, seriesStartUrl }) {
-  const { top, bottom } = buildCtas({ sponsorUrl, repoUrl, seriesStartUrl });
+function getTargetLinkMap(config) {
+  const raw = config?.schedule?.defaults?.target_link_map;
+  if (!raw || typeof raw !== 'object') return {};
+  return raw;
+}
+
+function normalizeTargetPath(pathRaw) {
+  const trimmed = String(pathRaw ?? '').trim();
+  if (!trimmed) return null;
+  if (!trimmed.startsWith('/')) return null;
+  return trimmed;
+}
+
+function resolvePostTargetLinkSpec(post, config) {
+  const entry = getTargetLinkMap(config)[String(post?.key ?? '').trim()];
+  if (!entry || typeof entry !== 'object') return null;
+
+  const targetPath = normalizeTargetPath(entry.path);
+  if (!targetPath) return null;
+
+  const url = `https://paintracker.ca${targetPath}`;
+  const anchorText = String(entry.anchorText ?? '').trim() || 'PainTracker resource';
+  const cue = String(entry.cue ?? '').trim() || 'Related resource';
+
+  return {
+    targetPath,
+    url,
+    anchorText,
+    cue,
+  };
+}
+
+function buildTargetLinkBlock(spec) {
+  return [
+    '<!-- pain-tracker:target-link:start -->',
+    `> ${spec.cue}: [${spec.anchorText}](${spec.url})`,
+    '<!-- pain-tracker:target-link:end -->',
+    '',
+  ].join('\n');
+}
+
+function injectTargetLinkBlock(md, spec) {
+  let out = String(md ?? '');
+  out = stripSectionByMarkers(out, '<!-- pain-tracker:target-link:start -->', '<!-- pain-tracker:target-link:end -->');
+
+  const block = buildTargetLinkBlock(spec);
+  const eol = out.includes('\r\n') ? '\r\n' : '\n';
+  const fmEnd = `${eol}---${eol}`;
+  const hasFrontMatter = hasFrontMatterBlock(out, eol);
+
+  if (hasFrontMatter) {
+    const endIdx = out.indexOf(fmEnd, `---${eol}`.length);
+    const after = endIdx + fmEnd.length;
+    return out.slice(0, after) + block.split('\n').join(eol) + out.slice(after);
+  }
+
+  return block.split('\n').join(eol) + out;
+}
+
+function validateSyncTargetLinkCoverage(syncPosts, config) {
+  const missing = [];
+  for (const post of syncPosts) {
+    const spec = resolvePostTargetLinkSpec(post, config);
+    if (!spec) {
+      missing.push(String(post?.key ?? '(missing-key)'));
+    }
+  }
+
+  if (missing.length === 0) return;
+
+  throw new Error(
+    `Missing target_link_map entries for sync-content posts: ${missing.join(', ')}. ` +
+      'Add entries under schedule.defaults.target_link_map before running sync-content.',
+  );
+}
+
+function buildBodyMarkdown(md, post, config) {
+  const { top, bottom } = buildCtas(config);
   const normalizedMd = normalizeBodyMarkdownForDev(md);
-  return shouldInjectCtasForPost(post)
+  let out = shouldInjectCtasForPost(post)
     ? injectCtasIntoMarkdown(normalizedMd, { ctaTop: top, ctaBottom: bottom })
     : normalizedMd;
+
+  const targetSpec = resolvePostTargetLinkSpec(post, config);
+  if (targetSpec) {
+    out = injectTargetLinkBlock(out, targetSpec);
+  }
+
+  return out;
 }
 
 async function readBodyMarkdownForPost(post, config) {
@@ -1174,7 +1257,7 @@ function getNormalizedCurrentBodyOrThrow(post, current, desiredTitleRaw) {
   throw new Error(`Cannot sync content for ${desiredTitleRaw}: API did not return body_markdown.`);
 }
 
-function buildSyncContentState({ post, current, config, desiredSeries, seriesStartUrl, nextUpUrl, partLabel }) {
+function buildSyncContentState({ post, current, config, desiredSeries, seriesStartUrl, nextUpUrl, partLabel, targetLinkSpec }) {
   const currentBody = getNormalizedCurrentBodyOrThrow(post, current, String(post.title ?? '').trim());
   const fm = readFrontMatter(currentBody);
   const ctaArgs = buildCtaArgs(config);
@@ -1190,6 +1273,9 @@ function buildSyncContentState({ post, current, config, desiredSeries, seriesSta
       nextUpUrl,
     });
   }
+  if (targetLinkSpec) {
+    body_markdown = injectTargetLinkBlock(body_markdown, targetLinkSpec);
+  }
 
   const shouldHaveCtas = shouldInjectCtasForPost(post);
   const shouldHaveSeriesChain = Boolean(desiredSeries && partLabel);
@@ -1201,6 +1287,11 @@ function buildSyncContentState({ post, current, config, desiredSeries, seriesSta
     '<!-- pain-tracker:series-chain:start -->',
     '<!-- pain-tracker:series-chain:end -->',
   ]);
+  const targetMarkersOk = !targetLinkSpec || hasAllMarkers(currentBody, [
+    '<!-- pain-tracker:target-link:start -->',
+    '<!-- pain-tracker:target-link:end -->',
+    targetLinkSpec.url,
+  ]);
 
   return {
     body_markdown,
@@ -1209,6 +1300,7 @@ function buildSyncContentState({ post, current, config, desiredSeries, seriesSta
     hasFrontMatter: Boolean(fm),
     ctaMarkersOk,
     chainMarkersOk,
+    targetMarkersOk,
   };
 }
 
@@ -1414,7 +1506,7 @@ async function processPushSourcePost({ post, allCache, now, yes, allowPublished,
   return { pushed: 1, linked: resolved.linked ? 1 : 0, skipped: 0 };
 }
 
-async function processSyncContentPost({ post, allCache, now, yes, allowPublished, config, desiredSeries, seriesStartUrl, nextUpUrl, partLabel }) {
+async function processSyncContentPost({ post, allCache, now, yes, allowPublished, config, desiredSeries, seriesStartUrl, nextUpUrl, partLabel, targetLinkSpec }) {
   const titleState = getRequiredTitleOrSkip(post);
   if (titleState.result) return titleState.result;
   const { desiredTitleRaw } = titleState;
@@ -1442,11 +1534,12 @@ async function processSyncContentPost({ post, allCache, now, yes, allowPublished
     seriesStartUrl,
     nextUpUrl,
     partLabel,
+    targetLinkSpec,
   });
   const needsTitle = normalizeDevComparableTitle(contentState.currentTitle) !== normalizeDevComparableTitle(desiredTitleRaw);
   const currentSeries = contentState.currentSeries || null;
   const needsSeries = shouldTreatSeriesAsDrift({ currentSeries, desiredSeries });
-  const needsBody = !(contentState.ctaMarkersOk && contentState.chainMarkersOk) || contentState.hasFrontMatter;
+  const needsBody = !(contentState.ctaMarkersOk && contentState.chainMarkersOk && contentState.targetMarkersOk) || contentState.hasFrontMatter;
 
   if (!(needsTitle || needsSeries || needsBody)) {
     console.log(`OK (content matches): ${desiredTitleRaw}`);
@@ -1801,12 +1894,14 @@ async function cmdSyncContent(schedule, { yes, write, allowPublished, onlyKeys }
 
   const config = getDevtoPublishConfig(schedule);
 
-  const allCache = await listAllUserArticles();
-
   const syncPosts = getPostsForSync(schedule, onlyKeys);
+  validateSyncTargetLinkCoverage(syncPosts, config);
+
+  const allCache = await listAllUserArticles();
 
   for (const post of syncPosts) {
     const chainContext = getSeriesChainContext({ schedule, post, config });
+    const targetLinkSpec = resolvePostTargetLinkSpec(post, config);
 
     const result = await processSyncContentPost({
       post,
@@ -1819,6 +1914,7 @@ async function cmdSyncContent(schedule, { yes, write, allowPublished, onlyKeys }
       seriesStartUrl: chainContext.seriesStartUrl,
       nextUpUrl: chainContext.nextUpUrl,
       partLabel: chainContext.partLabel,
+      targetLinkSpec,
     });
     changed += result.changed;
     linked += result.linked;

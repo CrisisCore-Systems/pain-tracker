@@ -36,7 +36,7 @@ export function TimeOfDayHeatmap({ entries, className, days = 90 }: TimeOfDayHea
   };
 
   const getIntensityClass = (avgPain: number, count: number) => {
-      if (count === 0) return 'bg-gray-50/50 dark:bg-white/5';
+      if (count === 0) return 'bg-gray-50/50 dark:bg-white/10';
       if (avgPain < 2) return 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300';
       if (avgPain < 4) return 'bg-green-200 dark:bg-green-900/50 text-green-800 dark:text-green-200';
       if (avgPain < 6) return 'bg-yellow-200 dark:bg-yellow-900/50 text-yellow-800 dark:text-yellow-200';
@@ -96,7 +96,7 @@ export function TimeOfDayHeatmap({ entries, className, days = 90 }: TimeOfDayHea
           ))}
           
           <div className="mt-4 flex items-center justify-center gap-4 text-xs text-muted-foreground">
-             <div className="flex items-center gap-1"><div className="w-3 h-3 bg-gray-50 dark:bg-white/5 border border-border"></div> No Data</div>
+             <div className="flex items-center gap-1"><div className="w-3 h-3 bg-gray-50 dark:bg-white/10 border border-border"></div> No Data</div>
              <div className="flex items-center gap-1"><div className="w-3 h-3 bg-green-100 dark:bg-green-900/30"></div> Low (0-3)</div>
              <div className="flex items-center gap-1"><div className="w-3 h-3 bg-yellow-200 dark:bg-yellow-900/50"></div> Moderate (4-6)</div>
              <div className="flex items-center gap-1"><div className="w-3 h-3 bg-red-400 dark:bg-red-900/60"></div> Severe (7-10)</div>

@@ -110,24 +110,24 @@ const BASIC_FEATURES: TierFeatures = {
   pdfReports: true,
   wcbReports: true,
   clinicalPDFExport: false,
-  scheduledReports: false,
+  scheduledReports: true, // Scheduled reports fully shipped and available
   maxExportsPerMonth: 50,
 
   // Integration Features
-  healthcareProviderAPI: false,
-  fhirIntegration: false,
+  healthcareProviderAPI: false, // Roadmap: read-only dashboard only, no provider API yet
+  fhirIntegration: false, // Roadmap: FHIR export service exists but no UI exposure yet
   calendarSync: true,
   wearableDevices: false,
 
   // Collaboration
   multiUser: false,
-  familySharing: true,
-  caregiverAccess: true,
-  maxSharedUsers: 2,
+  familySharing: false, // Roadmap: local-first architecture deprioritizes cloud sync
+  caregiverAccess: false, // Roadmap: not yet implemented
+  maxSharedUsers: 0,
 
   // Security & Privacy
   encryption: 'advanced',
-  twoFactorAuth: true,
+  twoFactorAuth: false, // Roadmap: archived provider-API code; not in local-first app
   auditLogs: false,
   hipaaCompliance: false,
   soc2Compliance: false,
@@ -189,22 +189,22 @@ const PRO_FEATURES: TierFeatures = {
   maxExportsPerMonth: 200,
 
   // Integration Features
-  healthcareProviderAPI: true,
-  fhirIntegration: true,
+  healthcareProviderAPI: false, // Roadmap: read-only dashboard only; provider API not yet available
+  fhirIntegration: false, // Roadmap: FHIR export available; no provider/clinic portal integration yet
   calendarSync: true,
-  wearableDevices: true,
+  wearableDevices: false,
 
   // Collaboration
-  multiUser: true,
-  familySharing: true,
-  caregiverAccess: true,
-  maxSharedUsers: 5,
+  multiUser: false,
+  familySharing: false, // Roadmap: local-first design deprioritizes cloud-based sharing
+  caregiverAccess: false, // Roadmap: not yet implemented
+  maxSharedUsers: 0,
 
   // Security & Privacy
   encryption: 'advanced',
-  twoFactorAuth: true,
+  twoFactorAuth: false, // Roadmap: archived provider-API code; not in local-first app
   auditLogs: true,
-  hipaaCompliance: true,
+  hipaaCompliance: false, // Privacy-aligned controls; not HIPAA-certified. See PRIVACY.md for architecture details.
   soc2Compliance: false,
   customDataRetention: true,
 
@@ -264,22 +264,22 @@ const ENTERPRISE_FEATURES: TierFeatures = {
   maxExportsPerMonth: -1,
 
   // Integration Features
-  healthcareProviderAPI: true,
-  fhirIntegration: true,
+  healthcareProviderAPI: false, // Roadmap: read-only dashboard only; provider API not yet available
+  fhirIntegration: false, // Roadmap: FHIR export available; no provider/clinic portal integration yet
   calendarSync: true,
-  wearableDevices: true,
+  wearableDevices: false,
 
   // Collaboration
-  multiUser: true,
-  familySharing: true,
-  caregiverAccess: true,
-  maxSharedUsers: -1, // Unlimited
+  multiUser: false,
+  familySharing: false, // Roadmap: local-first design deprioritizes cloud-based sharing
+  caregiverAccess: false, // Roadmap: not yet implemented
+  maxSharedUsers: 0,
 
   // Security & Privacy
   encryption: 'enterprise',
-  twoFactorAuth: true,
+  twoFactorAuth: false, // Roadmap: archived provider-API code; not in local-first app
   auditLogs: true,
-  hipaaCompliance: true,
+  hipaaCompliance: false, // Privacy-aligned controls; not HIPAA-certified. See PRIVACY.md for architecture details.
   soc2Compliance: false,
   customDataRetention: true,
 

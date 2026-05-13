@@ -23,6 +23,19 @@ Current automated coverage includes 223 tests across the repository's tracked te
   <a href="https://paintracker.ca"><strong>Private Offline Pain Tracker</strong></a> · <a href="https://paintracker.ca/case-study"><strong>Case Study</strong></a> · <a href="https://paintracker.ca/proof"><strong>Proof</strong></a> · <a href="docs/user-guide/INSTALL.md"><strong>Install</strong></a> · <a href="PRIVACY.md"><strong>Privacy</strong></a> · <a href="docs/user-guide/EXPORT_DATA.md"><strong>Export Guide</strong></a> · <a href="docs/README.md"><strong>Docs</strong></a>
 </p>
 
+## Key resource paths
+
+These are the primary product and resource paths used in external references.
+
+- [Private offline pain tracking app](https://paintracker.ca)
+- [Download a private pain tracker](https://paintracker.ca/download)
+- [Chronic pain tracking resources](https://paintracker.ca/resources)
+- [PainTracker pricing and upgrades](https://paintracker.ca/pricing)
+- [Free pain journal templates](https://paintracker.ca/resources/daily-pain-tracker-printable)
+- [What to include in a pain journal](https://paintracker.ca/resources/what-to-include-in-pain-journal)
+- [Pain journal for appointments](https://paintracker.ca/resources/doctor-visit-pain-summary-template)
+- [WorkSafeBC pain documentation tool](https://paintracker.ca/resources/worksafebc-pain-journal-template)
+
 ## Table of Contents
 
 - [Why this exists](#why-this-exists)

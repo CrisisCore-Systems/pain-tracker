@@ -316,7 +316,7 @@ export const LandingFooter: React.FC = () => {
 
           {/* Bottom Bar */}
           <div className="mt-10 pt-6 border-t border-white/5 flex flex-col items-center gap-3 text-sm text-center md:flex-row md:justify-between md:text-left">
-            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-slate-500 md:justify-start">
+            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-slate-400 md:justify-start">
               <p>© {currentYear} CrisisCore Systems</p>
               <a
                 href="https://github.com/CrisisCore-Systems/pain-tracker/blob/main/LICENSE"
@@ -327,7 +327,7 @@ export const LandingFooter: React.FC = () => {
                 View License
               </a>
             </div>
-            <p className="flex flex-wrap items-center justify-center gap-2 text-slate-500 md:justify-end">
+            <p className="flex flex-wrap items-center justify-center gap-2 text-slate-400 md:justify-end">
               Made with <Heart className="h-4 w-4 fill-current text-rose-500 animate-pulse" style={{ animationDuration: '2s' }} /> for chronic pain survivors
             </p>
           </div>
@@ -370,7 +370,7 @@ export const LandingFooter: React.FC = () => {
           {/* Build ID (dev-only unless explicitly enabled) */}
           {(import.meta.env.DEV || import.meta.env.VITE_SHOW_BUILD_INFO === 'true') &&
             import.meta.env.VITE_BUILD_HASH && (
-              <p className="mt-6 text-center text-[10px] text-slate-700">
+              <p className="mt-6 text-center text-[10px] text-slate-400">
                 Build: {import.meta.env.VITE_BUILD_HASH}
               </p>
             )}

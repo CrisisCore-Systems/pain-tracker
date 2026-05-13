@@ -23,6 +23,12 @@ This page explains what the app helps with, how offline use and local-first
 storage work, and why those defaults matter when pain tracking has to survive
 real life instead of ideal conditions.
 
+If you want the most practical next step, start with the [Daily Pain Tracker
+Printable](https://www.paintracker.ca/resources/daily-pain-tracker-printable),
+the [Doctor Visit Pain Summary
+Template](https://www.paintracker.ca/resources/doctor-visit-pain-summary-template),
+or the [Pain Tracker download page](https://www.paintracker.ca/download).
+
 If you want something immediately practical, start with the [Daily Pain Tracker
 Printable](https://www.paintracker.ca/resources/daily-pain-tracker-printable),
 the [Monthly Pain Tracker

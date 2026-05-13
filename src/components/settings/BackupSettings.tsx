@@ -138,7 +138,7 @@ export default function BackupSettings() {
           </button>
           <label className="cursor-pointer">
             <input type="file" accept="application/json" onChange={handleFileInput} className="hidden" />
-            <span className="inline-block px-4 py-2 rounded-lg text-sm font-medium transition-all cursor-pointer bg-gray-100 dark:bg-white/5 border border-gray-300 dark:border-white/10 text-gray-600 dark:text-slate-400 hover:bg-gray-200 dark:hover:bg-white/10">
+            <span className="inline-block px-4 py-2 rounded-lg text-sm font-medium transition-all cursor-pointer bg-gray-100 dark:bg-white/10 border border-gray-300 dark:border-white/10 text-gray-600 dark:text-slate-300 hover:bg-gray-200 dark:hover:bg-white/20">
               Import backup
             </span>
           </label>

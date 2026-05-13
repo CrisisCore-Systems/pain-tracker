@@ -125,7 +125,7 @@ export const CaseStudyPage: React.FC = () => {
           </div>
         </section>
 
-        <section className="mb-12 rounded-2xl border border-white/10 bg-white/5 p-6 lg:p-8">
+        <section className="mb-12 rounded-2xl border border-white/10 bg-white/10 p-6 lg:p-8">
           <h2 className="text-2xl font-semibold mb-4">The problem</h2>
           <p className="text-slate-300 leading-relaxed mb-5">
             When documentation depends on memory, scattered notes, and last-minute formatting, the result is predictable: missing days, inconsistent detail, and a stressful rewrite cycle exactly when the user has the least capacity.
@@ -143,7 +143,7 @@ export const CaseStudyPage: React.FC = () => {
         <section className="mb-12 rounded-2xl border border-white/10 bg-slate-900/70 p-6 lg:p-8">
           <h2 className="text-2xl font-semibold mb-5">Workflow improvement summary</h2>
           <div className="grid gap-6 md:grid-cols-2">
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+            <div className="rounded-2xl border border-white/10 bg-white/10 p-5">
               <h3 className="text-lg font-semibold mb-3">Before</h3>
               <ol className="space-y-3 text-slate-300 leading-relaxed list-decimal list-inside">
                 {beforeSteps.map((item) => (
@@ -162,7 +162,7 @@ export const CaseStudyPage: React.FC = () => {
           </div>
         </section>
 
-        <section className="mb-12 rounded-2xl border border-white/10 bg-white/5 p-6 lg:p-8">
+        <section className="mb-12 rounded-2xl border border-white/10 bg-white/10 p-6 lg:p-8">
           <h2 className="flex items-center gap-3 text-2xl font-semibold mb-4">
             <ClipboardList className="h-6 w-6 text-sky-300" />
             What improved in the composite example
@@ -213,7 +213,7 @@ export const CaseStudyPage: React.FC = () => {
           </ul>
         </section>
 
-        <section className="rounded-2xl border border-white/10 bg-white/5 p-6 lg:p-8">
+        <section className="rounded-2xl border border-white/10 bg-white/10 p-6 lg:p-8">
           <h2 className="text-2xl font-semibold mb-4">Need a proof path, not a pitch deck?</h2>
           <p className="text-slate-300 leading-relaxed mb-6">
             Read the full case-study article, inspect the proof materials behind the trust story, or use the product directly when you need structured records that can survive real life.

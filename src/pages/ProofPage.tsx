@@ -171,7 +171,7 @@ export const ProofPage: React.FC = () => {
           </div>
         </section>
 
-        <section className="mb-12 rounded-2xl border border-white/10 bg-white/5 p-6 lg:p-8">
+        <section className="mb-12 rounded-2xl border border-white/10 bg-white/10 p-6 lg:p-8">
           <h2 className="text-2xl font-semibold mb-4">What this page is</h2>
           <p className="text-slate-300 leading-relaxed">
             This is an index of public materials that make trust claims inspectable: what the system says it does, what the threat model includes, what release evidence captured, what verification steps ran, and what non-guarantees still apply.
@@ -234,7 +234,7 @@ export const ProofPage: React.FC = () => {
           <h2 className="text-2xl font-semibold mb-5">Artifact index</h2>
           <div className="grid gap-5">
             {artifactGroups.map((group) => (
-              <article key={group.title} className="rounded-2xl border border-white/10 bg-white/5 p-6 lg:p-8">
+              <article key={group.title} className="rounded-2xl border border-white/10 bg-white/10 p-6 lg:p-8">
                 <h3 className="text-xl font-semibold mb-3">{group.title}</h3>
                 <p className="text-slate-300 leading-relaxed mb-5">{group.description}</p>
                 <ul className="space-y-3">
@@ -271,7 +271,7 @@ export const ProofPage: React.FC = () => {
           </ol>
         </section>
 
-        <section className="rounded-2xl border border-white/10 bg-white/5 p-6 lg:p-8">
+        <section className="rounded-2xl border border-white/10 bg-white/10 p-6 lg:p-8">
           <h2 className="flex items-center gap-3 text-2xl font-semibold mb-4">
             <Github className="h-6 w-6 text-sky-300" />
             GitHub proof surface
