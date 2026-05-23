@@ -539,9 +539,9 @@ export const MonthlyPainTrackerPrintablePage: React.FC = () => {
               id="hero-heading"
               className="landing-headline landing-headline-lg text-white mb-6"
             >
-              Track Your Pain{' '}
+              Monthly Pain Tracker{' '}
               <span className="bg-gradient-to-r from-sky-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">
-                Across an Entire Month in 2026
+                Printable (2026)
               </span>
             </h1>
 

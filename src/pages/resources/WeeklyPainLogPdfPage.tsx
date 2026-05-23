@@ -518,9 +518,9 @@ export const WeeklyPainLogPdfPage: React.FC = () => {
               id="hero-heading"
               className="landing-headline landing-headline-lg text-white mb-6"
             >
-              See Your Pain Patterns{' '}
+              Weekly Pain Log{' '}
               <span className="bg-gradient-to-r from-sky-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">
-                Across an Entire Week in 2026
+                PDF (2026)
               </span>
             </h1>
 

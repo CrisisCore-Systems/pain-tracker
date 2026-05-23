@@ -504,7 +504,7 @@ export const PainDiaryTemplatePdfPage: React.FC = () => {
             >
               Free pain diary template{' '}
               <span className="bg-gradient-to-r from-sky-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">
-                PDF in 2026.
+                PDF in 2026
               </span>
             </h1>
 

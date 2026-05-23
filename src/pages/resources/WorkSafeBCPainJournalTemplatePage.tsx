@@ -367,8 +367,8 @@ const pageContent: SEOPageContent = {
   
   // Above-the-fold
   badge: 'Free 6-Page PDF',
-  headline: 'WorkSafeBC pain journal template for 2026 workplace injury documentation.',
-  subheadline: 'PainTracker.ca can help you keep structured notes about pain, functional limits, medication changes, triggers, and recovery patterns. Use the printable if you need something today. Use the free app when you need cleaner summaries and a longer-running private record for appointments, case review, or claim discussions.',
+  headline: 'WorkSafeBC Pain Journal Template (2026)',
+  subheadline: 'Structured notes about pain, functional limits, medication changes, triggers, and recovery patterns — in the format that supports WorkSafeBC claims, case reviews, and appeal documentation. Use the printable if you need something today. Use the free app for cleaner summaries and a longer-running private record.',
   primaryCTA: {
     text: 'Download Free PDF (6 Pages)',
     href: '/assets/worksafebc-pain-journal.pdf',
