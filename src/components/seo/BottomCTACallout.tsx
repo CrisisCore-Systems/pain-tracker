@@ -6,6 +6,13 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
+import {
+  resolveResourcePageSlug,
+  resolveResourcePageType,
+  trackResourcePrintableDownloadClick,
+  trackResourceStartTrackingFreeClick,
+  type ResourcePageType,
+} from '../../analytics/resource-funnel-events';
 
 /** Tailwind `from-{color}` / `to-{color}` / tint classes passed directly */
 interface BottomCTACalloutProps {
@@ -28,6 +35,10 @@ interface BottomCTACalloutProps {
   secondaryLabel?: string;
   /** Set false to render a normal link instead of a download link */
   download?: boolean;
+  resourcePageSlug?: string;
+  resourcePageType?: ResourcePageType;
+  primaryCtaLocation?: string;
+  secondaryCtaLocation?: string;
 }
 
 export const BottomCTACallout: React.FC<BottomCTACalloutProps> = ({
@@ -43,7 +54,40 @@ export const BottomCTACallout: React.FC<BottomCTACalloutProps> = ({
   primaryLabel = 'Download PDF',
   secondaryLabel = 'Try Digital Version',
   download: isDownload = true,
-}) => (
+  resourcePageSlug,
+  resourcePageType,
+  primaryCtaLocation = 'bottom_callout_primary_download',
+  secondaryCtaLocation = 'bottom_callout_secondary_start_free',
+}) => {
+  const resolvedSlug = resolveResourcePageSlug(resourcePageSlug);
+  const resolvedType = resolveResourcePageType(resourcePageType, resolvedSlug);
+
+  const handlePrimaryClick = () => {
+    if (!isDownload || !resolvedSlug || !resolvedType) {
+      return;
+    }
+
+    trackResourcePrintableDownloadClick({
+      resourcePageSlug: resolvedSlug,
+      resourcePageType: resolvedType,
+      resourceCtaLocation: primaryCtaLocation,
+      routeTarget: pdfUrl,
+    });
+  };
+
+  const handleSecondaryClick = () => {
+    if (!resolvedSlug || !resolvedType) {
+      return;
+    }
+
+    trackResourceStartTrackingFreeClick({
+      resourcePageSlug: resolvedSlug,
+      resourcePageType: resolvedType,
+      resourceCtaLocation: secondaryCtaLocation,
+    });
+  };
+
+  return (
   <div className={`my-10 bg-gradient-to-r ${gradientClasses} rounded-2xl p-6 md:p-8 text-white`}>
     <div className="flex items-start gap-4">
       <Icon className="w-8 h-8 flex-shrink-0 opacity-80" aria-hidden="true" />
@@ -54,12 +98,14 @@ export const BottomCTACallout: React.FC<BottomCTACalloutProps> = ({
           <a
             href={pdfUrl}
             {...(isDownload ? { download: pdfFilename ?? true } : {})}
+            onClick={handlePrimaryClick}
             className={`inline-flex items-center gap-2 bg-white ${buttonTextClass} px-4 py-2 rounded-lg font-medium text-sm ${buttonHoverClass} transition-colors`}
           >
             {primaryLabel} <ArrowRight className="w-4 h-4" />
           </a>
           <a
             href="/start"
+            onClick={handleSecondaryClick}
             className="inline-flex items-center gap-2 border border-white/30 text-white px-4 py-2 rounded-lg font-medium text-sm hover:bg-white/10 transition-colors"
           >
             {secondaryLabel}
@@ -68,4 +114,5 @@ export const BottomCTACallout: React.FC<BottomCTACalloutProps> = ({
       </div>
     </div>
   </div>
-);
+  );
+};

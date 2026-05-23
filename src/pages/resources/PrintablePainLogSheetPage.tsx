@@ -7,7 +7,7 @@
 
 import React from 'react';
 import {
-  ArrowRight, CheckCircle, Clock, Printer,
+  Clock, Printer,
   FileText, TrendingUp, Zap, PenLine,
   BarChart3, Clipboard, Star, Download
 } from 'lucide-react';
@@ -115,7 +115,7 @@ const painLogStats: StatItem[] = [
 const pageContent: SEOPageContent = {
   slug: 'printable-pain-log-sheet',
   title: 'Printable Pain Log Sheet (Free)',
-  metaTitle: 'Printable Pain Log Sheet — Free Simple Daily Pain Tracker You Can Print Right Now | PainTracker',
+  metaTitle: 'Printable Pain Log Sheet — Free Simple Daily Pain Tracker You Can Print Right Now | PainTracker.ca',
   metaDescription: 'Download a free printable pain log sheet with daily pain ratings, symptom tracking, medication log, and notes section. Print and start tracking in under a minute.',
   keywords: [
     'printable pain log sheet', 'pain log printable',
@@ -130,7 +130,7 @@ const pageContent: SEOPageContent = {
   headline: 'Printable Pain Log Sheet',
   subheadline: 'The simplest way to start tracking pain: print this sheet, pick up a pen, and log your day in under 4 minutes. No app, no account, no learning curve — just a clean, structured format that captures what your doctor needs to know.',
   primaryCTA: { text: 'Download Free PDF', href: '/assets/printable-pain-log-sheet.pdf', download: true },
-  secondaryCTA: { text: 'Try Digital Version', href: '/start' },
+  secondaryCTA: { text: 'Start tracking free', href: '/start' },
   utilityBlock: { type: 'download', downloadUrl: '/assets/printable-pain-log-sheet.pdf', downloadFileName: 'printable-pain-log-sheet.pdf' },
   whatIsThis: 'A simple, one-page daily pain log sheet designed for people who want to track their pain without complexity. It covers the essentials — pain level (0-10), location, quality, symptoms, medications, sleep, function, and a notes section — all on a single printable page. The complete kit includes 6 pages: the daily log, a pain scale reference card, symptom checklist, medication tracker, weekly summary table, and a doctor preparation page. Print page 1 alone for daily use, or print the full kit.',
   whoShouldUse: [
@@ -192,15 +192,15 @@ export const PrintablePainLogSheetPage: React.FC = () => (
     <PdfContentsPreview pages={painLogPdfPages} accentColor="orange" variant="badge" heading="Your 6-Page Printable Pain Log Kit" subtitle="Print the daily log (page 1) by itself for quick tracking, or print all 6 pages for a complete kit." />
     <BottomCTACallout
       icon={Printer}
-      heading="Print. Pen. Track. That's It."
-      body="No app to install, no account to create, no tutorial to watch. Download, print, and start tracking your pain in the next 60 seconds."
+      heading="Start with the format you can use today."
+      body="A simple daily sheet can be enough to spot patterns and bring something concrete into appointments. Print the log if paper is easier, or use the app if that makes the routine easier to keep."
       pdfUrl="/assets/printable-pain-log-sheet.pdf"
       gradientClasses="from-orange-500 to-amber-500"
       tintClass="text-orange-100"
       buttonTextClass="text-orange-700"
       buttonHoverClass="hover:bg-orange-50"
       primaryLabel="Download Log Sheet"
-      secondaryLabel="Try Digital Version"
+      secondaryLabel="Start tracking free"
     />
   </SEOPageLayout>
 );

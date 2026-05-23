@@ -48,7 +48,7 @@ export default function CloudBackupSettings() {
         <p className="text-sm text-gray-600 dark:text-slate-400">When enabled, your data will be securely backed up to your account. Cloud backups are encrypted in transit and at rest.</p>
 
         {!enabled && (
-          <div className="rounded-lg border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/5 p-3 text-sm text-gray-700 dark:text-slate-300">
+          <div className="rounded-lg border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/10 p-3 text-sm text-gray-700 dark:text-slate-200">
             Turn on Cloud Backup to enable manual backup and sync controls.
           </div>
         )}
@@ -65,7 +65,7 @@ export default function CloudBackupSettings() {
             <button
               onClick={() => setLastSync(null)}
               disabled={!lastSync}
-              className="px-4 py-2 rounded-lg text-sm font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-gray-100 dark:bg-white/5 border border-gray-300 dark:border-white/10 text-gray-600 dark:text-slate-400 hover:bg-gray-200 dark:hover:bg-white/10"
+              className="px-4 py-2 rounded-lg text-sm font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-gray-100 dark:bg-white/10 border border-gray-300 dark:border-white/10 text-gray-600 dark:text-slate-300 hover:bg-gray-200 dark:hover:bg-white/20"
             >
               Clear last sync
             </button>

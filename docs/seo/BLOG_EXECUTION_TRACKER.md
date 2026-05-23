@@ -1,5 +1,7 @@
 # blog.paintracker.ca Execution Tracker
 
+<!-- markdownlint-disable MD038 MD060 -->
+
 Version: 1.0  
 Date: 2026-03-11  
 Source spec: `docs/seo/BLOG_URL_REWRITE_MAP.md`
@@ -22,7 +24,9 @@ Staged vs live rule:
 
 Platform-constraint rule:
 
-- `Metadata Updated` may be `Yes` when metadata fields were applied in UI/API but the template renders constrained output (for example title parity not fully honored).
+- `Metadata Updated` may be `Yes` when metadata fields were applied in UI/API
+  but the template renders constrained output (for example title parity not
+  fully honored).
 - When this happens, keep a corresponding `Validation Issues Log` entry open and describe the rendered-vs-target delta.
 
 ## Trust Receipt Cross-Links
@@ -37,7 +41,9 @@ Use these trust artifacts as the verification layer for SEO/content rollout chan
 
 Cross-link rules:
 
-- When recrawl submission status changes for any row, update the dated trust evidence file with URL list, submission timestamps, and verification method (manual GSC vs scripted).
+- When recrawl submission status changes for any row, update the dated trust
+  evidence file with URL list, submission timestamps, and verification method
+  (manual GSC vs scripted).
 - Any SEO blocker marked `Accepted Constraint` must also be reflected under trust `Exceptions` with mitigation language.
 
 ## P0 and P1 URL Tracker
@@ -64,7 +70,9 @@ Status rule for this tracker:
 
 - `Not started`: all action fields are `No`.
 - `In progress`: any action field is `Yes`.
-- `Done`: `Lane Placement Updated`, `One End Bridge Link Applied`, `Repeated Product CTAs Removed`, and `Related Module Labeled/Removed` are all `Yes`.
+- `Done`: `Lane Placement Updated`, `One End Bridge Link Applied`,
+  `Repeated Product CTAs Removed`, and `Related Module Labeled/Removed` are
+  all `Yes`.
 
 | URL | Owner | Target Week | Lane Placement Updated | One End Bridge Link Applied | Repeated Product CTAs Removed | Related Module Labeled/Removed | Overall Status | Notes |
 |---|---|---|---|---|---|---|---|---|

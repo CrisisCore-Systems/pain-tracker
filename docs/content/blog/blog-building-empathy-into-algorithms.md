@@ -21,6 +21,10 @@ When I started building [Pain Tracker](https://paintracker.ca), I thought the ha
 
 Here's what I learned about building empathy into code—with real examples you can adapt for your own projects.
 
+For the full reading path around this design layer, start with [Trauma-Informed Design: Start Here](/blog/trauma-informed-design-start-here).
+
+This post is part of a broader Trauma-Informed Design reading path alongside [Two People, Same Body](https://dev.to/crisiscoresystems/two-people-same-body-a-developers-crisis-architecture-25ko), [Trauma-informed UX + accessibility as architecture (not polish)](https://dev.to/crisiscoresystems/trauma-informed-ux-accessibility-as-architecture-not-polish-22jg), and [Trauma-Informed React Hooks](https://dev.to/crisiscoresystems/trauma-informed-react-hooks-483n).
+
 ---
 
 ## The Problem: Most Health Apps Feel Like Interrogations
@@ -382,6 +386,10 @@ const getSeverity = (stress: number) => {
   return 'none';
 };
 ```
+
+If you want the calibration side of this sensitivity work, read [The False Positive Problem](/blog/false-positives-calibrating-crisis-detection) for how those thresholds get tuned without eroding user trust.
+
+If you want the component-layer hook implementation that carries this detection logic into React, read [Trauma-Informed React Hooks](https://dev.to/crisiscoresystems/trauma-informed-react-hooks-483n).
 
 ### Response: Adaptation, Not Alerts
 

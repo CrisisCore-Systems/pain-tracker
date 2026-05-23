@@ -8,7 +8,7 @@
 import React from 'react';
 import {
   Activity, Brain, Moon, Thermometer, CloudRain, Heart,
-  AlertTriangle, CheckCircle, XCircle, ArrowRight, Zap,
+  ArrowRight, Zap,
   TrendingUp, Users, FileText, Clock
 } from 'lucide-react';
 import { SEOPageLayout, type SEOPageContent, StatsBanner, PdfContentsPreview, BottomCTACallout } from '../../components/seo';
@@ -129,7 +129,7 @@ const FlareTriggerGrid: React.FC = () => {
 const pageContent: SEOPageContent = {
   slug: 'fibromyalgia-pain-diary',
   title: 'Fibromyalgia Pain Diary (Free)',
-  metaTitle: 'Fibromyalgia Pain Diary — Free 6-Page Fibro Symptom Tracker | PainTracker',
+  metaTitle: 'Fibromyalgia Pain Diary — Free 6-Page Fibro Symptom Tracker | PainTracker.ca',
   metaDescription: 'Download a free fibromyalgia pain diary that tracks all 6 symptom domains: widespread pain, fatigue, fibro fog, sleep, sensitivity, and mood. Designed for ACR criteria and rheumatology appointments.',
   keywords: [
     'fibromyalgia pain diary', 'fibro symptom tracker', 'fibromyalgia journal',
@@ -142,7 +142,7 @@ const pageContent: SEOPageContent = {
   headline: 'Fibromyalgia Pain Diary',
   subheadline: 'Not another generic pain diary with "fibromyalgia" on top. This tracks all 6 symptom domains — pain, fatigue, fog, sleep, sensitivity, and mood — because fibro is never just one thing.',
   primaryCTA: { text: 'Download Free PDF (6 Pages)', href: '/assets/fibromyalgia-pain-diary.pdf', download: true },
-  secondaryCTA: { text: 'Try Digital Version', href: '/start' },
+  secondaryCTA: { text: 'Start tracking free', href: '/start' },
   utilityBlock: { type: 'download', downloadUrl: '/assets/fibromyalgia-pain-diary.pdf', downloadFileName: 'fibromyalgia-pain-diary.pdf' },
   whatIsThis: 'A fibromyalgia pain diary built for how fibro actually works. Standard pain diaries track one dimension — pain intensity. But fibromyalgia is a multi-system condition: widespread pain, crushing fatigue, cognitive dysfunction, sleep disruption, sensory sensitivity, and mood changes all interact. This 6-page template captures every domain, maps to ACR diagnostic criteria, and gives your rheumatologist the specific data they need to evaluate your condition and adjust treatment.',
   whoShouldUse: [
@@ -208,8 +208,8 @@ export const FibromyalgiaPainDiaryPage: React.FC = () => (
     />
     <BottomCTACallout
       icon={FileText}
-      heading="Screen Time Making Fibro Worse?"
-      body="Many fibro patients find screens aggravate symptoms. Start with the printable PDF \u2014 it works without a screen, without WiFi, without thinking. When you're ready, the digital version adds trend analysis and pattern detection that paper can't do."
+      heading="Use the format that asks the least of you today."
+      body="Some days the printable is easier. Some days the app makes it simpler to capture pain, fatigue, fog, sleep, and flares without extra effort. What matters is keeping a record you can bring into your next appointment."
       pdfUrl="/assets/fibromyalgia-pain-diary.pdf"
       gradientClasses="from-purple-600 to-indigo-600"
       tintClass="text-purple-100"

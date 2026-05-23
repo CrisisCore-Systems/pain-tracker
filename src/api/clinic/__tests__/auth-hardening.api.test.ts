@@ -1,8 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import loginHandler from '../../../../api/clinic/auth/login';
-import refreshHandler from '../../../../api/clinic/auth/refresh';
-import logoutHandler from '../../../../api/clinic/auth/logout';
-import verifyHandler from '../../../../api/clinic/auth/verify';
+import clinicAuthHandler from '../../../../api/clinic/auth/[action]';
 
 type MockRes = {
   _status: number;
@@ -53,6 +50,14 @@ function createMockRes(): MockRes {
 describe('clinic auth hardening', () => {
   const originalEnv = { ...process.env };
 
+  function makeReq(action: string, init: Record<string, unknown>) {
+    return {
+      query: { action },
+      url: `/api/clinic/auth/${action}`,
+      ...init,
+    } as unknown as Parameters<typeof clinicAuthHandler>[0];
+  }
+
   afterEach(() => {
     process.env = { ...originalEnv };
     vi.restoreAllMocks();
@@ -64,14 +69,14 @@ describe('clinic auth hardening', () => {
     process.env.NODE_ENV = 'development';
     const requestPassword = Math.random().toString(36).slice(2);
 
-    const req = {
+    const req = makeReq('login', {
       method: 'POST',
       headers: {},
       body: { email: 'doctor@clinic.com', password: requestPassword },
-    } as Parameters<typeof loginHandler>[0];
+    });
     const res = createMockRes();
 
-    await loginHandler(req, res as unknown as Parameters<typeof loginHandler>[1]);
+    await clinicAuthHandler(req, res as unknown as Parameters<typeof clinicAuthHandler>[1]);
 
     expect(res._status).toBe(503);
     expect(res._body).toMatchObject({ code: 'CLINIC_AUTH_MISCONFIGURED' });
@@ -80,13 +85,13 @@ describe('clinic auth hardening', () => {
   it('fails closed for verify when clinic auth secret is missing', async () => {
     delete process.env.CLINIC_AUTH_SECRET;
 
-    const req = {
+    const req = makeReq('verify', {
       method: 'GET',
       headers: {},
-    } as Parameters<typeof verifyHandler>[0];
+    });
     const res = createMockRes();
 
-    await verifyHandler(req, res as unknown as Parameters<typeof verifyHandler>[1]);
+    await clinicAuthHandler(req, res as unknown as Parameters<typeof clinicAuthHandler>[1]);
 
     expect(res._status).toBe(503);
     expect(res._body).toMatchObject({ code: 'CLINIC_AUTH_MISCONFIGURED', valid: false });
@@ -95,24 +100,24 @@ describe('clinic auth hardening', () => {
   it('fails closed for refresh/logout when clinic auth secret is missing', async () => {
     delete process.env.CLINIC_AUTH_SECRET;
 
-    const refreshReq = {
+    const refreshReq = makeReq('refresh', {
       method: 'POST',
       headers: {},
-    } as Parameters<typeof refreshHandler>[0];
+    });
     const refreshRes = createMockRes();
 
-    await refreshHandler(refreshReq, refreshRes as unknown as Parameters<typeof refreshHandler>[1]);
+    await clinicAuthHandler(refreshReq, refreshRes as unknown as Parameters<typeof clinicAuthHandler>[1]);
 
     expect(refreshRes._status).toBe(503);
     expect(refreshRes._body).toMatchObject({ code: 'CLINIC_AUTH_MISCONFIGURED' });
 
-    const logoutReq = {
+    const logoutReq = makeReq('logout', {
       method: 'POST',
       headers: {},
-    } as Parameters<typeof logoutHandler>[0];
+    });
     const logoutRes = createMockRes();
 
-    await logoutHandler(logoutReq, logoutRes as unknown as Parameters<typeof logoutHandler>[1]);
+    await clinicAuthHandler(logoutReq, logoutRes as unknown as Parameters<typeof clinicAuthHandler>[1]);
 
     expect(logoutRes._status).toBe(503);
     expect(logoutRes._body).toMatchObject({ code: 'CLINIC_AUTH_MISCONFIGURED' });
@@ -121,13 +126,13 @@ describe('clinic auth hardening', () => {
   it('returns 401 from verify when no bearer token and no auth cookie are provided', async () => {
     process.env.CLINIC_AUTH_SECRET = 'test-secret';
 
-    const req = {
+    const req = makeReq('verify', {
       method: 'GET',
       headers: {},
-    } as Parameters<typeof verifyHandler>[0];
+    });
     const res = createMockRes();
 
-    await verifyHandler(req, res as unknown as Parameters<typeof verifyHandler>[1]);
+    await clinicAuthHandler(req, res as unknown as Parameters<typeof clinicAuthHandler>[1]);
 
     expect(res._status).toBe(401);
     expect(res._body).toMatchObject({ valid: false, error: 'Unauthorized' });
@@ -138,17 +143,17 @@ describe('clinic auth hardening', () => {
     process.env.ALLOW_DEMO_AUTH = 'true';
     process.env.NODE_ENV = 'development';
 
-    const req = {
+    const req = makeReq('login', {
       method: 'POST',
       headers: {
         host: 'example.test',
         'x-forwarded-proto': 'https',
       },
       body: { email: 'doctor@clinic.com', password: Math.random().toString(36).slice(2) },
-    } as unknown as Parameters<typeof loginHandler>[0];
+    } as Record<string, unknown>);
     const res = createMockRes();
 
-    await loginHandler(req, res as unknown as Parameters<typeof loginHandler>[1]);
+    await clinicAuthHandler(req, res as unknown as Parameters<typeof clinicAuthHandler>[1]);
 
     expect(res._status).toBe(200);
     const setCookies = readSetCookie(res);
@@ -173,16 +178,16 @@ describe('clinic auth hardening', () => {
     process.env.ALLOW_DEMO_AUTH = 'true';
     process.env.NODE_ENV = 'development';
 
-    const loginReq = {
+    const loginReq = makeReq('login', {
       method: 'POST',
       headers: {
         host: 'example.test',
         'x-forwarded-proto': 'https',
       },
       body: { email: 'doctor@clinic.com', password: Math.random().toString(36).slice(2) },
-    } as unknown as Parameters<typeof loginHandler>[0];
+    } as Record<string, unknown>);
     const loginRes = createMockRes();
-    await loginHandler(loginReq, loginRes as unknown as Parameters<typeof loginHandler>[1]);
+    await clinicAuthHandler(loginReq, loginRes as unknown as Parameters<typeof clinicAuthHandler>[1]);
     const initialSetCookies = readSetCookie(loginRes);
 
     const sessionCookieRaw = findCookie(initialSetCookies, 'clinic_session');
@@ -192,7 +197,7 @@ describe('clinic auth hardening', () => {
 
     const sessionValue = extractCookieValue(sessionCookieRaw || '');
     const csrfValue = extractCookieValue(csrfCookieRaw || '');
-    const refreshReq = {
+    const refreshReq = makeReq('refresh', {
       method: 'POST',
       headers: {
         host: 'example.test',
@@ -201,10 +206,10 @@ describe('clinic auth hardening', () => {
         cookie: `clinic_session=${sessionValue}; csrfToken=${csrfValue}`,
         'x-csrf-token': csrfValue,
       },
-    } as unknown as Parameters<typeof refreshHandler>[0];
+    } as Record<string, unknown>);
     const refreshRes = createMockRes();
 
-    await refreshHandler(refreshReq, refreshRes as unknown as Parameters<typeof refreshHandler>[1]);
+    await clinicAuthHandler(refreshReq, refreshRes as unknown as Parameters<typeof clinicAuthHandler>[1]);
 
     expect(refreshRes._status).toBe(200);
     const refreshSetCookies = readSetCookie(refreshRes);
@@ -224,7 +229,7 @@ describe('clinic auth hardening', () => {
   it('rejects refresh when csrf header is missing', async () => {
     process.env.CLINIC_AUTH_SECRET = 'test-secret';
 
-    const req = {
+    const req = makeReq('refresh', {
       method: 'POST',
       headers: {
         host: 'example.test',
@@ -232,10 +237,10 @@ describe('clinic auth hardening', () => {
         origin: 'https://example.test',
         cookie: 'csrfToken=abc123',
       },
-    } as unknown as Parameters<typeof refreshHandler>[0];
+    } as Record<string, unknown>);
     const res = createMockRes();
 
-    await refreshHandler(req, res as unknown as Parameters<typeof refreshHandler>[1]);
+    await clinicAuthHandler(req, res as unknown as Parameters<typeof clinicAuthHandler>[1]);
 
     expect(res._status).toBe(403);
     expect(res._body).toMatchObject({ error: 'Missing CSRF token' });
@@ -244,7 +249,7 @@ describe('clinic auth hardening', () => {
   it('rejects refresh when csrf token mismatches cookie token', async () => {
     process.env.CLINIC_AUTH_SECRET = 'test-secret';
 
-    const req = {
+    const req = makeReq('refresh', {
       method: 'POST',
       headers: {
         host: 'example.test',
@@ -253,10 +258,10 @@ describe('clinic auth hardening', () => {
         cookie: 'csrfToken=abc123',
         'x-csrf-token': 'wrong-token',
       },
-    } as unknown as Parameters<typeof refreshHandler>[0];
+    } as Record<string, unknown>);
     const res = createMockRes();
 
-    await refreshHandler(req, res as unknown as Parameters<typeof refreshHandler>[1]);
+    await clinicAuthHandler(req, res as unknown as Parameters<typeof clinicAuthHandler>[1]);
 
     expect(res._status).toBe(403);
     expect(res._body).toMatchObject({ error: 'Invalid CSRF token' });
@@ -265,7 +270,7 @@ describe('clinic auth hardening', () => {
   it('rejects refresh when origin is absent', async () => {
     process.env.CLINIC_AUTH_SECRET = 'test-secret';
 
-    const req = {
+    const req = makeReq('refresh', {
       method: 'POST',
       headers: {
         host: 'example.test',
@@ -273,10 +278,10 @@ describe('clinic auth hardening', () => {
         cookie: 'csrfToken=abc123',
         'x-csrf-token': 'abc123',
       },
-    } as unknown as Parameters<typeof refreshHandler>[0];
+    } as Record<string, unknown>);
     const res = createMockRes();
 
-    await refreshHandler(req, res as unknown as Parameters<typeof refreshHandler>[1]);
+    await clinicAuthHandler(req, res as unknown as Parameters<typeof clinicAuthHandler>[1]);
 
     expect(res._status).toBe(403);
     expect(res._body).toMatchObject({ error: 'Invalid request origin' });
@@ -285,7 +290,7 @@ describe('clinic auth hardening', () => {
   it('rejects refresh when auth cookie is absent', async () => {
     process.env.CLINIC_AUTH_SECRET = 'test-secret';
 
-    const req = {
+    const req = makeReq('refresh', {
       method: 'POST',
       headers: {
         host: 'example.test',
@@ -294,10 +299,10 @@ describe('clinic auth hardening', () => {
         cookie: 'csrfToken=abc123',
         'x-csrf-token': 'abc123',
       },
-    } as unknown as Parameters<typeof refreshHandler>[0];
+    } as Record<string, unknown>);
     const res = createMockRes();
 
-    await refreshHandler(req, res as unknown as Parameters<typeof refreshHandler>[1]);
+    await clinicAuthHandler(req, res as unknown as Parameters<typeof clinicAuthHandler>[1]);
 
     expect(res._status).toBe(401);
     expect(res._body).toMatchObject({ error: 'Session expired' });
@@ -306,7 +311,7 @@ describe('clinic auth hardening', () => {
   it('rejects logout when csrf header is missing', async () => {
     process.env.CLINIC_AUTH_SECRET = 'test-secret';
 
-    const req = {
+    const req = makeReq('logout', {
       method: 'POST',
       headers: {
         host: 'example.test',
@@ -314,10 +319,10 @@ describe('clinic auth hardening', () => {
         origin: 'https://example.test',
         cookie: 'csrfToken=abc123',
       },
-    } as unknown as Parameters<typeof logoutHandler>[0];
+    } as Record<string, unknown>);
     const res = createMockRes();
 
-    await logoutHandler(req, res as unknown as Parameters<typeof logoutHandler>[1]);
+    await clinicAuthHandler(req, res as unknown as Parameters<typeof clinicAuthHandler>[1]);
 
     expect(res._status).toBe(403);
     expect(res._body).toMatchObject({ error: 'Missing CSRF token' });
@@ -326,7 +331,7 @@ describe('clinic auth hardening', () => {
   it('rejects logout when csrf token mismatches cookie token', async () => {
     process.env.CLINIC_AUTH_SECRET = 'test-secret';
 
-    const req = {
+    const req = makeReq('logout', {
       method: 'POST',
       headers: {
         host: 'example.test',
@@ -335,10 +340,10 @@ describe('clinic auth hardening', () => {
         cookie: 'csrfToken=abc123',
         'x-csrf-token': 'wrong-token',
       },
-    } as unknown as Parameters<typeof logoutHandler>[0];
+    } as Record<string, unknown>);
     const res = createMockRes();
 
-    await logoutHandler(req, res as unknown as Parameters<typeof logoutHandler>[1]);
+    await clinicAuthHandler(req, res as unknown as Parameters<typeof clinicAuthHandler>[1]);
 
     expect(res._status).toBe(403);
     expect(res._body).toMatchObject({ error: 'Invalid CSRF token' });
@@ -347,7 +352,7 @@ describe('clinic auth hardening', () => {
   it('rejects logout when origin is absent', async () => {
     process.env.CLINIC_AUTH_SECRET = 'test-secret';
 
-    const req = {
+    const req = makeReq('logout', {
       method: 'POST',
       headers: {
         host: 'example.test',
@@ -355,10 +360,10 @@ describe('clinic auth hardening', () => {
         cookie: 'csrfToken=abc123',
         'x-csrf-token': 'abc123',
       },
-    } as unknown as Parameters<typeof logoutHandler>[0];
+    } as Record<string, unknown>);
     const res = createMockRes();
 
-    await logoutHandler(req, res as unknown as Parameters<typeof logoutHandler>[1]);
+    await clinicAuthHandler(req, res as unknown as Parameters<typeof clinicAuthHandler>[1]);
 
     expect(res._status).toBe(403);
     expect(res._body).toMatchObject({ error: 'Invalid request origin' });
@@ -370,14 +375,14 @@ describe('clinic auth hardening', () => {
     process.env.NODE_ENV = 'development';
     const requestPassword = Math.random().toString(36).slice(2);
 
-    const req = {
+    const req = makeReq('login', {
       method: 'POST',
       headers: {},
       body: { email: 'doctor@clinic.com', password: requestPassword },
-    } as Parameters<typeof loginHandler>[0];
+    });
     const res = createMockRes();
 
-    await loginHandler(req, res as unknown as Parameters<typeof loginHandler>[1]);
+    await clinicAuthHandler(req, res as unknown as Parameters<typeof clinicAuthHandler>[1]);
 
     expect(res._status).toBe(403);
     expect(res._body).toMatchObject({ code: 'DEMO_AUTH_DISABLED' });
@@ -389,14 +394,14 @@ describe('clinic auth hardening', () => {
     process.env.NODE_ENV = 'production';
     const requestPassword = Math.random().toString(36).slice(2);
 
-    const req = {
+    const req = makeReq('login', {
       method: 'POST',
       headers: {},
       body: { email: 'doctor@clinic.com', password: requestPassword },
-    } as Parameters<typeof loginHandler>[0];
+    });
     const res = createMockRes();
 
-    await loginHandler(req, res as unknown as Parameters<typeof loginHandler>[1]);
+    await clinicAuthHandler(req, res as unknown as Parameters<typeof clinicAuthHandler>[1]);
 
     expect(res._status).toBe(403);
     expect(res._body).toMatchObject({ code: 'DEMO_AUTH_DISABLED' });

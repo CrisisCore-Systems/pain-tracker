@@ -1,10 +1,43 @@
-# PainTracker.ca ↔ Overton v0.2 Control Mapping (Repo-Grounded)
+# Legacy compliance mapping draft
+
+This page is a legacy compliance mapping draft. It is retained for transparency while the PainTracker reference packet becomes the canonical implementation artifact. Claims on this page should not be treated as certification, final conformance, or externally reviewed compliance until rewritten and bound to repository evidence.
+
+This is necessary because the current mapping still contains high-risk claims around optional server sync, zero-knowledge backup, CRDT-like sync expectations, mutual TLS, grant funding, and native mobile encryption that need repo-bound proof or removal.
+
+Protective Computing Specification v1.0 is a founder-authored normative design specification. Current implementation claims are conformance claims, not certification. A system may be described as self-attested, repo backed, CI backed, externally reviewed, or certified only according to the published proof badge taxonomy.
+
+PainTracker is a candidate reference implementation with a public reference packet, explicit limitations, and bounded evidence anchors. It is not certified. Its current posture is Level 2 to Level 3 alignment where evidence exists, with unresolved gaps in active-coercion resistance, accessibility-complete degraded mode, and external review.
+
+The canonical PainTracker implementation artifact is the PainTracker Protective Computing Reference Packet v1.0. Legacy mappings are retained only as historical drafts until rewritten against the current repository, CI evidence, and claim badge taxonomy.
 
 **Status:** working draft (engineering-facing)
 
 See also: `docs/engineering/checklists/paintracker-overton-v1.3-compliance-matrix.md` (living matrix; implemented/evidence/gaps/human-review).
 
 **Purpose:** Map PainTracker’s current implementation surfaces to the Overton v0.2 Companion control families (PC‑1..PC‑6) to support accurate claims, scoped assessments, and remediation planning.
+
+## Current proof level badges (major claims)
+
+Badge definitions used in this file:
+
+- `Self attested`: Founder/project claim. No direct public evidence yet.
+- `Repo backed`: Source file, doc, config, or test exists in public repo.
+- `CI backed`: Automated workflow verifies the claim on a commit.
+- `Externally reviewed`: Named reviewer has published or signed a bounded review.
+- `Certified`: Recognized external body has issued certification.
+
+Hard rule: a claim cannot inherit a stronger badge from a nearby claim. Each major statement below has its own proof level.
+
+| Claim | Current proof level |
+|---|---|
+| PainTracker is a candidate Protective Computing reference implementation. | Repo backed |
+| PainTracker is certified Protective Computing compliant. | Self attested (false claim; do not claim certification) |
+| PainTracker supports local-first journaling. | Repo backed |
+| PainTracker claims zero operator plaintext access on documented local-first paths. | Repo backed |
+| PainTracker has zero metadata visibility. | Self attested (false claim; metadata visibility is not zero-proven) |
+| PainTracker is accessibility complete. | Self attested (do not claim) |
+| PainTracker has externally reviewed degraded-mode behavior. | Self attested (not yet externally reviewed) |
+| Protective Computing has CI audit gates in this repo. | Repo backed |
 
 **Non-overclaim rule:** This mapping is descriptive. If a control is not clearly implemented, mark it as **UNKNOWN** or **NOT IMPLEMENTED**.
 

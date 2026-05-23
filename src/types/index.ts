@@ -1,4 +1,33 @@
-﻿export interface PainEntry {
+﻿export interface EntryCaptureContext {
+  networkState: 'online' | 'offline' | 'unknown';
+  storageLocation: 'local-device';
+  captureChannel: 'quick-log' | 'manual' | 'unknown';
+}
+
+export interface PainEntryRevision {
+  amendedAt: string;
+  changedFields: string[];
+  summary: string[];
+  captureContext: EntryCaptureContext;
+}
+
+export interface PainEntryRecordIntegrity {
+  createdAt: string;
+  originalTimestamp: string;
+  lastAmendedAt?: string;
+  revisionCount: number;
+  revisions: PainEntryRevision[];
+  captureContext: EntryCaptureContext;
+}
+
+export interface OccupationalImpactFlags {
+  cannotLiftOver10Lbs?: boolean;
+  impairedMobility?: boolean;
+  lossOfGripStrength?: boolean;
+  unableToOperateMachinery?: boolean;
+}
+
+export interface PainEntry {
   id: number | string;
   timestamp: string;
   baselineData: {
@@ -87,6 +116,12 @@
 
   /** Medication adherence for scheduled meds (optional) */
   medicationAdherence?: 'as_prescribed' | 'partial' | 'missed' | 'not_applicable';
+
+  /** Explicit occupationally relevant functional limits */
+  occupationalImpact?: OccupationalImpactFlags;
+
+  /** Local provenance metadata for amendment-aware exports */
+  recordIntegrity?: PainEntryRecordIntegrity;
 }
 
 export interface WCBReport {
@@ -213,6 +248,9 @@ export interface ReportTemplate {
   sections: ReportSection[];
   createdAt: string;
   lastModified: string;
+  networkState: 'online' | 'offline' | 'unknown';
+  storageLocation: 'local-device';
+  captureChannel: 'quick-log' | 'manual' | 'unknown';
 }
 
 export interface ScheduledReport {

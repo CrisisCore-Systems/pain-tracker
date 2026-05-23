@@ -8,7 +8,7 @@
 import React from 'react';
 import {
   ArrowRight, Activity, AlertTriangle, Zap, CheckCircle,
-  TrendingUp, Users, FileText, Clock, Flame,
+  TrendingUp, Users, Flame,
   CircleDot, Waves, MonitorSmartphone
 } from 'lucide-react';
 import { SEOPageLayout, type SEOPageContent, StatsBanner, PdfContentsPreview, BottomCTACallout } from '../../components/seo';
@@ -126,7 +126,7 @@ const nerveStats: StatItem[] = [
 const pageContent: SEOPageContent = {
   slug: 'nerve-pain-symptom-log',
   title: 'Nerve Pain Symptom Log (Free)',
-  metaTitle: 'Nerve Pain Symptom Log — Free 6-Page Neuropathy Tracker | PainTracker',
+  metaTitle: 'Nerve Pain Symptom Log — Free 6-Page Neuropathy Tracker | PainTracker.ca',
   metaDescription: 'Download a free nerve pain symptom log for neuropathy, sciatica, and neurological pain. Track burning, tingling, numbness, shooting pain, progression, and treatment response.',
   keywords: [
     'nerve pain symptom log', 'neuropathy tracker', 'nerve pain diary',
@@ -139,7 +139,7 @@ const pageContent: SEOPageContent = {
   headline: 'Nerve Pain Symptom Log',
   subheadline: 'Track burning, tingling, numbness, and shooting pain with specific quality codes. Monitor progression patterns, medication response, and functional impact for your neurologist.',
   primaryCTA: { text: 'Download Free PDF (6 Pages)', href: '/assets/nerve-pain-symptom-log.pdf', download: true },
-  secondaryCTA: { text: 'Try Digital Version', href: '/start' },
+  secondaryCTA: { text: 'Start tracking free', href: '/start' },
   utilityBlock: { type: 'download', downloadUrl: '/assets/nerve-pain-symptom-log.pdf', downloadFileName: 'nerve-pain-symptom-log.pdf' },
   whatIsThis: 'A nerve pain symptom log designed for neuropathic conditions: peripheral neuropathy, sciatica, carpal tunnel, CIDP, diabetic neuropathy, and post-surgical nerve pain. It captures what generic pain diaries miss — the specific quality of nerve pain (burning vs. tingling vs. shooting), precise location, progression pattern (which areas are newly involved), and functional impact including balance, grip, and fall risk. Your neurologist gets the data they need to identify the cause, assess progression, and adjust medication.',
   whoShouldUse: [
@@ -201,8 +201,8 @@ export const NervePainSymptomLogPage: React.FC = () => (
     <PdfContentsPreview pages={nervePdfPages} accentColor="indigo" />
     <BottomCTACallout
       icon={MonitorSmartphone}
-      heading="Numbness Makes Handwriting Difficult?"
-      body="If nerve damage in your hands makes writing uncomfortable, the digital version offers larger touch targets, simple tap-to-rate input, and automated progression tracking. Use paper when you can, digital when you need to."
+      heading="Use the format that keeps the record usable."
+      body="Start with paper when that feels easiest. If handwriting gets harder because of numbness, burning, or weakness, the app can make it easier to keep up with symptoms, progression, and treatment response. The important part is having something clear to review later."
       pdfUrl="/assets/nerve-pain-symptom-log.pdf"
       gradientClasses="from-indigo-600 to-purple-600"
       tintClass="text-indigo-100"

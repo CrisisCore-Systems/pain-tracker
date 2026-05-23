@@ -1,5 +1,6 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { pathToFileURL } from 'node:url';
 
 const ACCEPT = 'application/vnd.forem.api-v1+json, application/json';
 const DEVTO_API_BASE = process.env.DEVTO_API_BASE ?? 'https://dev.to/api';
@@ -75,15 +76,195 @@ function getDevtoPublishConfig(schedule) {
     seriesStartUrl,
     series,
     organization_id,
+    schedule,
   };
 }
 
-function buildBodyMarkdown(md, post, { sponsorUrl, repoUrl, seriesStartUrl }) {
-  const { top, bottom } = buildCtas({ sponsorUrl, repoUrl, seriesStartUrl });
+function getSeriesProfiles(config) {
+  const profiles = config?.schedule?.defaults?.series_profiles;
+  if (!profiles || typeof profiles !== 'object') return {};
+  return profiles;
+}
+
+function normalizeOrderedKeys(raw) {
+  if (!Array.isArray(raw)) return [];
+  return raw.map((key) => String(key ?? '').trim()).filter(Boolean);
+}
+
+function findSeriesProfileBySeriesName(seriesName, config) {
+  const desired = String(seriesName ?? '').trim();
+  if (!desired) return null;
+
+  for (const [key, value] of Object.entries(getSeriesProfiles(config))) {
+    if (!value || typeof value !== 'object') continue;
+    if (String(value.series ?? '').trim() !== desired) continue;
+    return {
+      key,
+      series: desired,
+      chainKey: String(value.chainKey ?? '').trim() || null,
+      startHereKey: String(value.startHereKey ?? '').trim() || null,
+      startHereUrl: String(value.startHereUrl ?? '').trim() || null,
+      orderedKeys: normalizeOrderedKeys(value.orderedKeys),
+    };
+  }
+
+  return null;
+}
+
+function resolveSeriesProfile(post, config) {
+  const explicitKey = String(post?.seriesProfile ?? post?.seriesKey ?? '').trim();
+  if (explicitKey) {
+    const value = getSeriesProfiles(config)[explicitKey];
+    if (value && typeof value === 'object') {
+      return {
+        key: explicitKey,
+        series: String(value.series ?? '').trim() || null,
+        chainKey: String(value.chainKey ?? '').trim() || null,
+        startHereKey: String(value.startHereKey ?? '').trim() || null,
+        startHereUrl: String(value.startHereUrl ?? '').trim() || null,
+        orderedKeys: normalizeOrderedKeys(value.orderedKeys),
+      };
+    }
+  }
+
+  if (post && Object.hasOwn(post, 'series')) {
+    return findSeriesProfileBySeriesName(post.series, config);
+  }
+
+  return findSeriesProfileBySeriesName(config?.series, config);
+}
+
+function getSchedulePostByKey(schedule, key) {
+  const safeKey = String(key ?? '').trim();
+  if (!safeKey) return null;
+  return schedule?.posts?.find((entry) => String(entry?.key ?? '').trim() === safeKey) ?? null;
+}
+
+function getOrderedSeriesPosts({ schedule, config, chainKey, profile }) {
+  const keyedPosts = new Map((schedule?.posts ?? []).map((entry) => [String(entry?.key ?? '').trim(), entry]));
+  const explicitOrdered = (profile?.orderedKeys ?? []).map((key) => keyedPosts.get(key)).filter(Boolean);
+
+  if (explicitOrdered.length > 0) {
+    if (!chainKey) return explicitOrdered;
+
+    const seen = new Set(explicitOrdered.map((entry) => String(entry?.key ?? '').trim()));
+    const extras = (schedule?.posts ?? [])
+      .filter((entry) => resolvePostSeriesChain(entry, config) === chainKey)
+      .filter((entry) => !seen.has(String(entry?.key ?? '').trim()))
+      .slice()
+      .sort((a, b) => Date.parse(a.publishAt) - Date.parse(b.publishAt));
+
+    return [...explicitOrdered, ...extras];
+  }
+
+  if (!chainKey) return [];
+
+  return (schedule?.posts ?? [])
+    .filter((entry) => resolvePostSeriesChain(entry, config) === chainKey)
+    .slice()
+    .sort((a, b) => Date.parse(a.publishAt) - Date.parse(b.publishAt));
+}
+
+function resolveSeriesStartUrl({ schedule, config, profile, orderedPosts }) {
+  if (profile?.startHereUrl) return profile.startHereUrl;
+
+  if (profile?.startHereKey) {
+    const startHerePost = getSchedulePostByKey(schedule, profile.startHereKey);
+    if (startHerePost?.devtoUrl) return startHerePost.devtoUrl;
+  }
+
+  return orderedPosts[0]?.devtoUrl ?? config.seriesStartUrl ?? null;
+}
+
+function getTargetLinkMap(config) {
+  const raw = config?.schedule?.defaults?.target_link_map;
+  if (!raw || typeof raw !== 'object') return {};
+  return raw;
+}
+
+function normalizeTargetPath(pathRaw) {
+  const trimmed = String(pathRaw ?? '').trim();
+  if (!trimmed) return null;
+  if (!trimmed.startsWith('/')) return null;
+  return trimmed;
+}
+
+function resolvePostTargetLinkSpec(post, config) {
+  const entry = getTargetLinkMap(config)[String(post?.key ?? '').trim()];
+  if (!entry || typeof entry !== 'object') return null;
+
+  const targetPath = normalizeTargetPath(entry.path);
+  if (!targetPath) return null;
+
+  const url = `https://paintracker.ca${targetPath}`;
+  const anchorText = String(entry.anchorText ?? '').trim() || 'PainTracker resource';
+  const cue = String(entry.cue ?? '').trim() || 'Related resource';
+
+  return {
+    targetPath,
+    url,
+    anchorText,
+    cue,
+  };
+}
+
+function buildTargetLinkBlock(spec) {
+  return [
+    '<!-- pain-tracker:target-link:start -->',
+    `> ${spec.cue}: [${spec.anchorText}](${spec.url})`,
+    '<!-- pain-tracker:target-link:end -->',
+    '',
+  ].join('\n');
+}
+
+function injectTargetLinkBlock(md, spec) {
+  let out = String(md ?? '');
+  out = stripSectionByMarkers(out, '<!-- pain-tracker:target-link:start -->', '<!-- pain-tracker:target-link:end -->');
+
+  const block = buildTargetLinkBlock(spec);
+  const eol = out.includes('\r\n') ? '\r\n' : '\n';
+  const fmEnd = `${eol}---${eol}`;
+  const hasFrontMatter = hasFrontMatterBlock(out, eol);
+
+  if (hasFrontMatter) {
+    const endIdx = out.indexOf(fmEnd, `---${eol}`.length);
+    const after = endIdx + fmEnd.length;
+    return out.slice(0, after) + block.split('\n').join(eol) + out.slice(after);
+  }
+
+  return block.split('\n').join(eol) + out;
+}
+
+function validateSyncTargetLinkCoverage(syncPosts, config) {
+  const missing = [];
+  for (const post of syncPosts) {
+    const spec = resolvePostTargetLinkSpec(post, config);
+    if (!spec) {
+      missing.push(String(post?.key ?? '(missing-key)'));
+    }
+  }
+
+  if (missing.length === 0) return;
+
+  throw new Error(
+    `Missing target_link_map entries for sync-content posts: ${missing.join(', ')}. ` +
+      'Add entries under schedule.defaults.target_link_map before running sync-content.',
+  );
+}
+
+function buildBodyMarkdown(md, post, config) {
+  const { top, bottom } = buildCtas(config);
   const normalizedMd = normalizeBodyMarkdownForDev(md);
-  return shouldInjectCtasForPost(post)
+  let out = shouldInjectCtasForPost(post)
     ? injectCtasIntoMarkdown(normalizedMd, { ctaTop: top, ctaBottom: bottom })
     : normalizedMd;
+
+  const targetSpec = resolvePostTargetLinkSpec(post, config);
+  if (targetSpec) {
+    out = injectTargetLinkBlock(out, targetSpec);
+  }
+
+  return out;
 }
 
 async function readBodyMarkdownForPost(post, config) {
@@ -91,15 +272,44 @@ async function readBodyMarkdownForPost(post, config) {
   return buildBodyMarkdown(md, post, config);
 }
 
+function inferPublishedStateForExistingArticle(currentArticle) {
+  if (!currentArticle || typeof currentArticle !== 'object') return false;
+  if (typeof currentArticle.published === 'boolean') return currentArticle.published;
+  return Boolean(currentArticle.published_at ?? currentArticle.published_timestamp);
+}
+
+function resolvePostSeriesName(post, config) {
+  if (post && Object.hasOwn(post, 'series')) {
+    return post.series ?? null;
+  }
+  const profile = resolveSeriesProfile(post, config);
+  if (profile?.series) return profile.series;
+  return config.series ?? null;
+}
+
+function resolvePostSeriesChain(post, config) {
+  if (!post) return null;
+  if (Object.hasOwn(post, 'seriesChain')) return post.seriesChain ?? null;
+  const profile = resolveSeriesProfile(post, config);
+  return profile?.chainKey ?? null;
+}
+
 function buildArticleUpsertPayload(post, body_markdown, config, overrides = {}) {
+  const explicitPublished = overrides.article && Object.hasOwn(overrides.article, 'published')
+    ? overrides.article.published
+    : undefined;
+  const explicitCanonical = overrides.article && Object.hasOwn(overrides.article, 'canonical_url')
+    ? overrides.article.canonical_url
+    : undefined;
+
   return {
     article: {
       title: post.title,
       body_markdown,
-      published: false,
-      series: config.series ?? null,
+      published: explicitPublished ?? inferPublishedStateForExistingArticle(overrides.currentArticle),
+      series: resolvePostSeriesName(post, config),
       main_image: resolvePostMainImage(post, overrides.currentArticle ?? null),
-      canonical_url: post.canonical_url ?? null,
+      canonical_url: resolvePostCanonicalUrl(post, overrides.currentArticle ?? null, explicitCanonical),
       description: post.description ?? undefined,
       tags: ensureStringArrayTags(post.tags),
       organization_id: config.organization_id ?? null,
@@ -134,6 +344,21 @@ function resolvePostMainImage(post, currentArticle = null) {
   return existingImage;
 }
 
+function resolvePostCanonicalUrl(post, currentArticle = null, explicitCanonical = undefined) {
+  if (explicitCanonical !== undefined) return explicitCanonical;
+
+  // If the schedule explicitly sets canonical_url to null, honour that and clear
+  // whatever Dev.to has stored — prevents "has already been taken" conflicts.
+  if (Object.hasOwn(post ?? {}, 'canonical_url') && post.canonical_url === null) return null;
+
+  const existingCanonical =
+    (typeof currentArticle?.canonical_url === 'string' && currentArticle.canonical_url.trim()) || null;
+
+  if (existingCanonical) return existingCanonical;
+
+  return (typeof post?.canonical_url === 'string' && post.canonical_url.trim()) || null;
+}
+
 function shouldInjectCtasForPost(post) {
   return post?.injectCtas !== false;
 }
@@ -147,7 +372,7 @@ function buildCtas({ sponsorUrl, repoUrl, seriesStartUrl }) {
 
   const seriesLine = seriesStartUrl
     ? `- Read the full series from the start: ${seriesStartUrl}`
-    : '- Read the full series from the start: (link)';
+    : null;
 
   const bottom = [
     '',
@@ -159,7 +384,7 @@ function buildCtas({ sponsorUrl, repoUrl, seriesStartUrl }) {
     `- Star the repo (secondary): ${repoUrl}`,
     seriesLine,
     '',
-  ].join('\n');
+  ].filter((line) => line !== null).join('\n');
 
   const pinnedComment = [
     'TL;DR',
@@ -746,6 +971,16 @@ function normalizeTitle(title) {
     .toLowerCase();
 }
 
+function normalizeDevComparableTitle(title) {
+  return String(title ?? '')
+    .normalize('NFKD')
+    .replaceAll(/[\u2190-\u21FF\u27F0-\u27FF\u2900-\u297F]/g, ' ')
+    .replaceAll(/[^\p{L}\p{N}]+/gu, ' ')
+    .trim()
+    .replaceAll(/\s+/g, ' ')
+    .toLowerCase();
+}
+
 function normalizeFunnelKey(title) {
   return String(title ?? '')
     .normalize('NFKD')
@@ -772,6 +1007,17 @@ async function listAllUserArticles() {
   }
 
   return all;
+}
+
+async function getArticleById(articleId) {
+  try {
+    return await devtoRequest('GET', `/articles/${articleId}`);
+  } catch (err) {
+    if (String(err?.message ?? '').includes('404')) {
+      return null;
+    }
+    throw err;
+  }
 }
 
 function pickBestTitleMatch(matches, desiredIso, now = new Date()) {
@@ -1011,7 +1257,7 @@ function getNormalizedCurrentBodyOrThrow(post, current, desiredTitleRaw) {
   throw new Error(`Cannot sync content for ${desiredTitleRaw}: API did not return body_markdown.`);
 }
 
-function buildSyncContentState({ post, current, config, seriesName, seriesStartUrl, nextUpUrl, partLabel }) {
+function buildSyncContentState({ post, current, config, desiredSeries, seriesStartUrl, nextUpUrl, partLabel, targetLinkSpec }) {
   const currentBody = getNormalizedCurrentBodyOrThrow(post, current, String(post.title ?? '').trim());
   const fm = readFrontMatter(currentBody);
   const ctaArgs = buildCtaArgs(config);
@@ -1019,30 +1265,80 @@ function buildSyncContentState({ post, current, config, seriesName, seriesStartU
   if (shouldInjectCtasForPost(post)) {
     body_markdown = injectCtasIntoMarkdown(body_markdown, ctaArgs);
   }
-  body_markdown = injectSeriesChainIntoMarkdown(body_markdown, {
-    seriesName,
-    partLabel,
-    startHereUrl: seriesStartUrl,
-    nextUpUrl,
-  });
+  if (desiredSeries && partLabel) {
+    body_markdown = injectSeriesChainIntoMarkdown(body_markdown, {
+      seriesName: desiredSeries,
+      partLabel,
+      startHereUrl: seriesStartUrl,
+      nextUpUrl,
+    });
+  }
+  if (targetLinkSpec) {
+    body_markdown = injectTargetLinkBlock(body_markdown, targetLinkSpec);
+  }
 
-  const ctaMarkersOk = hasAllMarkers(currentBody, [
+  const shouldHaveCtas = shouldInjectCtasForPost(post);
+  const shouldHaveSeriesChain = Boolean(desiredSeries && partLabel);
+  const ctaMarkersOk = !shouldHaveCtas || hasAllMarkers(currentBody, [
     '<!-- pain-tracker:cta-top -->',
     '<!-- pain-tracker:cta-bottom -->',
   ]);
-  const chainMarkersOk = hasAllMarkers(currentBody, [
+  const chainMarkersOk = !shouldHaveSeriesChain || hasAllMarkers(currentBody, [
     '<!-- pain-tracker:series-chain:start -->',
     '<!-- pain-tracker:series-chain:end -->',
+  ]);
+  const targetMarkersOk = !targetLinkSpec || hasAllMarkers(currentBody, [
+    '<!-- pain-tracker:target-link:start -->',
+    '<!-- pain-tracker:target-link:end -->',
+    targetLinkSpec.url,
   ]);
 
   return {
     body_markdown,
     currentTitle: String(current?.title ?? '').trim(),
-    currentSeries: String(current?.series ?? '').trim(),
+    currentSeries: typeof current?.series === 'string' ? current.series.trim() : '',
     hasFrontMatter: Boolean(fm),
     ctaMarkersOk,
     chainMarkersOk,
+    targetMarkersOk,
   };
+}
+
+function getPostsForSync(schedule, onlyKeys) {
+  if (onlyKeys) {
+    return schedule.posts
+      .filter((post) => matchesOnlyKeys(post, onlyKeys))
+      .slice()
+      .sort((a, b) => Date.parse(a.publishAt) - Date.parse(b.publishAt));
+  }
+
+  return schedule.posts
+    .filter((post) => post?.enabled)
+    .slice()
+    .sort((a, b) => Date.parse(a.publishAt) - Date.parse(b.publishAt));
+}
+
+function getSeriesChainContext({ schedule, post, config }) {
+  const desiredSeries = resolvePostSeriesName(post, config);
+  const profile = resolveSeriesProfile(post, config);
+  const chainKey = resolvePostSeriesChain(post, config);
+
+  if (!desiredSeries) {
+    return { desiredSeries, partLabel: null, nextUpUrl: null, seriesStartUrl: null };
+  }
+
+  const chainPosts = getOrderedSeriesPosts({ schedule, config, chainKey, profile });
+  const seriesStartUrl = resolveSeriesStartUrl({ schedule, config, profile, orderedPosts: chainPosts });
+
+  if (!chainKey) {
+    return { desiredSeries, partLabel: null, nextUpUrl: null, seriesStartUrl };
+  }
+
+  const index = chainPosts.findIndex((entry) => entry?.key === post?.key);
+  const partLabel = index >= 0 ? `Part ${index + 1}` : null;
+  const nextUpUrl = index >= 0 ? chainPosts[index + 1]?.devtoUrl ?? null : null;
+
+  return { desiredSeries, partLabel, nextUpUrl, seriesStartUrl };
 }
 
 async function processSyncSchedulePost({ post, allCache, now, yes, allowPast }) {
@@ -1148,7 +1444,7 @@ async function processSyncTitlePost({ post, allCache, now, yes, allowPublished }
   }
 
   const currentTitle = String(resolved.current?.title ?? '').trim();
-  if (currentTitle === desiredTitleRaw) {
+  if (normalizeDevComparableTitle(currentTitle) === normalizeDevComparableTitle(desiredTitleRaw)) {
     console.log(`OK (title matches): ${desiredTitleRaw}`);
     return buildCountResult({ linked: linkedCount(resolved) });
   }
@@ -1200,9 +1496,6 @@ async function processPushSourcePost({ post, allCache, now, yes, allowPublished,
 
   const payload = buildArticleUpsertPayload(post, body_markdown, config, {
     currentArticle: resolved.current,
-    article: {
-      series: config.series ?? null,
-    },
   });
 
   const updated = await devtoRequest('PUT', `/articles/${post.articleId}`, payload);
@@ -1213,7 +1506,7 @@ async function processPushSourcePost({ post, allCache, now, yes, allowPublished,
   return { pushed: 1, linked: resolved.linked ? 1 : 0, skipped: 0 };
 }
 
-async function processSyncContentPost({ post, allCache, now, yes, allowPublished, config, seriesName, seriesStartUrl, nextUpUrl, partLabel }) {
+async function processSyncContentPost({ post, allCache, now, yes, allowPublished, config, desiredSeries, seriesStartUrl, nextUpUrl, partLabel, targetLinkSpec }) {
   const titleState = getRequiredTitleOrSkip(post);
   if (titleState.result) return titleState.result;
   const { desiredTitleRaw } = titleState;
@@ -1237,14 +1530,16 @@ async function processSyncContentPost({ post, allCache, now, yes, allowPublished
     post,
     current: resolved.current,
     config,
-    seriesName,
+    desiredSeries,
     seriesStartUrl,
     nextUpUrl,
     partLabel,
+    targetLinkSpec,
   });
-  const needsTitle = contentState.currentTitle !== desiredTitleRaw;
-  const needsSeries = contentState.currentSeries !== seriesName;
-  const needsBody = !(contentState.ctaMarkersOk && contentState.chainMarkersOk) || contentState.hasFrontMatter;
+  const needsTitle = normalizeDevComparableTitle(contentState.currentTitle) !== normalizeDevComparableTitle(desiredTitleRaw);
+  const currentSeries = contentState.currentSeries || null;
+  const needsSeries = shouldTreatSeriesAsDrift({ currentSeries, desiredSeries });
+  const needsBody = !(contentState.ctaMarkersOk && contentState.chainMarkersOk && contentState.targetMarkersOk) || contentState.hasFrontMatter;
 
   if (!(needsTitle || needsSeries || needsBody)) {
     console.log(`OK (content matches): ${desiredTitleRaw}`);
@@ -1263,7 +1558,7 @@ async function processSyncContentPost({ post, allCache, now, yes, allowPublished
     currentArticle: resolved.current,
     article: {
       title: desiredTitleRaw,
-      series: seriesName,
+      series: desiredSeries,
     },
   });
   const updated = await devtoRequest('PUT', `/articles/${post.articleId}`, payload);
@@ -1280,6 +1575,101 @@ function buildCtaArgs(config) {
 
 function buildSyncContentChangeList({ needsTitle, needsSeries, needsBody }) {
   return [needsTitle ? 'title' : null, needsSeries ? 'series' : null, needsBody ? 'body' : null].filter(Boolean);
+}
+
+function shouldTreatSeriesAsDrift({ currentSeries, desiredSeries }) {
+  if (!desiredSeries) return false;
+  if (!currentSeries) return false;
+  return currentSeries !== desiredSeries;
+}
+
+function buildSeriesReportGroupLabel({ profile, desiredSeries }) {
+  if (profile?.key) return `${profile.key} (${desiredSeries ?? 'no-series'})`;
+  return desiredSeries ?? 'standalone';
+}
+
+async function cmdSeriesReport(schedule, { onlyKeys }) {
+  const config = {
+    schedule,
+    seriesStartUrl: process.env.DEVTO_SERIES_START_URL ?? schedule.defaults?.series_start_url ?? null,
+    series: process.env.DEVTO_SERIES ?? schedule.defaults?.series ?? null,
+  };
+
+  const scopedPosts = (schedule.posts ?? [])
+    .filter((post) => matchesOnlyKeys(post, onlyKeys))
+    .filter((post) => resolvePostSeriesName(post, config));
+
+  if (scopedPosts.length === 0) {
+    console.log('No schedule-mapped posts with a configured series matched the current scope.');
+    return;
+  }
+
+  const groups = new Map();
+
+  for (const post of scopedPosts) {
+    const desiredSeries = resolvePostSeriesName(post, config);
+    const profile = resolveSeriesProfile(post, config);
+    const groupKey = profile?.key ?? desiredSeries;
+    const chainContext = getSeriesChainContext({ schedule, post, config });
+    const liveArticle = post.articleId ? await getArticleById(post.articleId) : null;
+    const collectionId = liveArticle?.collection_id ?? null;
+
+    if (!groups.has(groupKey)) {
+      groups.set(groupKey, {
+        label: buildSeriesReportGroupLabel({ profile, desiredSeries }),
+        desiredSeries,
+        seriesStartUrl: chainContext.seriesStartUrl,
+        items: [],
+      });
+    }
+
+    groups.get(groupKey).items.push({
+      key: post.key,
+      title: post.title,
+      articleId: post.articleId ?? null,
+      devtoUrl: post.devtoUrl ?? liveArticle?.url ?? null,
+      collectionId,
+      partLabel: chainContext.partLabel,
+      nextUpUrl: chainContext.nextUpUrl,
+    });
+  }
+
+  const collectionUsage = new Map();
+  for (const group of groups.values()) {
+    const collectionIds = [...new Set(group.items.map((item) => item.collectionId).filter(Boolean))];
+    for (const collectionId of collectionIds) {
+      if (!collectionUsage.has(collectionId)) {
+        collectionUsage.set(collectionId, new Set());
+      }
+      collectionUsage.get(collectionId).add(group.label);
+    }
+  }
+
+  for (const group of groups.values()) {
+    const collectionIds = [...new Set(group.items.map((item) => item.collectionId).filter(Boolean))];
+    console.log(`Series: ${group.label}`);
+    console.log(`  desired: ${group.desiredSeries}`);
+    console.log(`  start-here: ${group.seriesStartUrl ?? '(none)'}`);
+    console.log(`  collection_ids: ${collectionIds.length > 0 ? collectionIds.join(', ') : '(none from API)'}`);
+    console.log(`  items: ${group.items.length}`);
+
+    for (const item of group.items) {
+      console.log(`  - ${item.key}`);
+      console.log(`    title: ${item.title}`);
+      console.log(`    articleId: ${item.articleId ?? '(none)'}`);
+      console.log(`    collectionId: ${item.collectionId ?? '(none)'}`);
+      console.log(`    part: ${item.partLabel ?? '(none)'}`);
+      console.log(`    next: ${item.nextUpUrl ?? '(none)'}`);
+      console.log(`    url: ${item.devtoUrl ?? '(none)'}`);
+    }
+
+    console.log('');
+  }
+
+  for (const [collectionId, labels] of collectionUsage.entries()) {
+    if (labels.size < 2) continue;
+    console.log(`Warning: collection_id ${collectionId} is shared by ${[...labels].join(', ')}`);
+  }
 }
 
 async function writePinnedCommentsFile(items) {
@@ -1503,27 +1893,15 @@ async function cmdSyncContent(schedule, { yes, write, allowPublished, onlyKeys }
   let skipped = 0;
 
   const config = getDevtoPublishConfig(schedule);
-  const seriesName = config.series;
-  if (!seriesName) {
-    throw new Error('Missing series name. Set DEVTO_SERIES (or schedule.defaults.series).');
-  }
+
+  const syncPosts = getPostsForSync(schedule, onlyKeys);
+  validateSyncTargetLinkCoverage(syncPosts, config);
 
   const allCache = await listAllUserArticles();
 
-  // Determine ordering for Part X and Next up links.
-  const enabled = schedule.posts
-    .filter((p) => p?.enabled)
-    .slice()
-    .sort((a, b) => Date.parse(a.publishAt) - Date.parse(b.publishAt));
-
-  const seriesStartUrl =
-    config.seriesStartUrl || (typeof enabled[0]?.devtoUrl === 'string' ? enabled[0].devtoUrl : null) || null;
-
-  for (let i = 0; i < enabled.length; i += 1) {
-    const post = enabled[i];
-    if (!matchesOnlyKeys(post, onlyKeys)) continue;
-    const partLabel = `Part ${i + 1}`;
-    const nextUpUrl = enabled[i + 1]?.devtoUrl ?? null;
+  for (const post of syncPosts) {
+    const chainContext = getSeriesChainContext({ schedule, post, config });
+    const targetLinkSpec = resolvePostTargetLinkSpec(post, config);
 
     const result = await processSyncContentPost({
       post,
@@ -1532,10 +1910,11 @@ async function cmdSyncContent(schedule, { yes, write, allowPublished, onlyKeys }
       yes,
       allowPublished,
       config,
-      seriesName,
-      seriesStartUrl,
-      nextUpUrl,
-      partLabel,
+      desiredSeries: chainContext.desiredSeries,
+      seriesStartUrl: chainContext.seriesStartUrl,
+      nextUpUrl: chainContext.nextUpUrl,
+      partLabel: chainContext.partLabel,
+      targetLinkSpec,
     });
     changed += result.changed;
     linked += result.linked;
@@ -1565,7 +1944,7 @@ async function cmdPushSource(schedule, { yes, write, allowPublished, onlyKeys })
 
   for (const post of schedule.posts) {
     if (!matchesOnlyKeys(post, onlyKeys)) continue;
-    if (!post.enabled) continue;
+    if (!onlyKeys && !post.enabled) continue;
 
     const result = await processPushSourcePost({ post, allCache, now, yes, allowPublished, config });
     pushed += result.pushed;
@@ -1606,7 +1985,7 @@ function getRetrofitContext(schedule, retrofit) {
   const sponsorUrl =
     process.env.DEVTO_SPONSOR_URL ?? retrofit?.defaults?.sponsor_url ?? schedule.defaults?.sponsor_url ?? null;
   const tryUrl =
-    process.env.DEVTO_TRY_URL ?? retrofit?.defaults?.try_url ?? schedule.defaults?.try_url ?? 'https://paintracker.ca';
+    process.env.DEVTO_TRY_URL ?? retrofit?.defaults?.try_url ?? schedule.defaults?.try_url ?? 'https://crisiscore-systems.ca';
   const startHereUrl = resolveRetrofitStartHereUrl(retrofit, schedule);
   const trustBullets =
     (Array.isArray(retrofit?.defaults?.trust_bullets) ? retrofit.defaults.trust_bullets : null) ?? [
@@ -1958,6 +2337,10 @@ async function runCommand(cmd, schedule, args, onlyKeys) {
     console.log(`OK: authenticated as ${me?.username ?? me?.name ?? '(unknown)'}`);
     return;
   }
+  if (cmd === 'series-report') {
+    await cmdSeriesReport(schedule, { onlyKeys });
+    return;
+  }
   if (cmd === 'create-drafts') {
     await cmdCreateDrafts(schedule, { write: Boolean(args.write), onlyKeys });
     return;
@@ -2034,7 +2417,7 @@ async function cmdPublishStartHere(schedule, { yes, write, writeMd }) {
 
   const sponsorUrl = process.env.DEVTO_SPONSOR_URL ?? retrofit?.defaults?.sponsor_url ?? schedule.defaults?.sponsor_url ?? null;
   const repoUrl = process.env.DEVTO_REPO_URL ?? schedule.defaults?.repo_url ?? retrofit?.defaults?.repo_url ?? null;
-  const tryUrl = process.env.DEVTO_TRY_URL ?? 'https://paintracker.ca';
+  const tryUrl = process.env.DEVTO_TRY_URL ?? schedule.defaults?.try_url ?? retrofit?.defaults?.try_url ?? 'https://crisiscore-systems.ca';
 
   if (!sponsorUrl) throw new Error('Missing sponsor URL. Set DEVTO_SPONSOR_URL (or retrofit.defaults.sponsor_url).');
   if (!repoUrl) throw new Error('Missing repo URL. Set DEVTO_REPO_URL (or schedule.defaults.repo_url).');
@@ -2178,13 +2561,26 @@ async function main() {
   await runCommand(cmd, schedule, args, onlyKeys);
 }
 
-try {
-  await main();
-} catch (err) {
-  console.error(err?.message ?? err);
-  if (err?.details) {
-    console.error(JSON.stringify(err.details, null, 2));
+const isDirectRun = process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href;
+
+export {
+  buildSyncContentState,
+  getSeriesChainContext,
+  normalizeDevComparableTitle,
+  resolvePostSeriesName,
+  resolveSeriesProfile,
+  shouldTreatSeriesAsDrift,
+};
+
+if (isDirectRun) {
+  try {
+    await main();
+  } catch (err) {
+    console.error(err?.message ?? err);
+    if (err?.details) {
+      console.error(JSON.stringify(err.details, null, 2));
+    }
+    logAuthTroubleshooting(err?.message);
+    process.exitCode = 1;
   }
-  logAuthTroubleshooting(err?.message);
-  process.exitCode = 1;
 }

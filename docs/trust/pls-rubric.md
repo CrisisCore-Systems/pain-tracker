@@ -4,19 +4,23 @@ Score each release candidate using evidence-backed criteria.
 
 ## Dimensions
 
-1. Reversibility
+### Reversibility
+
 - Can risky changes be rolled back safely?
 - Are migrations bounded and recoverable?
 
-2. Exposure Minimization
+### Exposure Minimization
+
 - Did the release reduce or hold steady on sensitive data exposure?
 - Are logs and analytics non-reconstructive?
 
-3. Local Authority
+### Local Authority
+
 - Does the user keep control over local data and export boundaries?
 - Did any new remote dependency or egress path appear?
 
-4. Auditability
+### Auditability
+
 - Are claims mapped to tests, docs, and scenario receipts?
 - Are security-critical changes explicitly reviewed?
 

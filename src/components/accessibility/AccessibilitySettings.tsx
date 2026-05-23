@@ -107,7 +107,7 @@ export function AccessibilitySettingsPanel() {
         <div className="flex space-x-2">
           <button
             onClick={resetToDefaults}
-            className="inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-all bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-600 dark:text-slate-400 hover:bg-gray-200 dark:hover:bg-white/10"
+            className="inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-all bg-gray-100 dark:bg-white/10 border border-gray-200 dark:border-white/10 text-gray-600 dark:text-slate-300 hover:bg-gray-200 dark:hover:bg-white/20"
           >
             <RotateCcw className="w-4 h-4 mr-2" />
             Reset
@@ -540,7 +540,7 @@ function SettingGroup({
       className="rounded-xl p-4 bg-gray-50 dark:bg-slate-900/50 border border-gray-100 dark:border-white/5"
     >
       <div className="flex items-start space-x-3 mb-4">
-        <div className="p-1.5 rounded-lg bg-gray-100 dark:bg-white/5">
+        <div className="p-1.5 rounded-lg bg-gray-100 dark:bg-white/10">
           {icon}
         </div>
         <div>

@@ -10,15 +10,22 @@ ogImage: https://cdn.hashnode.com/res/hashnode/image/upload/v1763006218887/07a02
 
 ---
 
+<!-- markdownlint-disable-file MD009 MD012 MD013 MD022 MD025 MD026 MD033 -->
+
 <!-- pain-tracker:product-hunt-badge:start -->
 <a href="https://www.producthunt.com/products/pain-tracker?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-pain-tracker" target="_blank" rel="noopener noreferrer"><img alt="Pain Tracker - Privacy-first PWA for chronic pain tracking & management | Product Hunt" width="250" height="54" src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1063103&theme=dark" /></a>
 <!-- pain-tracker:product-hunt-badge:end -->
 
 > **View WorkSafeBC Guide ->** [WorkSafeBC Documentation Workflows](https://blog.paintracker.ca/worksafebc)
 
-# Generate WorkSafeBC-Ready Documentation with Pain Tracker
-
 This guide explains how to produce WorkSafeBC-ready documentation from structured pain records while keeping health data local on your device.
+
+If you want to build the record first, start with the [Daily Pain Tracker
+Printable](https://www.paintracker.ca/resources/daily-pain-tracker-printable),
+the [What to Include in a Pain
+Journal](https://www.paintracker.ca/resources/what-to-include-in-pain-journal),
+or the [Doctor Visit Pain Summary
+Template](https://www.paintracker.ca/resources/doctor-visit-pain-summary-template).
 
 ## The Paperwork Problem Every Claimant Faces
 

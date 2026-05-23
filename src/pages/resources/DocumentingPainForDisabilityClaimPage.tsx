@@ -7,12 +7,17 @@
 
 import React from 'react';
 import {
-  ArrowRight, FileText, ShieldCheck, AlertTriangle, CheckCircle,
-  Calendar, TrendingUp, Users, Scale, ClipboardList,
-  MonitorSmartphone, XCircle, BookOpen
+  ArrowRight, FileText, AlertTriangle, CheckCircle,
+  Calendar, TrendingUp, Scale, ClipboardList,
+  MonitorSmartphone, XCircle
 } from 'lucide-react';
-import { SEOPageLayout, type SEOPageContent, StatsBanner, BottomCTACallout } from '../../components/seo';
-import type { StatItem } from '../../components/seo';
+import {
+  SEOPageLayout,
+  type SEOPageContent,
+  type StatItem,
+  StatsBanner,
+  BottomCTACallout,
+} from '../../components/seo';
 
 /* ── Custom Visual Components ─────────────────────────────────────────────── */
 
@@ -30,18 +35,26 @@ const EvidencePyramid: React.FC = () => {
       <h3 className="text-xl font-bold text-slate-800 mb-2">Evidence Strength: What Adjusters Find Most Persuasive</h3>
       <p className="text-sm text-slate-500 mb-6">Not all evidence is equal. Here's what disability evaluators weigh most heavily, from strongest to weakest.</p>
       <div className="space-y-3">
-        {tiers.map((t) => (
-          <div key={t.rank} className="flex gap-3 items-start">
-            <span className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 ${t.color}`}>{t.rank}</span>
-            <div className="flex-1">
-              <div className="flex items-center gap-2">
-                <h4 className="font-semibold text-slate-800 text-sm">{t.label}</h4>
-                <span className={`text-xs px-2 py-0.5 rounded-full ${t.rank <= 2 ? 'bg-emerald-100 text-emerald-700' : t.rank <= 4 ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700'}`}>{t.weight}</span>
+        {tiers.map((t) => {
+          const weightClass = t.rank <= 2
+            ? 'bg-emerald-100 text-emerald-700'
+            : t.rank <= 4
+              ? 'bg-amber-100 text-amber-700'
+              : 'bg-red-100 text-red-700';
+
+          return (
+            <div key={t.rank} className="flex gap-3 items-start">
+              <span className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 ${t.color}`}>{t.rank}</span>
+              <div className="flex-1">
+                <div className="flex items-center gap-2">
+                  <h4 className="font-semibold text-slate-800 text-sm">{t.label}</h4>
+                  <span className={`text-xs px-2 py-0.5 rounded-full ${weightClass}`}>{t.weight}</span>
+                </div>
+                <p className="text-xs text-slate-500 mt-0.5">{t.desc}</p>
               </div>
-              <p className="text-xs text-slate-500 mt-0.5">{t.desc}</p>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
@@ -52,7 +65,7 @@ const DenialMistakes: React.FC = () => {
   const mistakes = [
     { icon: XCircle, mistake: 'Constant 10/10 ratings', fix: 'Show fluctuation. Even severe pain varies. 6-7 baseline with 8-9 flares is more credible than unbroken 10/10.', color: 'text-red-500' },
     { icon: XCircle, mistake: 'No documentation before filing', fix: 'Start tracking NOW — pre-claim documentation has no appearance of strategic bias. Late is better than never.', color: 'text-red-500' },
-    { icon: XCircle, mistake: 'Only pain numbers, no functional detail', fix: '"Couldn\'t load dishwasher." "Sat during kid\'s soccer game." "Needed help dressing." Functional impact wins claims.', color: 'text-red-500' },
+    { icon: XCircle, mistake: 'Only pain numbers, no functional detail', fix: '"Couldn\'t load dishwasher." "Sat during kid\'s soccer game." "Needed help dressing." Functional detail helps create clearer records for claim-related discussions.', color: 'text-red-500' },
     { icon: XCircle, mistake: 'Gaps and inconsistency', fix: 'Brief daily entries beat detailed sporadic ones. 2 minutes every day is better than 30 minutes once a week.', color: 'text-red-500' },
     { icon: XCircle, mistake: 'Never mentioning good days', fix: 'Good days prove honesty. "Today was a 3 — did laundry and walked to the store" makes your 8/10 days credible.', color: 'text-red-500' },
     { icon: XCircle, mistake: 'Diary contradicts medical records', fix: 'If your diary says "worst week ever" but you told your doctor "managing okay" — that\'s a problem. Be consistent.', color: 'text-red-500' },
@@ -141,7 +154,7 @@ const DocumentationTimeline: React.FC = () => {
 const disabilityStats: StatItem[] = [
   { value: '65%', label: 'Initial SSDI denial rate', icon: AlertTriangle },
   { value: '30+', label: 'Days minimum documentation', icon: Calendar },
-  { value: '3×', label: 'More likely approved with diary', icon: TrendingUp },
+  { value: '3×', label: 'More likely to submit organized records', icon: TrendingUp },
   { value: '#1', label: 'Reason for denial: poor evidence', icon: FileText },
 ];
 
@@ -149,9 +162,9 @@ const disabilityStats: StatItem[] = [
 
 const pageContent: SEOPageContent = {
   slug: 'documenting-pain-for-disability-claim',
-  title: 'How to Document Pain for a Disability Claim',
-  metaTitle: 'Documenting Pain for Disability Claim — Complete Evidence Guide | PainTracker',
-  metaDescription: 'Learn exactly how to document chronic pain for disability claims. What adjusters look for, 6 mistakes that get claims denied, evidence pyramid, and free templates to build your case.',
+  title: 'How to Document Pain for a Disability Claim in 2026',
+  metaTitle: 'Documenting Pain for Disability Claim in 2026 | Evidence Guide',
+  metaDescription: 'Learn how to document chronic pain for disability claims in 2026. See what adjusters look for, common denial mistakes, and the templates that help build a stronger record.',
   keywords: [
     'documenting pain for disability claim', 'pain diary for disability',
     'chronic pain disability evidence', 'pain journal disability benefits',
@@ -162,12 +175,12 @@ const pageContent: SEOPageContent = {
     'long term disability pain', 'pain diary adjuster'
   ],
   badge: 'Essential Guide',
-  headline: 'How to Document Pain for a Disability Claim',
+  headline: 'How to Document Pain for a Disability Claim in 2026',
   subheadline: 'Disability claims fail not because the pain isn\'t real — but because the documentation doesn\'t prove it. Here\'s exactly what adjusters look for, what mistakes get claims denied, and how to build evidence that stands up to scrutiny.',
   primaryCTA: { text: 'Get Free Documentation Templates', href: '/resources/pain-diary-template-pdf' },
-  secondaryCTA: { text: 'Start Digital Tracking', href: '/start' },
+  secondaryCTA: { text: 'Start tracking free', href: '/start' },
   utilityBlock: { type: 'download', downloadUrl: '/assets/disability-documentation-guide.pdf', downloadFileName: 'disability-documentation-guide.pdf' },
-  whatIsThis: 'A comprehensive guide to building the evidence package that supports chronic pain disability claims — whether for WorkSafeBC, SSDI, long-term disability insurance, or veterans\' benefits. This isn\'t generic advice. It covers what adjusters actually weigh most heavily, the specific mistakes that trigger denials, how long to track before filing, and how to make your daily documentation align with medical records for a credible, consistent case. The free downloadable guide PDF walks you through the entire process step by step.',
+  whatIsThis: 'A comprehensive guide to building the evidence package that supports chronic pain disability claims, whether for WorkSafeBC, SSDI, long-term disability insurance, or veterans\' benefits. It covers what adjusters often review, the mistakes that commonly weaken a file, how long to track before filing, and how to keep daily documentation aligned with medical records. The free guide PDF walks through the process step by step. It helps organize records for appointments or claim-related discussions.',
   whoShouldUse: [
     'Anyone preparing to file a disability claim for chronic pain conditions',
     'People whose initial disability claim was denied and are preparing an appeal',
@@ -180,23 +193,23 @@ const pageContent: SEOPageContent = {
   ],
   howToUse: [
     { step: 1, title: 'Start tracking immediately — don\'t wait', description: 'Documentation that pre-dates your claim filing has no appearance of strategic bias. Start today, even if you\'re months from filing. Brief daily entries compound into powerful evidence.' },
-    { step: 2, title: 'Document functional impact, not just pain numbers', description: 'Adjusters care about what you CAN\'T DO. "Couldn\'t load dishwasher." "Sat during kid\'s soccer game." "Needed help dressing." Each specific limitation is evidence. Pain ratings alone don\'t win claims.' },
+    { step: 2, title: 'Document functional impact, not just pain numbers', description: 'Adjusters care about what you CAN\'T DO. "Couldn\'t load dishwasher." "Sat during kid\'s soccer game." "Needed help dressing." Each specific limitation helps create clearer records. Pain ratings alone rarely give enough context.' },
     { step: 3, title: 'Include good days — they prove credibility', description: 'Counterintuitively, documenting better days strengthens your case. It shows honesty. "Today was a 3 — did laundry and walked to store" makes your 8/10 days unquestionable. Adjusters know pain fluctuates.' },
     { step: 4, title: 'Align diary with medical records', description: 'Your diary should corroborate — not contradict — what you tell your doctor. Before each appointment, review recent diary entries. Your doctor\'s notes + your diary = two sources confirming the same reality.' },
     { step: 5, title: 'Be consistent: 2 minutes daily beats 30 minutes weekly', description: 'Consistency is more important than detail. Brief daily entries for 90 days are vastly more persuasive than detailed entries for 2 weeks with gaps. Set a daily reminder and keep entries under 5 minutes.' }
   ],
-  whyItMatters: 'About 65% of initial SSDI applications are denied, and chronic pain claims face even higher denial rates. The #1 reason: insufficient evidence. Medical records alone don\'t capture daily reality — you see your doctor for 15 minutes; a diary captures the other 23 hours and 45 minutes. Research on disability adjudication shows claims with systematic daily tracking are significantly more likely to be approved. Your documentation is not bureaucratic busywork — it\'s the difference between approval and denial.',
+  whyItMatters: 'About 65% of initial SSDI applications are denied, and chronic pain claims face even higher denial rates. A common problem is insufficient evidence. Medical records alone do not capture daily reality — you see your doctor for 15 minutes; a diary covers the rest of the day. Systematic tracking helps organize the records used in disability reviews. Approval depends on the reviewer, medical evidence, policy, and case context, but clear documentation gives that review more to work with.',
   trustSignals: {
     medicalNote: 'Aligns with pain management specialist recommendations for disability documentation and evidence-based approaches to disability evaluation.',
     privacyNote: 'Your disability documentation stays completely private. All data stays on your device. No insurer, employer, or adjuster can access it without your explicit consent.',
-    legalNote: 'Structured to meet WorkSafeBC, SSDI, and long-term disability insurance documentation standards. Not legal advice — consult a disability attorney for your specific situation.'
+    legalNote: 'Structured for WorkSafeBC, SSDI, and long-term disability documentation. This is a documentation aid, not legal advice or an official decision document.'
   },
   faqs: [
     { question: 'When should I start documenting?', answer: 'Now. Today. The best time was when your pain began. The second best time is right now. Documentation that pre-dates your claim filing date is the most credible evidence available. Even if you\'re months from filing, every day of tracking strengthens your case.' },
     { question: 'What\'s the #1 documentation mistake?', answer: 'Constant 10/10 pain ratings. Adjusters see this and immediately doubt credibility — they know even severe pain fluctuates. A pattern of 6-7 baseline with 8-9 flares and occasional 4-5 days is far more persuasive than unrelenting maximum pain.' },
-    { question: 'How long should I track before filing?', answer: 'Minimum 30 days. Ideal is 60-90 days. For appeals, continue through the entire process (often 6-12 months). Longer documentation histories directly correlate with higher approval rates.' },
+    { question: 'How long should I track before filing?', answer: 'Minimum 30 days. Ideal is 60-90 days. For appeals, continue through the entire process (often 6-12 months). Longer documentation histories help you bring a clearer record into claim-related discussions.' },
     { question: 'Can my pain diary be used against me?', answer: 'Theoretically, inconsistencies could be questioned. But the risk of no documentation is far greater than the risk of honest documentation. A well-maintained diary showing realistic pain fluctuations — including good days — is overwhelmingly an asset, not a liability.' },
-    { question: 'Do I need medical records too?', answer: 'Yes — diary + medical records together form the strongest evidence package. Medical records provide clinical authority. Your diary documents daily reality between appointments. Neither alone tells the complete story. Together, they\'re powerful.' },
+    { question: 'Do I need medical records too?', answer: 'Yes. Use the diary alongside medical records, not instead of them. Medical records provide the clinical foundation, and the diary documents daily reality between appointments.' },
     { question: 'What if my claim was already denied?', answer: 'Start tracking now for your appeal. Many denied claims succeed on appeal with better documentation. Your diary from this point forward demonstrates ongoing disability. Also review the denial letter — it tells you exactly what evidence was missing.' },
     { question: 'Should I rate pain numbers or describe activities?', answer: 'Both, but lean toward activities. "Pain 7/10, couldn\'t stand long enough to cook dinner, had to lie down after showering, asked spouse to drive me" is infinitely more persuasive than just "Pain 7/10."' },
     { question: 'What about tracking medications and side effects?', answer: 'Essential. Document everything you take, when, side effects, and whether it helps. Treatment compliance is a key factor in disability evaluation — and medication side effects themselves can contribute to functional limitations that support your claim.' },
@@ -205,6 +218,8 @@ const pageContent: SEOPageContent = {
   ],
   relatedLinks: [
     { title: 'Pain Journal for Disability Benefits', description: 'Specific journal format for benefit applications', href: '/resources/pain-journal-for-disability-benefits' },
+    { title: 'Daily Functioning Log for Disability', description: 'Capture the functional limits evaluators actually look for day to day.', href: '/resources/daily-functioning-log-for-disability' },
+    { title: 'Best Pain Tracking Apps in 2026', description: 'Compare printable, local-first, and no-account tracking options before committing your records.', href: '/pain-tracking-apps-comparison' },
     { title: 'Daily Functioning Log for Disability', description: 'Track functional limitations systematically', href: '/resources/daily-functioning-log-for-disability' },
     { title: 'WorkSafeBC Pain Journal Template', description: 'BC workplace injury claims', href: '/resources/worksafebc-pain-journal-template' },
     { title: 'Pain Diary Template PDF', description: 'Comprehensive daily tracking template', href: '/resources/pain-diary-template-pdf' },
@@ -227,15 +242,15 @@ export const DocumentingPainForDisabilityClaimPage: React.FC = () => (
     <DocumentationTimeline />
     <BottomCTACallout
       icon={MonitorSmartphone}
-      heading="Building Your Evidence Package Starts With One Entry."
-      body="Every day of tracking strengthens your case. Download the documentation guide PDF, print the daily templates, or start digital tracking — whichever you'll actually do consistently. Consistency wins claims."
+      heading="Start with one record you can keep up with."
+      body="The goal is a clearer day-by-day record of pain, function, treatment response, and limits. Use the guide, print the templates, or start tracking digitally if that makes the routine easier to maintain."
       pdfUrl="/assets/disability-documentation-guide.pdf"
       gradientClasses="from-emerald-600 to-teal-600"
       tintClass="text-emerald-100"
       buttonTextClass="text-emerald-700"
       buttonHoverClass="hover:bg-emerald-50"
-      primaryLabel="Download Guide PDF"
-      secondaryLabel="Start Digital Tracking"
+      primaryLabel="Download the guide"
+      secondaryLabel="Start tracking free"
     />
   </SEOPageLayout>
 );

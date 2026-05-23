@@ -16,6 +16,8 @@ Owner:
 
 - Unit/integration tests run:
 - Accessibility checks run:
+- WCAG claim evidence packet (if claim is public):
+- Manual AT validation status/sign-off:
 - Sensitive-path human review links:
 - Interlock status (`Soft`/`Hard`/`None`):
 - Pv snapshot reference:

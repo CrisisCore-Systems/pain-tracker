@@ -1,4 +1,4 @@
-import handler from '../../../../api/landing/testimonials';
+import handler from '../../../../api/landing/[...route]';
 import type { VercelRequest } from '../../../types/vercel';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { db } from '../../../../src/lib/database';
@@ -31,7 +31,7 @@ describe('GET /api/landing/testimonials', () => {
   });
 
   it('returns 401 if not admin', async () => {
-    const req = { method: 'GET', headers: {}, query: {} } as unknown as VercelRequest;
+    const req = { method: 'GET', headers: {}, query: { route: ['testimonials'] }, url: '/api/landing/testimonials' } as unknown as VercelRequest;
     const res = createMockRes();
     await handler(req as never, res as never);
   expect(res._status).toBe(401);
@@ -41,7 +41,7 @@ describe('GET /api/landing/testimonials', () => {
   it('returns testimonials for admin', async () => {
     const fakeRows = [{ id: 1, quote: 'test' }];
     const querySpy = vi.spyOn(db, 'query').mockResolvedValueOnce(fakeRows);
-  const req = { method: 'GET', headers: { authorization: 'Bearer test-admin-key' }, query: {} } as unknown as VercelRequest;
+  const req = { method: 'GET', headers: { authorization: 'Bearer test-admin-key' }, query: { route: ['testimonials'] }, url: '/api/landing/testimonials' } as unknown as VercelRequest;
     const res = createMockRes();
     // Make fetch return successful admin verification
     const fetchMock = fetch as unknown as ReturnType<typeof vi.fn>;

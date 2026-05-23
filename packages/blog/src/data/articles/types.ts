@@ -25,6 +25,11 @@ export interface HowToStep {
   text: string;
 }
 
+export interface ComparisonTable {
+  columns: string[];
+  rows: string[][];
+}
+
 /**
  * Cross-domain internal linking for subdomain SEO architecture.
  *
@@ -57,10 +62,11 @@ export interface ArticleData {
   howToSteps?: HowToStep[];
   /** Cross-domain + internal linking directives (required for SEO) */
   internalLinks?: InternalLinks;
-  /** Optional resource-first links for patient-intent and lane-routing callouts */
+  /** High-intent utility links rendered near the opening copy */
   resourceLinks?: Array<{
-    title: string;
     href: string;
-    description?: string;
+    label: string;
+    description: string;
   }>;
+  comparisonTable?: ComparisonTable;
 }

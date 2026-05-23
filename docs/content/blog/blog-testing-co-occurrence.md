@@ -14,6 +14,8 @@ Crises don't queue politely. They stack. They interact. A pain spike triggers an
 
 This is how we learned to test for crisis co-occurrence.
 
+Start with [Cross-Crisis Calibration](/blog/cross-crisis-calibration) if you want the individual crisis signatures before combining them into overlapping states.
+
 ## The Co-Occurrence Problem
 
 When multiple crisis types occur simultaneously, we face several challenges:
@@ -721,6 +723,8 @@ When users face cascading crises, our system should be a calm anchor, not anothe
 ---
 
 *This is Part 11 of our series on building trauma-informed healthcare applications. Previous posts covered [crisis detection](/blog/false-positives-calibrating-crisis-detection), [testing strategies](/blog/testing-the-untestable), [recovery testing](/blog/testing-recovery), [cultural contexts](/blog/internationalization-of-trauma), and [validation](/blog/testing-the-testing).*
+
+Related reading: [Performance Under Pressure](/blog/performance-under-pressure) covers the 16ms budget that keeps co-occurring crisis detection from turning into interface lag.
 
 **Coming Next**: "Testing Privacy-Preserving Analytics: Verifying That Insights Don't Leak Identity"
 

@@ -7,12 +7,17 @@
 
 import React from 'react';
 import {
-  ArrowRight, Stethoscope, CheckCircle, TrendingUp,
+  Stethoscope, CheckCircle, TrendingUp,
   FileText, Brain, Activity, Pill, BarChart3,
   MonitorSmartphone, Eye, Users
 } from 'lucide-react';
-import { SEOPageLayout, type SEOPageContent, StatsBanner, BottomCTACallout } from '../../components/seo';
-import type { StatItem } from '../../components/seo';
+import {
+  SEOPageLayout,
+  type SEOPageContent,
+  type StatItem,
+  StatsBanner,
+  BottomCTACallout,
+} from '../../components/seo';
 
 /* ── Custom Visual Components ─────────────────────────────────────────────── */
 
@@ -89,8 +94,8 @@ const ResearchEvidence: React.FC = () => {
     <div className="my-10 rounded-2xl border border-slate-200 bg-white p-6 md:p-8">
       <h3 className="text-xl font-bold text-slate-800 mb-6">What Research Shows</h3>
       <div className="space-y-3">
-        {facts.map((f, i) => (
-          <div key={i} className="flex items-start gap-3 p-3 rounded-lg bg-sky-50 border border-sky-100">
+        {facts.map((f) => (
+          <div key={f.finding} className="flex items-start gap-3 p-3 rounded-lg bg-sky-50 border border-sky-100">
             <CheckCircle className="w-5 h-5 text-sky-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
             <div>
               <p className="text-sm text-slate-700 font-medium">{f.finding}</p>
@@ -115,7 +120,7 @@ const doctorStats: StatItem[] = [
 const pageContent: SEOPageContent = {
   slug: 'how-doctors-use-pain-diaries',
   title: 'How Doctors Use Pain Diaries',
-  metaTitle: 'How Doctors Use Pain Diaries — The Clinical Perspective | PainTracker',
+  metaTitle: 'How Doctors Use Pain Diaries — The Clinical Perspective | PainTracker.ca',
   metaDescription: 'Understand how doctors actually use pain diary data to make treatment decisions. 6 clinical uses, decision timeline, and how to make your tracking clinically useful.',
   keywords: [
     'how doctors use pain diaries', 'pain diary clinical use',
@@ -130,7 +135,7 @@ const pageContent: SEOPageContent = {
   headline: 'How Doctors Use Pain Diaries',
   subheadline: 'Your pain diary isn\'t just for you. Here\'s exactly how doctors use each piece of data to make treatment decisions, narrow diagnoses, and justify referrals — and why the diary you keep directly impacts the care you receive.',
   primaryCTA: { text: 'Download Free Pain Diary', href: '/resources/pain-diary-template-pdf' },
-  secondaryCTA: { text: 'Start Digital Tracking', href: '/start' },
+  secondaryCTA: { text: 'Start tracking free', href: '/start' },
   utilityBlock: { type: 'download', downloadUrl: '/assets/clinical-pain-diary-guide.pdf', downloadFileName: 'clinical-pain-diary-guide.pdf' },
   whatIsThis: 'An inside look at how healthcare providers actually use pain diary data in clinical practice. Most patients track pain because they were told to — but don\'t understand HOW their data changes clinical decisions. This guide maps every piece of diary data to its clinical use: pain trends drive medication adjustments, timing patterns narrow diagnoses, functional data justifies referrals, and sleep/mood data reveals co-occurring conditions. Understanding the clinical perspective makes your tracking more focused and more useful.',
   whoShouldUse: [
@@ -165,7 +170,7 @@ const pageContent: SEOPageContent = {
     { question: 'What if my diary contradicts what my doctor says?', answer: 'Your diary IS the data. If your doctor says "you seem fine" but your diary shows consistent 6-7/10 pain with significant functional limitations, the diary provides evidence for a second opinion or referral discussion. Data is powerful.' },
     { question: 'How do doctors use diaries for treatment evaluation?', answer: 'They compare pre-treatment and post-treatment data. If your average pain was 7 before starting a medication and is now 5, that\'s a clear response. If it hasn\'t changed after 6 weeks, it\'s time to try something else. Your diary provides the before/after comparison.' },
     { question: 'Do specialists use diaries differently than primary care?', answer: 'Yes. Pain specialists focus heavily on medication response and pain quality. Rheumatologists look at morning stiffness and joint patterns. Neurologists analyze pain descriptors and progression. Surgeons look at positional triggers. Know your audience.' },
-    { question: 'How does my diary help with insurance/prior auth?', answer: 'Insurance requires "medical necessity" for procedures, specialists, and expensive medications. Your diary documenting "failed conservative treatment for 6 weeks — pain unchanged at 7/10" is the evidence that gets prior authorizations approved.' },
+    { question: 'How does my diary help with insurance/prior auth?', answer: 'Insurance requires "medical necessity" for procedures, specialists, and expensive medications. Your diary documenting "failed conservative treatment for 6 weeks — pain unchanged at 7/10" can help organize the records often requested in prior authorization discussions.' },
     { question: 'Is there a "wrong" way to keep a pain diary?', answer: 'Yes: constant 10/10 with no variation looks unreliable. Not tracking medication response wastes the most useful data point. Very sporadic entries show no patterns. But honestly tracking — even imperfectly — is always better than not tracking at all.' }
   ],
   relatedLinks: [
@@ -191,16 +196,16 @@ export const HowDoctorsUsePainDiariesPage: React.FC = () => (
     <ResearchEvidence />
     <BottomCTACallout
       icon={MonitorSmartphone}
-      heading="Now That You Know What Doctors Need — Start Providing It."
-      body="Understanding the clinical use of your data makes tracking purposeful, not tedious. Every entry you make is a data point that drives better treatment decisions."
+      heading="Turn what you track into something your doctor can use."
+      body="A short, consistent record is easier to bring into appointments than trying to explain a month from memory. Start with a template or track digitally if that makes the routine easier to keep."
       pdfUrl="/resources/pain-diary-template-pdf"
       download={false}
       gradientClasses="from-sky-600 to-indigo-600"
       tintClass="text-sky-100"
       buttonTextClass="text-sky-700"
       buttonHoverClass="hover:bg-sky-50"
-      primaryLabel="Get Free Templates"
-      secondaryLabel="Start Digital Tracking"
+      primaryLabel="Get a free template"
+      secondaryLabel="Start tracking free"
     />
   </SEOPageLayout>
 );

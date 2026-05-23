@@ -9,7 +9,10 @@ tags: webdev, pwa, privacy, healthcare, typescript, indexeddb, local-first, offl
 
 ---
 
-# Local-First Pain Tracking: A Practical Blueprint for Private Health Data
+<!-- markdownlint-disable-file MD013 MD025 MD028 MD032 MD040 MD060 -->
+
+> Related reading:
+> This article builds on two earlier posts: [Why My Pain App Has No Backend: Lessons from Building Local-First Healthcare Software](https://blog.paintracker.ca/why-my-pain-app-has-no-backend-local-first-healthcare) and [Offline-First PWAs: Why They Matter for Crisis-Responsive Health Tech](https://blog.paintracker.ca/offline-first-pwas-crisis-responsive-health-tech)
 
 > **TL;DR:** This article walks through building a private-by-default health tracker using local storage as the source of truth. I'll cover the stack decisions, UX patterns that work for people having bad days, safety rails that actually matter, and a template architecture you can adapt for any sensitive health use case.
 

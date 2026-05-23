@@ -22,6 +22,14 @@ export interface ExportActivity {
   recordCount: number;
 }
 
+export interface SafeErrorEvent {
+  errorClass: string;
+  surface: string;
+  source: 'window-error' | 'unhandled-rejection' | 'manual';
+  timestamp: number;
+  metadata?: Record<string, unknown>;
+}
+
 function getPainBucket(level: unknown): 'mild' | 'moderate' | 'severe' | 'extreme' | undefined {
   if (typeof level !== 'number' || !Number.isFinite(level)) return undefined;
   if (level <= 2) return 'mild';
@@ -74,6 +82,26 @@ function sanitizeUsageMetadata(metadata?: Record<string, unknown>): Record<strin
   return Object.keys(out).length ? out : undefined;
 }
 
+function sanitizeErrorMetadata(metadata?: Record<string, unknown>): Record<string, unknown> | undefined {
+  if (!metadata) return undefined;
+
+  const out: Record<string, unknown> = {};
+  const allowedKeys = new Set([
+    'route',
+    'operation',
+    'statusCode',
+    'isRetryable',
+    'phase',
+  ]);
+
+  for (const [key, value] of Object.entries(metadata)) {
+    if (!allowedKeys.has(key)) continue;
+    out[key] = value;
+  }
+
+  return Object.keys(out).length ? out : undefined;
+}
+
 // ============================================
 // LOCAL STORAGE KEYS
 // ============================================
@@ -84,6 +112,7 @@ export const STORAGE_KEYS = {
   FEATURE_COUNTS: 'pain-tracker:feature-counts',
   NAV_PATTERNS: 'pain-tracker:nav-patterns',
   EXPORT_HISTORY: 'pain-tracker:export-history',
+  ERROR_EVENTS: 'pain-tracker:error-events',
 } as const;
 
 // ============================================
@@ -158,6 +187,39 @@ export function trackExport(
   const updated = [...exportHistory.slice(-99), activity];
   setStoredData(STORAGE_KEYS.EXPORT_HISTORY, updated);
   trackUsageEvent(`export_${type}`, 'export', { recordCount });
+}
+
+export function trackSafeError(
+  errorClass: string,
+  surface: string,
+  source: SafeErrorEvent['source'],
+  metadata?: Record<string, unknown>
+): void {
+  const safeMetadata = sanitizeErrorMetadata(metadata);
+  const events = getStoredData<SafeErrorEvent[]>(STORAGE_KEYS.ERROR_EVENTS, []);
+
+  const event: SafeErrorEvent = {
+    errorClass,
+    surface,
+    source,
+    timestamp: Date.now(),
+    metadata: safeMetadata,
+  };
+
+  // Keep a bounded local error history for troubleshooting without storing raw payloads.
+  const updatedEvents = [...events.slice(-199), event];
+  setStoredData(STORAGE_KEYS.ERROR_EVENTS, updatedEvents);
+
+  trackUsageEvent('error_visible', 'stability', {
+    errorClass,
+    surface,
+    source,
+    ...safeMetadata,
+  });
+}
+
+export function getSafeErrorEvents(): SafeErrorEvent[] {
+  return getStoredData<SafeErrorEvent[]>(STORAGE_KEYS.ERROR_EVENTS, []);
 }
 
 // ============================================

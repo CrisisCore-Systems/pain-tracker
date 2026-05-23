@@ -1,22 +1,24 @@
 import { useRef, useEffect, useState, useMemo } from 'react';
 import { FileText, Eye, FileDown } from 'lucide-react';
-import type { PainEntry } from '../../types';
-import type { WCBReport } from '../../types';
+import type { PainEntry, WCBReport } from '../../types';
 import { WCBReportGenerator } from '../pain-tracker/WCBReport';
 import { WCBReportPreview } from '../pain-tracker/WCBReportPreview';
 import { isFeatureEnabled } from '../../config/features';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../design-system';
 import { usePainTrackerStore } from '../../stores/pain-tracker-store';
 import { analyzeTreatmentChanges, analyzeWorkImpact } from '../../utils/wcbAnalytics';
+import { entitlementService } from '../../services/EntitlementService';
+import { UpgradeCard } from '../UpgradeCard';
 
 interface WCBReportPanelProps {
   entries: PainEntry[];
 }
 
-export function WCBReportPanel({ entries }: WCBReportPanelProps) {
+export function WCBReportPanel({ entries }: Readonly<WCBReportPanelProps>) {
   const { ui, setReportPeriod } = usePainTrackerStore();
   const startDateRef = useRef<HTMLInputElement>(null);
   const [showPreview, setShowPreview] = useState(false);
+  const hasWcbReports = entitlementService.hasEntitlement('reports_wcb_forms');
 
   // Focus management for WCB report
   useEffect(() => {
@@ -58,7 +60,7 @@ export function WCBReportPanel({ entries }: WCBReportPanelProps) {
 
     const accommodationsNeeded = Array.from(
       new Set(filteredEntries.flatMap(entry => entry.workImpact?.modifiedDuties ?? []))
-    ).sort();
+    ).sort((left, right) => left.localeCompare(right));
 
     return {
       id: `wcb-${Date.now().toString(36)}`,
@@ -86,6 +88,24 @@ export function WCBReportPanel({ entries }: WCBReportPanelProps) {
       recommendations: ['Continue monitoring pain levels', 'Follow up with healthcare provider'],
     };
   }, [showPreview, entries, ui.reportPeriod]);
+
+  if (!hasWcbReports) {
+    return <UpgradeCard moduleId="reports_wcb_forms" className="mb-8" />;
+  }
+
+  let reportContent: React.ReactNode;
+
+  if (isFeatureEnabled('workSafeBCExport')) {
+    reportContent = showPreview && wcbReport
+      ? <WCBReportPreview report={wcbReport} />
+      : <WCBReportGenerator entries={entries} period={ui.reportPeriod} />;
+  } else {
+    reportContent = (
+      <div className="text-sm text-muted-foreground p-4 bg-muted/5 rounded">
+        WorkSafe BC report export is not available in this release.
+      </div>
+    );
+  }
 
   return (
     <Card className="mb-8" id="wcb-report-section">
@@ -138,17 +158,7 @@ export function WCBReportPanel({ entries }: WCBReportPanelProps) {
             />
           </div>
         </div>
-        {isFeatureEnabled('workSafeBCExport') ? (
-          showPreview && wcbReport ? (
-            <WCBReportPreview report={wcbReport} />
-          ) : (
-            <WCBReportGenerator entries={entries} period={ui.reportPeriod} />
-          )
-        ) : (
-          <div className="text-sm text-muted-foreground p-4 bg-muted/5 rounded">
-            WorkSafe BC report export is not available in this release.
-          </div>
-        )}
+        {reportContent}
       </CardContent>
     </Card>
   );

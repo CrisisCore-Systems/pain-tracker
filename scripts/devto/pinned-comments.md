@@ -2,7 +2,7 @@
 
 > Note: Forem API v1 does not expose endpoints to create/pin comments. This file is generated to make manual pinning fast.
 
-## The Micro-Coercion of Speed: Why Friction Is an Engineering Prerequisite
+## The Friction Prerequisite: Why We Intentionally Slowed Down the UI
 
 ```md
 TL;DR
@@ -13,5 +13,7 @@ TL;DR
 Why this matters
 - (one line)
 
+Commercial front door → https://crisiscore-systems.ca
+Protective Computing library → https://protective-computing.github.io
 Sponsor the build → https://github.com/sponsors/CrisisCore-Systems
 ```

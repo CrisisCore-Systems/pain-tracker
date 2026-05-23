@@ -10,7 +10,7 @@
 endobj
 4 0 obj
 <<
-/Length 3817
+/Length 4630
 >>
 stream
 0.200025 w
@@ -36,30 +36,30 @@ BT
 (paintracker.ca) Tj
 ET
 0.23 0.51 0.96 rg
-504.0600000000000023 772. m
+508.6499999999999773 772. m
 572. 772. l
 574.2091389993231587 772. 576. 770.2091389993231587 576. 768. c
 576. 754. l
 576. 751.7908610006768413 573.7908610006768413 750. 572. 750. c
-504.0600000000000023 750. l
-501.8508610006768436 750. 500.0600000000000023 752.2091389993231587 500.0600000000000023 754. c
-500.0600000000000023 768. l
-500.0600000000000023 770.2091389993231587 502.269138999323161 772. 504.0600000000000023 772. c
+508.6499999999999773 750. l
+506.4408610006768185 750. 504.6499999999999773 752.2091389993231587 504.6499999999999773 754. c
+504.6499999999999773 768. l
+504.6499999999999773 770.2091389993231587 506.859138999323136 772. 508.6499999999999773 772. c
 h
 f
 BT
 /F2 9 Tf
 10.3499999999999996 TL
 1. g
-508.0600000000000023 757. Td
-(Clinical Guide) Tj
+512.6499999999999773 757. Td
+(Clinical Lens) Tj
 ET
 BT
 /F2 8 Tf
 9.1999999999999993 TL
 0.58 0.639 0.722 rg
-511.1999999999999886 737. Td
-(FREE TEMPLATE) Tj
+507.6800000000000068 737. Td
+(FREE PRINTABLE) Tj
 ET
 BT
 /F2 22 Tf
@@ -73,106 +73,168 @@ BT
 11.5 TL
 0.278 0.333 0.412 rg
 36. 674. Td
-(Understanding the clinical perspective on pain tracking and what information matters most.) Tj
+(A guide to how clinicians read pain records and which details actually survive the scan.) Tj
 ET
 0.89 0.91 0.94 RG
 1. w
 36. 648. m
 576. 648. l
 S
+0.97 0.98 0.99 rg
+0.89 0.91 0.94 RG
+0.75 w
+42. 632. m
+570. 632. l
+573.3137084989847381 632. 576. 629.3137084989847381 576. 626. c
+576. 564. l
+576. 560.6862915010152619 572.6862915010152619 558. 570. 558. c
+42. 558. l
+38.6862915010152406 558. 36. 561.3137084989847381 36. 564. c
+36. 626. l
+36. 629.3137084989847381 39.3137084989847594 632. 42. 632. c
+h
+B
+BT
+/F2 8 Tf
+9.1999999999999993 TL
+0.145 0.388 0.922 rg
+48. 618. Td
+(Routing Note) Tj
+ET
+BT
+/F2 8.5 Tf
+9.7749999999999986 TL
+0.059 0.09 0.165 rg
+48. 604. Td
+(Need:) Tj
+ET
+BT
+/F1 8.5 Tf
+9.7749999999999986 TL
+0.278 0.333 0.412 rg
+114. 604. Td
+(This guide explains how clinicians read the record once it leaves your hands.) Tj
+ET
+BT
+/F2 8.5 Tf
+9.7749999999999986 TL
+0.059 0.09 0.165 rg
+48. 590. Td
+(Tool:) Tj
+ET
+BT
+/F1 8.5 Tf
+9.7749999999999986 TL
+0.278 0.333 0.412 rg
+114. 590. Td
+(Use it when you want your tracking to stop feeling like wellness theater and start functioning as clinical evidence.) Tj
+ET
+BT
+/F2 8.5 Tf
+9.7749999999999986 TL
+0.059 0.09 0.165 rg
+48. 576. Td
+(Rule:) Tj
+ET
+BT
+/F1 8.5 Tf
+9.7749999999999986 TL
+0.278 0.333 0.412 rg
+114. 576. Td
+(Make it scan fast. Make it specific. Make it defensible.) Tj
+ET
 BT
 /F2 11 Tf
 12.6499999999999986 TL
 0.059 0.09 0.165 rg
-44. 632. Td
-(Why Doctors Value Pain Diaries) Tj
+44. 546. Td
+(Why Clinicians Keep Asking for Diaries) Tj
 ET
 BT
 /F1 9 Tf
 10.3499999999999996 TL
 0.278 0.333 0.412 rg
-52. 616. Td
-(Appointments capture a snapshot; diaries capture the movie. Clinicians use pain diaries to identify patterns, assess treatment) Tj
-T* (response, plan interventions, and communicate with specialists. A good diary saves appointment time and improves care.) Tj
+52. 530. Td
+(Appointments catch a snapshot. Diaries catch the system underneath it. Clinicians use them to judge pattern, treatment response,) Tj
+T* (risk, function, and whether the story holds across time.) Tj
 ET
 BT
 /F2 11 Tf
 12.6499999999999986 TL
 0.059 0.09 0.165 rg
-44. 576. Td
-(What Clinicians Extract From Diaries) Tj
+44. 490. Td
+(What Survives the Scan) Tj
 ET
 BT
 /F1 9 Tf
 10.3499999999999996 TL
 0.278 0.333 0.412 rg
-52. 560. Td
-(1\) Pain trajectory: Is it stable, worsening, or improving? 2\) Treatment response: How well are medications working? 3\) Functional) Tj
-T* (capacity: What can/can't the patient do? 4\) Triggers: What makes pain better or worse? 5\) Sleep-pain-mood cycle: How are these) Tj
-T* (interconnected?) Tj
+52. 474. Td
+(Trajectory. Response. Functional loss. Trigger logic. Sleep and mood spillover. The details that survive are the ones tied to) Tj
+T* (decisions, not the ones written for emotional effect.) Tj
 ET
 BT
 /F2 11 Tf
 12.6499999999999986 TL
 0.059 0.09 0.165 rg
-44. 507. Td
-(Standardized Measures Doctors Use) Tj
+44. 434. Td
+(Where Standardized Measures Fit) Tj
 ET
 BT
 /F1 9 Tf
 10.3499999999999996 TL
 0.278 0.333 0.412 rg
-52. 491. Td
-(Doctors often use validated tools alongside diaries: Numeric Rating Scale \(NRS 0-10\), Brief Pain Inventory \(BPI\), Oswestry) Tj
-T* (Disability Index \(for back pain\), PROMIS measures. Your diary complements these by adding daily context.) Tj
+52. 418. Td
+(Numeric scales and clinical tools matter, but they flatten the day. Your diary gives them context: when pain rose, what changed,) Tj
+T* (what helped, what failed, and what function was lost.) Tj
 ET
 BT
 /F2 11 Tf
 12.6499999999999986 TL
 0.059 0.09 0.165 rg
-44. 451. Td
-(What Makes a Diary Clinically Useful) Tj
+44. 378. Td
+(What Makes a Record Clinically Strong) Tj
 ET
 BT
 /F1 9 Tf
 10.3499999999999996 TL
 0.278 0.333 0.412 rg
-52. 435. Td
-(• Consistency: daily entries over at least one week. • Specificity: exact locations, descriptions, timing. • Functional focus: how pain) Tj
-T* (affects real activities. • Medication logging: name, dose, time, and response. • Honest variability: not all days are the same.) Tj
+52. 362. Td
+(A week or more of dated entries. Specific location and timing. Real function impact. Medication timing and outcome. Honest) Tj
+T* (variation. A structure that can be scanned fast without losing the truth.) Tj
 ET
 BT
 /F2 11 Tf
 12.6499999999999986 TL
 0.059 0.09 0.165 rg
-44. 395. Td
-(Common Diary Mistakes \(From Doctors' Perspective\)) Tj
+44. 322. Td
+(What Makes a Record Easy to Dismiss) Tj
 ET
 BT
 /F1 9 Tf
 10.3499999999999996 TL
 0.278 0.333 0.412 rg
-52. 379. Td
-(• Vague descriptions \("pain everywhere"\). • Only tracking bad days. • Ignoring triggers and relief factors. • Not recording) Tj
-T* (medication timing. • Starting the diary the night before the appointment.) Tj
+52. 306. Td
+(Vague wording. Only bad days. Missing treatment timing. No trigger or relief context. A diary started the night before the) Tj
+T* (appointment. In short: heat without structure.) Tj
 ET
 0.89 0.91 0.94 RG
 0.5 w
-36. 48. m
-576. 48. l
+36. 58. m
+576. 58. l
 S
 BT
 /F1 7.5 Tf
 8.625 TL
 0.58 0.639 0.722 rg
-36. 34. Td
-(PainTracker  •  paintracker.ca  •  Private Offline-First Pain Tracking) Tj
+36. 38. Td
+(PainTracker  •  paintracker.ca  •  Private, offline-first pain tracking) Tj
 ET
 BT
 /F1 7.5 Tf
 8.625 TL
 0.58 0.639 0.722 rg
-537.8999999999999773 34. Td
+537.8999999999999773 38. Td
 (Page 1 of 1) Tj
 ET
 BT
@@ -180,7 +242,7 @@ BT
 8.625 TL
 0.58 0.639 0.722 rg
 36. 22. Td
-(This template is free to use, print, and share. Not medical advice.) Tj
+(Free to print and share. Not medical advice.) Tj
 ET
 endstream
 endobj
@@ -353,8 +415,8 @@ endobj
 endobj
 19 0 obj
 <<
-/Producer (jsPDF 4.2.0)
-/CreationDate (D:20260320212846-07'00')
+/Producer (jsPDF 4.2.1)
+/CreationDate (D:20260504143343-07'00')
 >>
 endobj
 20 0 obj
@@ -368,33 +430,33 @@ endobj
 xref
 0 21
 0000000000 65535 f 
-0000003989 00000 n 
-0000005806 00000 n 
+0000004802 00000 n 
+0000006619 00000 n 
 0000000015 00000 n 
 0000000120 00000 n 
-0000004046 00000 n 
-0000004171 00000 n 
-0000004301 00000 n 
-0000004434 00000 n 
-0000004571 00000 n 
-0000004694 00000 n 
-0000004823 00000 n 
-0000004955 00000 n 
-0000005091 00000 n 
-0000005219 00000 n 
-0000005346 00000 n 
-0000005475 00000 n 
-0000005608 00000 n 
-0000005710 00000 n 
-0000006054 00000 n 
-0000006140 00000 n 
+0000004859 00000 n 
+0000004984 00000 n 
+0000005114 00000 n 
+0000005247 00000 n 
+0000005384 00000 n 
+0000005507 00000 n 
+0000005636 00000 n 
+0000005768 00000 n 
+0000005904 00000 n 
+0000006032 00000 n 
+0000006159 00000 n 
+0000006288 00000 n 
+0000006421 00000 n 
+0000006523 00000 n 
+0000006867 00000 n 
+0000006953 00000 n 
 trailer
 <<
 /Size 21
 /Root 20 0 R
 /Info 19 0 R
-/ID [ <6705F4A828B02701DCCE629152122901> <6705F4A828B02701DCCE629152122901> ]
+/ID [ <F3D62B27BA87FD2C722170156A0CEF07> <F3D62B27BA87FD2C722170156A0CEF07> ]
 >>
 startxref
-6244
+7057
 %%EOF

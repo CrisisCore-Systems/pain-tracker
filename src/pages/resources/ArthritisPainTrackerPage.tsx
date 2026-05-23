@@ -7,8 +7,8 @@
 
 import React from 'react';
 import {
-  ArrowRight, Activity, AlertTriangle, CheckCircle,
-  TrendingUp, Users, FileText, Clock, Thermometer,
+  Activity, CheckCircle,
+  TrendingUp, Users, FileText, Thermometer,
   Sun, Droplets, Hand
 } from 'lucide-react';
 import { SEOPageLayout, type SEOPageContent, StatsBanner, PdfContentsPreview, BottomCTACallout } from '../../components/seo';
@@ -129,7 +129,7 @@ const arthritisStats: StatItem[] = [
 const pageContent: SEOPageContent = {
   slug: 'arthritis-pain-tracker',
   title: 'Arthritis Pain Tracker (Free)',
-  metaTitle: 'Arthritis Pain Tracker — Free 6-Page Joint Pain Diary | PainTracker',
+  metaTitle: 'Arthritis Pain Tracker — Free 6-Page Joint Pain Diary | PainTracker.ca',
   metaDescription: 'Download a free arthritis pain tracker for RA, OA, PsA, and gout. Track morning stiffness, joint-by-joint pain, swelling, functional impact, and treatment response.',
   keywords: [
     'arthritis pain tracker', 'joint pain diary', 'rheumatoid arthritis tracker',
@@ -142,7 +142,7 @@ const pageContent: SEOPageContent = {
   headline: 'Arthritis Pain Tracker',
   subheadline: 'Track joint pain, morning stiffness, swelling, and function — by joint, by day, in the format rheumatologists actually use. For RA, OA, PsA, and gout.',
   primaryCTA: { text: 'Download Free PDF (6 Pages)', href: '/assets/arthritis-pain-tracker.pdf', download: true },
-  secondaryCTA: { text: 'Try Digital Version', href: '/start' },
+  secondaryCTA: { text: 'Start tracking free', href: '/start' },
   utilityBlock: { type: 'download', downloadUrl: '/assets/arthritis-pain-tracker.pdf', downloadFileName: 'arthritis-pain-tracker.pdf' },
   whatIsThis: 'An arthritis pain tracker designed for joint-specific conditions: rheumatoid arthritis, osteoarthritis, psoriatic arthritis, and gout. Unlike generic pain diaries, this template tracks morning stiffness duration (the key diagnostic indicator), individual joint pain and swelling, symmetry patterns (critical for distinguishing RA from OA), functional grip/mobility measures, and treatment response including DMARDs and biologics. It gives your rheumatologist the specific data they use to assess disease activity and adjust treatment.',
   whoShouldUse: [
@@ -204,8 +204,8 @@ export const ArthritisPainTrackerPage: React.FC = () => (
     <PdfContentsPreview pages={arthritisPdfPages} accentColor="amber" />
     <BottomCTACallout
       icon={Droplets}
-      heading="Hands Too Stiff to Write? Start Digital."
-      body="Arthritis in the hands can make paper tracking painful. The digital version works with minimal tapping, tracks morning stiffness with a timer, and builds the trend charts your rheumatologist wants to see. Use whichever format your joints allow today."
+      heading="Use the format your joints tolerate today."
+      body="Start with paper when that feels simplest. If stiff hands make writing harder, the app can make it easier to keep tracking morning stiffness, flares, and function with less strain. The goal is a record you can keep up with before your next rheumatology visit."
       pdfUrl="/assets/arthritis-pain-tracker.pdf"
       gradientClasses="from-amber-600 to-orange-600"
       tintClass="text-amber-100"

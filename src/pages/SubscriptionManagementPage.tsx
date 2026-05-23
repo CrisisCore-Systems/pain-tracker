@@ -7,12 +7,12 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Calendar,
-  AlertCircle,
   Check,
-  X,
+  ExternalLink,
   RefreshCw,
   Settings,
   Shield,
+  X,
   Crown,
   Sparkles,
   ArrowLeft,
@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { useSubscription, useTierBadge } from '../contexts/SubscriptionContext';
 import { SUBSCRIPTION_PLANS, FEATURE_COMPARISON } from '../config/subscription-tiers';
+import { openBillingPortal } from '../utils/stripe-portal';
 
 export function SubscriptionManagementPage() {
   const navigate = useNavigate();
@@ -27,11 +28,8 @@ export function SubscriptionManagementPage() {
     subscription,
     currentTier,
     isLoading,
-    cancelSubscription,
-    reactivateSubscription,
   } = useSubscription();
 
-  const [showCancelDialog, setShowCancelDialog] = useState(false);
   const [processingAction, setProcessingAction] = useState<string | null>(null);
 
   const tierBadge = useTierBadge();
@@ -45,29 +43,18 @@ export function SubscriptionManagementPage() {
     return Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
   };
 
-
-  const handleCancel = async () => {
-    setProcessingAction('cancel');
-    try {
-      await cancelSubscription(false); // Cancel at period end
-      setShowCancelDialog(false);
-      alert('Subscription canceled. You will retain access until the end of your billing period.');
-    } catch (error) {
-      console.error('Cancellation failed:', error);
-      alert('Failed to cancel subscription. Please try again.');
-    } finally {
-      setProcessingAction(null);
+  const handleOpenBillingPortal = async () => {
+    if (!subscription?.userId) {
+      alert('No subscription is available to manage from this device.');
+      return;
     }
-  };
 
-  const handleReactivate = async () => {
-    setProcessingAction('reactivate');
+    setProcessingAction('portal');
     try {
-      await reactivateSubscription();
-      alert('Subscription reactivated successfully!');
+      await openBillingPortal({ userId: subscription.userId });
     } catch (error) {
-      console.error('Reactivation failed:', error);
-      alert('Failed to reactivate subscription. Please try again.');
+      console.error('Billing portal failed:', error);
+      alert('Billing changes are unavailable right now. Please try again from this device later.');
     } finally {
       setProcessingAction(null);
     }
@@ -105,7 +92,7 @@ export function SubscriptionManagementPage() {
                 Subscription Management
               </h1>
               <p className="text-muted-foreground">
-                Manage your Pain Tracker subscription and billing
+                Review billing details tied to this browser profile and current subscription
               </p>
             </div>
           </div>
@@ -242,28 +229,18 @@ export function SubscriptionManagementPage() {
                 </button>
               )}
 
-              {subscription?.cancelAtPeriodEnd ? (
+              {currentTier !== 'free' && (
                 <button
-                  onClick={handleReactivate}
-                  disabled={processingAction === 'reactivate'}
+                  onClick={handleOpenBillingPortal}
+                  disabled={processingAction === 'portal'}
                   className="px-5 py-2.5 rounded-xl font-medium transition-all flex items-center gap-2 text-white disabled:opacity-50 shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:-translate-y-0.5"
                   style={{
                     background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)'
                   }}
                 >
-                  <RefreshCw className={`w-4 h-4 ${processingAction === 'reactivate' ? 'animate-spin' : ''}`} />
-                  Reactivate Subscription
+                  <ExternalLink className={`w-4 h-4 ${processingAction === 'portal' ? 'animate-spin' : ''}`} />
+                  Open Billing Portal
                 </button>
-              ) : (
-                currentTier !== 'free' && (
-                  <button
-                    onClick={() => setShowCancelDialog(true)}
-                    className="px-5 py-2.5 rounded-xl font-medium transition-all flex items-center gap-2 text-rose-400 border border-rose-500/30 hover:bg-rose-500/10 hover:-translate-y-0.5"
-                  >
-                    <X className="w-4 h-4" />
-                    Cancel Subscription
-                  </button>
-                )
               )}
 
               <button
@@ -271,9 +248,15 @@ export function SubscriptionManagementPage() {
                 className="px-5 py-2.5 rounded-xl font-medium transition-all flex items-center gap-2 text-muted-foreground border border-border hover:bg-muted hover:-translate-y-0.5"
               >
                 <Settings className="w-4 h-4" />
-                Account Settings
+                App Settings
               </button>
             </div>
+
+            {currentTier !== 'free' && (
+              <p className="mt-4 text-sm text-slate-400 bg-slate-800/70 border border-white/10 rounded-xl p-3">
+                Billing changes open in Stripe&apos;s hosted portal and are limited to the subscription linked to this browser profile.
+              </p>
+            )}
           </div>
         </div>
 
@@ -334,48 +317,6 @@ export function SubscriptionManagementPage() {
         </div>
       </div>
 
-      {/* Cancel Dialog */}
-      {showCancelDialog && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div 
-            className="rounded-2xl shadow-2xl max-w-md w-full p-6 border border-border bg-card"
-          >
-            <div className="flex items-start gap-4 mb-4">
-              <div className="p-2 rounded-lg bg-rose-500/20 border border-rose-500/30">
-                <AlertCircle className="w-6 h-6 text-rose-400" />
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold text-foreground mb-2">
-                  Cancel Subscription?
-                </h3>
-                <p className="text-muted-foreground text-sm">
-                  You will lose access to {tierBadge.label} features at the end of your billing period.
-                  Your data will be retained according to the Free tier limits.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex gap-3 justify-end">
-              <button
-                onClick={() => setShowCancelDialog(false)}
-                className="px-4 py-2 rounded-lg text-muted-foreground border border-border hover:bg-muted transition-colors"
-              >
-                Keep Subscription
-              </button>
-              <button
-                onClick={handleCancel}
-                disabled={processingAction === 'cancel'}
-                className="px-4 py-2 rounded-lg text-white disabled:opacity-50 transition-colors"
-                style={{
-                  background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)'
-                }}
-              >
-                {processingAction === 'cancel' ? 'Canceling...' : 'Yes, Cancel'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

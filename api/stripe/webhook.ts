@@ -10,7 +10,7 @@ import type { VercelRequest, VercelResponse } from '../../src/types/vercel';
 import Stripe from 'stripe';
 import { buffer } from 'micro';
 import { db } from '../../api-lib/database.js';
-import { enforceRateLimit, getClientIp, hashForLogs, logError, logWarn } from '../../api-lib/http';
+import { enforceRateLimit, getClientIp, hashForLogs, logError, logWarn } from '../../api-lib/http.js';
 
 // Initialize Stripe
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {

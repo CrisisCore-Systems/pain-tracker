@@ -7,8 +7,8 @@
 
 import React from 'react';
 import {
-  ArrowRight, Activity, CheckCircle, TrendingUp, Users,
-  FileText, Footprints, Brain, Zap, ShieldAlert,
+  Activity, CheckCircle, TrendingUp, Users,
+  FileText, Footprints, Brain, ShieldAlert,
   MonitorSmartphone, ArrowDownCircle
 } from 'lucide-react';
 import { SEOPageLayout, type SEOPageContent, StatsBanner, PdfContentsPreview, BottomCTACallout } from '../../components/seo';
@@ -135,7 +135,7 @@ const neuropathyStats: StatItem[] = [
 const pageContent: SEOPageContent = {
   slug: 'neuropathy-symptom-tracker',
   title: 'Neuropathy Symptom Tracker (Free)',
-  metaTitle: 'Neuropathy Symptom Tracker — Free Peripheral Neuropathy Tracker PDF | PainTracker',
+  metaTitle: 'Neuropathy Symptom Tracker — Free Peripheral Neuropathy Tracker PDF | PainTracker.ca',
   metaDescription: 'Download a free neuropathy symptom tracker covering sensory, motor, autonomic, and balance symptoms. Track progression, falls, and treatment response for neurologist visits.',
   keywords: [
     'neuropathy symptom tracker', 'peripheral neuropathy tracker', 'diabetic neuropathy log',
@@ -148,7 +148,7 @@ const pageContent: SEOPageContent = {
   headline: 'Neuropathy Symptom Tracker',
   subheadline: 'Track all four domains of peripheral neuropathy — sensory, motor, autonomic, and balance — with progression mapping, fall logging, and treatment response tracking.',
   primaryCTA: { text: 'Download Free PDF (6 Pages)', href: '/assets/neuropathy-symptom-tracker.pdf', download: true },
-  secondaryCTA: { text: 'Try Digital Version', href: '/start' },
+  secondaryCTA: { text: 'Start tracking free', href: '/start' },
   utilityBlock: { type: 'download', downloadUrl: '/assets/neuropathy-symptom-tracker.pdf', downloadFileName: 'neuropathy-symptom-tracker.pdf' },
   whatIsThis: 'A peripheral neuropathy symptom tracker designed to capture what standard pain diaries miss. Neuropathy isn\'t just numbness and tingling — it\'s weakness, balance problems, falls, autonomic dysfunction, and progressive loss of function. This 6-page tracker covers all four domains of neuropathy (sensory, motor, autonomic, balance), tracks progression over time by body area, logs falls and near-falls, and provides summaries formatted for neurologists and primary care providers managing neuropathy. Whether your neuropathy is diabetic, chemotherapy-induced, inflammatory, or idiopathic — this tracker captures the full picture.',
   whoShouldUse: [
@@ -210,8 +210,8 @@ export const NeuropathySymptomTrackerPage: React.FC = () => (
     <PdfContentsPreview pages={neuropathyPdfPages} accentColor="teal" />
     <BottomCTACallout
       icon={MonitorSmartphone}
-      heading="Numb Fingers Making Writing Difficult? The Digital Version Doesn't Require Fine Motor Control."
-      body="Neuropathy affects grip and fine motor skills. The paper template is ideal when hands cooperate. The digital version works with larger touch targets and doesn't require a pen grip. Switch between formats \u2014 your tracking is what matters."
+      heading="Choose the format that works with your hands today."
+      body="Paper is fine when writing is manageable. If numbness or grip changes get in the way, the app makes it easier to keep tracking progression, balance issues, and function with less strain. Use whichever format helps you keep the record going."
       pdfUrl="/assets/neuropathy-symptom-tracker.pdf"
       gradientClasses="from-teal-600 to-cyan-600"
       tintClass="text-teal-100"

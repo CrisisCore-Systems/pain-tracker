@@ -11,7 +11,18 @@ canonical_url: "https://github.com/CrisisCore-Systems/pain-tracker"
 published: false
 ---
 
-**Series:** [Start here](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-00-start-here.md) · [Part 1](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-01-offline-first-local-first-architecture.md) · [Part 2](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-02-three-storage-layers-state-cache-offline-db-encrypted-vault.md) · [Part 3](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-03-service-workers-that-dont-surprise-you.md) · [Part 4](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-04-zod-defensive-parsing.md) · [Part 5](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-05-trauma-informed-ux-accessibility-as-architecture.md) · **Part 6** · [Part 7](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-07-worksafebc-oriented-workflows-careful-language.md) · [Part 8](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-08-analytics-without-surveillance-explicit-consent.md) · [Part 9](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-09-quality-gates-that-earn-trust.md) · [Part 10](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-10-maintaining-truthful-docs-over-time.md)
+**Series:**
+[Start here](https://dev.to/crisiscoresystems/start-here-paintracker-crisiscore-build-log-privacy-first-offline-first-no-surveillance-3h0k)
+· [Part 1](https://dev.to/crisiscoresystems/offline-first-without-a-backend-a-local-first-pwa-architecture-you-can-trust-3j15)
+· [Part 2](https://dev.to/crisiscoresystems/three-storage-layers-in-an-offline-first-health-pwa-state-cache-vs-indexeddb-vs-encrypted-vault-19b7)
+· [Part 3](https://dev.to/crisiscoresystems/service-workers-that-dont-surprise-you-deterministic-caching-for-offline-first-pwas-5480)
+· [Part 4](https://dev.to/crisiscoresystems/zod-defensive-parsing-in-a-local-first-app-make-your-offline-data-trustworthy-1016)
+· [Part 5](https://dev.to/crisiscoresystems/trauma-informed-ux-accessibility-as-architecture-not-polish-22jg)
+· **Part 6**
+· [Part 7](https://dev.to/crisiscoresystems/worksafebc-oriented-workflows-without-overclaims-structured-summaries-careful-language-2n3i)
+· [Part 8](https://dev.to/crisiscoresystems/analytics-without-surveillance-explicit-consent-layered-gates-and-never-sending-class-a-data-59f1)
+· [Part 9](https://dev.to/crisiscoresystems/quality-gates-that-earn-trust-checks-you-can-run-not-promises-you-cant-58a3)
+· [Part 10](https://dev.to/crisiscoresystems/maintaining-truthful-docs-over-time-how-to-keep-security-claims-honest-2778)
 
 This post is Part 6 in a Dev.to series grounded in the open-source **Pain Tracker** repo.
 
@@ -20,7 +31,8 @@ This post is Part 6 in a Dev.to series grounded in the open-source **Pain Tracke
 - This post is about *trust boundaries*, not “features.”
 
 If you haven’t read Part 5 yet:
-- Part 5: [Trauma-informed UX + accessibility as architecture](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-05-trauma-informed-ux-accessibility-as-architecture.md)
+
+- Part 5: [Trauma-informed UX + accessibility as architecture](https://dev.to/crisiscoresystems/trauma-informed-ux-accessibility-as-architecture-not-polish-22jg)
 
 ---
 
@@ -58,10 +70,10 @@ The UI that invokes them (with filters) is here:
 
 The pattern is intentionally boring:
 
-1) user chooses a format (CSV/JSON/PDF)
-2) user optionally filters the date range / symptoms / locations
-3) app generates a string (or PDF data URI)
-4) app downloads it via a normal browser download
+1. user chooses a format (CSV/JSON/PDF)
+1. user optionally filters the date range / symptoms / locations
+1. app generates a string (or PDF data URI)
+1. app downloads it via a normal browser download
 
 No background exporting, no scheduled exports, no “send to provider” button that quietly turns into a network feature.
 
@@ -99,6 +111,10 @@ This is good honesty:
 - the export is a faithful copy
 - the app isn’t claiming it can “anonymize” your narrative
 
+If you care about making that export/import round-trip trustworthy on the way
+back in, read
+[Zod + defensive parsing: make your offline data trustworthy](https://dev.to/crisiscoresystems/zod-defensive-parsing-in-a-local-first-app-make-your-offline-data-trustworthy-1016).
+
 If you need de-identification, that’s a different feature with a different risk profile.
 
 ---
@@ -120,10 +136,13 @@ Pain Tracker uses two kinds of tracking around exports:
 
 It also sanitizes metadata so Class A fields aren’t stored in plaintext localStorage.
 
-2) **Optional GA4 events**
+1. **Optional GA4 events**
 
 - export utilities call `trackDataExported(format, entryCount)`
 - those events are gated behind env + explicit consent (covered in Part 8)
+
+Part 8 walks through the full gating model behind those events:
+[Analytics without surveillance: explicit consent, layered gates, and never sending Class A data](https://dev.to/crisiscoresystems/analytics-without-surveillance-explicit-consent-layered-gates-and-never-sending-class-a-data-59f1).
 
 The key point is what’s *not* tracked:
 
@@ -149,11 +168,23 @@ Good export UX in sensitive apps is mostly about preventing regret:
 
 If you add “share” features later, treat them as new boundaries: they turn a local file into network exposure.
 
+For a concrete paperwork-oriented example built on top of this boundary, see
+[How Pain Tracker Pro Streamlines WorkSafeBC Claims: A Composite Case Study](https://dev.to/crisiscoresystems/how-pain-tracker-pro-streamlines-worksafebc-claims-a-composite-case-study-4ce8).
+
 ---
 
 ## Next up
 
 Part 7 covers WorkSafeBC-oriented workflows — and how to keep language careful and grounded in what the repo actually does.
 
-Prev: [Part 5 — Trauma-informed UX + accessibility as architecture](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-05-trauma-informed-ux-accessibility-as-architecture.md)
-Next: [Part 7 — WorkSafeBC-oriented workflows (careful language)](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-07-worksafebc-oriented-workflows-careful-language.md)
+Prev: [Part 5 — Trauma-informed UX + accessibility as architecture](https://dev.to/crisiscoresystems/trauma-informed-ux-accessibility-as-architecture-not-polish-22jg)
+Next: [Part 7 — WorkSafeBC-oriented workflows (careful language)](https://dev.to/crisiscoresystems/worksafebc-oriented-workflows-without-overclaims-structured-summaries-careful-language-2n3i)
+
+## Proof network
+
+If you want the broader route around this series:
+
+- **Main site:** [CrisisCore Systems](https://crisiscore-systems.ca/)
+- **Framework:** [Protective Computing](https://protective-computing.github.io/)
+- **Reference implementation:** [private offline pain tracker](https://paintracker.ca/)
+- **Proof route:** [paintracker.ca/proof](https://paintracker.ca/proof)

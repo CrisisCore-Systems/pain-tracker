@@ -7,12 +7,18 @@
 
 import React from 'react';
 import {
-  ArrowRight, Stethoscope, CheckCircle, Clock, MessageSquare,
-  FileText, AlertTriangle, TrendingUp, ClipboardList,
-  MonitorSmartphone, XCircle, Target
+  Target,
+  Stethoscope, CheckCircle, Clock, MessageSquare,
+  AlertTriangle, TrendingUp, ClipboardList,
+  MonitorSmartphone
 } from 'lucide-react';
-import { SEOPageLayout, type SEOPageContent, StatsBanner, BottomCTACallout } from '../../components/seo';
-import type { StatItem } from '../../components/seo';
+import {
+  SEOPageLayout,
+  type SEOPageContent,
+  type StatItem,
+  StatsBanner,
+  BottomCTACallout,
+} from '../../components/seo';
 
 /* ── Custom Visual Components ─────────────────────────────────────────────── */
 
@@ -29,8 +35,8 @@ const DoctorVsPatient: React.FC = () => {
       <h3 className="text-xl font-bold text-slate-800 mb-2">What Doctors Need vs. What Patients Typically Say</h3>
       <p className="text-sm text-slate-500 mb-6">Your doctor has 15 minutes. These translations turn vague descriptions into actionable clinical information.</p>
       <div className="space-y-4">
-        {rows.map((r, i) => (
-          <div key={i} className="rounded-xl border border-slate-200 bg-white p-4">
+        {rows.map((r) => (
+          <div key={r.patient} className="rounded-xl border border-slate-200 bg-white p-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-2">
               <div className="bg-red-50 rounded-lg p-3 border border-red-100">
                 <span className="text-xs font-bold text-red-500 block mb-1">Patient says</span>
@@ -44,45 +50,6 @@ const DoctorVsPatient: React.FC = () => {
             <p className="text-xs text-slate-500">→ {r.why}</p>
           </div>
         ))}
-      </div>
-    </div>
-  );
-};
-
-/** The 7 things to track */
-const SevenThingsToTrack: React.FC = () => {
-  const items = [
-    { num: 1, label: 'Pain Level (0-10)', desc: 'Rate at consistent times: morning, afternoon, evening. Patterns matter more than individual numbers.', icon: Target },
-    { num: 2, label: 'Pain Location & Type', desc: 'Where exactly? Burning, aching, stabbing, throbbing? Does it radiate? This narrows the differential diagnosis.', icon: Stethoscope },
-    { num: 3, label: 'Triggers & Aggravators', desc: 'What makes it worse? Sitting, standing, weather, stress, specific movements? Triggers guide treatment planning.', icon: AlertTriangle },
-    { num: 4, label: 'Medication Response', desc: 'What did you take, when, and did it help? Pain before dose vs. after. Duration of relief. Side effects.', icon: ClipboardList },
-    { num: 5, label: 'Sleep Quality', desc: 'Hours slept, times woken, time to fall asleep, how you felt on waking. Sleep is clinical gold.', icon: Clock },
-    { num: 6, label: 'Functional Impact', desc: 'What could you do? What couldn\'t you? How far could you walk? How long could you sit? Be specific.', icon: TrendingUp },
-    { num: 7, label: 'Mood & Mental Health', desc: 'Pain affects mood; mood affects pain. Brief daily note. This guides whether adjunct treatments are needed.', icon: MessageSquare },
-  ];
-  return (
-    <div className="my-10">
-      <h3 className="text-xl font-bold text-slate-800 mb-2">The 7 Things Your Doctor Actually Needs from Your Tracking</h3>
-      <p className="text-sm text-slate-500 mb-6">Track these consistently and your 15-minute appointment becomes 10x more productive.</p>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {items.slice(0, 6).map((item) => (
-          <div key={item.num} className="rounded-xl border border-slate-200 bg-white p-5">
-            <div className="flex items-center gap-3 mb-3">
-              <span className="w-8 h-8 rounded-full bg-sky-100 flex items-center justify-center text-sm font-bold text-sky-700">{item.num}</span>
-              <item.icon className="w-5 h-5 text-sky-600" aria-hidden="true" />
-            </div>
-            <h4 className="font-bold text-slate-800 text-sm mb-1">{item.label}</h4>
-            <p className="text-sm text-slate-600">{item.desc}</p>
-          </div>
-        ))}
-        <div className="rounded-xl border-2 border-dashed border-sky-200 bg-sky-50 p-5 flex flex-col justify-center">
-          <div className="flex items-center gap-3 mb-3">
-            <span className="w-8 h-8 rounded-full bg-sky-200 flex items-center justify-center text-sm font-bold text-sky-700">7</span>
-            {React.createElement(items[6].icon, { className: 'w-5 h-5 text-sky-600', 'aria-hidden': 'true' })}
-          </div>
-          <h4 className="font-bold text-slate-800 text-sm mb-1">{items[6].label}</h4>
-          <p className="text-sm text-slate-600">{items[6].desc}</p>
-        </div>
       </div>
     </div>
   );
@@ -146,9 +113,9 @@ const trackingStats: StatItem[] = [
 
 const pageContent: SEOPageContent = {
   slug: 'how-to-track-pain-for-doctors',
-  title: 'How to Track Pain for Doctors',
-  metaTitle: 'How to Track Pain for Doctors — What Your Doctor Actually Needs | PainTracker',
-  metaDescription: 'Learn exactly what to track and how to present pain data to your doctor in 15-minute appointments. 7 key data points, appointment prep checklist, and free tracking templates.',
+  title: 'How to Track Pain for Doctors in 2026',
+  metaTitle: 'How to Track Pain for Doctors in 2026 | 15-Min Appointment Checklist',
+  metaDescription: 'Learn exactly what to track and how to present pain data to your doctor in 2026. 7 key data points, a 15-minute appointment checklist, and free tracking templates.',
   keywords: [
     'how to track pain for doctors', 'pain tracking for doctor appointment',
     'what to tell doctor about pain', 'pain diary for doctor',
@@ -159,10 +126,10 @@ const pageContent: SEOPageContent = {
     'clinical pain assessment preparation', 'pain data for physician'
   ],
   badge: 'Guide',
-  headline: 'How to Track Pain for Doctors',
-  subheadline: 'Your doctor has 15 minutes and needs specific, actionable data — not "it hurts all the time." Here\'s exactly what to track, how to present it, and why it changes the quality of care you receive.',
+  headline: 'How to Track Pain for Doctors in 2026',
+  subheadline: 'Your doctor has 15 minutes and needs specific, actionable data — not "it hurts all the time." Use the printable if you need something today. Use the free app when you need patterns, summaries, and records you can bring to an appointment.',
   primaryCTA: { text: 'Download Free Pain Tracker', href: '/resources/pain-diary-template-pdf' },
-  secondaryCTA: { text: 'Start Digital Tracking', href: '/start' },
+  secondaryCTA: { text: 'Start tracking free', href: '/start' },
   utilityBlock: { type: 'download', downloadUrl: '/assets/how-to-track-pain-for-doctors.pdf', downloadFileName: 'how-to-track-pain-for-doctors.pdf' },
   whatIsThis: 'A practical guide to tracking pain in ways that actually help your doctor help you. Most chronic pain patients know they should track pain, but don\'t know WHAT to track or HOW to present it. The result: wasted appointment time, vague conversations, and treatment decisions made with incomplete information. This guide covers the 7 data points doctors need most, shows you how to translate your experience into clinical language, and includes a pre-appointment preparation checklist.',
   whoShouldUse: [
@@ -205,6 +172,7 @@ const pageContent: SEOPageContent = {
     { title: 'How Doctors Use Pain Diaries', description: 'Understanding the clinical perspective', href: '/resources/how-doctors-use-pain-diaries' },
     { title: 'Pain Diary for Specialist', description: 'Specialist appointment preparation', href: '/resources/pain-diary-for-specialist-appointment' },
     { title: 'What to Include in Pain Journal', description: 'Complete journal content guide', href: '/resources/what-to-include-in-pain-journal' },
+    { title: 'Best Pain Tracking Apps in 2026', description: 'Compare printable, local-first, and no-account tracking options before choosing one workflow.', href: '/pain-tracking-apps-comparison' },
     { title: 'Daily Pain Tracker Printable', description: 'Simple daily format', href: '/resources/daily-pain-tracker-printable' },
     { title: 'Symptom Tracker Printable', description: 'Track symptoms beyond pain', href: '/resources/symptom-tracker-printable' }
   ],
@@ -246,16 +214,16 @@ export const HowToTrackPainForDoctorsPage: React.FC = () => (
     <AppointmentPrep />
     <BottomCTACallout
       icon={MonitorSmartphone}
-      heading="Your Next Appointment Could Be Different."
-      body="Start tracking today. By your next appointment, you'll have 2 weeks of structured data that transforms vague conversations into productive clinical decisions."
+      heading="Less scrambling before your next appointment."
+      body="Start with one useful record now. By your next visit, you can bring a clearer summary of pain, function, sleep, and treatment response instead of trying to reconstruct everything from memory."
       pdfUrl="/resources/pain-diary-template-pdf"
       download={false}
       gradientClasses="from-sky-600 to-blue-600"
       tintClass="text-sky-100"
       buttonTextClass="text-sky-700"
       buttonHoverClass="hover:bg-sky-50"
-      primaryLabel="Get Free Templates"
-      secondaryLabel="Start Digital Tracking"
+      primaryLabel="Get a free template"
+      secondaryLabel="Start tracking free"
     />
   </SEOPageLayout>
 );

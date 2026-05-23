@@ -7,11 +7,20 @@ cover_image: https://dev-to-uploads.s3.amazonaws.com/uploads/articles/encryption
 canonical_url: 
 ---
 
-# Client-Side Encryption for Healthcare Apps
+<!-- markdownlint-disable-file MD013 MD025 MD060 -->
+
+> Series: Client-Side Encryption for Health Apps
+> Part 3 of 3.
+> Start here: [Client-Side Encryption for Health Apps: Start Here](/blog/client-side-encryption-health-apps-start-here)
+> Read first: [Keeping Your Health Data Out of Court](https://blog.paintracker.ca/keeping-your-health-data-out-of-court)
+> Read before this: [If Your Health App Can't Explain Its Encryption, It Doesn't Have Any](https://blog.paintracker.ca/if-your-health-app-cant-explain-its-encryption-it-doesnt-have-any)
 
 I've had my data used against me in court.
 
 Not hypothetically. Actual court. Actual lawyers. Actual judge reading things I wrote during a pain flare, reframed as evidence of instability.
+
+If you want the threat model that explains why this level of encryption is
+necessary, read [Keeping Your Health Data Out of Court](https://blog.paintracker.ca/keeping-your-health-data-out-of-court).
 
 That's why I use a strong KDF configuration and authenticated encryption (for example, PBKDF2 + AES-GCM via Web Crypto). That's why key material is kept client-side in normal use, and why I treat offline attacks as a first-class threat.
 
@@ -28,6 +37,10 @@ The server decrypts to process. Your health data passes through corporate infras
 In a user-held-keys model, a server (if present) only sees ciphertext; the operator can’t read user content without the key.
 
 Local-first means your data can stay on-device by default, with sharing happening via explicit exports/imports. Encryption helps with lost/stolen device risk and casual inspection; it’s not a guarantee against a fully compromised OS or a determined forensic adversary.
+
+In Pain Tracker, that ciphertext lives inside the broader storage boundary
+described in [Three storage layers in an offline-first health PWA: state cache
+vs IndexedDB vs encrypted vault](https://dev.to/crisiscoresystems/three-storage-layers-in-an-offline-first-health-pwa-state-cache-vs-indexeddb-vs-encrypted-vault-19b7).
 
 ---
 

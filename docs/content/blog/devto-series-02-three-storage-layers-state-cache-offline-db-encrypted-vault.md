@@ -11,7 +11,18 @@ canonical_url: "https://github.com/CrisisCore-Systems/pain-tracker"
 published: false
 ---
 
-**Series:** [Start here](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-00-start-here.md) · [Part 1](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-01-offline-first-local-first-architecture.md) · **Part 2** · [Part 3](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-03-service-workers-that-dont-surprise-you.md) · [Part 4](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-04-zod-defensive-parsing.md) · [Part 5](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-05-trauma-informed-ux-accessibility-as-architecture.md) · [Part 6](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-06-exports-as-a-security-boundary.md) · [Part 7](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-07-worksafebc-oriented-workflows-careful-language.md) · [Part 8](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-08-analytics-without-surveillance-explicit-consent.md) · [Part 9](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-09-quality-gates-that-earn-trust.md) · [Part 10](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-10-maintaining-truthful-docs-over-time.md)
+**Series:**
+[Start here](https://dev.to/crisiscoresystems/start-here-paintracker-crisiscore-build-log-privacy-first-offline-first-no-surveillance-3h0k)
+· [Part 1](https://dev.to/crisiscoresystems/offline-first-without-a-backend-a-local-first-pwa-architecture-you-can-trust-3j15)
+· **Part 2**
+· [Part 3](https://dev.to/crisiscoresystems/service-workers-that-dont-surprise-you-deterministic-caching-for-offline-first-pwas-5480)
+· [Part 4](https://dev.to/crisiscoresystems/zod-defensive-parsing-in-a-local-first-app-make-your-offline-data-trustworthy-1016)
+· [Part 5](https://dev.to/crisiscoresystems/trauma-informed-ux-accessibility-as-architecture-not-polish-22jg)
+· [Part 6](https://dev.to/crisiscoresystems/exports-are-a-security-boundary-the-moment-local-first-becomes-shareable-3gj9)
+· [Part 7](https://dev.to/crisiscoresystems/worksafebc-oriented-workflows-without-overclaims-structured-summaries-careful-language-2n3i)
+· [Part 8](https://dev.to/crisiscoresystems/analytics-without-surveillance-explicit-consent-layered-gates-and-never-sending-class-a-data-59f1)
+· [Part 9](https://dev.to/crisiscoresystems/quality-gates-that-earn-trust-checks-you-can-run-not-promises-you-cant-58a3)
+· [Part 10](https://dev.to/crisiscoresystems/maintaining-truthful-docs-over-time-how-to-keep-security-claims-honest-2778)
 
 This is Part 2 of a Dev.to series grounded in the open-source **Pain Tracker** repo.
 
@@ -21,7 +32,7 @@ This is Part 2 of a Dev.to series grounded in the open-source **Pain Tracker** r
 
 If you haven’t read Part 1, start here:
 
-* Part 1: [Offline-first without a backend: a local-first PWA architecture you can trust](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-01-offline-first-local-first-architecture.md)
+- Part 1: [Offline-first without a backend: a local-first PWA architecture you can trust](https://dev.to/crisiscoresystems/offline-first-without-a-backend-a-local-first-pwa-architecture-you-can-trust-3j15)
 
 ---
 
@@ -45,7 +56,9 @@ In Pain Tracker, storage is split into three layers on purpose:
 Here’s the line that matters:
 
 **Local-first ≠ secure.**
-Local storage is still readable by anyone with access to the browser profile (or DevTools). Encryption-at-rest is a separate boundary. If you blur those, you’re lying to yourself—and to users.
+Local storage is still readable by anyone with access to the browser profile
+(or DevTools). Encryption-at-rest is a separate boundary. If you blur those,
+you’re lying to yourself and to users.
 
 ---
 
@@ -63,7 +76,7 @@ Vault-gated encrypted IndexedDB records
 
 If you want the authoritative map of where data lives and how it migrates, this is the source of truth:
 
-* [https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/engineering/LOCAL_DATA_AND_MIGRATIONS.md](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/engineering/LOCAL_DATA_AND_MIGRATIONS.md)
+- [https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/engineering/LOCAL_DATA_AND_MIGRATIONS.md](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/engineering/LOCAL_DATA_AND_MIGRATIONS.md)
 
 (Yes, I just used “source of truth.” I hate the phrase too. But it fits here.)
 
@@ -71,18 +84,20 @@ If you want the authoritative map of where data lives and how it migrates, this 
 
 ## Layer 1: State cache (Zustand) — “make the UI feel instant”
 
-This is the layer your UI is basically married to. Timeline rendering, “draft edits,” validation, derived state—this stuff needs to be fast and predictable.
+This is the layer your UI is basically married to. Timeline rendering, “draft
+edits,” validation, derived state, this stuff needs to be fast and predictable.
 
 Store file:
 
-* [https://github.com/CrisisCore-Systems/pain-tracker/blob/main/src/stores/pain-tracker-store.ts](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/src/stores/pain-tracker-store.ts)
+- [https://github.com/CrisisCore-Systems/pain-tracker/blob/main/src/stores/pain-tracker-store.ts](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/src/stores/pain-tracker-store.ts)
 
 Why keep it in-memory?
 
 Because IndexedDB is not a fun “every keystroke” API.
 And because async boundaries in your render loop will make you hate your life.
 
-Also: state-level testing is way easier than storage-level testing. If you can keep logic in the store and *let persistence be plumbing*, you’ll move faster.
+Also: state-level testing is way easier than storage-level testing. If you can
+keep logic in the store and *let persistence be plumbing*, you’ll move faster.
 
 ### Persistence should not become “the API”
 
@@ -96,14 +111,14 @@ But there’s an extra constraint here: **persisted snapshots are vault-gated.**
 
 The store uses a custom adapter:
 
-* `createEncryptedOfflinePersistStorage(...)`
-* [https://github.com/CrisisCore-Systems/pain-tracker/blob/main/src/stores/encrypted-idb-persist.ts](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/src/stores/encrypted-idb-persist.ts)
+- `createEncryptedOfflinePersistStorage(...)`
+- [https://github.com/CrisisCore-Systems/pain-tracker/blob/main/src/stores/encrypted-idb-persist.ts](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/src/stores/encrypted-idb-persist.ts)
 
 That adapter:
 
-* stores the snapshot in the offline DB (settings rows)
-* encrypts/decrypts that blob via the vault
-* **refuses to hydrate while the vault is locked** (returns `null`)
+- stores the snapshot in the offline DB (settings rows)
+- encrypts/decrypts that blob via the vault
+- **refuses to hydrate while the vault is locked** (returns `null`)
 
 Why be that strict?
 
@@ -112,7 +127,7 @@ That’s not a bug, that’s a betrayal.
 
 The test that proves the intended behavior:
 
-* [https://github.com/CrisisCore-Systems/pain-tracker/blob/main/src/test/stores/persist-vault-roundtrip.test.ts](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/src/test/stores/persist-vault-roundtrip.test.ts)
+- [https://github.com/CrisisCore-Systems/pain-tracker/blob/main/src/test/stores/persist-vault-roundtrip.test.ts](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/src/test/stores/persist-vault-roundtrip.test.ts)
 
 Goal:
 
@@ -124,16 +139,16 @@ Goal:
 
 The durable offline store lives here:
 
-* [https://github.com/CrisisCore-Systems/pain-tracker/blob/main/src/lib/offline-storage.ts](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/src/lib/offline-storage.ts)
+- [https://github.com/CrisisCore-Systems/pain-tracker/blob/main/src/lib/offline-storage.ts](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/src/lib/offline-storage.ts)
 
 DB name: `pain-tracker-offline`
 
 This is where you put things that should survive refresh/restart and benefit from indexing/querying:
 
-* queue items (priority, retries, “synced” flags)
-* cached data / metadata
-* non-sensitive settings
-* encrypted blobs (as blobs—still not plaintext)
+- queue items (priority, retries, “synced” flags)
+- cached data / metadata
+- non-sensitive settings
+- encrypted blobs (as blobs—still not plaintext)
 
 And yes, this exists because `localStorage` isn’t a serious “offline-first PWA storage” strategy. It’s a convenience drawer.
 
@@ -143,13 +158,13 @@ Let’s say it plain: IndexedDB is durable and queryable, but it’s not confide
 
 So in this repo, the approach is basically:
 
-* non-sensitive? sure, offline DB is fine
-* sensitive/reconstructive? cross the vault boundary
-* unsure? store less, or store later, or store coarse metadata only
+- non-sensitive? sure, offline DB is fine
+- sensitive/reconstructive? cross the vault boundary
+- unsure? store less, or store later, or store coarse metadata only
 
 The migration doc calls this out:
 
-* [https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/engineering/LOCAL_DATA_AND_MIGRATIONS.md](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/engineering/LOCAL_DATA_AND_MIGRATIONS.md)
+- [https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/engineering/LOCAL_DATA_AND_MIGRATIONS.md](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/engineering/LOCAL_DATA_AND_MIGRATIONS.md)
 
 ### Why bother with the offline DB if you have a vault?
 
@@ -167,25 +182,27 @@ So the offline DB remains valuable even if the vault exists.
 
 This is implemented here:
 
-* [https://github.com/CrisisCore-Systems/pain-tracker/blob/main/src/lib/storage/encryptedIndexedDB.ts](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/src/lib/storage/encryptedIndexedDB.ts)
+- [https://github.com/CrisisCore-Systems/pain-tracker/blob/main/src/lib/storage/encryptedIndexedDB.ts](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/src/lib/storage/encryptedIndexedDB.ts)
+
+If you want the crypto implementation details behind this boundary, read [Client-Side Encryption for Healthcare Apps](https://dev.to/crisiscoresystems/client-side-encryption-for-healthcare-apps-dhm).
 
 It stores records as an envelope:
 
-* `v` (version marker)
-* `n` (nonce)
-* `c` (ciphertext)
-* plus metadata like timestamps and vault key versioning
+- `v` (version marker)
+- `n` (nonce)
+- `c` (ciphertext)
+- plus metadata like timestamps and vault key versioning
 
 Here’s the behavioral rule that keeps the promise honest:
 
-* `encryptAndStore(...)` throws if the vault is locked
-* `retrieveAndDecrypt(...)` returns `null` if the vault is locked
+- `encryptAndStore(...)` throws if the vault is locked
+- `retrieveAndDecrypt(...)` returns `null` if the vault is locked
 
 That’s intentional. Locked means locked.
 
 Vault service boundary:
 
-* [https://github.com/CrisisCore-Systems/pain-tracker/blob/main/src/services/VaultService.ts](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/src/services/VaultService.ts)
+- [https://github.com/CrisisCore-Systems/pain-tracker/blob/main/src/services/VaultService.ts](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/src/services/VaultService.ts)
 
 I’m not going to turn this into a crypto blog post. That’s where “security theater” happens fast.
 For app architecture, what matters is:
@@ -197,7 +214,9 @@ No unlock, no pretend saves.
 
 `encryptedIndexedDB.ts` supports a legacy `{ iv, data }` shape and upgrades to the current envelope on successful read.
 
-I like upgrade-on-read because it fails gently. If a user’s storage is partially broken (it happens), you don’t want a big migration step to wipe things out.
+I like upgrade-on-read because it fails gently. If a user’s storage is
+partially broken, and it happens, you don’t want a big migration step to wipe
+things out.
 
 ---
 
@@ -212,9 +231,9 @@ Should it be available while locked?
 
 Then map it:
 
-* **Zustand (in-memory)**: drafts, derived UI state, “what I’m editing right now”
-* **Offline IndexedDB**: queues/caches/non-sensitive prefs/encrypted blobs
-* **Vault DB**: health entries and reconstructive payloads that must be encrypted at rest
+- **Zustand (in-memory)**: drafts, derived UI state, “what I’m editing right now”
+- **Offline IndexedDB**: queues/caches/non-sensitive prefs/encrypted blobs
+- **Vault DB**: health entries and reconstructive payloads that must be encrypted at rest
 
 If you’re unsure: store less. Seriously.
 
@@ -226,9 +245,9 @@ If you’re unsure: store less. Seriously.
 
 Expected:
 
-* app loads
-* user sees locked affordances
-* persisted sensitive state does **not** silently hydrate
+- app loads
+- user sees locked affordances
+- persisted sensitive state does **not** silently hydrate
 
 The persist adapter enforces this by returning `null` when locked.
 
@@ -236,8 +255,8 @@ The persist adapter enforces this by returning `null` when locked.
 
 The persist code is defensive:
 
-* serialized operations to avoid races
-* decrypt failures don’t trigger “helpful cleanup” deletes
+- serialized operations to avoid races
+- decrypt failures don’t trigger “helpful cleanup” deletes
 
 Because “delete on decrypt failure” is a foot-gun. And it’s permanent.
 
@@ -245,8 +264,8 @@ Because “delete on decrypt failure” is a foot-gun. And it’s permanent.
 
 There’s migration logic from older keys like `pain_tracker_entries`, but legacy keys only get cleared after:
 
-* a successful encrypted write, and
-* vault unlocked
+- a successful encrypted write, and
+- vault unlocked
 
 That’s the right order.
 
@@ -256,7 +275,7 @@ That’s the right order.
 
 Offline-first apps need a reliable purge path.
 
-* [https://github.com/CrisisCore-Systems/pain-tracker/blob/main/src/utils/clear-all-user-data.ts](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/src/utils/clear-all-user-data.ts)
+- [https://github.com/CrisisCore-Systems/pain-tracker/blob/main/src/utils/clear-all-user-data.ts](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/src/utils/clear-all-user-data.ts)
 
 If you store locally, you owe users a clean “burn it down” button.
 
@@ -266,12 +285,12 @@ If you store locally, you owe users a clean “burn it down” button.
 
 Storage map:
 
-* [https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/engineering/LOCAL_DATA_AND_MIGRATIONS.md](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/engineering/LOCAL_DATA_AND_MIGRATIONS.md)
+- [https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/engineering/LOCAL_DATA_AND_MIGRATIONS.md](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/engineering/LOCAL_DATA_AND_MIGRATIONS.md)
 
 Persistence flow:
 
-* [https://github.com/CrisisCore-Systems/pain-tracker/blob/main/src/stores/pain-tracker-store.ts](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/src/stores/pain-tracker-store.ts)
-* [https://github.com/CrisisCore-Systems/pain-tracker/blob/main/src/stores/encrypted-idb-persist.ts](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/src/stores/encrypted-idb-persist.ts)
+- [https://github.com/CrisisCore-Systems/pain-tracker/blob/main/src/stores/pain-tracker-store.ts](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/src/stores/pain-tracker-store.ts)
+- [https://github.com/CrisisCore-Systems/pain-tracker/blob/main/src/stores/encrypted-idb-persist.ts](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/src/stores/encrypted-idb-persist.ts)
 
 Run the vault-gated hydration roundtrip test:
 
@@ -287,13 +306,16 @@ npm run -s test -- --run src/test/stores/persist-vault-roundtrip.test.ts
 No. It’s local. Privacy depends on threat model, device access, and whether sensitive payloads are encrypted at rest.
 
 **Why not just encrypt everything in one DB and call it a day?**
-Because you end up coupling your entire app to unlock state. That creates weird UX and weird bugs. Separate layers let you keep the app usable without lying.
+Because you end up coupling your entire app to unlock state. That creates weird
+UX and weird bugs. Separate layers let you keep the app usable without lying.
 
 **Does encrypted-at-rest protect against a compromised OS?**
 No. It’s not a magic shield. It’s protection against opportunistic access and casual inspection of the profile/data at rest.
 
 **What about multi-device sync?**
-Not by default here. If you add sync later, the offline DB’s queue patterns are already a foothold—but sync becomes a new trust boundary and needs to be explicit.
+Not by default here. If you add sync later, the offline DB’s queue patterns are
+already a foothold, but sync becomes a new trust boundary and needs to be
+explicit.
 
 ---
 
@@ -301,10 +323,21 @@ Not by default here. If you add sync later, the offline DB’s queue patterns ar
 
 Part 3 will cover service workers that don’t surprise you (and how to keep offline behavior deterministic without “magic caching”):
 
-[Part 3 — Service workers that don’t surprise you](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-03-service-workers-that-dont-surprise-you.md)
+[Part 3 — Service workers that don’t surprise you](https://dev.to/crisiscoresystems/service-workers-that-dont-surprise-you-deterministic-caching-for-offline-first-pwas-5480)
 
-Prev: [Part 1 — Offline-first without a backend](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-01-offline-first-local-first-architecture.md)
+Prev: [Part 1 — Offline-first without a backend](https://dev.to/crisiscoresystems/offline-first-without-a-backend-a-local-first-pwa-architecture-you-can-trust-3j15)
 
 ---
 
-If you want, I can also produce a **more SEO-tilted variant** (same content, slightly different headings + long-tail phrasing) *without* making it read like a keyword farm.
+## Proof network
+
+If you want the broader route around this series:
+
+- **Main site:** [CrisisCore Systems](https://crisiscore-systems.ca/)
+- **Framework:** [Protective Computing](https://protective-computing.github.io/)
+- **Reference implementation:** [private offline pain tracker](https://paintracker.ca/)
+- **Proof route:** [paintracker.ca/proof](https://paintracker.ca/proof)
+
+If you want, I can also produce a **more SEO-tilted variant** with the same
+content and slightly different headings plus long-tail phrasing, *without*
+making it read like a keyword farm.

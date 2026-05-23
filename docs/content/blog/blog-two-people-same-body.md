@@ -24,6 +24,10 @@ Same body. Same brain. Same person.
 
 Both of us built the same app.
 
+For the full reading path around this layer of the project, start with [Trauma-Informed Design: Start Here](/blog/trauma-informed-design-start-here).
+
+This is the personal entry point in the Trauma-Informed Design reading path. The architecture companion is [Trauma-informed UX + accessibility as architecture (not polish)](https://dev.to/crisiscoresystems/trauma-informed-ux-accessibility-as-architecture-not-polish-22jg), and the component-level follow-through is [Trauma-Informed React Hooks](https://dev.to/crisiscoresystems/trauma-informed-react-hooks-483n).
+
 ---
 
 ## Why Pain Tracker Exists
@@ -219,6 +223,8 @@ The story isn't finished.
 ---
 
 If your pages look anything like mine and you're actively thinking about ending things:
+
+If you want the companion piece on how this lived crisis experience got translated into working software architecture, read [Building Software That Actually Gives a Damn: My Journey with Trauma-Informed Design](https://dev.to/crisiscoresystems/building-software-that-actually-gives-a-damn-my-journey-with-trauma-informed-design-12h3).
 
 * In Canada, you can call or text **9-8-8** for support.
 * Elsewhere, look up your local crisis line or emergency service.

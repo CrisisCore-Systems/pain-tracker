@@ -34,7 +34,7 @@ import {
 } from 'lucide-react';
 import { useTraumaInformed } from '../accessibility/TraumaInformedHooks';
 import type { ValidationResponse } from '../../services/EmotionalValidationService';
-import { trackPainEntryLogged } from '../../analytics/ga4-events';
+import { trackPainEntryLogged, trackFirstLogSaved } from '../../analytics/ga4-events';
 import { trackUsageEvent, incrementSessionAction } from '../../utils/usage-tracking';
 import { analyticsLogger } from '../../lib/debug-logger';
 
@@ -384,6 +384,7 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
   const handleSubmit = async () => {
     setIsSubmitting(true);
     setValidationError(null);
+    const isFirstLogSave = entries.length === 0;
 
     try {
       // Validate form data using Zod schema before submission
@@ -416,6 +417,10 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
           locationCount,
           symptomCount,
         });
+
+        if (isFirstLogSave) {
+          trackFirstLogSaved();
+        }
       } catch (err) {
         analyticsLogger.swallowed('trackPainEntryLogged', err);
       }

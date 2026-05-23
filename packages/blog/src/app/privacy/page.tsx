@@ -129,7 +129,7 @@ export default function PrivacyPage() {
           Start tracking with full confidence that your data stays yours.
         </p>
         <div className="flex items-center justify-center gap-4 flex-wrap">
-          <Link href="/app" className="btn-primary">
+          <Link href={siteConfig.links.app} className="btn-primary">
             Open Pain Tracker
           </Link>
           <Link href="/security" className="btn-secondary">

@@ -4,8 +4,8 @@ import { render, screen, fireEvent } from '@testing-library/react';
 
 // Mock recharts to avoid DOM measurement issues in jsdom
 vi.mock('recharts', () => {
-  const MockChart = ({ children, ...props }: React.PropsWithChildren<Record<string, unknown>>) => (
-    <div data-testid={props['data-testid'] as string}>{children}</div>
+  const MockChart = ({ ...props }: React.PropsWithChildren<Record<string, unknown>>) => (
+    <div data-testid={props['data-testid'] as string} />
   );
   return {
     AreaChart: (props: React.PropsWithChildren<Record<string, unknown>>) => (

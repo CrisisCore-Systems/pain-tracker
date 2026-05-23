@@ -17,7 +17,7 @@ interface SubscriptionAwarePainEntryFormProps {
  * - Usage warnings when approaching limits
  * - User-friendly error messages for quota violations
  */
-export function SubscriptionAwarePainEntryForm({ userId }: SubscriptionAwarePainEntryFormProps) {
+export function SubscriptionAwarePainEntryForm({ userId }: Readonly<SubscriptionAwarePainEntryFormProps>) {
   const { addPainEntry, isQuotaExceeded, quotaMessage, isLoading } = useSubscriptionEntry(userId);
 
   const handleSubmit = async (entry: Omit<PainEntry, 'id' | 'timestamp'>) => {
@@ -53,9 +53,6 @@ export function SubscriptionAwarePainEntryForm({ userId }: SubscriptionAwarePain
                 Entry Limit Reached
               </h3>
               <p className="text-sm text-red-700 dark:text-red-400">{quotaMessage}</p>
-              <p className="text-xs text-red-600 dark:text-red-500 mt-2">
-                Upgrade your plan to continue tracking your pain without limits.
-              </p>
             </div>
           </div>
         </div>

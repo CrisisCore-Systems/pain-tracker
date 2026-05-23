@@ -2,7 +2,7 @@
  * Simple in-memory rate limiter for API endpoints.
  * Not a replacement for production-grade rate limiting (use a shared store like Redis).
  */
-import RedisRateLimiter from './rateLimiterRedis';
+import RedisRateLimiter from './rateLimiterRedis.js';
 
 type Entry = { count: number; expiresAt: number };
 

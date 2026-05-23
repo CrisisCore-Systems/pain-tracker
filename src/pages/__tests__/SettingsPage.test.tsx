@@ -1,6 +1,11 @@
 import React from 'react';
+import { vi } from 'vitest';
 import { render, screen } from '../../test/test-utils';
 import SettingsPage from '../SettingsPage';
+
+vi.mock('../../components/notifications/NotificationManagement', () => ({
+  NotificationManagement: () => <div data-testid="notification-management-stub" />,
+}));
 
 describe('SettingsPage', () => {
   it('renders settings sections', () => {
@@ -14,6 +19,9 @@ describe('SettingsPage', () => {
 
   // Backup & Export (section heading)
   expect(screen.getByRole('heading', { level: 3, name: /Backup & Export/i })).toBeInTheDocument();
+
+    // Workflow preferences panel
+    expect(screen.getByText(/Workflow & Field Mode/i)).toBeInTheDocument();
 
     // Alerts settings
     expect(screen.getByText(/Alerts settings/i)).toBeInTheDocument();

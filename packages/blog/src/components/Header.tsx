@@ -151,7 +151,7 @@ export function Header() {
           <div className="w-px h-8 bg-border/60 mx-4" aria-hidden="true" />
           
           <a
-            href="https://www.paintracker.ca/app"
+            href={siteConfig.links.app}
             className="btn-primary group/btn relative overflow-hidden"
           >
             {/* Shimmer effect */}
@@ -270,7 +270,7 @@ export function Header() {
           <div className="w-32 h-1 bg-gradient-to-r from-primary via-accent to-primary rounded-full my-6" aria-hidden="true" />
           
           <a
-            href="https://www.paintracker.ca/app"
+            href={siteConfig.links.app}
             className="btn-primary text-lg px-10 py-4 shadow-xl shadow-primary/20"
           >
             Try Pain Tracker

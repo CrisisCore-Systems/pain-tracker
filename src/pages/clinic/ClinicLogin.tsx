@@ -205,7 +205,7 @@ export function ClinicLogin() {
           <div className="flex items-center justify-center gap-2 text-muted-foreground mb-2">
             <Shield className="w-4 h-4 text-emerald-400" />
             <p className="text-sm">
-              PainTracker &copy; {new Date().getFullYear()}
+              Pain Tracker &copy; {new Date().getFullYear()}
             </p>
           </div>
           <p className="text-xs text-muted-foreground">

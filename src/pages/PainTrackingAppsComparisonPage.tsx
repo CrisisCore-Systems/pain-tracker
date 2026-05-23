@@ -5,10 +5,10 @@ import { SEOPageLayout, type SEOPageContent } from '../components/seo';
 const pageContent: SEOPageContent = {
   slug: 'pain-tracking-apps-comparison',
   canonicalPath: '/pain-tracking-apps-comparison',
-  title: 'Pain Tracking Apps Comparison',
-  metaTitle: 'Pain Tracking Apps Comparison: Privacy, Offline Use, and Doctor Visits | PainTracker',
+  title: 'Best Pain Tracking Apps in 2026',
+  metaTitle: 'Best Pain Tracking Apps in 2026: No Account, Offline, Private Options',
   metaDescription:
-    'Compare pain tracking apps by privacy, offline use, doctor-visit readiness, exports, and daily usability. See how PainTracker approaches local-first tracking and clinician-friendly records.',
+    'Compare the best pain tracking apps for privacy, no-account use, offline reliability, printable logs, and doctor-ready symptom reports in 2026.',
   keywords: [
     'pain tracking apps',
     'pain management apps',
@@ -19,17 +19,17 @@ const pageContent: SEOPageContent = {
     'pain tracker doctor report',
   ],
   badge: 'Comparison Guide',
-  headline: 'Pain Tracking Apps Comparison: What Actually Matters',
+  headline: 'Best pain tracking apps in 2026',
   subheadline:
-    'If you are comparing pain tracking apps, do not stop at screenshots. Compare privacy, offline use, clinician-ready exports, and whether the app still works when you are tired, interrupted, or offline.',
+    'Most pain apps can log symptoms. Fewer let you track privately without account lock-in, keep working offline, and hand over printable records when needed.',
   primaryCTA: {
-    text: 'Open PainTracker',
+    text: 'Try PainTracker free',
     href: '/start',
     download: false,
   },
   secondaryCTA: {
-    text: 'See Printable Option',
-    href: '/pain-diary-template',
+    text: 'Get the printable PDF',
+    href: '/resources/daily-pain-tracker-printable',
   },
   utilityBlock: {
     type: 'tool-embed',
@@ -80,14 +80,14 @@ const pageContent: SEOPageContent = {
       answer: 'Because the point of tracking is often to review patterns later or share a structured record with a clinician. If the data cannot leave the app cleanly, your control is weaker.',
     },
     {
-      question: 'How does PainTracker position itself in that comparison?',
-      answer: 'PainTracker is built around local-first daily tracking, user-controlled exports, and clinician-friendly records rather than account-first engagement loops.',
+      question: 'How does Pain Tracker position itself in that comparison?',
+      answer: 'Pain Tracker is built around local-first daily tracking, user-controlled exports, and clinician-friendly records rather than account-first engagement loops.',
     },
   ],
   relatedLinks: [
     {
       title: 'Pain Tracker App',
-      description: 'Read the direct category page for PainTracker itself.',
+      description: 'Read the direct category page for Pain Tracker itself.',
       href: '/pain-tracker-app',
     },
     {
@@ -115,17 +115,17 @@ const pageContent: SEOPageContent = {
 const comparisonPoints = [
   {
     title: 'Where does daily data live?',
-    description: 'PainTracker keeps day-to-day tracking local-first by default instead of making routine use depend on a remote account.',
+    description: 'Pain Tracker keeps day-to-day tracking local-first by default instead of making routine use depend on a remote account.',
     icon: Shield,
   },
   {
     title: 'Can I still log pain offline?',
-    description: 'PainTracker is built so daily logging remains available without treating network access as a prerequisite.',
+    description: 'Pain Tracker is built so daily logging remains available without treating network access as a prerequisite.',
     icon: WifiOff,
   },
   {
     title: 'Can I bring records to a doctor visit?',
-    description: 'PainTracker focuses on exports and structured records that support later review rather than trapping the data inside the app.',
+    description: 'Pain Tracker focuses on exports and structured records that support later review rather than trapping the data inside the app.',
     icon: FileText,
   },
   {
@@ -135,21 +135,117 @@ const comparisonPoints = [
   },
 ];
 
+const comparisonRows = [
+  {
+    app: 'PainTracker',
+    free: 'Yes',
+    offline: 'Yes',
+    accountRequired: 'No',
+    printableExport: 'Yes',
+    privacyPosture: 'Local-first',
+  },
+  {
+    app: 'App 2',
+    free: 'Maybe',
+    offline: 'No',
+    accountRequired: 'Yes',
+    printableExport: 'Maybe',
+    privacyPosture: 'Cloud account',
+  },
+  {
+    app: 'App 3',
+    free: 'Maybe',
+    offline: 'Maybe',
+    accountRequired: 'Yes',
+    printableExport: 'Maybe',
+    privacyPosture: 'Cloud account',
+  },
+];
+
+const nextStepCards = [
+  {
+    title: 'Try the free app',
+    description: 'Use the local-first app if you want structured records, analysis, and export without cloud-first workflow lock-in.',
+    href: '/start',
+  },
+  {
+    title: 'Start with a printable',
+    description: 'Use the daily printable if you need a no-setup option right now or want a paper backup lane.',
+    href: '/resources/daily-pain-tracker-printable',
+  },
+  {
+    title: 'Browse clinician resources',
+    description: 'Move from comparison into doctor-visit and documentation pages that help convert tracking into usable records.',
+    href: '/resources',
+  },
+];
+
 export const PainTrackingAppsComparisonPage: React.FC = () => (
   <SEOPageLayout content={pageContent}>
-    <div className="grid gap-6 md:grid-cols-2">
-      {comparisonPoints.map((point) => {
-        const Icon = point.icon;
-        return (
-          <div key={point.title} className="rounded-2xl border border-slate-700 bg-slate-800/70 p-6 text-left">
-            <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-300">
-              <Icon className="h-6 w-6" />
+    <div className="space-y-8">
+      <div className="grid gap-6 md:grid-cols-2">
+        {comparisonPoints.map((point) => {
+          const Icon = point.icon;
+          return (
+            <div key={point.title} className="rounded-2xl border border-slate-700 bg-slate-800/70 p-6 text-left">
+              <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-300">
+                <Icon className="h-6 w-6" />
+              </div>
+              <h3 className="mb-2 text-lg font-semibold text-white">{point.title}</h3>
+              <p className="text-sm leading-relaxed text-slate-400">{point.description}</p>
             </div>
-            <h3 className="mb-2 text-lg font-semibold text-white">{point.title}</h3>
-            <p className="text-sm leading-relaxed text-slate-400">{point.description}</p>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
+
+      <section className="rounded-2xl border border-slate-700 bg-slate-900/70 p-6 text-left">
+        <h2 className="mb-3 text-2xl font-semibold text-white">Quick comparison table</h2>
+        <p className="mb-4 text-sm leading-relaxed text-slate-300">
+          Compare the options by what changes real outcomes: privacy posture, offline reliability, account lock-in, and printable outputs.
+        </p>
+        <div className="overflow-x-auto">
+          <table className="min-w-full border-collapse text-sm">
+            <thead>
+              <tr className="border-b border-slate-700 text-left text-slate-200">
+                <th className="px-3 py-3 font-semibold">App</th>
+                <th className="px-3 py-3 font-semibold">Free</th>
+                <th className="px-3 py-3 font-semibold">Offline</th>
+                <th className="px-3 py-3 font-semibold">Account Required</th>
+                <th className="px-3 py-3 font-semibold">Printable Export</th>
+                <th className="px-3 py-3 font-semibold">Privacy Posture</th>
+              </tr>
+            </thead>
+            <tbody>
+              {comparisonRows.map((row) => (
+                <tr key={row.app} className="border-b border-slate-800 align-top text-slate-300">
+                  <td className="px-3 py-3 font-medium text-white">{row.app}</td>
+                  <td className="px-3 py-3">{row.free}</td>
+                  <td className="px-3 py-3">{row.offline}</td>
+                  <td className="px-3 py-3">{row.accountRequired}</td>
+                  <td className="px-3 py-3">{row.printableExport}</td>
+                  <td className="px-3 py-3">{row.privacyPosture}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section className="rounded-2xl border border-slate-700 bg-slate-800/70 p-6 text-left">
+        <h2 className="mb-3 text-2xl font-semibold text-white">Want a private option you can start using now?</h2>
+        <p className="mb-5 text-sm leading-relaxed text-slate-300">
+          Start with the free app if you want daily tracking now, or move into the printable and doctor-visit lanes if paper fits better today.
+        </p>
+        <div className="grid gap-4 md:grid-cols-3">
+          {nextStepCards.map((card) => (
+            <a key={card.title} href={card.href} className="rounded-2xl border border-slate-700 bg-slate-900/60 p-6 text-left transition hover:border-emerald-500/60 hover:bg-slate-900">
+              <h3 className="mb-2 text-lg font-semibold text-white">{card.title}</h3>
+              <p className="text-sm leading-relaxed text-slate-400">{card.description}</p>
+            </a>
+          ))}
+        </div>
+      </section>
+
     </div>
   </SEOPageLayout>
 );

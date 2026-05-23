@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 
 const SITE_URL = 'https://www.paintracker.ca';
 const NOINDEX_QUERY_STATE_PATHS = new Set(['/resources']);
+const NOINDEX_PATH_PREFIXES = ['/app', '/subscription', '/start', '/clinic/login'];
 
 export function toCanonicalUrl(pathname: string): string {
   if (!pathname || pathname === '/') {
@@ -15,7 +16,12 @@ export function toCanonicalUrl(pathname: string): string {
 }
 
 export function shouldNoindexRoute(pathname: string, search: string): boolean {
-  return NOINDEX_QUERY_STATE_PATHS.has(pathname) && search.trim().length > 0;
+  const hasNoindexQueryState = NOINDEX_QUERY_STATE_PATHS.has(pathname) && search.trim().length > 0;
+  const hasNoindexPathPrefix = NOINDEX_PATH_PREFIXES.some(
+    (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`)
+  );
+
+  return hasNoindexQueryState || hasNoindexPathPrefix;
 }
 
 function setRobotsMetaTag(name: 'robots' | 'googlebot', shouldNoindex: boolean) {

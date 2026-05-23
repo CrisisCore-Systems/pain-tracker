@@ -72,7 +72,7 @@ type MinimalExportEntry = {
 };
 
 function toMedicationLogString(entry: PainEntry): string {
-  return (entry.medications.current || [])
+  return (entry.medications?.current || [])
     .map(med => `${med.name} (${med.dosage}, ${med.frequency})`)
     .join('; ');
 }
@@ -83,7 +83,7 @@ function toMinimalExportEntry(entry: PainEntry): MinimalExportEntry {
     timestamp: entry.timestamp,
     painLevel: entry.baselineData.pain,
     symptoms: [...(entry.baselineData.symptoms || [])],
-    medications: (entry.medications.current || []).map(med => ({
+    medications: (entry.medications?.current || []).map(med => ({
       name: med.name,
       dosage: med.dosage,
       frequency: med.frequency,
@@ -220,7 +220,13 @@ export const downloadData = (
   link.download = filename;
   document.body.appendChild(link);
   link.click();
-  link.remove();
+
+  if (typeof link.remove === 'function') {
+    link.remove();
+  } else {
+    document.body.removeChild(link);
+  }
+
   trackExportArtifact(url);
 };
 

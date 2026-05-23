@@ -226,7 +226,7 @@ export class BackgroundSyncService {
     if (result.success) {
       stats.successCount++;
       await offlineStorage.removeSyncQueueItem(requireSyncQueueItemId(item));
-      console.log(`BackgroundSync: Successfully synced ${item.method} ${item.url}`);
+      console.log(`BackgroundSync: Successfully synced ${item.method} request`);
       return;
     }
 
@@ -236,7 +236,7 @@ export class BackgroundSyncService {
       stats.failureCount++;
       stats.errors.push(`Max retries exceeded for ${item.url}: ${result.error}`);
       await offlineStorage.removeSyncQueueItem(requireSyncQueueItemId(item));
-      console.error(`BackgroundSync: Max retries exceeded for ${item.url}`);
+      console.error(`BackgroundSync: Max retries exceeded for ${item.method} request`);
       return;
     }
 
@@ -257,7 +257,7 @@ export class BackgroundSyncService {
     } catch (error) {
       stats.failureCount++;
       stats.errors.push(`Sync error for ${item.url}: ${error}`);
-      console.error(`BackgroundSync: Error syncing ${item.url}:`, error);
+      console.error(`BackgroundSync: Error syncing ${item.method} request:`, error);
     }
   }
 
@@ -287,7 +287,7 @@ export class BackgroundSyncService {
     try {
       // Defense-in-depth: never enqueue requests we would refuse to replay.
       if (!this.isAllowedSyncRequest(method, url)) {
-        console.warn(`BackgroundSync: Refusing to queue disallowed URL: ${url}`);
+        console.warn('BackgroundSync: Refusing to queue disallowed request');
         return;
       }
 
@@ -310,7 +310,7 @@ export class BackgroundSyncService {
         type: 'api-request',
       });
 
-      console.log(`BackgroundSync: Queued ${method} ${url} for sync`);
+      console.log(`BackgroundSync: Queued ${method} request for sync`);
 
       // Try to sync immediately if online
       if (this.isOnline) {
@@ -465,7 +465,7 @@ export class BackgroundSyncService {
 
     this.retryTimeouts.set(itemId, timeout);
 
-    console.log(`BackgroundSync: Scheduled retry for ${item.url} in ${delay}ms`);
+    console.log(`BackgroundSync: Scheduled retry for ${item.method} request in ${delay}ms`);
   }
 
   private getRetryDelay(retryCount: number): number {

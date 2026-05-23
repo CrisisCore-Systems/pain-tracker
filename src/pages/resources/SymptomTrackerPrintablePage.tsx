@@ -40,6 +40,7 @@ import {
   Cloudy,
 } from 'lucide-react';
 import { LandingFooter } from '../../components/landing/LandingFooter';
+import { ResourceOutcomeBridge, ResourceWorkflowSteps } from '../../components/seo';
 import {
   generateMedicalWebPageSchema,
   generateFAQSchema,
@@ -55,11 +56,11 @@ import '../../styles/pages/landing.css';
 // ---------------------------------------------------------------------------
 const SEO = {
   slug: 'symptom-tracker-printable',
-  title: 'Symptom Tracker Printable (Free)',
+  title: 'Symptom Tracker Printable in 2026',
   metaTitle:
-    'Symptom Tracker Printable — Free Comprehensive Daily Symptom Log | PainTracker',
+    'Symptom Tracker Printable (2026) | Free PDF, No Email Required',
   metaDescription:
-    'Download a free symptom tracker printable. Track fatigue, sleep quality, mood, brain fog, energy, and more alongside pain — the complete picture your doctor needs for chronic illness management.',
+    'Download a free symptom tracker printable for 2026. No email required. Track fatigue, sleep quality, mood, brain fog, energy, and pain in one symptom log for chronic illness management.',
   keywords: [
     'symptom tracker printable',
     'daily symptom log',
@@ -307,7 +308,7 @@ const FAQS = [
   {
     question: 'Is there a digital version?',
     answer:
-      'Yes. PainTracker tracks all these symptoms digitally, auto-detects correlations between symptoms, generates clinical reports, and encrypts everything on your device. Many people start with paper to figure out which symptoms matter most, then transition to digital for pattern detection and convenience.',
+      'Yes. Pain Tracker tracks all these symptoms digitally, auto-detects correlations between symptoms, generates clinical reports, and encrypts everything on your device. Many people start with paper to figure out which symptoms matter most, then transition to digital for pattern detection and convenience.',
   },
 ];
 
@@ -463,7 +464,7 @@ export const SymptomTrackerPrintablePage: React.FC = () => {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <Link to="/" className="flex items-center gap-2">
-              <span className="landing-brand text-xl">PainTracker</span>
+              <span className="landing-brand text-xl">Pain Tracker</span>
             </Link>
             <div className="flex items-center gap-4">
               <Link
@@ -530,7 +531,7 @@ export const SymptomTrackerPrintablePage: React.FC = () => {
             >
               Track the{' '}
               <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-amber-400 bg-clip-text text-transparent">
-                Complete Picture
+                Complete Picture in 2026
               </span>{' '}
               of Chronic Illness
             </h1>
@@ -538,6 +539,9 @@ export const SymptomTrackerPrintablePage: React.FC = () => {
             <p className="landing-subhead text-lg sm:text-xl max-w-2xl mx-auto mb-4">
               Pain, fatigue, sleep, brain fog, mood, and functional impact — structured so
               your provider sees the connections that standard pain diaries miss.
+            </p>
+            <p className="text-slate-300 text-base sm:text-lg max-w-2xl mx-auto mb-4">
+              Use the printable if you need the full symptom picture on paper first. Move to the offline-first app when you want ongoing review, cleaner history, and easier summaries.
             </p>
             <p className="text-slate-500 text-sm mb-8">
               100% free &bull; No email required &bull; No tracking &bull; Prints on standard letter paper
@@ -600,6 +604,13 @@ export const SymptomTrackerPrintablePage: React.FC = () => {
             </div>
           </div>
         </section>
+
+        <ResourceOutcomeBridge
+          downloadUrl="/assets/symptom-tracker.pdf"
+          downloadFileName="symptom-tracker.pdf"
+        />
+
+        <ResourceWorkflowSteps intent="printable" />
 
         {/* ═══ WHAT'S INSIDE ═══ */}
         <section className="py-16 sm:py-20 bg-slate-900" aria-labelledby="whats-inside">
@@ -901,7 +912,7 @@ export const SymptomTrackerPrintablePage: React.FC = () => {
                   <div className="w-10 h-10 bg-primary/15 rounded-lg flex items-center justify-center">
                     <Sparkles className="w-5 h-5 text-primary" />
                   </div>
-                  <h3 className="text-xl font-bold text-white">PainTracker (Digital)</h3>
+                  <h3 className="text-xl font-bold text-white">Pain Tracker (Digital)</h3>
                 </div>
                 <ul className="space-y-3 flex-1">
                   {[
@@ -997,7 +1008,7 @@ export const SymptomTrackerPrintablePage: React.FC = () => {
                 to="/start"
                 className="px-8 py-4 text-lg font-medium text-slate-300 hover:text-white border border-slate-600 hover:border-slate-500 rounded-xl transition-all flex items-center gap-2"
               >
-                Open PainTracker
+                Use the app free
                 <ArrowRight className="w-5 h-5" />
               </Link>
             </div>

@@ -18,6 +18,16 @@ if ! command -v npm >/dev/null 2>&1; then
   exit 0
 fi
 
+# Constrain the badge-generation test pass so coverage runs do not exhaust
+# memory on developer machines during pre-push.
+if [ -z "${VITEST_MAX_THREADS:-}" ]; then
+  export VITEST_MAX_THREADS=1
+fi
+
+if [[ " ${NODE_OPTIONS:-} " != *" --max-old-space-size="* ]]; then
+  export NODE_OPTIONS="${NODE_OPTIONS:+$NODE_OPTIONS }--max-old-space-size=6144"
+fi
+
 # If badge files were already committed in the push, trust them and skip
 # regeneration. This avoids it re-running badge:all (which re-runs tests),
 # getting slightly different numbers, and blocking the push in a loop.
@@ -27,13 +37,20 @@ if [ -n "$BADGES_IN_PUSH" ]; then
   exit 0
 fi
 
+INITIAL_BADGE_CHANGES=$(git status --porcelain -- badges/*.json 2>/dev/null || true)
+
 echo "[pre-push] Generating dynamic badges..." >&2
-npm run -s badge:all || echo "[pre-push] badge:all failed (continuing, will not block push)." >&2
+BADGE_REFRESH_EXIT=0
+npm run -s badge:all || BADGE_REFRESH_EXIT=$?
+if [ "$BADGE_REFRESH_EXIT" -ne 0 ]; then
+  echo "[pre-push] badge:all failed (continuing, will not block push)." >&2
+fi
 
 # IMPORTANT: pre-push hooks must never create commits.
-# If badge JSONs changed, block the push and ask the developer to commit explicitly.
+# If a successful badge refresh changed badge JSONs, block the push and ask the
+# developer to review and commit them explicitly.
 BADGE_CHANGES=$(git status --porcelain -- badges/*.json 2>/dev/null || true)
-if [ -n "$BADGE_CHANGES" ]; then
+if [ "$BADGE_REFRESH_EXIT" -eq 0 ] && [ -n "$BADGE_CHANGES" ] && [ "$BADGE_CHANGES" != "$INITIAL_BADGE_CHANGES" ]; then
   echo "[pre-push] Badge JSONs changed. This hook will not auto-commit." >&2
   echo "[pre-push] Please review and commit them, then push again:" >&2
   echo "  git add badges/*.json" >&2
@@ -41,6 +58,6 @@ if [ -n "$BADGE_CHANGES" ]; then
   exit 1
 fi
 
-echo "[pre-push] No badge changes detected." >&2
+echo "[pre-push] No new badge changes detected." >&2
 
 exit 0

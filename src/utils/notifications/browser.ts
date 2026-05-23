@@ -171,7 +171,7 @@ class BrowserNotificationManager {
 
     // Note: Modern browsers don't provide a direct way to close notifications by tag
     // This method is kept for future implementation or alternative approaches
-    console.log(`Attempting to close notifications with tag: ${tag}`);
+    console.log('Attempting to close notifications by tag');
   }
 
   // Get notification settings/status

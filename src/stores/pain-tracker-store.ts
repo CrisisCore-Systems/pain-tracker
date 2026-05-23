@@ -3,6 +3,7 @@ import { formatNumber } from '../utils/formatting';
 import { devtools, persist, subscribeWithSelector, type PersistStorage } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 import type { PainEntry, EmergencyPanelData, ActivityLogEntry, ReportTemplate } from '../types';
+import type { EntryCaptureContext } from '../types/index';
 import type { MoodEntry } from '../types/quantified-empathy';
 import { makeMoodEntry } from '../utils/mood-entry-factory';
 import type { FibromyalgiaEntry } from '../types/fibromyalgia';
@@ -32,6 +33,97 @@ type PersistedPainTrackerSlice = Pick<
   PainTrackerState,
   'entries' | 'moodEntries' | 'emergencyData' | 'activityLogs' | 'scheduledReports' | 'retention'
 >;
+
+function captureEntryContext(
+  captureChannel: 'quick-log' | 'manual' | 'unknown' = 'unknown'
+): EntryCaptureContext {
+  const hasNavigator = typeof navigator !== 'undefined';
+
+  return {
+    networkState: hasNavigator
+      ? navigator.onLine === false
+        ? 'offline'
+        : 'online'
+      : 'unknown',
+    storageLocation: 'local-device' as const,
+    captureChannel,
+  };
+}
+
+function summarizePrimitive(value: unknown): string {
+  if (typeof value === 'boolean') return value ? 'yes' : 'no';
+  if (typeof value === 'number' || typeof value === 'string') return String(value);
+  if (Array.isArray(value)) return value.length > 0 ? value.join(', ') : 'none';
+  if (value && typeof value === 'object') return 'updated';
+  return 'cleared';
+}
+
+function summarizeChangedField(field: string, previousValue: unknown, nextValue: unknown): string {
+  if (field === 'notes') {
+    return typeof nextValue === 'string' && nextValue.trim().length > 0
+      ? 'Notes updated'
+      : 'Notes cleared';
+  }
+
+  if (
+    field === 'baselineData' &&
+    previousValue &&
+    nextValue &&
+    typeof previousValue === 'object' &&
+    typeof nextValue === 'object'
+  ) {
+    const prev = previousValue as PainEntry['baselineData'];
+    const next = nextValue as PainEntry['baselineData'];
+    const fragments: string[] = [];
+
+    if (prev.pain !== next.pain) {
+      fragments.push(`Pain ${prev.pain} -> ${next.pain}`);
+    }
+    if ((prev.locations ?? []).join('|') !== (next.locations ?? []).join('|')) {
+      fragments.push(`Locations: ${summarizePrimitive(next.locations)}`);
+    }
+    if ((prev.symptoms ?? []).join('|') !== (next.symptoms ?? []).join('|')) {
+      fragments.push(`Symptoms: ${summarizePrimitive(next.symptoms)}`);
+    }
+
+    return fragments.length > 0 ? fragments.join(' | ') : 'Baseline data updated';
+  }
+
+  if (field === 'occupationalImpact' && nextValue && typeof nextValue === 'object') {
+    const next = nextValue as Record<string, boolean | undefined>;
+    const active = Object.entries(next)
+      .filter(([, enabled]) => enabled)
+      .map(([key]) => key);
+
+    return active.length > 0
+      ? `Occupational flags: ${active.join(', ')}`
+      : 'Occupational flags cleared';
+  }
+
+  return `${field} -> ${summarizePrimitive(nextValue)}`;
+}
+
+function buildEntryRevision(previousEntry: PainEntry, updates: Partial<PainEntry>) {
+  const changedFields = Object.keys(updates).filter(field => {
+    if (field === 'recordIntegrity') return false;
+    return previousEntry[field as keyof PainEntry] !== updates[field as keyof PainEntry];
+  });
+
+  if (changedFields.length === 0) {
+    return null;
+  }
+
+  const captureContext = captureEntryContext('quick-log');
+
+  return {
+    amendedAt: new Date().toISOString(),
+    changedFields,
+    summary: changedFields.map(field =>
+      summarizeChangedField(field, previousEntry[field as keyof PainEntry], updates[field as keyof PainEntry])
+    ),
+    captureContext,
+  };
+}
 
 const encryptedPersistStorage: PersistStorage<PersistedPainTrackerSlice | undefined> =
   createEncryptedOfflinePersistStorage<PersistedPainTrackerSlice | undefined>('pain-tracker-storage', {
@@ -215,9 +307,10 @@ export const usePainTrackerStore = create<PainTrackerState>()(
             set(state => {
               // Generate collision-resistant ID: timestamp + random suffix
               const uniqueId = Date.now() * 1000 + Math.floor(Math.random() * 1000);
+              const createdAt = new Date().toISOString();
               const newEntry: PainEntry = {
                 id: uniqueId,
-                timestamp: new Date().toISOString(),
+                timestamp: createdAt,
                 baselineData: {
                   pain: entryData.baselineData?.pain || 0,
                   locations: entryData.baselineData?.locations || [],
@@ -267,6 +360,14 @@ export const usePainTrackerStore = create<PainTrackerState>()(
                 stress: entryData.stress ?? undefined,
                 activities: entryData.activities ?? [],
                 medicationAdherence: entryData.medicationAdherence,
+                occupationalImpact: entryData.occupationalImpact,
+                recordIntegrity: {
+                  createdAt,
+                  originalTimestamp: createdAt,
+                  revisionCount: 0,
+                  revisions: [],
+                  captureContext: captureEntryContext('quick-log'),
+                },
               };
 
               state.entries.push(newEntry);
@@ -285,7 +386,23 @@ export const usePainTrackerStore = create<PainTrackerState>()(
             set(state => {
               const index = state.entries.findIndex(entry => entry.id === id);
               if (index >= 0) {
-                state.entries[index] = { ...state.entries[index], ...updates };
+                const previousEntry = state.entries[index];
+                const revision = buildEntryRevision(previousEntry, updates);
+                const mergedEntry: PainEntry = { ...previousEntry, ...updates };
+
+                if (revision) {
+                  const previousIntegrity = previousEntry.recordIntegrity;
+                  mergedEntry.recordIntegrity = {
+                    createdAt: previousIntegrity?.createdAt ?? previousEntry.timestamp,
+                    originalTimestamp: previousIntegrity?.originalTimestamp ?? previousEntry.timestamp,
+                    lastAmendedAt: revision.amendedAt,
+                    revisionCount: (previousIntegrity?.revisionCount ?? 0) + 1,
+                    revisions: [...(previousIntegrity?.revisions ?? []), revision],
+                    captureContext: previousIntegrity?.captureContext ?? revision.captureContext,
+                  };
+                }
+
+                state.entries[index] = mergedEntry;
               }
             });
           },

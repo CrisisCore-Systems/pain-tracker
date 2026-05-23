@@ -6,6 +6,8 @@ import { PWAInstallPrompt } from '../components/pwa/PWAInstallPrompt';
 import { PWAStatusIndicator } from '../components/pwa/PWAStatusIndicator';
 import { ToneStateTester } from '../components/dev/ToneStateTester';
 import { BlackBoxSplashScreen } from '../components/branding/BlackBoxSplashScreen';
+import { ToneProvider } from '../contexts/ToneContext';
+import { StartupPromptsProvider } from '../contexts/StartupPromptsContext';
 import { usePatternAlerts } from '../hooks/usePatternAlerts';
 import { usePainTrackerStore, selectEntries } from '../stores/pain-tracker-store';
 import { pwaManager } from '../utils/pwa-utils';
@@ -23,7 +25,7 @@ const ErrorFallback = () => {
           We encountered an unexpected error. Please try refreshing the page.
         </p>
         <button
-          onClick={() => window.location.reload()}
+          onClick={() => globalThis.location.reload()}
           className="bg-primary text-primary-foreground px-6 py-2 rounded-md hover:bg-primary/90 transition-colors"
         >
           Refresh Page
@@ -45,7 +47,7 @@ export function ProtectedAppShell({ initialView }: { initialView?: string } = {}
 
     // Add debugging method to window for development
     if (import.meta.env.DEV) {
-      (window as unknown as Record<string, unknown>).resetPWA = async () => {
+      (globalThis as typeof globalThis & Record<string, unknown>).resetPWA = async () => {
         try {
           await pwaManager.resetServiceWorker();
         } catch (error) {
@@ -54,7 +56,7 @@ export function ProtectedAppShell({ initialView }: { initialView?: string } = {}
       };
 
       // Expose test data loaders for console access
-      (window as unknown as Record<string, unknown>).loadChronicPainTestData = () => {
+      (globalThis as typeof globalThis & Record<string, unknown>).loadChronicPainTestData = () => {
         import('../data/chronic-pain-12-month-seed').then(
           ({ chronicPain12MonthPainEntries, chronicPain12MonthMoodEntries, chronicPainDataStats }) => {
             console.log('[Dev] Loading 12-month chronic pain test data:', chronicPainDataStats);
@@ -103,23 +105,27 @@ export function ProtectedAppShell({ initialView }: { initialView?: string } = {}
   usePatternAlerts(patternEntries);
 
   return (
-    <div
-      className="pt-app-shell min-h-screen bg-background transition-colors"
-      role="application"
-      aria-label="PainTracker Application"
-    >
-      <OfflineBanner />
-      <NotificationConsentPrompt />
+    <ToneProvider>
+      <StartupPromptsProvider>
+        <div
+          className="pt-app-shell min-h-screen bg-background transition-colors"
+          role="application"
+          aria-label="PainTracker Application"
+        >
+          <OfflineBanner />
+          <NotificationConsentPrompt />
 
-      <ErrorBoundary fallback={<ErrorFallback />}>
-        <Suspense fallback={<LoadingFallback />}>
-          <PainTrackerContainer initialView={initialView} />
-        </Suspense>
-      </ErrorBoundary>
+          <ErrorBoundary fallback={<ErrorFallback />}>
+            <Suspense fallback={<LoadingFallback />}>
+              <PainTrackerContainer initialView={initialView} />
+            </Suspense>
+          </ErrorBoundary>
 
-      <PWAInstallPrompt />
-      <PWAStatusIndicator />
-      <ToneStateTester />
-    </div>
+          <PWAInstallPrompt />
+          <PWAStatusIndicator />
+          <ToneStateTester />
+        </div>
+      </StartupPromptsProvider>
+    </ToneProvider>
   );
 }

@@ -11,7 +11,18 @@ canonical_url: "https://github.com/CrisisCore-Systems/pain-tracker"
 published: false
 ---
 
-**Series:** [Start here](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-00-start-here.md) · [Part 1](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-01-offline-first-local-first-architecture.md) · [Part 2](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-02-three-storage-layers-state-cache-offline-db-encrypted-vault.md) · [Part 3](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-03-service-workers-that-dont-surprise-you.md) · [Part 4](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-04-zod-defensive-parsing.md) · [Part 5](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-05-trauma-informed-ux-accessibility-as-architecture.md) · [Part 6](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-06-exports-as-a-security-boundary.md) · [Part 7](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-07-worksafebc-oriented-workflows-careful-language.md) · **Part 8** · [Part 9](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-09-quality-gates-that-earn-trust.md) · [Part 10](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-10-maintaining-truthful-docs-over-time.md)
+**Series:**
+[Start here](https://dev.to/crisiscoresystems/start-here-paintracker-crisiscore-build-log-privacy-first-offline-first-no-surveillance-3h0k)
+· [Part 1](https://dev.to/crisiscoresystems/offline-first-without-a-backend-a-local-first-pwa-architecture-you-can-trust-3j15)
+· [Part 2](https://dev.to/crisiscoresystems/three-storage-layers-in-an-offline-first-health-pwa-state-cache-vs-indexeddb-vs-encrypted-vault-19b7)
+· [Part 3](https://dev.to/crisiscoresystems/service-workers-that-dont-surprise-you-deterministic-caching-for-offline-first-pwas-5480)
+· [Part 4](https://dev.to/crisiscoresystems/zod-defensive-parsing-in-a-local-first-app-make-your-offline-data-trustworthy-1016)
+· [Part 5](https://dev.to/crisiscoresystems/trauma-informed-ux-accessibility-as-architecture-not-polish-22jg)
+· [Part 6](https://dev.to/crisiscoresystems/exports-are-a-security-boundary-the-moment-local-first-becomes-shareable-3gj9)
+· [Part 7](https://dev.to/crisiscoresystems/worksafebc-oriented-workflows-without-overclaims-structured-summaries-careful-language-2n3i)
+· **Part 8**
+· [Part 9](https://dev.to/crisiscoresystems/quality-gates-that-earn-trust-checks-you-can-run-not-promises-you-cant-58a3)
+· [Part 10](https://dev.to/crisiscoresystems/maintaining-truthful-docs-over-time-how-to-keep-security-claims-honest-2778)
 
 Analytics in health-adjacent apps has a special failure mode:
 
@@ -36,13 +47,17 @@ This post is grounded in the repo’s implementation:
 - `src/components/settings/PrivacySettings.tsx`
 - `src/utils/usage-tracking.ts`
 
+For the broader reading path around this architecture, start here: [Start Here: PainTracker and the CrisisCore Build Log](https://dev.to/crisiscoresystems/start-here-paintracker-crisiscore-build-log-privacy-first-offline-first-no-surveillance-3h0k).
+
 ---
 
 ## Rule 1: analytics is a capability, not a background assumption
 
 The first gate is deployment-level: an environment flag.
 
-In this repo, analytics is controlled with a Vite env var (e.g. `VITE_ENABLE_ANALYTICS`). When disabled, the app should behave as if analytics does not exist.
+In this repo, analytics is controlled with a Vite env var such as
+`VITE_ENABLE_ANALYTICS`. When disabled, the app should behave as if analytics
+does not exist.
 
 This is a small architectural choice with big impact:
 
@@ -83,7 +98,8 @@ This is how you keep “disabled means no-op” true.
 
 ## Rule 4: analytics payloads must be designed to exclude Class A data
 
-If your app stores Class A data (pain entries, symptoms, meds, free-text notes), assume it will leak unless you deliberately design against it.
+If your app stores Class A data such as pain entries, symptoms, meds, and
+free-text notes, assume it will leak unless you deliberately design against it.
 
 Pain Tracker’s event helpers aim to only send coarse information:
 
@@ -105,7 +121,8 @@ It’s a pragmatic engineering rule: analytics should be useful without being in
 
 ## Prefer local-only tracking when it can do the job
 
-The repo also includes local usage tracking utilities (stored on-device) intended for lightweight UX behavior and product insight without shipping data off-device.
+The repo also includes local usage tracking utilities stored on-device for
+lightweight UX behavior and product insight without shipping data off-device.
 
 You still need to be careful here:
 
@@ -118,11 +135,28 @@ But local-only tracking can cover a surprising amount:
 - “has the user seen this onboarding tip?”
 - “how often is export used?” (as a count, not content)
 
+That export example is intentional: Part 6 shows how export telemetry is kept
+separate and minimal at the exact point local-first data becomes shareable:
+[Exports are a security boundary](https://dev.to/crisiscoresystems/exports-are-a-security-boundary-the-moment-local-first-becomes-shareable-3gj9).
+
 ---
 
 ## Next up
 
+And if you want the verification layer that checks whether those analytics can
+still be used to re-identify people despite your design intent, read
+[Privacy-Preserving Analytics: Proving You Can Measure Without Identity](https://dev.to/crisiscoresystems/testing-privacy-preserving-analytics-verifying-that-insights-dont-leak-identity-e37).
+
 Part 9 is where these rules get teeth: tests and quality gates that keep privacy promises from drifting over time.
 
-Prev: [Part 7 — WorkSafeBC-oriented workflows without overclaims](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-07-worksafebc-oriented-workflows-careful-language.md)
-Next: [Part 9 — Quality gates that earn trust](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-09-quality-gates-that-earn-trust.md)
+Prev: [Part 7 — WorkSafeBC-oriented workflows without overclaims](https://dev.to/crisiscoresystems/worksafebc-oriented-workflows-without-overclaims-structured-summaries-careful-language-2n3i)
+Next: [Part 9 — Quality gates that earn trust](https://dev.to/crisiscoresystems/quality-gates-that-earn-trust-checks-you-can-run-not-promises-you-cant-58a3)
+
+## Proof network
+
+If you want the broader route around this series:
+
+- **Main site:** [CrisisCore Systems](https://crisiscore-systems.ca/)
+- **Framework:** [Protective Computing](https://protective-computing.github.io/)
+- **Reference implementation:** [private offline pain tracker](https://paintracker.ca/)
+- **Proof route:** [paintracker.ca/proof](https://paintracker.ca/proof)

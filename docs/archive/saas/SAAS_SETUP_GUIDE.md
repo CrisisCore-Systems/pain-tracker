@@ -251,17 +251,14 @@ Features:
 
 ### Checkout Flow
 
-1. User clicks "Upgrade to Pro" on pricing page
-2. Frontend calls `/api/stripe/create-checkout-session`
-3. Stripe checkout session created with:
-   - Price ID for selected tier/interval
-   - User ID in metadata
-   - Trial period (14-30 days)
-   - Success/cancel URLs
-4. User completes payment
-5. Stripe webhook fires `checkout.session.completed`
-6. Backend creates subscription record in database
-7. User redirected to success page
+1. User clicks "Upgrade to Pro" on pricing page.
+1. Frontend calls `/api/stripe/create-checkout-session`.
+1. Stripe creates a checkout session with the selected price ID, user ID metadata,
+  a server-signed ownership cookie, trial details, and success/cancel URLs.
+1. User completes payment.
+1. Stripe sends `checkout.session.completed`.
+1. Backend creates or updates the subscription record.
+1. User is redirected back to the app.
 
 ### Webhook Events
 
@@ -289,6 +286,13 @@ node test-checkout.mjs
 # Monitor webhook events
 stripe listen --events checkout.session.completed,customer.subscription.created
 ```
+
+### Ownership Binding Requirement
+
+Stripe checkout now relies on a server-side signing secret,
+`SUBSCRIPTION_OWNER_SECRET`, to bind the browser that initiated checkout
+to later subscription status reads. If this value is missing, checkout
+creation and server-backed entitlement hydration fail closed.
 
 ---
 

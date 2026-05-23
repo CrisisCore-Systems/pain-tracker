@@ -1,9 +1,16 @@
 import React from 'react';
-import { describe, it, expect } from 'vitest';
+import { beforeEach, describe, it, expect, vi } from 'vitest';
 import { render, screen } from '../../../test/test-utils';
 import userEvent from '@testing-library/user-event';
 import { PremiumAnalyticsDashboard } from '../PremiumAnalyticsDashboard';
 import type { PainEntry } from '../../../types';
+import { subscriptionService } from '../../../services/SubscriptionService';
+
+let currentUserId = 'premium-analytics-patterns-user';
+
+vi.mock('../../../utils/user-identity', () => ({
+  getLocalUserId: () => currentUserId,
+}));
 
 function makeEntry(overrides: Partial<PainEntry> = {}): PainEntry {
   const base: PainEntry = {
@@ -66,6 +73,11 @@ function makeEntry(overrides: Partial<PainEntry> = {}): PainEntry {
 }
 
 describe('PremiumAnalyticsDashboard patterns include extended fields', () => {
+  beforeEach(async () => {
+    currentUserId = `premium-analytics-patterns-${Math.random().toString(36).slice(2)}`;
+    await subscriptionService.createSubscription(currentUserId, 'pro');
+  });
+
   it('shows relief methods, qualities, activities, stress/activity level, and weather correlations', async () => {
     const user = userEvent.setup();
 

@@ -7,13 +7,11 @@
  */
 
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { SEOPageLayout, type SEOPageContent } from '../../components/seo';
 import {
   Brain,
   Eye,
   Zap,
-  Clock,
   Pill,
   Moon,
   CloudRain,
@@ -242,7 +240,7 @@ const pageContent: SEOPageContent = {
   // Meta & SEO
   slug: 'migraine-pain-diary-printable',
   title: 'Migraine Pain Diary Printable (Free)',
-  metaTitle: 'Migraine Pain Diary Printable - Free Headache Tracker Template (2026) | PainTracker',
+  metaTitle: 'Migraine Pain Diary Printable - Free Headache Tracker Template (2026) | PainTracker.ca',
   metaDescription: 'Download our free 6-page migraine diary PDF. Track all 4 migraine phases, auras, 30+ common triggers, medications, and monthly patterns. Recommended by the American Headache Society tracking framework.',
   keywords: [
     'migraine pain diary printable',
@@ -271,7 +269,7 @@ const pageContent: SEOPageContent = {
     download: true,
   },
   secondaryCTA: {
-    text: 'Try Digital Version',
+    text: 'Start tracking free',
     href: '/start',
   },
   
@@ -330,7 +328,7 @@ const pageContent: SEOPageContent = {
   trustSignals: {
     medicalNote: 'Structured around the American Headache Society and International Headache Society recommended data points for migraine tracking.',
     privacyNote: 'Paper format — your migraine history, medication details, and hormonal data never leave your hands.',
-    legalNote: 'Accepted format for FMLA, ADA accommodation, SSDI, and insurance prior authorization documentation.',
+    legalNote: 'Useful for FMLA, ADA accommodation, SSDI, and insurance prior authorization discussions. This diary is a documentation aid, not an official decision document. Approval depends on the reviewer, medical evidence, policy, and case context.',
   },
   
   // FAQ
@@ -368,8 +366,8 @@ const pageContent: SEOPageContent = {
       answer: 'Research suggests that most migraines occur when multiple triggers combine rather than from a single trigger alone. For example, poor sleep alone might not trigger an attack, but poor sleep + stress + skipping breakfast might. This is why tracking multiple daily factors is essential — you\'re looking for the combination that pushes you over your individual migraine threshold. The trigger diary page is designed to capture these overlapping factors.',
     },
     {
-      question: 'How is this different from the digital version in PainTracker?',
-      answer: 'The printable diary is ideal for: convenience at the bedside, sharing physical copies with doctors, situations where screen use worsens symptoms, or anyone who prefers paper. PainTracker\'s digital version adds: automatic pattern detection, weather correlation, trend graphs, encrypted storage, instant report generation, and the ability to export clinical-grade PDFs. Many patients use both — the paper version during an attack (when screens worsen symptoms) and the app for daily tracking and analysis.',
+      question: 'How is this different from the digital version in Pain Tracker?',
+      answer: 'The printable diary is ideal for: convenience at the bedside, sharing physical copies with doctors, situations where screen use worsens symptoms, or anyone who prefers paper. Pain Tracker\'s digital version adds: automatic pattern detection, weather correlation, trend graphs, encrypted storage, instant report generation, and the ability to export clinical-grade PDFs. Many patients use both — the paper version during an attack (when screens worsen symptoms) and the app for daily tracking and analysis.',
     },
     {
       question: 'Can this help me get FMLA or ADA accommodations for migraines?',
@@ -379,6 +377,11 @@ const pageContent: SEOPageContent = {
   
   // Related links
   relatedLinks: [
+    {
+      title: 'Pain Tracking for Migraines',
+      description: 'Guide to logging attacks, triggers, and treatment response between appointments',
+      href: '/resources/pain-tracking-for-migraines',
+    },
     {
       title: 'Pain Diary Template PDF',
       description: 'General pain tracking for non-migraine days',

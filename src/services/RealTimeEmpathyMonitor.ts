@@ -80,7 +80,7 @@ export class RealTimeEmpathyMonitor {
       }
     }, this.config.monitoringInterval);
 
-    console.log(`Real-time empathy monitoring started for user ${userId}`);
+    console.log('Real-time empathy monitoring started');
   }
 
   /**

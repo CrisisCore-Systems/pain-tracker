@@ -1,10 +1,12 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import handler from '../../../../api/landing/testimonial';
+import handler from '../../../../api/landing/[...route]';
 import { db } from '../../../../src/lib/database';
 
 type MockReq = {
   method: string;
   headers: Record<string, string>;
+  query: { route: string[] };
+  url: string;
   body: unknown;
 };
 
@@ -18,6 +20,8 @@ type MockRes = {
 function makeReq(body: unknown, ip = '1.2.3.4'): MockReq {
   return {
     method: 'POST',
+    query: { route: ['testimonial'] },
+    url: '/api/landing/testimonial',
     headers: { 'content-type': 'application/json', 'x-forwarded-for': ip },
     body,
   };

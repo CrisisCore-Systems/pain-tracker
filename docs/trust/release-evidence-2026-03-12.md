@@ -4,6 +4,9 @@ Release: trust-hardening execution sweep
 Date: 2026-03-12
 Owner: Kay
 
+Snapshot status: completed historical execution snapshot for the first trust-hardening sweep.
+Later dated evidence lives in `docs/trust/release-evidence-2026-03-19.md`, `docs/trust/release-evidence-2026-03-20.md`, and `docs/trust/release-evidence-2026-05-08.md`.
+
 ## Build-Time Evidence
 
 - Commit hash: pending (working tree has uncommitted changes).
@@ -60,8 +63,12 @@ Owner: Kay
 - Exposure Minimization: 3
 - Local Authority: 2
 - Auditability: 3
-- Final decision: `conditional` (release blocked until quality gate blocker is fixed).
 - Final decision: `pass with follow-up`.
+
+## Truthfulness Notes
+
+- This March note reflects the rerun state after the baseline blocker was fixed in that pass.
+- It should not be read as the current release state of the repository after later changes.
 
 ## Exceptions
 

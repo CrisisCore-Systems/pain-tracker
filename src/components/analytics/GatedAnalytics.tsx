@@ -7,6 +7,7 @@ import React from 'react';
 import type { PainEntry } from '../../types';
 import { entitlementService } from '../../services/EntitlementService';
 import { UpgradeCard } from '../UpgradeCard';
+import { FeatureGate } from '../subscription/FeatureGates';
 
 // Import actual analytics components
 import { AdvancedAnalyticsDashboard } from './AdvancedAnalyticsDashboard';
@@ -53,9 +54,9 @@ export const GatedEmpathyAnalytics: React.FC<GatedEmpathyAnalyticsProps> = props
  * Shows upgrade prompt for Pro tier
  */
 export const PredictiveInsightsGate: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  if (!entitlementService.hasEntitlement('analytics_advanced')) {
-    return <UpgradeCard moduleId="analytics_advanced" />;
-  }
-
-  return <>{children}</>;
+  return (
+    <FeatureGate feature="predictiveInsights" showUpgradePrompt>
+      {children}
+    </FeatureGate>
+  );
 };

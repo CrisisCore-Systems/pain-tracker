@@ -1,4 +1,4 @@
-import { ANALYTICS_CONSENT_STORAGE_KEY } from '../stores/encrypted-idb-persist';
+const ANALYTICS_CONSENT_STORAGE_KEY = 'pain-tracker:analytics-consent';
 
 export type AnalyticsGateResult = {
   envEnabled: boolean;
@@ -16,10 +16,12 @@ function isEnvEnabled(): boolean {
 
   try {
     // Vitest / Node fallback
-    const env =
-      (typeof process !== 'undefined'
-        ? (process as unknown as { env?: Record<string, string | undefined> }).env
-        : undefined) || {};
+    let env: Record<string, string | undefined> = {};
+    if (typeof process === 'undefined') {
+      return false;
+    }
+
+    env = (process as unknown as { env?: Record<string, string | undefined> }).env || {};
     return env.VITE_ENABLE_ANALYTICS === 'true';
   } catch {
     return false;

@@ -171,7 +171,7 @@ export default async function UseCaseDetailPage(
         <p className="text-muted-foreground mb-8 max-w-lg mx-auto">
           No account needed. Your data stays on your device.
         </p>
-        <Link href="/app" className="btn-primary">
+        <Link href={siteConfig.links.app} className="btn-primary">
           Open Pain Tracker
         </Link>
       </section>

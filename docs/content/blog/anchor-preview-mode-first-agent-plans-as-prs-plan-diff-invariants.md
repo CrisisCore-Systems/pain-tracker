@@ -12,6 +12,16 @@ published: true
 If you’re using AI agents in delivery workflows, the safest default is not “let it run.”
 It’s **Preview Mode First**.
 
+If you want the short reading path around this topic instead of a single post, start with [AI Agents Under Protective Computing: Start Here](https://blog.paintracker.ca/ai-agents-protective-computing-start-here).
+
+For the broader trust and release path this also belongs to, read this sequence:
+
+1. [Quality gates that earn trust](https://dev.to/crisiscoresystems/quality-gates-that-earn-trust-checks-you-can-run-not-promises-you-cant-58a3)
+2. [Maintaining truthful docs over time](https://dev.to/crisiscoresystems/maintaining-truthful-docs-over-time-how-to-keep-security-claims-honest-2778)
+3. [ProofVault as a Release Artifact: Turning Trust Into Something You Can Verify](https://dev.to/crisiscoresystems/how-proofvault-turned-trust-from-a-documentation-claim-into-a-reproducible-release-artifact-22pb)
+4. Preview Mode First: Agent Plans as PRs (Plan Diff + Invariants)
+5. [Protective Computing Canon v1.0 is now DOI-backed](https://dev.to/crisiscoresystems/the-overton-framework-is-now-doi-backed-ko7)
+
 Think of every agent run as a PR proposal:
 
 - it has a plan
@@ -130,6 +140,10 @@ Plan diffs show you what changed.
 Invariants stop the run when it crosses a line.
 
 That’s the whole trick.
+
+Related reading:
+[Quality gates that earn trust](https://dev.to/crisiscoresystems/quality-gates-that-earn-trust-checks-you-can-run-not-promises-you-cant-58a3)
+covers the same “checks you can run” posture at the repo level.
 
 ---
 

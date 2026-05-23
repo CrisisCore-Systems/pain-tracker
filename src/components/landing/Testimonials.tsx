@@ -15,7 +15,7 @@ const testimonials = [
     role: 'Pain Management',
     avatar: '👨‍⚕️',
     rating: 5,
-    quote: 'The export workflow saves me time. Pattern insights and WorkSafeBC-ready reports streamline documentation.',
+    quote: 'The export workflow saves me time. Pattern insights and WorkSafeBC-related reports help streamline documentation.',
     highlight: 'Streamlined workflow',
   },
   {
@@ -23,8 +23,8 @@ const testimonials = [
     role: 'WorkSafe BC Claimant',
     avatar: '🦾',
     rating: 5,
-    quote: 'The WorkSafeBC reporting tools are a relief. What used to take me days of paperwork now takes minutes.',
-    highlight: 'One-click WCB reports',
+    quote: 'The WorkSafeBC documentation tools are a relief. They make it easier to organize records for appointments and claim-related conversations.',
+    highlight: 'Claim-related summaries',
   },
   {
     name: 'Clinician',
@@ -90,7 +90,7 @@ export const Testimonials: React.FC = () => {
             <span className="gradient-text-animated">Patients & Clinicians</span>
           </h2>
           <p className="landing-subhead text-lg lg:text-xl">
-            Representative scenarios showing how people use PainTracker.
+            Representative scenarios showing how people use Pain Tracker.
           </p>
           <p className="text-sm text-slate-500 mt-2">
             These are illustrative examples, not verified customer quotes.

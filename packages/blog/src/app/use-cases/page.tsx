@@ -10,6 +10,14 @@ export const metadata: Metadata = {
   alternates: {
     canonical: `${siteConfig.url}/use-cases`,
   },
+  robots: {
+    index: false,
+    follow: true,
+    googleBot: {
+      index: false,
+      follow: true,
+    },
+  },
 };
 
 const useCases = [
@@ -94,7 +102,7 @@ export default function UseCasesPage() {
         <p className="text-muted-foreground mb-8 max-w-lg mx-auto">
           Get started in seconds. No sign-up required.
         </p>
-        <Link href="/app" className="btn-primary">
+        <Link href={siteConfig.links.app} className="btn-primary">
           Open Pain Tracker
         </Link>
       </section>

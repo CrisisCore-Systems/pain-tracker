@@ -2,17 +2,19 @@ import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Download, FileText, Lock, Shield } from 'lucide-react';
 import { combineSchemas, generateBreadcrumbSchema } from '../lib/seo';
+import { applyPageMetadata } from '../components/seo/applyPageMetadata';
 import '../styles/pages/landing.css';
 
 const WHITEPAPER_VERSION = '1.3.0';
-const WHITEPAPER_PDF_FILENAME = `PainTracker-Whitepaper-v${WHITEPAPER_VERSION}.pdf`;
+const WHITEPAPER_PDF_FILENAME = `Pain-Tracker-Whitepaper-v${WHITEPAPER_VERSION}.pdf`;
 
 export function WhitepaperPage() {
   useEffect(() => {
-    document.title = 'Pain Tracker Whitepaper (PDF)';
-    return () => {
-      document.title = 'PainTracker';
-    };
+    return applyPageMetadata({
+      title: 'Pain Tracker Whitepaper (PDF)',
+      description: 'Download the Pain Tracker whitepaper covering local-first architecture, privacy boundaries, and the product threat model.',
+      canonicalUrl: 'https://www.paintracker.ca/whitepaper',
+    });
   }, []);
 
   const schema = combineSchemas(
@@ -82,7 +84,7 @@ export function WhitepaperPage() {
 
             <Link
               to="/"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-slate-200 bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-slate-200 bg-white/10 border border-white/10 hover:bg-white/20 transition-colors"
             >
               <ArrowLeft className="w-4 h-4" aria-hidden="true" />
               Back to home
@@ -91,7 +93,7 @@ export function WhitepaperPage() {
         </div>
 
         <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="md:col-span-2 rounded-2xl border border-white/10 bg-white/5 p-6 sm:p-8 text-left">
+          <div className="md:col-span-2 rounded-2xl border border-white/10 bg-white/10 p-6 sm:p-8 text-left">
             <h2 className="text-xl sm:text-2xl font-bold text-white mb-3">What’s inside</h2>
             <p className="text-slate-300 leading-relaxed mb-6">
               A concise description of the system boundaries and the choices made to keep sensitive health
@@ -118,7 +120,7 @@ export function WhitepaperPage() {
             </ul>
           </div>
 
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-6 sm:p-8 text-left">
+          <div className="rounded-2xl border border-white/10 bg-white/10 p-6 sm:p-8 text-left">
             <h2 className="text-xl font-bold text-white mb-4">Key principles</h2>
 
             <div className="space-y-4">

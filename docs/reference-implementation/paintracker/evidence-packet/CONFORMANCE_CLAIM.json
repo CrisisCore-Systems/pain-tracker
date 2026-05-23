@@ -1,0 +1,63 @@
+{
+  "system": "PainTracker",
+  "version": "reference-packet-v1.0",
+  "commit": "169c9fd0dca1ae6c582a8ed753a281a4346616e8",
+  "date": "2026-05-09",
+  "claimOwner": "CrisisCore Systems",
+  "specification": {
+    "name": "Protective Computing Specification",
+    "version": "v1.0",
+    "statement": "Founder-authored normative design specification. Implementation claims are conformance claims, not certification."
+  },
+  "currentProofLevel": "Level 2 to Level 3 alignment where evidence exists",
+  "isCertified": false,
+  "claims": [
+    {
+      "claim": "Candidate reference implementation with bounded evidence anchors",
+      "proofLevel": "repo-backed",
+      "evidence": [
+        "docs/trust/paintracker-protective-computing-reference-packet-v1.0.md",
+        "docs/reference-implementation/paintracker/evidence-packet/CLAIMS.md"
+      ],
+      "limitation": "Not certified"
+    },
+    {
+      "claim": "Trust-claims gate exists in CI",
+      "proofLevel": "ci-backed",
+      "evidence": [
+        ".github/workflows/ci.yml",
+        "https://github.com/CrisisCore-Systems/pain-tracker/actions/workflows/ci.yml"
+      ],
+      "workflowName": "ci.yml",
+      "runLink": "https://github.com/CrisisCore-Systems/pain-tracker/actions/workflows/ci.yml",
+      "commitSha": "169c9fd0dca1ae6c582a8ed753a281a4346616e8",
+      "limitation": "Immutable run ID link is not included in this packet"
+    }
+  ],
+  "explicitNonClaims": [
+    "certified compliance",
+    "zero metadata visibility",
+    "mutual TLS",
+    "CRDT or operational transform sync",
+    "grant funding awarded",
+    "native mobile keychain or Android Keystore for current PWA",
+    "complete per-entry version history"
+  ],
+  "knownGaps": [
+    {
+      "gap": "active-coercion resistance",
+      "risk": "high",
+      "nextEvidenceNeeded": "bounded external review and runtime drill packet"
+    },
+    {
+      "gap": "accessibility-complete degraded mode",
+      "risk": "high",
+      "nextEvidenceNeeded": "narrow external degraded-mode accessibility review"
+    },
+    {
+      "gap": "external review coverage",
+      "risk": "medium",
+      "nextEvidenceNeeded": "signed reviewer output for scoped claims"
+    }
+  ]
+}

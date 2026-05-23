@@ -1,22 +1,78 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Download, ExternalLink, Shield, Smartphone, Monitor, Globe } from 'lucide-react';
-import { combineSchemas, generateBreadcrumbSchema } from '../lib/seo';
+import { Download, ExternalLink, Shield, Smartphone, Monitor, Globe, HelpCircle } from 'lucide-react';
+import { combineSchemas, defaultSEOConfig, generateBreadcrumbSchema, generateFAQSchema } from '../lib/seo';
+import { ResourceCtaStack, ResourceOutcomeBridge, ResourceWorkflowSteps } from '../components/seo';
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Download', url: '/download' },
+];
+
+const downloadFaqs = [
+  {
+    question: 'Do I need an account to use Pain Tracker?',
+    answer:
+      'No. Pain Tracker is designed so you can start tracking without creating an account. Daily use stays local-first by default.',
+  },
+  {
+    question: 'Can I install Pain Tracker like an app on my phone?',
+    answer:
+      'Yes. You can open Pain Tracker in a supported mobile browser and install it as a PWA so it behaves more like an app from your home screen.',
+  },
+  {
+    question: 'Does the download page give me access to printable pain logs too?',
+    answer:
+      'Yes. Pain Tracker includes printable pain diary and symptom log resources for people who want paper-first tracking or appointment-ready records.',
+  },
+  {
+    question: 'Can I export records for a doctor or claim paperwork?',
+    answer:
+      'Yes. Pain Tracker supports user-controlled exports so you can prepare structured records for appointments, documentation, or claim workflows when you decide to share them.',
+  },
+];
 
 export const DownloadPage: React.FC = () => {
   const schema = combineSchemas(
     generateBreadcrumbSchema(
-      [
-        { name: 'Home', url: '/' },
-        { name: 'Download', url: '/download' },
-      ],
-      { siteUrl: 'https://www.paintracker.ca' }
-    )
+      breadcrumbs,
+      { siteUrl: defaultSEOConfig.siteUrl }
+    ),
+    generateFAQSchema(downloadFaqs)
   );
 
   useEffect(() => {
-    document.title = 'Download Pain Tracker — Free Chronic Pain Tracking';
-    return () => { document.title = 'PainTracker'; };
+    const meta = {
+      title: 'Download PainTracker Free | Private Offline Pain Tracker',
+      description:
+        'Download PainTracker free, install it for offline use, or run it in your browser. No account required. Records stay on your device until you choose to export them.',
+      canonicalUrl: `${defaultSEOConfig.siteUrl}/download`,
+    };
+
+    document.title = meta.title;
+
+    const updateMeta = (selector: string, content: string) => {
+      const element = document.querySelector(selector);
+      if (element) {
+        element.setAttribute('content', content);
+      }
+    };
+
+    updateMeta('meta[name="description"]', meta.description);
+    updateMeta('meta[property="og:title"]', meta.title);
+    updateMeta('meta[property="og:description"]', meta.description);
+    updateMeta('meta[property="og:site_name"]', defaultSEOConfig.siteName);
+    updateMeta('meta[property="og:url"]', meta.canonicalUrl);
+    updateMeta('meta[name="twitter:title"]', meta.title);
+    updateMeta('meta[name="twitter:description"]', meta.description);
+    updateMeta('meta[name="twitter:url"]', meta.canonicalUrl);
+
+    const canonicalLink = document.querySelector('link[rel="canonical"]');
+    if (canonicalLink) {
+      canonicalLink.setAttribute('href', meta.canonicalUrl);
+    }
+
+    return () => { document.title = defaultSEOConfig.siteName; };
   }, []);
 
   return (
@@ -31,19 +87,45 @@ export const DownloadPage: React.FC = () => {
       </a>
 
       <main id="main-content" role="main" className="max-w-4xl mx-auto px-6 py-16">
+        <nav aria-label="Breadcrumb" className="mb-8">
+          <ol className="flex items-center gap-2 text-sm text-slate-400">
+            {breadcrumbs.map((crumb, index) => (
+              <li key={crumb.url} className="flex items-center gap-2">
+                {index > 0 && <span className="text-slate-600">/</span>}
+                {index === breadcrumbs.length - 1 ? (
+                  <span className="text-slate-300">{crumb.name}</span>
+                ) : (
+                  <Link to={crumb.url} className="hover:text-white transition-colors">
+                    {crumb.name}
+                  </Link>
+                )}
+              </li>
+            ))}
+          </ol>
+        </nav>
+
         {/* Header */}
         <header className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
-            Download Pain Tracker
+            Download PainTracker free.
           </h1>
           <p className="text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed">
-            Free, open-source chronic pain tracking. Privacy-first, offline-capable, clinically useful.
+            Use it in your browser, install it for offline access, or self host it if you want full control over where the app runs.
           </p>
         </header>
 
+        <ResourceOutcomeBridge
+          downloadUrl="/assets/free-pain-tracking-starter-pack.zip"
+          downloadFileName="free-pain-tracking-starter-pack.zip"
+          printableLabel="Download printable starter pack"
+          appLabel="Use the app free"
+        />
+
+        <ResourceWorkflowSteps intent="general" />
+
         {/* What It Does */}
         <section className="mb-16" aria-labelledby="what-it-does">
-          <h2 id="what-it-does" className="text-2xl font-bold mb-6 text-white">What Pain Tracker Does</h2>
+          <h2 id="what-it-does" className="text-2xl font-bold mb-6 text-white">What Pain Tracker helps you do</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {[
               'Track pain levels, locations, and symptoms',
@@ -75,7 +157,7 @@ export const DownloadPage: React.FC = () => {
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold text-white bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 transition-all"
               >
                 <Globe className="h-4 w-4" aria-hidden="true" />
-                Open App
+                Use the free app
               </a>
             </div>
 
@@ -85,11 +167,11 @@ export const DownloadPage: React.FC = () => {
               <h3 className="font-bold text-lg mb-2">Install as App</h3>
               <p className="text-sm text-slate-400 mb-4">Install to your home screen for a native experience.</p>
               <a
-                href="https://www.paintracker.ca/"
+                href={defaultSEOConfig.appUrl}
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold text-white bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 transition-all"
               >
                 <Download className="h-4 w-4" aria-hidden="true" />
-                Install PWA
+                Install for offline use
               </a>
             </div>
 
@@ -97,7 +179,7 @@ export const DownloadPage: React.FC = () => {
             <div className="p-6 rounded-xl bg-slate-800/80 border border-violet-500/30 text-center">
               <Monitor className="h-10 w-10 mx-auto mb-4 text-violet-400" aria-hidden="true" />
               <h3 className="font-bold text-lg mb-2">Source Code</h3>
-              <p className="text-sm text-slate-400 mb-4">Run locally or self-host. MIT licensed.</p>
+              <p className="text-sm text-slate-400 mb-4">Review the code or self-host if that matters to your trust model.</p>
               <a
                 href="https://github.com/CrisisCore-Systems/pain-tracker"
                 target="_blank"
@@ -105,8 +187,42 @@ export const DownloadPage: React.FC = () => {
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold text-white bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-400 hover:to-purple-500 transition-all"
               >
                 <ExternalLink className="h-4 w-4" aria-hidden="true" />
-                View on GitHub
+                Self host on GitHub
               </a>
+            </div>
+          </div>
+        </section>
+
+        <section
+          className="mb-16 rounded-xl border border-cyan-500/20 bg-slate-900/70 p-8"
+          aria-labelledby="printable-options-heading"
+        >
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+            <div className="max-w-2xl">
+              <h2 id="printable-options-heading" className="text-2xl font-bold text-white">
+                Need printables before you use the app?
+              </h2>
+              <p className="mt-3 text-slate-300 leading-relaxed">
+                Start with paper if that lowers friction today. The free resources hub includes pain
+                diary PDFs, weekly and monthly trackers, doctor-visit notes, and a starter pack you
+                can use without creating an account or changing how you already document symptoms.
+              </p>
+            </div>
+            <div className="flex flex-col gap-3 sm:min-w-72">
+              <a
+                href="/assets/free-pain-tracking-starter-pack.zip"
+                download="free-pain-tracking-starter-pack.zip"
+                className="inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 px-5 py-3 font-semibold text-white transition-all hover:from-cyan-400 hover:to-blue-500"
+              >
+                <Download className="h-4 w-4" aria-hidden="true" />
+                Download the printable starter pack
+              </a>
+              <Link
+                to="/resources"
+                className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-600 px-5 py-3 font-medium text-slate-200 transition-colors hover:border-slate-500 hover:text-white"
+              >
+                Browse all free pain tracker templates
+              </Link>
             </div>
           </div>
         </section>
@@ -179,6 +295,37 @@ export const DownloadPage: React.FC = () => {
             </a>
           </div>
         </section>
+
+        <section
+          className="mb-16 rounded-xl border border-slate-700/50 bg-slate-900/60 p-8"
+          aria-labelledby="download-faq-heading"
+        >
+          <div className="flex items-center gap-3 mb-6">
+            <HelpCircle className="h-6 w-6 text-cyan-400" aria-hidden="true" />
+            <h2 id="download-faq-heading" className="text-2xl font-bold text-white">
+              Download FAQs
+            </h2>
+          </div>
+          <div className="space-y-4">
+            {downloadFaqs.map((faq) => (
+              <details
+                key={faq.question}
+                className="rounded-lg border border-slate-700/50 bg-slate-800/60 p-5"
+              >
+                <summary className="cursor-pointer list-none font-semibold text-white">
+                  {faq.question}
+                </summary>
+                <p className="mt-3 text-slate-300 leading-relaxed">{faq.answer}</p>
+              </details>
+            ))}
+          </div>
+        </section>
+
+        <ResourceCtaStack
+          intent="printable"
+          heading="Stay in the patient lane from here"
+          body="If you are not ready to use the app yet, move sideways into printables or the record-sharing workflow instead of dropping into builder content."
+        />
 
         {/* Back to Home */}
         <div className="text-center">

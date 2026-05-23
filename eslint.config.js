@@ -28,6 +28,7 @@ export default [
       'playwright-report/**',
       'archive/**',
       'security-reports/**',
+      'artifacts/**/*.js',
     ],
   },
   js.configs.recommended,

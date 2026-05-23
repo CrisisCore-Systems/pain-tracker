@@ -5,12 +5,13 @@
   },
   "defaults": {
     "start_here_url": "https://dev.to/crisiscoresystems/start-here-paintracker-crisiscore-build-log-privacy-first-offline-first-no-surveillance-3h0k",
+    "try_url": "https://crisiscore-systems.ca",
     "sponsor_url": "https://github.com/sponsors/CrisisCore-Systems",
     "trust_bullets": [
       "Offline-first (works without a connection)",
       "No backend + client-side encryption + open source"
     ],
-    "default_hook": "For people living with chronic pain (and the devs supporting them): a privacy-first, offline-first pain tracker.",
+    "default_hook": "For teams building sensitive software: CrisisCore Systems publishes Protective Computing doctrine, proofs, and the PainTracker reference implementation.",
     "funnelA_series": "Foundations",
     "funnelB_series": "CrisisCore Build Log",
     "low_view_threshold": 25

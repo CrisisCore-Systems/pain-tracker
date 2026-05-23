@@ -7,12 +7,19 @@
 
 import React from 'react';
 import {
-  ArrowRight, CheckCircle, Clock, Calendar,
+  CheckCircle, Clock, Calendar,
   TrendingUp, FileText, Target, Stethoscope,
   ClipboardList, Zap, Sun, Moon
 } from 'lucide-react';
-import { SEOPageLayout, type SEOPageContent, StatsBanner, BottomCTACallout, PdfContentsPreview } from '../../components/seo';
-import type { StatItem, PdfPage } from '../../components/seo';
+import {
+  SEOPageLayout,
+  type SEOPageContent,
+  type StatItem,
+  type PdfPage,
+  StatsBanner,
+  BottomCTACallout,
+  PdfContentsPreview,
+} from '../../components/seo';
 
 /* ── Custom Visual Components ─────────────────────────────────────────────── */
 
@@ -124,7 +131,7 @@ const sevenDayStats: StatItem[] = [
 const pageContent: SEOPageContent = {
   slug: '7-day-pain-diary-template',
   title: '7-Day Pain Diary Template (Free)',
-  metaTitle: '7-Day Pain Diary Template — Free One-Week Pain Tracker for Doctor Appointments | PainTracker',
+  metaTitle: '7-Day Pain Diary Template — Free One-Week Pain Tracker for Doctor Appointments | PainTracker.ca',
   metaDescription: 'Download a free 7-day pain diary template. One-week format with morning/midday/evening tracking, medication logs, and a doctor-ready weekly summary.',
   keywords: [
     '7 day pain diary template', 'week pain diary',
@@ -137,9 +144,9 @@ const pageContent: SEOPageContent = {
   ],
   badge: 'Free Download',
   headline: '7-Day Pain Diary Template',
-  subheadline: 'One week is enough to see patterns, prepare for a doctor appointment, or test whether tracking works for you. This 6-page diary captures morning, midday, and evening pain levels plus medications, triggers, and a doctor-ready weekly summary — all in about 3 minutes per day.',
+  subheadline: 'One week is enough to see patterns, prepare for a doctor appointment, or test whether tracking works for you. Use the printable if you need something today. Use the free app when you need patterns, summaries, and records you can bring to an appointment.',
   primaryCTA: { text: 'Download Free PDF', href: '/assets/7-day-pain-diary.pdf', download: true },
-  secondaryCTA: { text: 'Try Digital Version', href: '/start' },
+  secondaryCTA: { text: 'Start tracking free', href: '/start' },
   utilityBlock: { type: 'download', downloadUrl: '/assets/7-day-pain-diary.pdf', downloadFileName: '7-day-pain-diary.pdf' },
   whatIsThis: 'A 6-page, 7-day pain diary designed to capture one complete week of pain data with three daily check-ins (morning, midday, evening). It includes symptom and trigger tracking, medication/treatment logs, a weekly summary that identifies patterns, and a doctor appointment prep page that turns your week of data into a concise clinical summary. It\'s the ideal format for pre-appointment tracking, medication trials, or anyone who wants to try pain tracking without a long-term commitment.',
   whoShouldUse: [
@@ -201,15 +208,15 @@ export const SevenDayPainDiaryTemplatePage: React.FC = () => (
     <PdfContentsPreview pages={sevenDayPdfPages} accentColor="teal" variant="badge" heading="Inside Your 6-Page 7-Day Diary" />
     <BottomCTACallout
       icon={Zap}
-      heading="One Week. Three Minutes a Day. Real Evidence for Your Doctor."
-      body="You don't need months of data to make a difference in your next appointment. Seven days of structured tracking produces more useful information than years of 'I've been in pain for a while.'"
+      heading="One week of clear notes beats trying to remember everything later."
+      body="Seven days is enough to bring a more useful summary of pain, triggers, sleep, and function into the next appointment. Start with the diary or use the app if you want the same record with less manual effort."
       pdfUrl="/assets/7-day-pain-diary.pdf"
       gradientClasses="from-teal-600 to-cyan-600"
       tintClass="text-teal-100"
       buttonTextClass="text-teal-700"
       buttonHoverClass="hover:bg-teal-50"
-      primaryLabel="Download 7-Day Diary"
-      secondaryLabel="Try Digital Tracking"
+      primaryLabel="Download the 7-day diary"
+      secondaryLabel="Start tracking free"
     />
   </SEOPageLayout>
 );

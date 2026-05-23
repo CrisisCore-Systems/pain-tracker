@@ -12,6 +12,8 @@ Our privacy policy said "anonymous analytics." Our implementation said otherwise
 
 This is the story of how we learned to test that our analytics actually preserve privacy—and don't just claim to.
 
+For the analytics architecture this post is trying to prove private, read [Analytics without surveillance: explicit consent, layered gates, and never sending Class A data](https://dev.to/crisiscoresystems/analytics-without-surveillance-explicit-consent-layered-gates-and-never-sending-class-a-data-59f1).
+
 ## The Re-identification Problem
 
 Even without names or emails, behavioral patterns can identify individuals:

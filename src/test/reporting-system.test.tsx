@@ -136,7 +136,8 @@ describe('Reporting System UI', () => {
 
   const toggleTitleEl = screen.getByText(/Toggle Weekly/i);
   const toggleCard = toggleTitleEl.closest('div')?.parentElement;
-    expect(toggleCard).toBeTruthy();
+  expect(toggleCard).toBeTruthy();
+  if (!toggleCard) throw new Error('Toggle card not found');
   const { getAllByRole: getRolesWithin } = within(toggleCard);
   const toggleBtn = getRolesWithin('switch').find(s => s.getAttribute('aria-label')?.toLowerCase().includes('toggle schedule'));
     if (!toggleBtn) throw new Error('Toggle button not found');

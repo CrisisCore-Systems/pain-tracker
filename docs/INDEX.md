@@ -20,10 +20,17 @@ If you’re not sure where to start, use the **Canonical Start Here** list below
 
 ## ✅ Canonical Start Here
 
+The canonical PainTracker implementation artifact is the PainTracker Protective Computing Reference Packet v1.0. Legacy mappings are retained only as historical drafts until rewritten against the current repository, CI evidence, and claim badge taxonomy.
+
+Protective Computing Specification v1.0 is a founder-authored normative design specification. Current implementation claims are conformance claims, not certification. A system may be described as self-attested, repo backed, CI backed, externally reviewed, or certified only according to the published proof badge taxonomy.
+
+PainTracker is a candidate reference implementation with a public reference packet, explicit limitations, and bounded evidence anchors. It is not certified. Its current posture is Level 2 to Level 3 alignment where evidence exists, with unresolved gaps in active-coercion resistance, accessibility-complete degraded mode, and external review.
+
 - **Product overview**: [../README.md](../README.md)
 - **Getting running**: [../QUICKSTART.md](../QUICKSTART.md)
 - **Security policy**: [../SECURITY.md](../SECURITY.md)
 - **Contributing**: [../CONTRIBUTING.md](../CONTRIBUTING.md)
+- **Canonical trust packet**: [trust/paintracker-protective-computing-reference-packet-v1.0.md](trust/paintracker-protective-computing-reference-packet-v1.0.md)
 - **Architecture (overview)**: [engineering/ARCHITECTURE.md](engineering/ARCHITECTURE.md)
 - **Architecture (deep dive)**: [engineering/ARCHITECTURE_DEEP_DIVE.md](engineering/ARCHITECTURE_DEEP_DIVE.md)
 - **Roadmap (current)**: [planning/ROADMAP.md](planning/ROADMAP.md)
@@ -85,35 +92,43 @@ Complete documentation for a 5-part blog post series about Pain Tracker PWA for 
 ## 📚 Core Documentation
 
 ### Getting Started
+
 - **[Main README](../README.md)** - Project overview and quick start
 - **[Quickstart Guide](../QUICKSTART.md)** - Fast setup instructions
 - **[Contributing](../CONTRIBUTING.md)** - How to contribute to the project
 
 ### User Guides
+
 - **[Installation Guide](user-guide/INSTALL.md)** - How to install and use Pain Tracker
 - **[Frequently Asked Questions](user-guide/FAQ.md)** - Common questions and answers
 - **[How to Export Data](user-guide/EXPORT_DATA.md)** - Export your data as PDF, CSV, or JSON
 - **[Privacy Policy](../PRIVACY.md)** - How your data is handled
 
 ### Planning & Roadmaps
+
 - **[Roadmap](planning/ROADMAP.md)** - Current roadmap
 - **[Next-Gen Roadmap](planning/ROADMAP_NEXT_GEN.md)** - 2026 strategy (draft)
 - **[Roadmap UX Enhancements](planning/ROADMAP_UX_ENHANCEMENTS.md)** - Planned UX improvements
 - **[Backlog](planning/BACKLOG.md)** - Feature backlog and planning
 
 ### Architecture & Design
+
 - **[Architecture Deep Dive](engineering/ARCHITECTURE_DEEP_DIVE.md)** - Technical architecture details
 - **[Architecture Overview](engineering/ARCHITECTURE.md)** - High-level system design
 - **[Architecture Mini](engineering/ARCHITECTURE_MINI.md)** - Quick architecture reference
 
 ### Feature Documentation
+
 - **[Advanced Analytics Implementation](product/ADVANCED_ANALYTICS_IMPLEMENTATION.md)** - Analytics system overview
+- **[Resource Funnel Measurement Plan](product/RESOURCE_FUNNEL_MEASUREMENT_PLAN.md)** - Privacy-constrained acquisition and activation measurement plan
+- **[Resource Page Command Board](product/RESOURCE_PAGE_COMMAND_BOARD.md)** - Operational table for impressions, CTA clicks, first logs, and exports by page
 - **[PWA Complete](ops/PWA-COMPLETE.md)** - Progressive Web App features
 - **[Empathy Enhancement](product/EMPATHY_ENHANCEMENT_SUMMARY.md)** - Empathy-driven features
 - **[Pattern Engine Implementation](product/PATTERN_ENGINE_IMPLEMENTATION.md)** - Pattern detection system
 - **[Validation Technology](engineering/VALIDATION_TECHNOLOGY.md)** - Data validation framework
 
 ### Accessibility
+
 - **[Accessibility Comfort Spec](accessibility/ACCESSIBILITY_COMFORT_SPEC.md)** - Comfort-focused accessibility
 - **[Accessibility Implementation Complete](accessibility/ACCESSIBILITY_IMPLEMENTATION_COMPLETE.md)** - Implementation status
 - **[Accessibility Implementation Checklist](accessibility/ACCESSIBILITY_IMPLEMENTATION_CHECKLIST.md)** - Feature checklist (Phase 1.5 complete Dec 2025)
@@ -126,39 +141,47 @@ Complete documentation for a 5-part blog post series about Pain Tracker PWA for 
 - `PanicMode` - Crisis support integration
 
 ### Security & Compliance
+
 - **[Security Policy](../SECURITY.md)** - Security practices and vulnerability reporting
 - **[Security Audit](security/SECURITY_AUDIT.md)** - Latest security audit results
 - **[Privacy-aligned audit implementation](security/AUDIT_HIPAA_IMPLEMENTATION.md)** - Privacy-aligned security controls
 - **[Trust Architecture Pack](trust/README.md)** - Verification-first trust docs, release gates, and evidence templates
 
 ### Deployment & Operations
+
 - **[Deployment Guide](ops/DEPLOYMENT_GUIDE.md)** - Deployment instructions
 - **[Deployment Status](ops/DEPLOYMENT_STATUS.md)** - Current deployment status
 - **[Deployment Polish Complete](ops/DEPLOYMENT_POLISH_COMPLETE.md)** - Deployment polish summary
 - **[Deployment Polish Summary](ops/DEPLOYMENT_POLISH_SUMMARY.md)** - Polish checklist
 
 ### Performance & Optimization
+
 - **[Bundle Optimization Analysis](engineering/BUNDLE_OPTIMIZATION_ANALYSIS.md)** - Bundle size optimization
 - **[Enhanced Offline Implementation](ops/ENHANCED_OFFLINE_IMPLEMENTATION.md)** - Offline capabilities
 
 ### Development Setup
+
 - **[Canvas Windows Prerequisites](ops/CANVAS_WINDOWS_PREREQS.md)** - Windows setup for canvas dependencies
 - **[CI Security Triage](ops/CI-SECURITY-TRIAGE.md)** - CI security issues and resolutions
 - **[CI Canvas](ops/CI-canvas.md)** - Canvas-related CI configuration
 
 ### Backend Integration
+
 - **[Backend Integration Complete](engineering/BACKEND_INTEGRATION_COMPLETE.md)** - Backend integration status
 - **[Backend Timestamp Contract](engineering/BACKEND_TIMESTAMP_CONTRACT.md)** - API timestamp specifications
 
 ### Market Analysis
+
 - **[Competitive Audit 2025-11-12](market/COMPETITIVE_AUDIT_2025-11-12.md)** - Latest competitive analysis
 - **[Competitive Market Analysis](market/COMPETITIVE_MARKET_ANALYSIS.md)** - Market positioning
 
 ### Implementation Summaries
+
 - **[Implementation Summary](planning/IMPLEMENTATION_SUMMARY.md)** - Overall implementation status
 - **[Roadmap UX Enhancements](planning/ROADMAP_UX_ENHANCEMENTS.md)** - Planned UX improvements
 
 ### Additional Documentation
+
 - **[Branding Guide](marketing/BRANDING_GUIDE.md)** - Brand guidelines
 - **[Code of Conduct](../CODE_OF_CONDUCT.md)** - Community standards
 - **[Backlog](planning/BACKLOG.md)** - Feature backlog and planning
@@ -168,11 +191,13 @@ Complete documentation for a 5-part blog post series about Pain Tracker PWA for 
 ## 🗂️ Longform + Audit (Moved Into `docs/`)
 
 ### Audit
+
 - **[Audit Quick Reference](audit/AUDIT_QUICK_REFERENCE.md)**
 - **[Audit Remediation Plan](audit/AUDIT_REMEDIATION_PLAN.md)**
 - **[Audit Summary](audit/AUDIT_SUMMARY.md)**
 
 ### Articles
+
 - **[Building Empathy-Driven Healthcare Apps](content/articles/article-building-empathy-driven-healthcare-apps.md)**
 - **[Encryption Transparency](content/articles/article-encryption-transparency.md)**
 - **[Encryption Deep Dive (Part 2)](content/articles/article-part2-encryption-deep-dive.md)**
@@ -180,6 +205,7 @@ Complete documentation for a 5-part blog post series about Pain Tracker PWA for 
 - **[Privacy-First, Trauma-Informed Digital Health](content/articles/article-privacy-first-trauma-informed-open-source-digital-health.md)**
 
 ### Blogs
+
 - **[Client-Side Encryption in Healthcare](content/blog/blog-client-side-encryption-healthcare.md)**
 - **[Offline-First PWAs in Crisis-Responsive Health Tech](content/blog/blog-offline-first-pwas-crisis-responsive-health-tech.md)**
 - **[No Backend: Local-First](content/blog/blog-no-backend-local-first.md)**

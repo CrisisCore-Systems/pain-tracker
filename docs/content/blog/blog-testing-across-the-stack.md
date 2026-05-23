@@ -12,6 +12,10 @@ We once had a user whose crisis was detected correctly, but a race condition in 
 
 This is why we test the entire stack under simulated distress conditions.
 
+If you want the full route that leads here, use [Testing Trauma-Informed Systems: Start Here](/blog/testing-trauma-informed-systems-start-here) as the series hub.
+
+If you want the signal-injection testing approach that this full-stack work builds on, start with [Testing the Untestable](/blog/testing-the-untestable).
+
 ## The Full Stack Signal Flow
 
 Before testing, we map the complete signal path:
@@ -748,6 +752,8 @@ When someone reaches for help during their worst moment, every layer of our stac
 ---
 
 *This is the final post in our series on building trauma-informed healthcare applications. The full series covered [crisis detection](/blog/false-positives-calibrating-crisis-detection), [testing strategies](/blog/testing-the-untestable), [visual regression](/blog/visual-regression-adaptive-interfaces), [ethics of simulation](/blog/ethics-of-simulation), [performance](/blog/performance-under-pressure), [cross-crisis calibration](/blog/cross-crisis-calibration), [recovery testing](/blog/testing-recovery), [cultural contexts](/blog/internationalization-of-trauma), [validation](/blog/testing-the-testing), [co-occurrence](/blog/testing-co-occurrence), and [privacy](/blog/testing-privacy-preserving-analytics).*
+
+Related reading: [Performance Under Pressure](/blog/performance-under-pressure) complements these end-to-end tests with the performance budgets that keep the whole stack responsive under distress.
 
 Thank you for reading. Build with empathy. Test with rigor. Ship with confidence.
 

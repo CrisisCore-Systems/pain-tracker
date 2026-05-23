@@ -1,11 +1,23 @@
 import React from 'react';
-import { describe, it, expect, vi } from 'vitest';
+import { beforeEach, describe, it, expect, vi } from 'vitest';
 import { render, screen } from '../../../test/test-utils';
 import { PremiumAnalyticsDashboard } from '../PremiumAnalyticsDashboard';
 import type { PainEntry } from '../../../types';
 import { makePainEntry } from '../../../utils/pain-entry-factory';
+import { subscriptionService } from '../../../services/SubscriptionService';
+
+let currentUserId = 'premium-analytics-med-user';
+
+vi.mock('../../../utils/user-identity', () => ({
+  getLocalUserId: () => currentUserId,
+}));
 
 describe('PremiumAnalyticsDashboard medication effectiveness display', () => {
+  beforeEach(async () => {
+    currentUserId = `premium-analytics-med-${Math.random().toString(36).slice(2)}`;
+    await subscriptionService.createSubscription(currentUserId, 'pro');
+  });
+
   it('shows <0.1 points instead of 0.0 for small but non-zero reduction (and works with unsorted entries)', () => {
     const base = Date.UTC(2024, 1, 10, 12, 0, 0);
     const iso = (hoursFromBase: number) => new Date(base + hoursFromBase * 60 * 60 * 1000).toISOString();

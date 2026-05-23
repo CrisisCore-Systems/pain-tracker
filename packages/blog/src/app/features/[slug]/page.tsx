@@ -45,9 +45,9 @@ const featureDetails: Record<
     ],
   },
   'clinical-exports': {
-    title: 'Clinical-Grade Exports',
+    title: 'Structured Exports',
     description:
-      'Generate PDF, CSV, and JSON reports formatted for WorkSafeBC claims, physiotherapy, and clinical review.',
+      'Generate PDF, CSV, and JSON reports for physiotherapy, appointments, and claim-related discussions.',
     sections: [
       {
         heading: 'Supported formats',
@@ -55,7 +55,7 @@ const featureDetails: Record<
       },
       {
         heading: 'WorkSafeBC integration',
-        body: 'Exports include fields and formatting that align with WorkSafeBC claim documentation requirements, saving you and your practitioner time.',
+        body: 'Exports include fields and formatting intended to help organize WorkSafeBC-related documentation. Review the export before sharing, because it does not guarantee acceptance, approval, or outcome.',
       },
     ],
   },
@@ -182,7 +182,7 @@ export default async function FeatureDetailPage(
         <p className="text-muted-foreground mb-8 max-w-lg mx-auto">
           No account needed. Your data stays on your device.
         </p>
-        <Link href="/app" className="btn-primary">
+        <Link href={siteConfig.links.app} className="btn-primary">
           Open Pain Tracker
         </Link>
       </section>

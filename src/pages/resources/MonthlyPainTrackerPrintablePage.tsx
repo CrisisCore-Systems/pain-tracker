@@ -39,6 +39,7 @@ import {
   CalendarDays,
 } from 'lucide-react';
 import { LandingFooter } from '../../components/landing/LandingFooter';
+import { ResourceOutcomeBridge, ResourceWorkflowSteps } from '../../components/seo';
 import {
   generateMedicalWebPageSchema,
   generateFAQSchema,
@@ -47,6 +48,10 @@ import {
   generateBreadcrumbSchema,
   combineSchemas,
 } from '../../lib/seo';
+import {
+  trackResourcePrintableDownloadClick,
+  trackResourceStartTrackingFreeClick,
+} from '../../analytics/resource-funnel-events';
 import '../../styles/pages/landing.css';
 
 // ---------------------------------------------------------------------------
@@ -54,11 +59,11 @@ import '../../styles/pages/landing.css';
 // ---------------------------------------------------------------------------
 const SEO = {
   slug: 'monthly-pain-tracker-printable',
-  title: 'Monthly Pain Tracker Printable (Free)',
+  title: 'Monthly Pain Tracker Printable in 2026',
   metaTitle:
-    'Monthly Pain Tracker Printable — Free 30-Day Template | PainTracker',
+    'Monthly Pain Tracker Printable (2026) | Free 30-Day PDF, No Email',
   metaDescription:
-    'Download a free monthly pain tracker printable. 8-section 30-day template tracks daily pain calendar, sleep, medications, functional impact, triggers, mood, and monthly summary — ideal for treatment reviews and disability claims.',
+    'Download a free monthly pain tracker printable for 2026. No email required. This 30-day template tracks pain calendar, sleep, medications, function, triggers, mood, and monthly summary for treatment reviews and disability claims.',
   keywords: [
     'monthly pain tracker printable',
     'monthly pain log',
@@ -290,7 +295,7 @@ const FAQS = [
   {
     question: 'Can I use this alongside the digital app?',
     answer:
-      'Absolutely. Paper monthly logs work well alongside PainTracker. The app captures daily detail with less effort, auto-generates monthly reports, and detects patterns. Many people use paper for the calendar overview (it\'s satisfying to see a full month at a glance) and the app for the analysis and convenience. The data is compatible — you\'re tracking the same clinical dimensions.',
+      'Absolutely. Paper monthly logs work well alongside Pain Tracker. The app captures daily detail with less effort, auto-generates monthly reports, and detects patterns. Many people use paper for the calendar overview (it\'s satisfying to see a full month at a glance) and the app for the analysis and convenience. The data is compatible — you\'re tracking the same clinical dimensions.',
   },
   {
     question: 'Is my privacy protected?',
@@ -428,8 +433,23 @@ export const MonthlyPainTrackerPrintablePage: React.FC = () => {
     generateBreadcrumbSchema(breadcrumbs, { siteUrl: 'https://www.paintracker.ca' }),
   );
 
-  const handleDownload = () => {
+  const handleDownload = (resourceCtaLocation: string) => {
     setDownloadCount((c) => c + 1);
+    trackResourcePrintableDownloadClick({
+      resourcePageSlug: SEO.slug,
+      resourcePageType: 'printable',
+      resourceCtaLocation,
+      routeTarget: '/assets/monthly-pain-tracker.pdf',
+    });
+  };
+
+  const handleStartTrackingClick = (resourceCtaLocation: string) => {
+    trackResourceStartTrackingFreeClick({
+      resourcePageSlug: SEO.slug,
+      resourcePageType: 'printable',
+      resourceCtaLocation,
+      routeTarget: '/start',
+    });
   };
 
   return (
@@ -453,7 +473,7 @@ export const MonthlyPainTrackerPrintablePage: React.FC = () => {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <Link to="/" className="flex items-center gap-2">
-              <span className="landing-brand text-xl">PainTracker</span>
+              <span className="landing-brand text-xl">Pain Tracker</span>
             </Link>
             <div className="flex items-center gap-4">
               <Link
@@ -464,9 +484,10 @@ export const MonthlyPainTrackerPrintablePage: React.FC = () => {
               </Link>
               <Link
                 to="/start"
+                onClick={() => handleStartTrackingClick('top_nav_start_free')}
                 className="btn-cta-primary px-4 py-2 text-sm font-medium rounded-lg"
               >
-                Open App
+                Start tracking free
               </Link>
             </div>
           </div>
@@ -520,7 +541,7 @@ export const MonthlyPainTrackerPrintablePage: React.FC = () => {
             >
               Track Your Pain{' '}
               <span className="bg-gradient-to-r from-sky-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">
-                Across an Entire Month
+                Across an Entire Month in 2026
               </span>
             </h1>
 
@@ -528,6 +549,9 @@ export const MonthlyPainTrackerPrintablePage: React.FC = () => {
               Daily pain calendar, sleep, medications, functional impact, triggers,
               mood, and a monthly summary — 8 structured sections that reveal the trends
               daily logs can&apos;t show.
+            </p>
+            <p className="text-slate-300 text-base sm:text-lg max-w-2xl mx-auto mb-4">
+              Use the printable if you need something today. Use the free app when you need patterns, summaries, and records you can bring to an appointment.
             </p>
             <p className="text-slate-500 text-sm mb-8">
               100% free &bull; No email required &bull; No tracking &bull; Prints on standard letter paper
@@ -537,7 +561,7 @@ export const MonthlyPainTrackerPrintablePage: React.FC = () => {
               <a
                 href="/assets/monthly-pain-tracker.pdf"
                 download="monthly-pain-tracker.pdf"
-                onClick={handleDownload}
+                onClick={() => handleDownload('hero_primary_download')}
                 className="btn-cta-primary px-8 py-4 text-lg font-semibold rounded-xl flex items-center gap-3 shadow-lg shadow-primary/20"
               >
                 <Download className="w-5 h-5" />
@@ -545,10 +569,11 @@ export const MonthlyPainTrackerPrintablePage: React.FC = () => {
               </a>
               <Link
                 to="/start"
+                onClick={() => handleStartTrackingClick('hero_secondary_start_free')}
                 className="px-8 py-4 text-lg font-medium text-slate-300 hover:text-white border border-slate-600 hover:border-slate-500 rounded-xl transition-all flex items-center gap-2"
               >
                 <Sparkles className="w-5 h-5" />
-                Try the Digital Version
+                Start tracking free
               </Link>
             </div>
 
@@ -581,7 +606,7 @@ export const MonthlyPainTrackerPrintablePage: React.FC = () => {
               <a
                 href="/assets/monthly-pain-tracker.pdf"
                 download="monthly-pain-tracker.pdf"
-                onClick={handleDownload}
+                onClick={() => handleDownload('quick_bar_download')}
                 className="btn-cta-primary px-6 py-3 rounded-xl flex items-center gap-2 whitespace-nowrap"
               >
                 <Download className="w-5 h-5" />
@@ -590,6 +615,13 @@ export const MonthlyPainTrackerPrintablePage: React.FC = () => {
             </div>
           </div>
         </section>
+
+        <ResourceOutcomeBridge
+          downloadUrl="/assets/monthly-pain-tracker.pdf"
+          downloadFileName="monthly-pain-tracker.pdf"
+        />
+
+        <ResourceWorkflowSteps intent="printable" />
 
         {/* ═══ WHAT'S INSIDE ═══ */}
         <section className="py-16 sm:py-20 bg-slate-900" aria-labelledby="whats-inside">
@@ -786,7 +818,7 @@ export const MonthlyPainTrackerPrintablePage: React.FC = () => {
                 <div>
                   <h3 className="font-semibold text-white mb-1">Claims-Ready Format</h3>
                   <p className="text-sm text-slate-400">
-                    Accepted for WorkSafeBC, ICBC, CPP-D, private insurance, and medical appointments. Monthly consistency builds a powerful case.
+                    Useful for appointments or claim-related discussions with WorkSafeBC, ICBC, CPP-D, or private insurers. This PDF is a documentation aid, not an official decision document. Approval depends on the reviewer, medical evidence, policy, and case context.
                   </p>
                 </div>
               </div>
@@ -810,7 +842,7 @@ export const MonthlyPainTrackerPrintablePage: React.FC = () => {
                 <a
                   href="/assets/monthly-pain-tracker.pdf"
                   download="monthly-pain-tracker.pdf"
-                  onClick={handleDownload}
+                  onClick={() => handleDownload('mid_page_download')}
                   className="btn-cta-primary px-8 py-4 text-lg font-semibold rounded-xl flex items-center gap-3"
                 >
                   <Download className="w-5 h-5" />
@@ -818,9 +850,10 @@ export const MonthlyPainTrackerPrintablePage: React.FC = () => {
                 </a>
                 <Link
                   to="/start"
+                  onClick={() => handleStartTrackingClick('mid_page_start_free')}
                   className="text-slate-400 hover:text-white transition-colors flex items-center gap-2 text-sm"
                 >
-                  Or try the digital version
+                  Start tracking free
                   <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>
@@ -864,7 +897,7 @@ export const MonthlyPainTrackerPrintablePage: React.FC = () => {
                 <a
                   href="/assets/monthly-pain-tracker.pdf"
                   download="monthly-pain-tracker.pdf"
-                  onClick={handleDownload}
+                  onClick={() => handleDownload('paper_vs_digital_download')}
                   className="mt-6 w-full text-center py-3 px-6 rounded-xl border border-slate-600 hover:border-primary text-white font-medium transition-colors flex items-center justify-center gap-2"
                 >
                   <Download className="w-4 h-4" />
@@ -883,7 +916,7 @@ export const MonthlyPainTrackerPrintablePage: React.FC = () => {
                   <div className="w-10 h-10 bg-primary/15 rounded-lg flex items-center justify-center">
                     <Sparkles className="w-5 h-5 text-primary" />
                   </div>
-                  <h3 className="text-xl font-bold text-white">PainTracker (Digital)</h3>
+                  <h3 className="text-xl font-bold text-white">Pain Tracker (Digital)</h3>
                 </div>
                 <ul className="space-y-3 flex-1">
                   {[
@@ -902,9 +935,10 @@ export const MonthlyPainTrackerPrintablePage: React.FC = () => {
                 </ul>
                 <Link
                   to="/start"
+                  onClick={() => handleStartTrackingClick('paper_vs_digital_start_free')}
                   className="mt-6 w-full text-center py-3 px-6 rounded-xl btn-cta-primary font-medium flex items-center justify-center gap-2"
                 >
-                  Open Free App
+                  Start tracking free
                   <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>
@@ -970,7 +1004,7 @@ export const MonthlyPainTrackerPrintablePage: React.FC = () => {
               <a
                 href="/assets/monthly-pain-tracker.pdf"
                 download="monthly-pain-tracker.pdf"
-                onClick={handleDownload}
+                onClick={() => handleDownload('final_cta_download')}
                 className="btn-cta-primary px-8 py-4 text-lg font-semibold rounded-xl flex items-center gap-3"
               >
                 <Download className="w-5 h-5" />
@@ -978,9 +1012,10 @@ export const MonthlyPainTrackerPrintablePage: React.FC = () => {
               </a>
               <Link
                 to="/start"
+                onClick={() => handleStartTrackingClick('final_cta_start_free')}
                 className="px-8 py-4 text-lg font-medium text-slate-300 hover:text-white border border-slate-600 hover:border-slate-500 rounded-xl transition-all flex items-center gap-2"
               >
-                Open PainTracker
+                Start tracking free
                 <ArrowRight className="w-5 h-5" />
               </Link>
             </div>

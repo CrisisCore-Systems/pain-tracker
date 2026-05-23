@@ -7,12 +7,17 @@
 
 import React from 'react';
 import {
-  ArrowRight, Activity, CheckCircle, Clock, Stethoscope,
-  FileText, TrendingUp, AlertTriangle, ClipboardList,
+  Activity, CheckCircle, Clock, Stethoscope,
+  TrendingUp,
   MonitorSmartphone, Users, Brain, Zap
 } from 'lucide-react';
-import { SEOPageLayout, type SEOPageContent, StatsBanner, BottomCTACallout } from '../../components/seo';
-import type { StatItem } from '../../components/seo';
+import {
+  SEOPageLayout,
+  type SEOPageContent,
+  type StatItem,
+  StatsBanner,
+  BottomCTACallout,
+} from '../../components/seo';
 
 /* ── Custom Visual Components ─────────────────────────────────────────────── */
 
@@ -124,7 +129,7 @@ const specialistStats: StatItem[] = [
 const pageContent: SEOPageContent = {
   slug: 'pain-diary-for-specialist-appointment',
   title: 'Pain Diary for Specialist Appointment',
-  metaTitle: 'Pain Diary for Specialist Appointment — What to Track & Bring | PainTracker',
+  metaTitle: 'Pain Diary for Specialist Appointment — What to Track & Bring | PainTracker.ca',
   metaDescription: 'Prepare for your specialist appointment with the right pain diary data. What pain specialists, rheumatologists, neurologists, and surgeons need. Free one-page summary template.',
   keywords: [
     'pain diary for specialist appointment', 'pain diary for specialist',
@@ -139,7 +144,7 @@ const pageContent: SEOPageContent = {
   headline: 'Pain Diary for Specialist Appointment',
   subheadline: 'You waited months for this appointment. Different specialists need different data. Here\'s exactly what to track and bring — tailored to whether you\'re seeing a pain specialist, rheumatologist, neurologist, or surgeon — so you make the most of your 30 minutes.',
   primaryCTA: { text: 'Download Specialist Prep Template', href: '/assets/specialist-appointment-diary.pdf', download: true },
-  secondaryCTA: { text: 'Start Digital Tracking', href: '/start' },
+  secondaryCTA: { text: 'Start tracking free', href: '/start' },
   utilityBlock: { type: 'download', downloadUrl: '/assets/specialist-appointment-diary.pdf', downloadFileName: 'specialist-appointment-diary.pdf' },
   whatIsThis: 'A specialist appointment preparation guide that matches your pain diary to the specialist you\'re seeing. Pain specialists, rheumatologists, neurologists, and orthopedic surgeons all evaluate differently — they need different data from your diary. This guide tells you exactly what to track for each specialist type, provides a pre-appointment preparation timeline, and includes a one-page summary template that specialists can review in 60 seconds. You waited months for this appointment. Arrive prepared.',
   whoShouldUse: [
@@ -200,15 +205,15 @@ export const PainDiaryForSpecialistAppointmentPage: React.FC = () => (
     <OnePageSummary />
     <BottomCTACallout
       icon={MonitorSmartphone}
-      heading="You Waited Months for This. Arrive Ready."
-      body="Download the specialist preparation template, start tracking today, and walk into your appointment with organized data that gets results."
+      heading="Use the wait time to build a record you can actually bring in."
+      body="Specialist visits go better when you arrive with a clearer summary of symptoms, function, and treatment response. Start with the prep template or use the app if it is easier to keep up with between now and the appointment."
       pdfUrl="/assets/specialist-appointment-diary.pdf"
       gradientClasses="from-indigo-600 to-purple-600"
       tintClass="text-indigo-100"
       buttonTextClass="text-indigo-700"
       buttonHoverClass="hover:bg-indigo-50"
-      primaryLabel="Download Prep Template"
-      secondaryLabel="Start Digital Tracking"
+      primaryLabel="Download the prep template"
+      secondaryLabel="Start tracking free"
     />
   </SEOPageLayout>
 );

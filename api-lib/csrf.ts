@@ -1,7 +1,7 @@
 import type { VercelRequest } from '../src/types/vercel';
 import crypto from 'node:crypto';
-import { getInternalOrigin } from './http';
-import { readCsrfTokenFromRequest } from './clinicAuthSession';
+import { getInternalOrigin } from './http.js';
+import { readCsrfTokenFromRequest } from './clinicAuthSession.js';
 
 type CsrfValidationResult =
   | { ok: true }

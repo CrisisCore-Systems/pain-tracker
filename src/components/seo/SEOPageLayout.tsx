@@ -7,9 +7,9 @@
  * 2. Instant utility block (download/tool preview)
  * 3. Ultra-clear explanation (what, who, how, why)
  * 4. Clinical & legal trust signals
- * 5. Soft conversion into the app
- * 6. Internal authority links
- * 7. FAQ block
+ * 5. Internal authority links
+ * 6. FAQ block
+ * 7. Patient-first CTA stack
  * 8. Structured data (invisible SEO)
  */
 
@@ -30,9 +30,17 @@ import {
   generateSoftwareApplicationSchema,
   generateBreadcrumbSchema,
   combineSchemas,
+  defaultSEOConfig,
   type FAQItem,
   type BreadcrumbItem
 } from '../../lib/seo';
+import { ResourceCtaStack } from './ResourceCtaStack';
+import { ResourceOutcomeBridge } from './ResourceOutcomeBridge';
+import { ResourceWorkflowSteps, type ResourcePageIntent } from './ResourceWorkflowSteps';
+import {
+  trackResourcePrintableDownloadClick,
+  trackResourceStartTrackingFreeClick,
+} from '../../analytics/resource-funnel-events';
 import '../../styles/pages/landing.css';
 
 export interface SEOPageContent {
@@ -59,7 +67,7 @@ export interface SEOPageContent {
   };
   
   // Utility block
-  utilityBlock: {
+  utilityBlock?: {
     type: 'pdf-preview' | 'tool-embed' | 'download';
     previewImage?: string;
     downloadUrl?: string;
@@ -98,8 +106,48 @@ interface SEOPageLayoutProps {
   children?: React.ReactNode;
 }
 
+const inferResourceIntent = (slug: string): ResourcePageIntent => {
+  if (/worksafebc|disability|claim|injury|functioning|benefits/i.test(slug)) {
+    return 'claims';
+  }
+
+  if (/doctor|appointment|specialist|share-pain-records/i.test(slug)) {
+    return 'doctor';
+  }
+
+  if (/printable|template|pdf|diary|journal|tracker/i.test(slug)) {
+    return 'printable';
+  }
+
+  return 'general';
+};
+
 export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children }) => {
-  const canonicalUrl = `https://www.paintracker.ca${content.canonicalPath ?? `/resources/${content.slug}`}`;
+  const resourcePath = content.canonicalPath ?? '/resources/' + content.slug;
+  const canonicalUrl = `${defaultSEOConfig.siteUrl}${resourcePath}`;
+  const resourceIntent = inferResourceIntent(content.slug);
+
+  const trackStartClick = (resourceCtaLocation: string, routeTarget = '/start') => {
+    trackResourceStartTrackingFreeClick({
+      resourcePageSlug: content.slug,
+      resourcePageType: resourceIntent,
+      resourceCtaLocation,
+      routeTarget,
+    });
+  };
+
+  const trackPrintableClick = (resourceCtaLocation: string, routeTarget?: string) => {
+    if (!routeTarget) {
+      return;
+    }
+
+    trackResourcePrintableDownloadClick({
+      resourcePageSlug: content.slug,
+      resourcePageType: resourceIntent,
+      resourceCtaLocation,
+      routeTarget,
+    });
+  };
   
   // Set document title and meta tags
   useEffect(() => {
@@ -194,7 +242,7 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
   });
   const softwareSchema = generateSoftwareApplicationSchema();
   const breadcrumbSchema = generateBreadcrumbSchema(content.breadcrumbs, {
-    siteUrl: 'https://www.paintracker.ca'
+    siteUrl: defaultSEOConfig.siteUrl
   });
   
   const combinedSchema = combineSchemas(
@@ -226,7 +274,7 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <Link to="/" className="flex items-center gap-2">
-              <span className="landing-brand text-xl">PainTracker</span>
+              <span className="landing-brand text-xl">Pain Tracker</span>
             </Link>
             <div className="flex items-center gap-4">
               <Link
@@ -237,9 +285,10 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
               </Link>
               <Link
                 to="/start"
+                onClick={() => trackStartClick('top_nav_start_free')}
                 className="btn-cta-primary px-4 py-2 text-sm font-medium rounded-lg"
               >
-                Open App
+                Use the free pain tracker
               </Link>
             </div>
           </div>
@@ -304,7 +353,8 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
               {content.primaryCTA.download ? (
                 <a
                   href={content.primaryCTA.href}
-                  download={content.utilityBlock.downloadFileName}
+                  download={content.utilityBlock?.downloadFileName}
+                  onClick={() => trackPrintableClick('hero_primary_download', content.primaryCTA.href)}
                   className="btn-cta-primary px-8 py-4 text-lg font-semibold rounded-xl flex items-center gap-3"
                 >
                   <Download className="w-5 h-5" />
@@ -313,6 +363,11 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
               ) : (
                 <Link
                   to={content.primaryCTA.href}
+                  onClick={() => {
+                    if (content.primaryCTA.href === '/start') {
+                      trackStartClick('hero_primary_start_free', content.primaryCTA.href);
+                    }
+                  }}
                   className="btn-cta-primary px-8 py-4 text-lg font-semibold rounded-xl flex items-center gap-3"
                 >
                   {content.primaryCTA.text}
@@ -323,6 +378,11 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
               {content.secondaryCTA && (
                 <Link
                   to={content.secondaryCTA.href}
+                  onClick={() => {
+                    if (content.secondaryCTA?.href === '/start') {
+                      trackStartClick('hero_secondary_start_free', content.secondaryCTA.href);
+                    }
+                  }}
                   className="px-8 py-4 text-lg font-medium text-slate-300 hover:text-white border border-slate-600 hover:border-slate-500 rounded-xl transition-all"
                 >
                   {content.secondaryCTA.text}
@@ -335,18 +395,18 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
         {/* ===== SECTION 2: Instant Utility Block ===== */}
         <section className="py-12 bg-slate-900 border-y border-slate-800">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            {content.utilityBlock.type === 'pdf-preview' && content.utilityBlock.previewImage && (
+            {content.utilityBlock?.type === 'pdf-preview' && content.utilityBlock.previewImage && (
               <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
                 <img
                   src={content.utilityBlock.previewImage}
-                  alt={`Preview of ${content.title}`}
+                  alt={`${content.slug}-printable-pdf-preview`}
                   className="w-full h-auto"
                   loading="eager"
                 />
               </div>
             )}
             
-            {content.utilityBlock.type === 'download' && (
+            {content.utilityBlock?.type === 'download' && (
               <div className="text-center">
                 <div className="inline-flex items-center gap-4 bg-slate-800 rounded-2xl p-6 border border-slate-700">
                   <div className="w-16 h-16 bg-primary/20 rounded-xl flex items-center justify-center">
@@ -361,6 +421,7 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
                   <a
                     href={content.utilityBlock.downloadUrl}
                     download={content.utilityBlock.downloadFileName}
+                    onClick={() => trackPrintableClick('utility_download', content.utilityBlock?.downloadUrl)}
                     className="btn-cta-primary px-6 py-3 rounded-xl flex items-center gap-2"
                   >
                     <Download className="w-5 h-5" />
@@ -374,6 +435,15 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
             {children}
           </div>
         </section>
+
+        <ResourceOutcomeBridge
+          downloadUrl={content.utilityBlock?.downloadUrl}
+          downloadFileName={content.utilityBlock?.downloadFileName}
+          resourcePageSlug={content.slug}
+          resourcePageType={resourceIntent}
+        />
+
+        <ResourceWorkflowSteps intent={resourceIntent} />
         
         {/* ===== SECTION 3: Ultra-Clear Explanation ===== */}
         <section className="py-16 bg-slate-900">
@@ -474,27 +544,7 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
           </section>
         )}
         
-        {/* ===== SECTION 5: Soft Conversion ===== */}
-        <section className="py-16 bg-gradient-to-b from-slate-900 to-slate-800">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 className="text-3xl font-bold text-white mb-4">
-              Want automatic tracking instead of paper?
-            </h2>
-            <p className="text-slate-400 text-lg mb-8 max-w-2xl mx-auto">
-              PainTracker automatically logs pain, symptoms, triggers, and daily patterns,
-              then lets you export clinician-friendly records when you choose. Local-first by default.
-            </p>
-            <Link
-              to="/start"
-              className="btn-cta-primary px-8 py-4 text-lg font-semibold rounded-xl inline-flex items-center gap-3"
-            >
-              Open PainTracker
-              <ArrowRight className="w-5 h-5" />
-            </Link>
-          </div>
-        </section>
-        
-        {/* ===== SECTION 6: Internal Authority Links ===== */}
+        {/* ===== SECTION 5: Internal Authority Links ===== */}
         <section className="py-16 bg-slate-900">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-2xl font-bold text-white mb-8">Related pain tracking resources</h2>
@@ -515,10 +565,24 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
                 </Link>
               ))}
             </div>
+
+            <div className="mt-8 rounded-2xl border border-slate-700 bg-slate-800/60 p-6">
+              <h3 className="text-xl font-semibold text-white">Explore the full resource hub</h3>
+              <p className="mt-3 text-slate-300">
+                Explore all free pain tracker templates and pain journal printables if you need a different format for doctor visits, disability documentation, or private offline tracking.
+              </p>
+              <Link
+                to="/resources"
+                className="mt-4 inline-flex items-center gap-2 text-primary hover:text-sky-300 transition-colors"
+              >
+                <span>Explore all free pain tracker templates and pain journal printables</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
           </div>
         </section>
         
-        {/* ===== SECTION 7: FAQ Block ===== */}
+        {/* ===== SECTION 6: FAQ Block ===== */}
         <section className="py-16 bg-slate-800/50 border-t border-slate-700">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-2xl font-bold text-white mb-8 text-center">
@@ -554,6 +618,20 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
                 </details>
               ))}
             </div>
+          </div>
+        </section>
+
+        <ResourceCtaStack
+          intent={resourceIntent}
+          resourcePageSlug={content.slug}
+          resourcePageType={resourceIntent}
+        />
+
+        <section className="py-10 bg-slate-950 border-t border-slate-800">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <p className="text-sm leading-relaxed text-slate-400">
+              PainTracker does not diagnose, treat, or replace medical advice. These templates and guides are designed to help you organize your own notes so you can communicate patterns more clearly with clinicians, insurers, case managers, or support workers.
+            </p>
           </div>
         </section>
       </main>

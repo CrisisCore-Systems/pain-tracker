@@ -7,12 +7,17 @@
 
 import React from 'react';
 import {
-  ArrowRight, CheckCircle, Clock, Search,
+  CheckCircle, Clock, Search,
   FileText, TrendingUp, AlertTriangle, Activity,
-  MonitorSmartphone, Users, Brain, Thermometer
+  MonitorSmartphone, Users, Brain
 } from 'lucide-react';
-import { SEOPageLayout, type SEOPageContent, StatsBanner, BottomCTACallout } from '../../components/seo';
-import type { StatItem } from '../../components/seo';
+import {
+  SEOPageLayout,
+  type SEOPageContent,
+  type StatItem,
+  StatsBanner,
+  BottomCTACallout,
+} from '../../components/seo';
 
 /* ── Custom Visual Components ─────────────────────────────────────────────── */
 
@@ -133,7 +138,7 @@ const diagnosisStats: StatItem[] = [
 const pageContent: SEOPageContent = {
   slug: 'symptom-tracking-before-diagnosis',
   title: 'Symptom Tracking Before Diagnosis',
-  metaTitle: 'Symptom Tracking Before Diagnosis — What to Track When You Don\'t Know What\'s Wrong | PainTracker',
+  metaTitle: 'Symptom Tracking Before Diagnosis — What to Track When You Don\'t Know What\'s Wrong | PainTracker.ca',
   metaDescription: 'Learn what to track when your pain hasn\'t been diagnosed yet. Pattern recognition guide, pre-diagnosis tracking categories, and doctor-ready summary template.',
   keywords: [
     'symptom tracking before diagnosis', 'pre-diagnosis symptom tracking',
@@ -148,7 +153,7 @@ const pageContent: SEOPageContent = {
   headline: 'Symptom Tracking Before Diagnosis',
   subheadline: 'You know something is wrong, but no one has told you what yet. Track broadly, track consistently, and bring patterns to your doctor that point toward answers — because the average chronic pain diagnosis takes 4.5 years, and your tracking can shorten that.',
   primaryCTA: { text: 'Download Pre-Diagnosis Tracker', href: '/assets/pre-diagnosis-symptom-tracker.pdf', download: true },
-  secondaryCTA: { text: 'Start Digital Tracking', href: '/start' },
+  secondaryCTA: { text: 'Start tracking free', href: '/start' },
   utilityBlock: { type: 'download', downloadUrl: '/assets/pre-diagnosis-symptom-tracker.pdf', downloadFileName: 'pre-diagnosis-symptom-tracker.pdf' },
   whatIsThis: 'A symptom tracking guide for people who haven\'t been diagnosed yet — the hardest and most important time to track. When you don\'t know what\'s wrong, you don\'t know what matters. This guide helps you track broadly across multiple categories, recognize diagnostically meaningful patterns in your data, and present findings to doctors in a format that accelerates investigation. It covers what to track when you\'re uncertain, how the patterns in your data suggest specific conditions, and how to prepare a pre-diagnosis summary your doctor can act on.',
   whoShouldUse: [
@@ -210,15 +215,15 @@ export const SymptomTrackingBeforeDiagnosisPage: React.FC = () => (
     <DoctorSummary />
     <BottomCTACallout
       icon={MonitorSmartphone}
-      heading="You Know Something the Tests Haven't Caught Yet. Document It."
-      body="Your symptoms are real. Your tracking creates the evidence that closes the gap between your experience and a diagnosis. Start today — every day of data gets you closer to answers."
+      heading="Keep a record that is easier to bring into the next appointment."
+      body="When symptoms are inconsistent or hard to explain, a simple record reduces guesswork. Start with one tracker now so you have something clearer than memory when it is time to talk to a doctor again."
       pdfUrl="/assets/pre-diagnosis-symptom-tracker.pdf"
       gradientClasses="from-sky-600 to-blue-600"
       tintClass="text-sky-100"
       buttonTextClass="text-sky-700"
       buttonHoverClass="hover:bg-sky-50"
-      primaryLabel="Download Tracker"
-      secondaryLabel="Start Digital Tracking"
+      primaryLabel="Download the tracker"
+      secondaryLabel="Start tracking free"
     />
   </SEOPageLayout>
 );

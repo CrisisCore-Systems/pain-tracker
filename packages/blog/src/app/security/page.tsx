@@ -152,7 +152,7 @@ export default function SecurityPage() {
           Every line is open source. Audit the code yourself.
         </p>
         <div className="flex items-center justify-center gap-4 flex-wrap">
-          <Link href="/app" className="btn-primary">
+          <Link href={siteConfig.links.app} className="btn-primary">
             Open Pain Tracker
           </Link>
           <a

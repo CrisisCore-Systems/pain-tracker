@@ -3,7 +3,7 @@
  * 
  * Target keyword: "daily pain tracker printable"
  * Search intent: User wants a quick daily tracking sheet to print
- * Conversion goal: Download template → discover Pain Tracker Pro
+ * Conversion goal: Download template → discover Pain Tracker
  * 
  * Fully custom layout for maximum conversion & engagement.
  */
@@ -30,7 +30,6 @@ import {
   ChevronDown,
   Sparkles,
   Lock,
-  AlertCircle,
   Zap,
   Smile,
   BarChart3,
@@ -47,6 +46,7 @@ import {
   generateBreadcrumbSchema,
   combineSchemas,
 } from '../../lib/seo';
+import { ResourceCtaStack, ResourceOutcomeBridge, ResourceWorkflowSteps } from '../../components/seo';
 import '../../styles/pages/landing.css';
 
 // ---------------------------------------------------------------------------
@@ -54,11 +54,11 @@ import '../../styles/pages/landing.css';
 // ---------------------------------------------------------------------------
 const SEO = {
   slug: 'daily-pain-tracker-printable',
-  title: 'Daily Pain Tracker Printable (Free)',
+  title: 'Daily Pain Tracker Printable in 2026',
   metaTitle:
-    'Daily Pain Tracker Printable — Free Comprehensive PDF | PainTracker',
+    'Daily Pain Tracker Printable (2026) | Free PDF, No Email Required',
   metaDescription:
-    'Download a free daily pain tracker printable. Tracks morning check-in, pain episodes, medications, activity impact, mood, and end-of-day summary — everything your provider needs from one day.',
+    'Download the free daily pain tracker printable PDF for 2026. No email required. Record pain levels, medications, flare ups, triggers, daily limits, mood, and notes for doctor visits.',
   keywords: [
     'daily pain tracker printable',
     'daily pain log',
@@ -290,7 +290,7 @@ const FAQS = [
   {
     question: 'Is there a digital version?',
     answer:
-      'Yes. PainTracker is the digital companion that captures the same information with fewer taps, auto-generates clinical reports, detects patterns, and encrypts everything on your device. Many people start with paper to build the habit, then switch to digital for the analysis and convenience.',
+      'Yes. Pain Tracker is the digital companion that captures the same information with fewer taps, auto-generates clinical reports, detects patterns, and encrypts everything on your device. Many people start with paper to build the habit, then switch to digital for the analysis and convenience.',
   },
   {
     question: 'Is my privacy protected?',
@@ -453,7 +453,7 @@ export const DailyPainTrackerPrintablePage: React.FC = () => {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <Link to="/" className="flex items-center gap-2">
-              <span className="landing-brand text-xl">PainTracker</span>
+              <span className="landing-brand text-xl">Pain Tracker</span>
             </Link>
             <div className="flex items-center gap-4">
               <Link
@@ -466,7 +466,7 @@ export const DailyPainTrackerPrintablePage: React.FC = () => {
                 to="/start"
                 className="btn-cta-primary px-4 py-2 text-sm font-medium rounded-lg"
               >
-                Open App
+                Use the app free
               </Link>
             </div>
           </div>
@@ -518,15 +518,14 @@ export const DailyPainTrackerPrintablePage: React.FC = () => {
               id="hero-heading"
               className="landing-headline landing-headline-lg text-white mb-6"
             >
-              A Daily Pain Tracker That{' '}
-              <span className="bg-gradient-to-r from-sky-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">
-                Captures Your Whole Day
-              </span>
+              Free Daily Pain Tracker Printable PDF in 2026
             </h1>
 
             <p className="landing-subhead text-lg sm:text-xl max-w-2xl mx-auto mb-4">
-              Morning check-in, pain episodes, medications, activity impact, mood,
-              and end-of-day summary — structured so your provider can scan it in seconds.
+              Use this printable pain tracker to log one full day of symptoms, medications, flare ups, activity limits, and notes in a format that is easy to keep and easy to bring to appointments.
+            </p>
+            <p className="text-slate-300 text-base sm:text-lg max-w-2xl mx-auto mb-4">
+              Start on paper if that is the easiest move today. Use the free app instead when you want less manual summarizing and a record that stays searchable on your device.
             </p>
             <p className="text-slate-500 text-sm mb-8">
               100% free &bull; No email required &bull; No tracking &bull; Prints on standard letter paper
@@ -540,14 +539,14 @@ export const DailyPainTrackerPrintablePage: React.FC = () => {
                 className="btn-cta-primary px-8 py-4 text-lg font-semibold rounded-xl flex items-center gap-3 shadow-lg shadow-primary/20"
               >
                 <Download className="w-5 h-5" />
-                Download Free PDF
+                Download free printable PDF
               </a>
               <Link
                 to="/start"
                 className="px-8 py-4 text-lg font-medium text-slate-300 hover:text-white border border-slate-600 hover:border-slate-500 rounded-xl transition-all flex items-center gap-2"
               >
                 <Sparkles className="w-5 h-5" />
-                Try the Digital Version
+                Use the free app instead
               </Link>
             </div>
 
@@ -584,11 +583,18 @@ export const DailyPainTrackerPrintablePage: React.FC = () => {
                 className="btn-cta-primary px-6 py-3 rounded-xl flex items-center gap-2 whitespace-nowrap"
               >
                 <Download className="w-5 h-5" />
-                Download PDF
+                Download free printable PDF
               </a>
             </div>
           </div>
         </section>
+
+        <ResourceOutcomeBridge
+          downloadUrl="/assets/daily-pain-tracker.pdf"
+          downloadFileName="daily-pain-tracker.pdf"
+        />
+
+        <ResourceWorkflowSteps intent="printable" />
 
         {/* ═══ WHAT'S INSIDE ═══ */}
         <section className="py-16 sm:py-20 bg-slate-900" aria-labelledby="whats-inside">
@@ -783,7 +789,7 @@ export const DailyPainTrackerPrintablePage: React.FC = () => {
                 <div>
                   <h3 className="font-semibold text-white mb-1">Claims-Ready Format</h3>
                   <p className="text-sm text-slate-400">
-                    Accepted for WorkSafeBC, ICBC, CPP-D, private insurance, and medical appointments. Daily timestamps make records defensible.
+                    Useful for appointments or claim-related discussions with WorkSafeBC, ICBC, CPP-D, or private insurers. This PDF is a documentation aid, not an official decision document. Approval depends on the reviewer, medical evidence, policy, and case context.
                   </p>
                 </div>
               </div>
@@ -811,13 +817,13 @@ export const DailyPainTrackerPrintablePage: React.FC = () => {
                   className="btn-cta-primary px-8 py-4 text-lg font-semibold rounded-xl flex items-center gap-3"
                 >
                   <Download className="w-5 h-5" />
-                  Download Free PDF
+                  Download free printable PDF
                 </a>
                 <Link
                   to="/start"
                   className="text-slate-400 hover:text-white transition-colors flex items-center gap-2 text-sm"
                 >
-                  Or try the digital version
+                  Use the free app instead
                   <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>
@@ -880,7 +886,7 @@ export const DailyPainTrackerPrintablePage: React.FC = () => {
                   <div className="w-10 h-10 bg-primary/15 rounded-lg flex items-center justify-center">
                     <Sparkles className="w-5 h-5 text-primary" />
                   </div>
-                  <h3 className="text-xl font-bold text-white">PainTracker (Digital)</h3>
+                  <h3 className="text-xl font-bold text-white">Pain Tracker (Digital)</h3>
                 </div>
                 <ul className="space-y-3 flex-1">
                   {[
@@ -951,37 +957,11 @@ export const DailyPainTrackerPrintablePage: React.FC = () => {
           </div>
         </section>
 
-        {/* ═══ FINAL CTA ═══ */}
-        <section className="py-16 bg-gradient-to-b from-slate-900 to-slate-800" aria-label="Final call to action">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <AlertCircle className="w-8 h-8 text-sky-400 mx-auto mb-4" />
-            <h2 className="text-3xl font-bold text-white mb-4">
-              Five minutes today can change your next appointment
-            </h2>
-            <p className="text-slate-400 text-lg mb-8 max-w-2xl mx-auto">
-              Every day you track is a data point your provider can use to help you.
-              Start today — even a partial entry is better than none.
-            </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <a
-                href="/assets/daily-pain-tracker.pdf"
-                download="daily-pain-tracker.pdf"
-                onClick={handleDownload}
-                className="btn-cta-primary px-8 py-4 text-lg font-semibold rounded-xl flex items-center gap-3"
-              >
-                <Download className="w-5 h-5" />
-                Download Free PDF
-              </a>
-              <Link
-                to="/start"
-                className="px-8 py-4 text-lg font-medium text-slate-300 hover:text-white border border-slate-600 hover:border-slate-500 rounded-xl transition-all flex items-center gap-2"
-              >
-                Open PainTracker
-                <ArrowRight className="w-5 h-5" />
-              </Link>
-            </div>
-          </div>
-        </section>
+        <ResourceCtaStack
+          intent="printable"
+          heading="Keep the patient funnel moving"
+          body="Use the app free, download a printable, or prepare records for appointments and documentation. The last step on the page should still match the real reason people searched."
+        />
 
       </main>
 

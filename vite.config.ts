@@ -272,10 +272,6 @@ export default defineConfig({
           if (id.includes('node_modules/i18next') || id.includes('node_modules/react-i18next')) {
             return 'i18n-vendor';
           }
-          // Heavy crypto library - lazy load only when vault is accessed
-          if (id.includes('node_modules/libsodium') || id.includes('node_modules/crypto-js')) {
-            return 'crypto-vendor';
-          }
           // PDF generation - lazy load on export
           if (id.includes('node_modules/jspdf') || id.includes('node_modules/jspdf-autotable')) {
             return 'pdf-vendor';

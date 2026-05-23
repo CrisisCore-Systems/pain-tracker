@@ -1,190 +1,431 @@
 ---
-title: How ProofVault turned trust from a documentation claim into a reproducible release artifact
+title: ProofVault as a Release Artifact: Turning Trust Into Something You Can Verify
 published: true
 tags: architecture, security, privacy, showdev
-description: How ProofVault turned trust from a documentation claim into a reproducible, release-bound artifact.
+description: Trust is not real until it survives contact with evidence. ProofVault turns release trust into something you can inspect instead of something you have to believe.
 ---
 
-ProofVault now carries part of its own proof burden in the repository.
+If you want the trust and release path instead of a single artifact essay, use this route:
 
-Most projects say they care about security, privacy, or integrity. Far fewer can point to a concrete specimen, regenerate it from the repository, detect drift automatically, show what tampering looks like, and identify the exact hosted-green release tree tied to a public tag.
+1. [Quality gates that earn trust](https://dev.to/crisiscoresystems/quality-gates-that-earn-trust-checks-you-can-run-not-promises-you-cant-58a3)
+2. [Maintaining truthful docs over time](https://dev.to/crisiscoresystems/maintaining-truthful-docs-over-time-how-to-keep-security-claims-honest-2778)
+3. ProofVault as a Release Artifact
+4. [Preview Mode First: Agent Plans as PRs (Plan Diff + Invariants)](https://dev.to/crisiscoresystems/preview-mode-first-agent-plans-as-prs-plan-diff-invariants-4ikd)
+5. [Protective Computing Canon v1.0 is now DOI-backed](https://dev.to/crisiscoresystems/the-overton-framework-is-now-doi-backed-ko7)
 
-ProofVault now does.
+For the broader catalog route, start with [Start Here: PainTracker and the CrisisCore Build Log](https://dev.to/crisiscoresystems/start-here-paintracker-crisiscore-build-log-privacy-first-offline-first-no-surveillance-3h0k).
 
-This post is about building a trust case that is not just described in prose, but enforced through code, generated artifacts, CI, and release discipline.
+Trust is a dangerous word.
 
-The result is **ProofVault Trust Case v1.0.1**: a reproducible trust case for an offline-first encrypted evidence app, tied to an exact public release and stabilized across hosted CI.
+People throw it around like a vibe. Like a brand promise. Like something
+that can be conjured with a clean landing page and a few polished
+sentences about privacy.
 
-## The problem with trust claims
+It cannot.
 
-ProofVault is an offline-first encrypted evidence and incident capture application built for unstable, privacy-sensitive, and high-stress conditions.
+Trust is not real until it survives contact with evidence.
 
-A system like that carries a higher burden than ordinary product software.
+That is why ProofVault matters.
 
-It is not enough to say the app encrypts data. It is not enough to say the app exports records. It is not enough to say it has verification features.
+Not just as a product.
 
-Those claims stay abstract unless they are tied to something concrete, inspectable, and repeatable.
+As a release artifact.
 
-That was the gap this trust-case work set out to close.
+Because the real question is not whether a tool claims to be safe,
+private, reversible, or tamper aware.
 
-The goal was to create a public artifact that answers, in checkable form:
+The real question is whether it can prove those claims after the docs are
+written, after the deploy is shipped, and after somebody else tries to
+verify what actually happened.
 
-- what ProofVault guarantees
-- what it does not guarantee
-- what evidence supports those claims
-- how a third party can reproduce trust-critical output
-- how release integrity is preserved when the environment changes
+That is the difference between messaging and discipline.
 
-## What the trust case added
+## The docs are not the proof
 
-The result is a trust dossier under `docs/trust-case/` and a pinned specimen under `docs/trust-case/demo/`.
+This is where a lot of teams get lazy.
 
-That package includes:
+They write the architecture doc.
+They write the privacy policy.
+They write the security page.
+They write the release notes.
 
-- a bounded trust case
-- an explicit threat model
-- a verification walkthrough grounded in a real specimen
-- a frozen demo case with pinned observed outputs
-- automated regeneration and drift detection
-- a CI workflow that enforces the specimen on GitHub's hosted runner
+Then they start acting like the words themselves are the guarantee.
 
-The key point is not that these pieces exist individually.
+They are not.
 
-The key point is that they are connected.
+Docs can describe intent. They can define the contract. They can explain
+the system. But they do not validate themselves. They do not stop a bad
+build. They do not prove the artifact was assembled from the right
+source. They do not tell you whether the shipped version still matches
+the thing you thought you released.
 
-The repository can now say:
+That gap is where trust gets fake.
 
-Here is the specimen.  
-Here is how it is regenerated.  
-Here is what counts as expected output.  
-Here is how drift is detected.  
-Here is what tampering looks like.  
-Here is the exact release tree that passed hosted CI.  
-Here is the public tag tied to that proof.
+ProofVault exists in that gap.
 
-That is a different class of credibility than a sentence in a README.
+It turns release trust into something you can inspect instead of
+something you have to believe.
 
-## Why the specimen mattered
+## A release is a chain
 
-The pinned specimen changed the conversation.
+A lot of release processes still treat the deployable like it is just
+"the thing we ship."
 
-Instead of talking about integrity in the abstract, the trust case now includes a real export, a real proof manifest, real verification reports, real fingerprint data, and a real tampered case showing mismatch behavior.
+That is too vague.
 
-That shifts the burden of trust in an important way.
+A release is a chain.
 
-The project no longer asks a reader to assume that the export path, manifest sealing, backup verification, and release process all fit together. It shows one exact instance of those things fitting together, and it gives the repository a way to notice when that example stops matching reality.
+Source.
+Build.
+Dependencies.
+Configuration.
+Artifact.
+Signature.
+Checksum.
+Environment.
+Gate.
+Approval.
 
-## Drift detection as enforcement
+If any link is unclear, the release is no longer fully explainable.
 
-A trust case without drift detection decays quickly.
+And if it is not explainable, it is not fully trustworthy.
 
-Once a specimen is checked in, the obvious risk is that future changes silently alter trust-critical output while the documentation continues to describe old behavior. That is how trust language collapses into theater.
+That is the part people want to skip because it slows everything down.
 
-ProofVault avoids that by treating the specimen as a checked invariant.
+Good.
 
-The local gate and the GitHub Actions workflow regenerate the specimen and compare it against the pinned outputs. If the trust-critical surface changes, the build fails until the change is explicitly reviewed and the specimen is intentionally updated.
+It should.
 
-That matters because it binds trust claims to maintenance discipline. The trust case is not merely published once. It is kept under pressure.
+ProofVault belongs on top of that chain, forcing a harder question:
 
-## Hosted CI mattered more than local success
+Can we prove this release is the one we intended to ship?
 
-One of the most important parts of this work happened after the local system already looked correct.
+Not "does it seem fine."
 
-The specimen was green on Windows. It was green under `TZ=UTC`. It was green in a Linux clone under WSL.
+Not "did it pass in CI once."
+
+Prove it.
+
+## Checksums are the first hard boundary
+
+Checksums are basic, but basic is often what people fail to respect.
+
+A checksum says this exact byte sequence exists.
+
+Not approximately.
+
+Not conceptually.
+
+Exactly.
+
+That matters because release integrity starts at the file level. If the
+build output changes, even slightly, you are no longer talking about the
+same artifact. Maybe the change is harmless. Maybe it is not. The
+checksum does not guess. It records.
+
+That is the first honest boundary.
+
+If a release artifact cannot be hashed, compared, and rechecked later,
+then it is not really anchored to anything stable.
+
+It is just a memory with a download link.
+
+## Provenance is what gives the checksum meaning
+
+A checksum alone says the file is identical to itself.
+
+That is useful.
+
+It is not enough.
+
+You also need provenance.
+
+Where did this artifact come from?
+What source committed it?
+What environment built it?
+What version of the dependency graph was involved?
+What steps transformed the source into the shipped package?
+Was the build reproducible?
+Was the pipeline deterministic?
+Was the output produced by the system we think produced it?
+
+That is where the trust model starts to get real.
+
+Because trust is not just about bit integrity.
+
+It is about lineage.
+
+If you cannot trace the artifact back through a known process, you do not
+really know what you are shipping. You only know what ended up in the
+bucket.
+
+That is not enough for serious software.
+
+Especially not for software that asks people to trust it with evidence,
+records, exports, health data, legal material, or anything else that
+cannot afford silent drift.
+
+## Signing turns identity into something machine readable
+
+A checksum proves sameness.
+
+A signature proves authorship.
+
+That distinction matters.
+
+If a release is signed, the signature gives you a way to say this
+artifact was approved or emitted by a known key under a known trust
+model. That does not make it magically safe. It does not make the code
+good. It does not replace review.
+
+But it does give the release an identity that can be checked later.
+
+And in a world full of copyable files, identity matters.
+
+Because unsigned artifacts can be swapped.
+Unsigned builds can be mirrored.
+Unsigned packages can be repackaged.
+Unsigned releases can drift away from the thing the team actually
+intended to ship.
+
+A signature is not a slogan.
+
+It is a cryptographic line in the sand.
+
+## Release gating is where discipline becomes real
+
+This is the part people like to skip because it slows them down.
+
+Good.
+
+It should.
+
+If a product claims to be trustworthy, the release pipeline should make
+trust a gate, not a decoration.
+
+That means the release should not move forward unless key conditions are
+met:
+
+The artifact hash matches what was expected.
+The provenance is known.
+The build source is traceable.
+The signing key is valid.
+The release notes match the shipped version.
+The verification checks pass.
+The risk surface has been reviewed.
+
+This is not bureaucracy for its own sake.
+
+This is how you stop the story from splitting apart.
+
+Because once the docs, the code, and the shipped artifact can drift
+independently, the organization starts lying to itself.
+
+Release gating is how you force those layers back into alignment.
+
+## A pinned specimen is what makes the claim concrete
+
+This is where ProofVault stops being abstract.
+
+The trust case is not just a set of principles.
+
+It includes a real dossier under `docs/trust-case/` and a pinned specimen
+under `docs/trust-case/demo/`.
+
+That matters because a reproducible specimen changes the burden of proof.
+
+Now the project can say:
+
+Here is the specimen.
+Here is how it is regenerated.
+Here is what counts as expected output.
+Here is what tampering looks like.
+Here is the exact release tree tied to the proof.
+
+That is a stronger claim than "we care about integrity."
+
+It is a concrete example that can be checked later.
+
+## Drift detection is the enforcement layer
+
+A pinned specimen without drift detection decays into theater.
+
+If you want the documentation discipline that keeps those drift failures from
+turning into stale security claims, read
+[Maintaining truthful docs over time: how to keep security claims honest](https://dev.to/crisiscoresystems/maintaining-truthful-docs-over-time-how-to-keep-security-claims-honest-2778).
+
+Once you publish expected outputs, the obvious risk is that future code
+changes silently alter trust-critical behavior while the docs keep
+describing the old story.
+
+That is why ProofVault does not just publish the specimen.
+
+It regenerates it and compares it against the pinned outputs.
+
+If the trust-critical surface changes, the check is supposed to fail
+until the change is reviewed and the specimen is intentionally updated.
+
+That is what turns the trust case into a release artifact instead of a
+one-time writeup.
+
+## Hosted CI mattered more than local green
+
+One of the important parts of this work happened after the local system
+already looked correct.
+
+The specimen was green on Windows.
+It was green under `TZ=UTC`.
+It was green in WSL.
 
 But GitHub's hosted runner still failed.
 
 That was the decisive moment.
 
-At that point, the responsible move was not to weaken the check, normalize away the problem, or assume CI was flaky. The responsible move was to treat the hosted runner as part of the real release surface and keep digging until the mismatch had a concrete explanation.
+At that point the responsible move was not to weaken the check, blame CI,
+or normalize away the mismatch.
 
-A trust case that only passes on the author's machine is not yet a release artifact. It is still a local belief.
+The responsible move was to treat the hosted runner as part of the real
+release surface and keep digging until the disagreement had a concrete
+explanation.
 
-## What had to be fixed
+A trust case that only passes on the author's machine is not yet a
+release artifact.
 
-The hosted mismatch surfaced three environment-sensitive faults in the specimen generation path:
+It is still a local belief.
 
-- timestamp rendering that depended on host-local presentation
-- archive metadata that drifted across environments
-- pinned specimen metadata that incorrectly stamped the live Node patch version
+## The release history matters because provenance matters
 
-Each of those faults was fixed at source. The check stayed strict.
+The public trust-case history is part of the proof surface too.
 
-The easiest way to get a green build would have been to weaken the invariant, normalize away the mismatch, or quietly stop comparing the unstable parts. That would have made the trust case look cleaner while making it less meaningful.
+`proofvault-trust-case-v1.0` remains the first public cut.
 
-Instead, the mismatches were traced and fixed where they originated.
+`proofvault-trust-case-v1.0.1` exists because the project found real
+cross-environment specimen drift, fixed it at source, proved the result
+on hosted CI, removed temporary diagnostics, and tagged the corrected
+non-debug release tree.
 
-Temporary CI diagnostics were added only long enough to expose the hosted-runner disagreement, then removed before the final release tag was cut.
+The final hosted-green non-debug release commit is `dc5fbe9`.
 
-That sequence matters as much as the fixes themselves. It shows that the release process was not green by accident. It was made legible under the same hosted surface the public repository actually depends on.
+That matters because the first tag was not silently rewritten.
 
-## Why v1.0 and v1.0.1 both matter
+The history stayed legible.
 
-The release history is part of the trust case.
+That is what provenance looks like when it is treated as part of the
+artifact instead of part of the marketing.
 
-`proofvault-trust-case-v1.0` remains the first public trust-case cut. It was not moved or rewritten after publication.
+## Proof after the docs are written is the real test
 
-`proofvault-trust-case-v1.0.1` exists because the project found and corrected real cross-environment specimen drift, proved the fixes on hosted CI, removed temporary diagnostics, and tagged the final non-debug tree.
+This is the part that separates serious systems from decorative ones.
 
-That preserves something important: provenance.
+Anyone can write a promise before shipping.
 
-Instead of silently rewriting the first tag, the project kept the original public cut intact and published a corrected release with a clear explanation of what changed.
+Very few systems can prove the promise after the fact.
 
-That is stronger than pretending the first release had been universally stable all along.
+That is where ProofVault becomes more than a tool. It becomes a standard
+for accountability.
 
-## What this proves
+You can ask:
 
-This work does not prove that ProofVault solves every trust or security problem.
+Does the release artifact hash match the published value?
+Does the signed file verify against the expected key?
+Does the provenance chain match the documented build?
+Can someone independently reproduce the same output?
+If the answer is no, where did the mismatch begin?
 
-It does prove that the project can:
+That is the level of scrutiny that matters.
 
-- define a bounded trust model
-- connect that model to code and generated artifacts
-- make tampering visible through a verifier path
-- detect cross-environment drift in trust-critical output
-- fix release-surface mismatches without weakening the invariant
-- publish a public tag tied to an exact hosted-green tree
+Not vibes.
 
-That is the core of the trust case.
+Not assumption.
 
-ProofVault is no longer asking for trust on the strength of intent alone. It is carrying part of its own proof burden in the repository.
+Not "trust us."
 
-## Why this matters beyond one project
+Proof.
 
-This pattern is reusable.
+## Verification should be boring
 
-Any system that makes claims about privacy, integrity, recoverability, or verification can benefit from the same discipline:
+Good verification is not flashy.
 
-- define the bounded claim surface
-- publish one reproducible specimen
-- encode expected outputs
-- treat drift as a first-class failure
-- require the real release surface to pass, not just a local machine
+It is not a hero story.
+It is not a launch post.
+It is a checklist that works the same way every time.
 
-For ProofVault, that makes the trust case a credibility pillar.
+That is the point.
 
-More broadly, it provides a reference specimen for what doctrine looks like when it is translated into architecture, tests, CI, and release hygiene.
+The less dramatic verification is, the more trustworthy it becomes.
 
-## Final release state
+A user should be able to look at a release and ask:
 
-The corrected public trust-case release is:
+Is this the file I was told to expect?
+Was it signed by the right identity?
+Does the checksum match?
+Is the provenance intact?
+Did the pipeline actually produce what it claimed?
 
-`proofvault-trust-case-v1.0.1`
+If those answers are machine-checkable, then the trust model has teeth.
 
-The final hosted-green non-debug release commit is:
+If they are not, then the product is still asking for belief where it
+should be earning verification.
 
-`dc5fbe9`
+## Release trust is a product feature
 
-The original public cut remains:
+This is the deeper shift.
 
-`proofvault-trust-case-v1.0`
+Most teams think release integrity is an internal engineering concern.
 
-That is the final shape of the trust case.
+Next in the trust and release path:
+[Preview Mode First: Agent Plans as PRs (Plan Diff + Invariants)](https://dev.to/crisiscoresystems/preview-mode-first-agent-plans-as-prs-plan-diff-invariants-4ikd)
 
-Not a statement of values, but a system that can show its work.
+It is not.
 
----
+It is a user trust feature.
 
-If this kind of work interests you, the useful question is not just whether a product has security features.
+Especially for tools that handle evidence, records, exports, private
+notes, health data, legal material, or anything else that cannot afford
+silent drift.
 
-It is whether the product can make its trust claims legible, reproducible, and release-bound.
+When the user presses export or downloads a release artifact, they are
+not just taking a file.
+
+They are taking a claim.
+
+And claims should be verifiable.
+
+That is why ProofVault matters in the first place.
+
+Not because it sounds secure.
+
+Because it turns trust into something that can be checked after the docs
+are written, after the code is shipped, and after the story is already
+in the wild.
+
+## The standard
+
+A real release artifact should answer one simple question:
+
+Can this be independently verified as the thing we said it was?
+
+If the answer is yes, the system has discipline.
+
+If the answer is no, the system has marketing.
+
+ProofVault belongs in the first category.
+
+Not as a branding flourish.
+
+As evidence that trust can be made concrete.
+
+That is the whole move.
+
+Not trust as a promise.
+
+## Proof network
+
+If you want the broader commercial and doctrine path around this release work:
+
+- **Main site:** [CrisisCore Systems](https://crisiscore-systems.ca/)
+- **Framework:** [Protective Computing](https://protective-computing.github.io/)
+- **Reference implementation:** [PainTracker](https://github.com/CrisisCore-Systems/pain-tracker)
+- **Support the work:** [Sponsor CrisisCore-Systems](https://github.com/sponsors/CrisisCore-Systems)
+
+Trust as a verified release state.

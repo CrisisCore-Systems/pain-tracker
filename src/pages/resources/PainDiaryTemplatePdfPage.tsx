@@ -52,11 +52,10 @@ import '../../styles/pages/landing.css';
 // ---------------------------------------------------------------------------
 const SEO = {
   slug: 'pain-diary-template-pdf',
-  title: 'Printable Pain Diary Template (Free PDF)',
-  metaTitle:
-    'Pain Diary Template PDF — Free Clinician-Designed Printable | PainTracker',
+  title: 'Pain Diary Template PDF in 2026',
+  metaTitle: 'Pain Diary Template PDF (2026) | Free PDF, No Email Required',
   metaDescription:
-    'Download a free, clinician-designed pain diary template PDF. Tracks pain intensity, location, medications, triggers, sleep, and mood — ready for doctor appointments, WorkSafeBC claims, and disability documentation.',
+    'Download a free, clinician-designed pain diary template PDF for 2026. No email required. Tracks pain intensity, location, medications, triggers, sleep, and mood for appointments, WorkSafeBC claims, and disability documentation.',
   keywords: [
     'pain diary template pdf',
     'printable pain diary',
@@ -255,12 +254,12 @@ const FAQS = [
   {
     question: 'What if I have too much pain to write?',
     answer:
-      'On high-pain days, just fill in the number (0-10) and check a few boxes — that takes under 30 seconds. The template is designed so you can capture meaningful data even with minimal effort. If paper is consistently difficult, PainTracker\'s digital version lets you log entries with a few taps on your phone.',
+      'On high-pain days, just fill in the number (0-10) and check a few boxes — that takes under 30 seconds. The template is designed so you can capture meaningful data even with minimal effort. If paper is consistently difficult, Pain Tracker\'s digital version lets you log entries with a few taps on your phone.',
   },
   {
     question: 'Is there a digital version of this template?',
     answer:
-      'Yes. PainTracker is the digital companion to this paper diary. It captures the same information with less effort, auto-generates clinical reports (PDF, CSV, JSON), runs entirely offline, and stores everything encrypted on your device. Many users start with paper and migrate to digital once they experience the value of tracking.',
+      'Yes. Pain Tracker is the digital companion to this paper diary. It captures the same information with less effort, auto-generates clinical reports (PDF, CSV, JSON), runs entirely offline, and stores everything encrypted on your device. Many users start with paper and migrate to digital once they experience the value of tracking.',
   },
   {
     question: 'Can I track multiple pain conditions at once?',
@@ -438,7 +437,7 @@ export const PainDiaryTemplatePdfPage: React.FC = () => {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <Link to="/" className="flex items-center gap-2">
-              <span className="landing-brand text-xl">PainTracker</span>
+              <span className="landing-brand text-xl">Pain Tracker</span>
             </Link>
             <div className="flex items-center gap-4">
               <Link
@@ -503,15 +502,18 @@ export const PainDiaryTemplatePdfPage: React.FC = () => {
               id="hero-heading"
               className="landing-headline landing-headline-lg text-white mb-6"
             >
-              The Pain Diary Template{' '}
+              Free pain diary template{' '}
               <span className="bg-gradient-to-r from-sky-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">
-                Your Doctor Wishes You Had
+                PDF in 2026.
               </span>
             </h1>
 
             <p className="landing-subhead text-lg sm:text-xl max-w-2xl mx-auto mb-4">
               Track pain intensity, location, medications, triggers, sleep, and mood — all on one page.
               Designed with pain management specialists so it captures exactly what clinicians need.
+            </p>
+            <p className="text-slate-300 text-base sm:text-lg max-w-2xl mx-auto mb-4">
+              Start with the printable if you need something today. Move to the offline-first app when paper starts getting harder to review, summarize, or carry forward.
             </p>
             <p className="text-slate-500 text-sm mb-8">
               100% free &bull; No email required &bull; No tracking &bull; Prints on standard letter paper
@@ -767,7 +769,7 @@ export const PainDiaryTemplatePdfPage: React.FC = () => {
                 <div>
                   <h3 className="font-semibold text-white mb-1">Claims-Ready Format</h3>
                   <p className="text-sm text-slate-400">
-                    Accepted for medical appointments, WorkSafeBC, ICBC, CPP-D disability benefits, and private insurance documentation.
+                    Useful for appointments or claim-related discussions with WorkSafeBC, ICBC, CPP-D disability, or private insurers. This PDF is a documentation aid, not an official decision document. Approval depends on the reviewer, medical evidence, policy, and case context.
                   </p>
                 </div>
               </div>
@@ -864,7 +866,7 @@ export const PainDiaryTemplatePdfPage: React.FC = () => {
                   <div className="w-10 h-10 bg-primary/15 rounded-lg flex items-center justify-center">
                     <Sparkles className="w-5 h-5 text-primary" />
                   </div>
-                  <h3 className="text-xl font-bold text-white">PainTracker (Digital)</h3>
+                  <h3 className="text-xl font-bold text-white">Pain Tracker (Digital)</h3>
                 </div>
                 <ul className="space-y-3 flex-1">
                   {[
@@ -960,7 +962,7 @@ export const PainDiaryTemplatePdfPage: React.FC = () => {
                 to="/start"
                 className="px-8 py-4 text-lg font-medium text-slate-300 hover:text-white border border-slate-600 hover:border-slate-500 rounded-xl transition-all flex items-center gap-2"
               >
-                Open PainTracker
+                Use the app free
                 <ArrowRight className="w-5 h-5" />
               </Link>
             </div>

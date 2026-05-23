@@ -7,7 +7,7 @@
 
 import React from 'react';
 import {
-  ArrowRight, Activity, AlertTriangle, CheckCircle,
+  Activity, CheckCircle,
   TrendingUp, Users, FileText, Flame, Thermometer,
   Eye, Zap, Hand, MonitorSmartphone
 } from 'lucide-react';
@@ -131,7 +131,7 @@ const crpsStats: StatItem[] = [
 const pageContent: SEOPageContent = {
   slug: 'crps-pain-diary-template',
   title: 'CRPS Pain Diary Template (Free)',
-  metaTitle: 'CRPS Pain Diary Template — Free Complex Regional Pain Syndrome Tracker | PainTracker',
+  metaTitle: 'CRPS Pain Diary Template — Free Complex Regional Pain Syndrome Tracker | PainTracker.ca',
   metaDescription: 'Download a free CRPS pain diary tracking burning pain, allodynia, color/temperature changes, swelling, motor symptoms, and limb comparison. Aligned with Budapest diagnostic criteria.',
   keywords: [
     'crps pain diary', 'complex regional pain syndrome tracker', 'CRPS symptom log',
@@ -145,7 +145,7 @@ const pageContent: SEOPageContent = {
   headline: 'CRPS Pain Diary Template',
   subheadline: 'Track complex regional pain syndrome across all Budapest criteria: burning pain, allodynia, color and temperature changes, swelling, and motor symptoms — with daily limb comparison.',
   primaryCTA: { text: 'Download Free PDF (6 Pages)', href: '/assets/crps-pain-diary.pdf', download: true },
-  secondaryCTA: { text: 'Try Digital Version', href: '/start' },
+  secondaryCTA: { text: 'Start tracking free', href: '/start' },
   utilityBlock: { type: 'download', downloadUrl: '/assets/crps-pain-diary.pdf', downloadFileName: 'crps-pain-diary.pdf' },
   whatIsThis: 'A CRPS pain diary template built for the most complex pain condition in medicine. CRPS (formerly RSD) involves burning pain, sensory changes, autonomic dysfunction, and motor impairment — all of which fluctuate throughout the day. This 6-page template tracks all four Budapest diagnostic criteria categories, includes daily affected-vs-unaffected limb comparison, and formats data for pain specialists and neurologists who treat CRPS. Standard pain diaries capture maybe 20% of what matters for CRPS. This captures all of it.',
   whoShouldUse: [
@@ -207,8 +207,8 @@ export const CRPSPainDiaryTemplatePage: React.FC = () => (
     <PdfContentsPreview pages={crpsPdfPages} accentColor="red" />
     <BottomCTACallout
       icon={MonitorSmartphone}
-      heading="Allodynia Making Touch Painful? Use Whichever Format Works Today."
-      body="CRPS flares can make holding a pen excruciating. Start with paper on good days. On bad days, the digital version works with minimal touch \u2014 larger buttons, simpler input. Your data matters more than the format."
+      heading="Keep the record going, even on flare days."
+      body="Use paper when it feels manageable. If holding a pen is too painful, switch to the app for lighter input and the same day-by-day record. Consistency matters more than forcing one format through a bad flare."
       pdfUrl="/assets/crps-pain-diary.pdf"
       gradientClasses="from-red-600 to-rose-600"
       tintClass="text-red-100"

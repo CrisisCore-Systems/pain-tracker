@@ -7,7 +7,7 @@
 
 import React from 'react';
 import {
-  ArrowRight, CheckCircle, Clock, Calendar,
+  CheckCircle, Clock, Calendar,
   TrendingUp, Activity, AlertTriangle, FileText,
   BarChart3, Flame, Thermometer, Shield
 } from 'lucide-react';
@@ -139,7 +139,7 @@ const chronicPainStats: StatItem[] = [
 const pageContent: SEOPageContent = {
   slug: 'chronic-pain-diary-template',
   title: 'Chronic Pain Diary Template (Free)',
-  metaTitle: 'Chronic Pain Diary Template — Free Long-Term Pain Tracker for Flares, Baseline & Trends | PainTracker',
+  metaTitle: 'Chronic Pain Diary Template — Free Long-Term Pain Tracker for Flares, Baseline & Trends | PainTracker.ca',
   metaDescription: 'Download a free 6-page chronic pain diary template with baseline/flare tracking, trigger identification, treatment logs, and monthly trend reviews for long-term pain management.',
   keywords: [
     'chronic pain diary template', 'chronic pain tracker template',
@@ -154,7 +154,7 @@ const pageContent: SEOPageContent = {
   headline: 'Chronic Pain Diary Template',
   subheadline: 'Chronic pain isn\'t one bad day — it\'s a pattern of baseline pain, flares, partial recoveries, and slow shifts. This 6-page diary template tracks all of it: daily symptoms, flare episodes, treatment responses, and monthly trends that reveal whether things are actually improving.',
   primaryCTA: { text: 'Download Free PDF', href: '/assets/chronic-pain-diary-template.pdf', download: true },
-  secondaryCTA: { text: 'Try Digital Version', href: '/start' },
+  secondaryCTA: { text: 'Start tracking free', href: '/start' },
   utilityBlock: { type: 'download', downloadUrl: '/assets/chronic-pain-diary-template.pdf', downloadFileName: 'chronic-pain-diary-template.pdf' },
   whatIsThis: 'A 6-page chronic pain diary template built specifically for the unique challenge of long-term pain tracking. Unlike generic pain diaries, this template distinguishes between baseline pain and flare episodes, tracks treatment responses over time, identifies flare triggers across physical, emotional, medical, and environmental categories, and provides weekly and monthly summary pages that reveal trends your daily experience can\'t. It\'s designed for people who\'ve been living with pain for months or years and need documentation that captures the full picture.',
   whoShouldUse: [
@@ -186,7 +186,7 @@ const pageContent: SEOPageContent = {
     { question: 'How do I know what my baseline is?', answer: 'Track daily for 2 weeks without any changes to your routine. Your average pain level during stable (non-flare) periods is your baseline. It\'s usually the level you consider "normal for me" — the background pain that\'s always there.' },
     { question: 'What counts as a flare?', answer: 'A flare is a significant worsening beyond your baseline. If your baseline is 3-4/10 and you spike to 7+, that\'s a flare. If your baseline is 6/10 and you spike to 9, that\'s a flare. The threshold is personal — it\'s when pain disrupts your usual (already limited) function.' },
     { question: 'The weekly summary seems like extra work. Is it worth it?', answer: 'It\'s the most valuable 5 minutes of your tracking. Daily entries capture trees; weekly summaries show the forest. After a month, you can see trends that are invisible day-to-day. Doctors specifically value this summary level of data.' },
-    { question: 'Can I use this alongside digital tracking?', answer: 'Absolutely. Many people use the printable template as a backup or for appointment days, while using PainTracker digitally for daily tracking with automatic trend analysis.' },
+    { question: 'Can I use this alongside digital tracking?', answer: 'Absolutely. Many people use the printable template as a backup or for appointment days, while using Pain Tracker digitally for daily tracking with automatic trend analysis.' },
     { question: 'How long should I maintain a chronic pain diary?', answer: 'Indefinitely, but with decreasing effort. Once you know your patterns (usually 2-3 months), you can shift to a shorter daily entry and focus on flare documentation and monthly summaries. The tracking becomes second nature.' },
     { question: 'My pain doesn\'t have clear flares — it\'s constant. Does this template still work?', answer: 'Yes. For constant pain, you\'ll use the daily tracking and weekly summary pages most. Track variation within your constant pain: is it 4/10 on some days and 6/10 on others? That variation has patterns worth documenting.' },
     { question: 'Should I track things other than pain?', answer: 'The template includes sleep, function, and medication tracking because they directly influence pain outcomes. Fatigue, mood, and activity levels are also valuable. Track what\'s manageable — consistency beats comprehensiveness.' },
@@ -216,8 +216,8 @@ export const ChronicPainDiaryTemplatePage: React.FC = () => (
     <PdfContentsPreview pages={chronicPdfPages} accentColor="violet" variant="badge" heading="What's in Your 6-Page Chronic Pain Diary" subtitle="Every page designed for the unique needs of long-term chronic pain tracking." />
     <BottomCTACallout
       icon={TrendingUp}
-      heading="Chronic Pain Changes Slowly. Your Diary Catches What You Can't Feel."
-      body="After a few weeks of tracking, you'll have evidence your doctor can act on — not just 'it hurts' but exactly how, when, and what makes it worse or better."
+      heading="Make the pattern easier to see over time."
+      body="A few weeks of consistent entries are easier to review than trying to remember how the month felt. Start with the printable diary, or use the app if that makes daily tracking easier to keep."
       pdfUrl="/assets/chronic-pain-diary-template.pdf"
       gradientClasses="from-violet-600 to-purple-600"
       tintClass="text-violet-100"

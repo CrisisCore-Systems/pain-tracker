@@ -14,9 +14,9 @@ const tierIcons = {
 } as const;
 
 const HIGHLIGHTS: Record<SubscriptionTier, string[]> = {
-  free: ['Unlimited tracking', 'Basic analytics', 'PDF + WorkSafeBC reports (5/mo)'],
-  basic: ['Advanced analytics', 'Higher export limit (50/mo)', 'Family sharing (2)'],
-  pro: ['Pattern-based alerts', 'Clinical PDF export', 'Audit logs'],
+  free: ['Unlimited private tracking', 'Basic pattern review', 'PDF + WorkSafeBC reports (5/mo)'],
+  basic: ['Cleaner summaries', 'Higher export limit (50/mo)', 'Custom reports for appointment prep'],
+  pro: ['Documentation-ready exports', 'Pattern-based alerts', 'Structured clinical formats'],
   enterprise: ['Organization-level customization', 'Dedicated support', 'Custom training'],
 };
 
@@ -87,6 +87,22 @@ const renderCell = (value: ComparisonCellValue) => {
 export const PricingPreview: React.FC = () => {
   const navigate = useNavigate();
 
+  const getTierSupportCopy = (tier: SubscriptionTier) => {
+    if (tier === 'free') {
+      return 'Track pain privately forever. No credit card required.';
+    }
+
+    if (tier === 'enterprise') {
+      return 'Evaluation access available for organizations.';
+    }
+
+    if (tier === 'basic') {
+      return 'Use Basic when you want cleaner summaries and less manual work before visits or reviews.';
+    }
+
+    return 'Use Pro when your records need to be easier to export, review, and organize for documentation.';
+  };
+
   return (
     <section className="landing-always-dark relative py-24 lg:py-32 overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-slate-900 via-slate-800/70 to-slate-900" />
@@ -99,12 +115,12 @@ export const PricingPreview: React.FC = () => {
           </div>
 
           <h2 className="landing-headline landing-headline-lg mb-6">
-            <span className="text-white">Start free. </span>
-            <span className="gradient-text-animated">Upgrade when you’re ready.</span>
+            <span className="text-white">Free keeps you in control. </span>
+            <span className="gradient-text-animated">Upgrade reduces the burden.</span>
           </h2>
 
           <p className="landing-subhead text-lg lg:text-xl">
-            Clear tiers, no surprises. You can use core tracking forever on the Free plan.
+            Clear tiers, no surprises. Free is not a trial. Upgrade when your record needs cleaner summaries, easier exports, and less manual rewriting.
           </p>
         </div>
 
@@ -114,7 +130,6 @@ export const PricingPreview: React.FC = () => {
             const Icon = tierIcons[tier];
             const isPro = tier === 'pro';
             const monthly = plan.pricing.monthly.display;
-            const trialDays = plan.pricing.trial?.enabled ? plan.pricing.trial.days : 0;
 
             return (
               <div
@@ -150,15 +165,7 @@ export const PricingPreview: React.FC = () => {
                       {monthly}
                       {tier !== 'enterprise' && <span className="text-base font-semibold text-slate-300">/mo</span>}
                     </div>
-                    <div className="text-xs text-slate-400">
-                      {tier === 'free'
-                        ? 'Upgrade anytime. No credit card required.'
-                        : tier === 'enterprise'
-                          ? 'Evaluation access available for organizations.'
-                          : tier === 'basic'
-                            ? 'Advanced tracking, analytics, and structured reports for personal health management.'
-                            : 'Clinical-grade reports, exports, and pattern insights for rehabilitation and insurance documentation.'}
-                    </div>
+                    <div className="text-xs text-slate-400">{getTierSupportCopy(tier)}</div>
                   </div>
 
                   <p className="text-sm text-slate-300 leading-relaxed line-clamp-4">{plan.description}</p>
@@ -197,11 +204,11 @@ export const PricingPreview: React.FC = () => {
               <div className="px-6 py-5 border-b border-white/10">
                 <h3 className="text-lg font-semibold text-white">Quick comparison</h3>
                 <p className="text-sm text-slate-300 mt-1">
-                  Key features at a glance. For full details, see the pricing page.
+                  Free helps you keep the record. Paid plans help turn that record into something easier to use under pressure.
                 </p>
               </div>
 
-              <div className="overflow-x-auto" tabIndex={0} role="region" aria-label="Pricing comparison table">
+              <section className="overflow-x-auto" aria-label="Pricing comparison table">
                 <table className="min-w-[720px] w-full text-sm">
                   <thead>
                     <tr className="text-left">
@@ -251,7 +258,7 @@ export const PricingPreview: React.FC = () => {
                     ))}
                   </tbody>
                 </table>
-              </div>
+              </section>
             </div>
           </div>
         )}

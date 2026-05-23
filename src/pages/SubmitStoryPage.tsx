@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../design-system/components/Button';
 import { Heart, Send, ArrowLeft, Shield, CheckCircle2, Sparkles } from 'lucide-react';
 import { combineSchemas, generateBreadcrumbSchema } from '../lib/seo';
+import { applyPageMetadata } from '../components/seo/applyPageMetadata';
 
 export const SubmitStoryPage: React.FC = () => {
   const navigate = useNavigate();
@@ -15,6 +16,12 @@ export const SubmitStoryPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => applyPageMetadata({
+    title: 'Share Your Pain Tracker Story | Pain Tracker',
+    description: 'Submit a testimonial or story about using Pain Tracker, with optional anonymization and explicit publication consent.',
+    canonicalUrl: 'https://www.paintracker.ca/submit-story',
+  }), []);
 
   const schema = combineSchemas(
     generateBreadcrumbSchema(

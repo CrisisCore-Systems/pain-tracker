@@ -106,8 +106,16 @@ async function runEssentialEntryFlowPointer(page: Page): Promise<Record<string, 
     await page.getByRole('button', { name: /Increase pain level/i }).click();
   }
 
-  const firstLocation = page.locator('button[role="checkbox"][aria-label$=" location"]').first();
-  await firstLocation.click();
+  const firstLocation = page.locator(
+    'input[type="checkbox"][aria-label$=" location"], button[role="checkbox"][aria-label$=" location"], button[role="checkbox"][aria-label^="Pain location:"]'
+  ).first();
+  await firstLocation.waitFor({ state: 'attached', timeout: 30_000 });
+
+  if ((await firstLocation.getAttribute('type')) === 'checkbox') {
+    await firstLocation.check({ force: true });
+  } else {
+    await firstLocation.click();
+  }
 
   const saveButton = page.getByRole('button', { name: /Save and finish|Save entry|Save/i }).last();
   await expect(saveButton).toBeVisible();
@@ -140,7 +148,9 @@ async function runEssentialEntryFlowKeyboard(page: Page): Promise<Record<string,
   const newEntryReadyMs = Date.now() - startedAt;
 
   const slider = page.locator('#pain-slider');
-  const locationButton = page.locator('button[role="checkbox"][aria-label$=" location"]').first();
+  const locationButton = page.locator(
+    'input[type="checkbox"][aria-label$=" location"], button[role="checkbox"][aria-label$=" location"], button[role="checkbox"][aria-label^="Pain location:"]'
+  ).first();
   const saveButton = page.getByRole('button', { name: /Save and finish|Save entry|Save/i }).last();
 
   const tabStopsToSlider = await focusByTab(page, slider);

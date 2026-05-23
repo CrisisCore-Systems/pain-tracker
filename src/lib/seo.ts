@@ -25,6 +25,22 @@ export interface BreadcrumbItem {
   url: string;
 }
 
+export interface ItemListEntry {
+  name: string;
+  url: string;
+  description?: string;
+}
+
+const seoIdentity = {
+  productName: 'Pain Tracker',
+  siteName: 'Pain Tracker',
+  organizationName: 'CrisisCore Systems',
+  siteUrl: 'https://www.paintracker.ca',
+  appUrl: 'https://www.paintracker.ca/start',
+  logoUrl: 'https://www.paintracker.ca/logos/pain-tracker-logo.svg',
+  githubUrl: 'https://github.com/CrisisCore-Systems/pain-tracker',
+} as const;
+
 export function safeJsonLdStringify(value: unknown): string {
   const json = JSON.stringify(value) ?? 'null';
   // Prevent breaking out of <script> via </script> and avoid legacy JS line-separator hazards.
@@ -91,11 +107,11 @@ export function generateMedicalWebPageSchema(metadata: {
     },
     publisher: {
       '@type': 'Organization',
-      name: defaultSEOConfig.siteName,
+      name: defaultSEOConfig.organizationName,
       url: defaultSEOConfig.siteUrl,
       logo: {
         '@type': 'ImageObject',
-        url: defaultSEOConfig.defaultImage
+        url: defaultSEOConfig.logoUrl
       }
     },
     inLanguage: 'en-CA',
@@ -128,16 +144,34 @@ export function generateSoftwareApplicationSchema(): object {
   return {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
-    name: defaultSEOConfig.siteName,
-    description: 'Private offline-first pain tracker app for logging symptoms, triggers, flare patterns, and clinician-ready records.',
+    name: defaultSEOConfig.productName,
+    url: defaultSEOConfig.appUrl,
+    description: 'PainTracker is a free pain tracker app and printable toolkit for private, offline symptom tracking and clearer doctor visit records.',
     applicationCategory: 'HealthApplication',
     operatingSystem: 'Web Browser, iOS, Android',
-    offers: {
-      '@type': 'Offer',
-      price: '0',
-      priceCurrency: 'CAD',
-      availability: 'https://schema.org/InStock'
-    },
+    offers: [
+      {
+        '@type': 'Offer',
+        name: 'Free',
+        price: '0',
+        priceCurrency: 'CAD',
+        availability: 'https://schema.org/InStock'
+      },
+      {
+        '@type': 'Offer',
+        name: 'Basic',
+        price: '9.99',
+        priceCurrency: 'CAD',
+        availability: 'https://schema.org/InStock'
+      },
+      {
+        '@type': 'Offer',
+        name: 'Pro',
+        price: '24.99',
+        priceCurrency: 'CAD',
+        availability: 'https://schema.org/InStock'
+      }
+    ],
     featureList: [
       'Offline-first pain tracking',
       'Local-only by default',
@@ -150,9 +184,19 @@ export function generateSoftwareApplicationSchema(): object {
     ],
     screenshot: 'https://www.paintracker.ca/main-dashboard.png',
     softwareVersion: '1.0.0',
+    brand: {
+      '@type': 'Brand',
+      name: defaultSEOConfig.productName
+    },
     creator: {
       '@type': 'Organization',
-      name: defaultSEOConfig.siteName
+      name: defaultSEOConfig.organizationName,
+      url: defaultSEOConfig.siteUrl
+    },
+    provider: {
+      '@type': 'Organization',
+      name: defaultSEOConfig.organizationName,
+      url: defaultSEOConfig.siteUrl
     }
   };
 }
@@ -200,16 +244,16 @@ export function generateArticleSchema(metadata: {
     url: metadata.url,
     author: {
       '@type': 'Organization',
-      name: defaultSEOConfig.siteName,
+      name: defaultSEOConfig.organizationName,
       url: defaultSEOConfig.siteUrl
     },
     publisher: {
       '@type': 'Organization',
-      name: defaultSEOConfig.siteName,
+      name: defaultSEOConfig.organizationName,
       url: defaultSEOConfig.siteUrl,
       logo: {
         '@type': 'ImageObject',
-        url: defaultSEOConfig.defaultImage
+        url: defaultSEOConfig.logoUrl
       }
     },
     image: metadata.imageUrl ?? defaultSEOConfig.defaultImage
@@ -246,6 +290,41 @@ export function generateHowToSchema(data: {
   };
 }
 
+export function generateCollectionPageSchema(data: {
+  name: string;
+  description: string;
+  url: string;
+}): object {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: data.name,
+    description: data.description,
+    url: data.url,
+    isPartOf: {
+      '@type': 'WebSite',
+      name: defaultSEOConfig.siteName,
+      url: defaultSEOConfig.siteUrl,
+    },
+  };
+}
+
+export function generateItemListSchema(items: ItemListEntry[], opts?: { siteUrl?: string }): object {
+  const siteUrl = opts?.siteUrl ?? defaultSEOConfig.siteUrl;
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    itemListElement: items.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: item.name,
+      url: normalizeToAbsoluteUrl(item.url, siteUrl),
+      description: item.description,
+    })),
+  };
+}
+
 /**
  * Combine multiple schema objects into a single JSON-LD script
  */
@@ -271,12 +350,16 @@ export function generateOrganizationSchema(): object {
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: defaultSEOConfig.siteName,
-    alternateName: 'Pain Tracker Pro',
+    name: defaultSEOConfig.organizationName,
+    alternateName: defaultSEOConfig.siteName,
     url: defaultSEOConfig.siteUrl,
-    logo: defaultSEOConfig.defaultImage,
+    logo: defaultSEOConfig.logoUrl,
     description: 'Private offline-first pain tracking application for daily symptom logging, clinician-friendly records, and local-first privacy controls.',
     foundingDate: '2024',
+    brand: {
+      '@type': 'Brand',
+      name: defaultSEOConfig.productName
+    },
     knowsAbout: [
       'Chronic Pain Management',
       'Pain Tracking',
@@ -286,11 +369,13 @@ export function generateOrganizationSchema(): object {
       'Privacy-First Healthcare Applications'
     ],
     sameAs: [
-      'https://github.com/CrisisCore-Systems/pain-tracker'
+      defaultSEOConfig.githubUrl,
+      'https://blog.paintracker.ca/'
     ],
     contactPoint: {
       '@type': 'ContactPoint',
       contactType: 'customer support',
+      email: 'support@paintracker.ca',
       availableLanguage: ['English', 'French']
     }
   };
@@ -304,13 +389,13 @@ export function generateWebSiteSchema(): object {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: defaultSEOConfig.siteName,
-    alternateName: 'Pain Tracker Pro',
+    alternateName: defaultSEOConfig.productName,
     url: defaultSEOConfig.siteUrl,
-    description: 'Private offline-first pain tracker app for tracking symptoms, triggers, flare patterns, and clinician-friendly records without making daily use depend on the cloud.',
+    description: 'PainTracker is a free pain tracker app and printable toolkit for private, offline symptom tracking and clearer doctor visit records.',
     inLanguage: 'en-CA',
     publisher: {
       '@type': 'Organization',
-      name: defaultSEOConfig.siteName,
+      name: defaultSEOConfig.organizationName,
       url: defaultSEOConfig.siteUrl
     }
   };
@@ -320,10 +405,15 @@ export function generateWebSiteSchema(): object {
  * Default SEO configuration for the site
  */
 export const defaultSEOConfig = {
-  siteName: 'PainTracker',
-  siteUrl: 'https://www.paintracker.ca',
-  defaultTitle: 'PainTracker - Private Offline-First Pain Tracking App',
-  defaultDescription: 'Track pain, symptoms, triggers, and daily patterns with a private offline-first pain tracker app. Local-first by default, no account required, and clinician-friendly exports when you choose.',
+  productName: seoIdentity.productName,
+  siteName: seoIdentity.siteName,
+  organizationName: seoIdentity.organizationName,
+  siteUrl: seoIdentity.siteUrl,
+  appUrl: seoIdentity.appUrl,
+  logoUrl: seoIdentity.logoUrl,
+  githubUrl: seoIdentity.githubUrl,
+  defaultTitle: 'Free Pain Tracker App That Works Offline and Keeps Data Private | PainTracker',
+  defaultDescription: 'Track pain, symptoms, medications, and triggers with a free pain tracker app that works offline and keeps your records private. No account required.',
   defaultImage: 'https://www.paintracker.ca/og-image.png',
   twitterHandle: '@paintrackerpro',
   locale: 'en_CA'

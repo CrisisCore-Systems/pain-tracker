@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { BookOpen, Link as LinkIcon, Shield } from 'lucide-react';
 import { combineSchemas, generateBreadcrumbSchema } from '../lib/seo';
+import { applyPageMetadata } from '../components/seo/applyPageMetadata';
 
 const OVERTON_FRAMEWORK_VERSION = '1.3';
 const OVERTON_FRAMEWORK_DOI = '10.5281/zenodo.18887610';
@@ -32,10 +33,11 @@ export const OvertonFrameworkPage: React.FC = () => {
   );
 
   useEffect(() => {
-    document.title = 'The Overton Framework — Protective Computing (Canon)';
-    return () => {
-      document.title = 'PainTracker';
-    };
+    return applyPageMetadata({
+      title: 'The Overton Framework — Protective Computing (Canon)',
+      description: 'Read the Overton Framework canon page, including the Protective Computing discipline overview, DOI, and canonical citation.',
+      canonicalUrl: 'https://www.paintracker.ca/overton-framework',
+    });
   }, []);
 
   return (
@@ -68,7 +70,7 @@ export const OvertonFrameworkPage: React.FC = () => {
           </h2>
           <p className="text-slate-300 leading-relaxed">
             The Overton Framework is a systems-engineering discipline for designing software under conditions of human
-            vulnerability. PainTracker is its reference implementation.
+            vulnerability. Pain Tracker is its reference implementation.
           </p>
         </section>
 
@@ -127,8 +129,34 @@ export const OvertonFrameworkPage: React.FC = () => {
             Boundary
           </h2>
           <p className="text-slate-300 leading-relaxed">
-            PainTracker can be used without knowledge of the framework.
+            Pain Tracker can be used without knowledge of the framework.
           </p>
+        </section>
+
+        <section
+          className="mb-12 p-6 rounded-xl bg-slate-800/50 border border-slate-700/50"
+          aria-labelledby="implementation-paths"
+        >
+          <h2 id="implementation-paths" className="text-xl font-bold mb-3 text-white">
+            Implementation paths
+          </h2>
+          <p className="text-slate-300 leading-relaxed mb-4">
+            If you want to see how these ideas show up in the product rather than the canon, start with the privacy boundary and the app comparison pages.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <Link
+              to="/zero-knowledge-health-tracking-faq"
+              className="inline-flex items-center justify-center gap-2 rounded-lg border border-cyan-500/30 bg-cyan-500/10 px-4 py-3 text-sm font-medium text-cyan-300 hover:bg-cyan-500/20"
+            >
+              Read the zero-knowledge FAQ
+            </Link>
+            <Link
+              to="/pain-tracking-apps-comparison"
+              className="inline-flex items-center justify-center gap-2 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm font-medium text-emerald-300 hover:bg-emerald-500/20"
+            >
+              Compare pain tracking apps
+            </Link>
+          </div>
         </section>
 
         <div className="text-center">

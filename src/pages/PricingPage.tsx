@@ -4,11 +4,11 @@
  * Upgraded with dramatic editorial magazine treatment
  */
 
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import '../styles/pages/landing.css';
 import '../styles/pages/pricing.css';
 import { Check, X, ChevronDown, Crown, Star, Users, Sparkles, Shield, Zap, ArrowRight, Activity } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { SUBSCRIPTION_PLANS, FEATURE_COMPARISON } from '../config/subscription-tiers';
 import type { SubscriptionTier } from '../types/subscription';
@@ -17,13 +17,124 @@ import { useVaultStatus } from '../hooks/useVault';
 import { createCheckoutSession, getTierForCheckout } from '../utils/stripe-checkout';
 import { getLocalUserId } from '../utils/user-identity';
 import { combineSchemas, generateBreadcrumbSchema } from '../lib/seo';
+import { applyPageMetadata } from '../components/seo/applyPageMetadata';
+import { trackUsageEvent } from '../utils/usage-tracking';
+
+const PRICING_PAGE_TITLE = 'PainTracker Pricing | Track, Explain, Document | PainTracker.ca';
+
+type CheckoutTier = NonNullable<ReturnType<typeof getTierForCheckout>>;
+
+function isCheckoutTier(value: string | null): value is CheckoutTier {
+  return value === 'basic' || value === 'pro';
+}
+
+function isBillingInterval(value: string | null): value is 'monthly' | 'yearly' {
+  return value === 'monthly' || value === 'yearly';
+}
+
+function buildResumeCheckoutPath(tier: CheckoutTier, interval: 'monthly' | 'yearly'): string {
+  const params = new URLSearchParams({
+    resumeCheckout: '1',
+    tier,
+    interval,
+  });
+
+  return `/pricing?${params.toString()}`;
+}
 
 export const PricingPage: React.FC = () => {
   const { currentTier } = useSubscription();
   const vaultStatus = useVaultStatus();
+  const location = useLocation();
   const navigate = useNavigate();
   const [billingInterval, setBillingInterval] = useState<'monthly' | 'yearly'>('monthly');
   const [isUpgrading, setIsUpgrading] = useState(false);
+  const [checkoutMessage, setCheckoutMessage] = useState<string | null>(null);
+  const [checkoutMessageTone, setCheckoutMessageTone] = useState<'info' | 'warning'>('info');
+  const resumedCheckoutRef = useRef<string | null>(null);
+
+  const trackPricingEvent = (type: string, metadata?: Record<string, unknown>) => {
+    trackUsageEvent(type, 'commerce', { route: '/pricing', ...metadata });
+  };
+
+  useEffect(() => applyPageMetadata({
+    title: PRICING_PAGE_TITLE,
+    description: 'Compare Free, Basic, Pro, and Enterprise plans for private, offline-capable pain tracking, clinician-friendly reports, and structured documentation workflows.',
+    canonicalUrl: 'https://www.paintracker.ca/pricing',
+  }), []);
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const checkoutState = params.get('checkout');
+
+    if (checkoutState === 'canceled') {
+      setCheckoutMessage('Checkout was canceled. Your current plan has not changed.');
+      setCheckoutMessageTone('warning');
+      trackPricingEvent('checkout_canceled');
+      return;
+    }
+
+    if (checkoutState === 'success') {
+      setCheckoutMessage('Checkout completed. Your subscription status will refresh on this device as soon as Stripe confirms the payment.');
+      setCheckoutMessageTone('info');
+      trackPricingEvent('checkout_success');
+      return;
+    }
+
+    setCheckoutMessage(null);
+    setCheckoutMessageTone('info');
+  }, [location.search]);
+
+  async function startCheckout(checkoutTier: CheckoutTier, interval: 'monthly' | 'yearly') {
+    setIsUpgrading(true);
+    try {
+      const userId = getLocalUserId();
+      trackPricingEvent('checkout_started', { tier: checkoutTier, interval });
+
+      await createCheckoutSession({
+        userId,
+        tier: checkoutTier,
+        interval,
+      });
+    } catch (err) {
+      console.error('Upgrade failed:', err);
+      const message = err instanceof Error
+        ? err.message
+        : 'Failed to start checkout. Please try again.';
+      setCheckoutMessage(message);
+      setCheckoutMessageTone('warning');
+      trackPricingEvent('checkout_failed', {
+        tier: checkoutTier,
+        interval,
+        errorClass: err instanceof Error ? err.name : 'UnknownError',
+      });
+    } finally {
+      setIsUpgrading(false);
+    }
+  }
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (params.get('resumeCheckout') !== '1' || vaultStatus.state !== 'unlocked') {
+      return;
+    }
+
+    const tier = params.get('tier');
+    const interval = params.get('interval');
+    if (!isCheckoutTier(tier) || !isBillingInterval(interval)) {
+      return;
+    }
+
+    const resumeKey = `${tier}:${interval}`;
+    if (resumedCheckoutRef.current === resumeKey) {
+      return;
+    }
+
+    resumedCheckoutRef.current = resumeKey;
+    setBillingInterval(interval);
+    navigate('/pricing', { replace: true });
+    void startCheckout(tier, interval);
+  }, [location.search, navigate, vaultStatus.state]);
 
   const schema = combineSchemas(
     generateBreadcrumbSchema(
@@ -36,15 +147,8 @@ export const PricingPage: React.FC = () => {
   );
 
   const handleUpgrade = async (tier: SubscriptionTier) => {
-    setIsUpgrading(true);
     try {
-      // Check if user is authenticated
-      if (vaultStatus.state !== 'unlocked') {
-        // Redirect to login/setup page
-        alert('Please sign in or create an account to subscribe.');
-        navigate('/start?redirect=/pricing');
-        return;
-      }
+      trackPricingEvent('upgrade_clicked', { tier, interval: billingInterval });
 
       // Free tier doesn't need payment
       if (tier === 'free') {
@@ -64,22 +168,29 @@ export const PricingPage: React.FC = () => {
         throw new Error('Invalid tier for checkout');
       }
 
-      // Local-only stable identifier for subscription + checkout linking.
-      // This is not an authentication system.
-      const userId = getLocalUserId();
+      // Checkout is tied to the current browser profile after vault unlock.
+      if (vaultStatus.state !== 'unlocked') {
+        setCheckoutMessage('Please unlock your vault on this device before starting checkout.');
+        setCheckoutMessageTone('warning');
+        trackPricingEvent('checkout_requires_unlock', { tier: checkoutTier, interval: billingInterval });
+        const redirect = encodeURIComponent(buildResumeCheckoutPath(checkoutTier, billingInterval));
+        navigate(`/start?redirect=${redirect}`);
+        return;
+      }
 
-      // Redirect to Stripe Checkout
-      await createCheckoutSession({
-        userId,
-        tier: checkoutTier,
-        interval: billingInterval,
-      });
-
+      await startCheckout(checkoutTier, billingInterval);
     } catch (err) {
       console.error('Upgrade failed:', err);
-      alert('Failed to start checkout. Please try again.');
-    } finally {
-      setIsUpgrading(false);
+      const message = err instanceof Error
+        ? err.message
+        : 'Failed to start checkout. Please try again.';
+      setCheckoutMessage(message);
+      setCheckoutMessageTone('warning');
+      trackPricingEvent('upgrade_failed', {
+        tier,
+        interval: billingInterval,
+        errorClass: err instanceof Error ? err.name : 'UnknownError',
+      });
     }
   };
 
@@ -125,11 +236,14 @@ export const PricingPage: React.FC = () => {
                 </div>
               </div>
               <span className="text-xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
-                PainTracker
+                Pain Tracker
               </span>
             </button>
             <button
-              onClick={() => navigate('/start')}
+              onClick={() => {
+                trackPricingEvent('app_open_intent', { surface: 'pricing_nav' });
+                navigate('/start');
+              }}
               className="btn-cta-primary flex items-center gap-2 text-sm px-5 py-2.5"
             >
               Get Started
@@ -148,21 +262,42 @@ export const PricingPage: React.FC = () => {
           </div>
           
           <h1 className="landing-headline landing-headline-xl mb-6">
-            <span className="text-white">Choose Your </span>
-            <span className="gradient-text-animated">Perfect Plan</span>
+            <span className="text-white">Free helps you keep the record. </span>
+            <span className="gradient-text-animated">Upgrade helps you use it.</span>
           </h1>
           <p className="landing-subhead text-lg lg:text-xl mb-10 max-w-2xl mx-auto">
-            Start free, upgrade when you need more power. All plans include our core 
-            privacy-first, offline-capable pain tracking.
+            PainTracker Free is not a trial.
           </p>
 
-          <p className="text-sm text-slate-400 max-w-3xl mx-auto mb-10">
-            PainTracker is a privacy-first, local-data pain documentation system designed to help patients record symptoms and provide clinicians with clear, structured reports.
+          <p className="text-base text-slate-300 max-w-3xl mx-auto mb-4 leading-relaxed">
+            You can track pain privately, use core features, and keep control of your records without upgrading.
           </p>
 
-          <p className="text-sm text-slate-400 max-w-3xl mx-auto mb-10">
-            Data is stored locally on your device unless you choose to export it.
+          <p className="text-base text-slate-300 max-w-3xl mx-auto mb-4 leading-relaxed">
+            Upgrade when your records need to become easier to use.
           </p>
+
+          <p className="text-sm text-slate-400 max-w-3xl mx-auto mb-4 leading-relaxed">
+            Basic helps you organize pain history into cleaner summaries for appointments and personal review. Pro is for heavier documentation workflows, including disability notes, WorkSafeBC preparation, medication response patterns, and functional impact records.
+          </p>
+
+          <p className="text-sm text-slate-400 max-w-3xl mx-auto mb-10 font-medium">
+            Free helps you track. Upgrade helps you explain.
+          </p>
+
+          {checkoutMessage && (
+            <div
+              role="status"
+              aria-live="polite"
+              className={`mb-10 rounded-2xl border px-5 py-4 text-sm sm:text-base ${
+                checkoutMessageTone === 'warning'
+                  ? 'border-amber-400/40 bg-amber-500/10 text-amber-100'
+                  : 'border-sky-400/40 bg-sky-500/10 text-sky-100'
+              }`}
+            >
+              {checkoutMessage}
+            </div>
+          )}
 
           {/* Current Tier Display */}
           {currentTier && (
@@ -203,6 +338,46 @@ export const PricingPage: React.FC = () => {
           </fieldset>
         </div>
 
+        <div className="max-w-5xl mx-auto mb-16 stagger-fade-up">
+          <div className="glass-card-premium p-8 lg:p-10">
+            <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-sky-300 mb-3">Why upgrade exists</p>
+                <h2 className="text-2xl lg:text-3xl font-bold text-white mb-4">
+                  Pain tracking is only the first step.
+                </h2>
+                <p className="text-slate-300 leading-relaxed mb-4">
+                  The hard part is turning scattered daily entries into something useful when you are tired, foggy, in pain, or sitting in front of a doctor trying to explain the last three weeks in ten minutes.
+                </p>
+                <p className="text-slate-400 leading-relaxed mb-4">
+                  Upgrade when you want less manual rewriting, cleaner summaries, easier exports, and records that are easier to bring into appointments, claims, or long-term care conversations.
+                </p>
+                <p className="text-slate-300 leading-relaxed font-medium">
+                  PainTracker Free helps you keep the record. Paid plans help you make the record usable.
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-white/10 bg-slate-900/50 p-6">
+                <p className="text-sm font-semibold text-white mb-4">Track / Explain / Document</p>
+                <ul className="space-y-3 text-sm text-slate-300">
+                  <li className="flex items-start gap-3">
+                    <Check className="h-4 w-4 mt-0.5 text-emerald-400 flex-shrink-0" />
+                    <span><strong className="text-white">Free:</strong> keep a private pain record and build the habit.</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <Check className="h-4 w-4 mt-0.5 text-emerald-400 flex-shrink-0" />
+                    <span><strong className="text-white">Basic:</strong> use the record for cleaner summaries and appointment prep.</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <Check className="h-4 w-4 mt-0.5 text-emerald-400 flex-shrink-0" />
+                    <span><strong className="text-white">Pro:</strong> prepare the record when documentation starts asking more from you.</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Pricing Cards */}
         <div className="max-w-7xl mx-auto grid md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 mb-24 stagger-fade-up">
           {(Object.keys(SUBSCRIPTION_PLANS) as SubscriptionTier[]).map(tierKey => {
@@ -226,13 +401,15 @@ export const PricingPage: React.FC = () => {
             const ctaText = (() => {
               if (isCurrentPlan) return 'Current Plan';
               if (isEnterprise) return 'Contact Sales';
-              return `Get ${plan.name}`;
+              if (tierKey === 'free') return 'Start tracking free';
+              if (tierKey === 'basic') return 'Make my records easier to use';
+              return 'Prepare stronger documentation';
             })();
 
             const planNoteByTier: Record<SubscriptionTier, string> = {
-              free: 'Upgrade anytime. No credit card required.',
-              basic: 'Advanced tracking, analytics, and structured reports for personal health management.',
-              pro: 'Clinical-grade reports, exports, and pattern insights for rehabilitation and insurance documentation.',
+              free: 'Use PainTracker privately without needing to upgrade first. Track pain, build the habit, and keep control of your records.',
+              basic: 'Basic is for people who already track pain and want less manual work before appointments, personal reviews, or support conversations.',
+              pro: 'Pro is for people using pain records around disability notes, WorkSafeBC preparation, medication response, functional impact, or longer-term documentation conversations.',
               enterprise: 'Evaluation access available for organizations.',
             };
 
@@ -359,11 +536,90 @@ export const PricingPage: React.FC = () => {
           })}
         </div>
 
+        <div className="max-w-6xl mx-auto mb-20 stagger-fade-up">
+          <div className="grid gap-6 lg:grid-cols-2">
+            <div className="glass-card-premium p-8">
+              <h2 className="text-2xl font-bold text-white mb-4">Free</h2>
+              <p className="text-slate-400 mb-4">For starting and staying consistent.</p>
+              <ul className="space-y-3 text-sm text-slate-300">
+                <li className="flex items-start gap-3"><Check className="h-4 w-4 mt-0.5 text-emerald-400 flex-shrink-0" /><span>Track pain privately</span></li>
+                <li className="flex items-start gap-3"><Check className="h-4 w-4 mt-0.5 text-emerald-400 flex-shrink-0" /><span>Works offline</span></li>
+                <li className="flex items-start gap-3"><Check className="h-4 w-4 mt-0.5 text-emerald-400 flex-shrink-0" /><span>No account required to start</span></li>
+                <li className="flex items-start gap-3"><Check className="h-4 w-4 mt-0.5 text-emerald-400 flex-shrink-0" /><span>Printable templates and starter pack</span></li>
+                <li className="flex items-start gap-3"><Check className="h-4 w-4 mt-0.5 text-emerald-400 flex-shrink-0" /><span>Basic record keeping</span></li>
+                <li className="flex items-start gap-3"><Check className="h-4 w-4 mt-0.5 text-emerald-400 flex-shrink-0" /><span>Good for building the habit</span></li>
+              </ul>
+            </div>
+
+            <div className="glass-card-premium p-8">
+              <h2 className="text-2xl font-bold text-white mb-4">Upgrade</h2>
+              <p className="text-slate-400 mb-4">When your pain records need to become easier to explain.</p>
+              <div className="grid gap-5 lg:grid-cols-2">
+                <div>
+                  <h3 className="text-lg font-semibold text-white mb-3">Basic</h3>
+                  <ul className="space-y-3 text-sm text-slate-300">
+                    <li className="flex items-start gap-3"><Check className="h-4 w-4 mt-0.5 text-purple-400 flex-shrink-0" /><span>Cleaner pain summaries</span></li>
+                    <li className="flex items-start gap-3"><Check className="h-4 w-4 mt-0.5 text-purple-400 flex-shrink-0" /><span>Appointment-ready notes</span></li>
+                    <li className="flex items-start gap-3"><Check className="h-4 w-4 mt-0.5 text-purple-400 flex-shrink-0" /><span>Pattern review across days and weeks</span></li>
+                    <li className="flex items-start gap-3"><Check className="h-4 w-4 mt-0.5 text-purple-400 flex-shrink-0" /><span>Less manual rewriting</span></li>
+                  </ul>
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-white mb-3">Pro</h3>
+                  <ul className="space-y-3 text-sm text-slate-300">
+                    <li className="flex items-start gap-3"><Check className="h-4 w-4 mt-0.5 text-purple-400 flex-shrink-0" /><span>Documentation-ready summaries</span></li>
+                    <li className="flex items-start gap-3"><Check className="h-4 w-4 mt-0.5 text-purple-400 flex-shrink-0" /><span>Functional impact organization</span></li>
+                    <li className="flex items-start gap-3"><Check className="h-4 w-4 mt-0.5 text-purple-400 flex-shrink-0" /><span>Medication response review</span></li>
+                    <li className="flex items-start gap-3"><Check className="h-4 w-4 mt-0.5 text-purple-400 flex-shrink-0" /><span>Longer timeline review</span></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="max-w-5xl mx-auto mb-20 stagger-fade-up">
+          <div className="glass-card-premium overflow-hidden">
+            <div className="px-6 py-5 border-b border-white/10">
+              <h2 className="text-2xl font-bold text-white">What you need</h2>
+              <p className="text-sm text-slate-400 mt-2">Choose the plan by the job the record needs to do, not by pressure to upgrade.</p>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-white/10">
+                    <th scope="col" className="px-6 py-4 text-left text-slate-300 font-semibold">What you need</th>
+                    <th scope="col" className="px-6 py-4 text-left text-slate-300 font-semibold">Best plan</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    ['Start tracking pain privately', 'Free'],
+                    ['Keep a simple daily record', 'Free'],
+                    ['Prepare cleaner notes for appointments', 'Basic'],
+                    ['Reduce manual rewriting before visits', 'Basic'],
+                    ['Review patterns over time', 'Basic'],
+                    ['Organize functional impact notes', 'Pro'],
+                    ['Prepare disability or WorkSafeBC documentation', 'Pro'],
+                    ['Track medication response more seriously', 'Pro'],
+                    ['Build a longer-term record system', 'Pro'],
+                  ].map(([need, plan]) => (
+                    <tr key={need} className="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
+                      <td className="px-6 py-4 text-slate-300">{need}</td>
+                      <td className="px-6 py-4 font-semibold text-white">{plan}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
         {/* Feature Comparison Table */}
         <div className="max-w-7xl mx-auto mb-24">
           <h2 className="landing-headline text-3xl lg:text-4xl text-center mb-10">
             <span className="text-white">Compare </span>
-            <span className="gradient-text-animated">All Features</span>
+            <span className="gradient-text-animated">What Changes</span>
           </h2>
 
           <div className="glass-card-premium overflow-hidden">
@@ -372,7 +628,7 @@ export const PricingPage: React.FC = () => {
                 <thead>
                   <tr className="border-b border-white/10">
                     <th scope="col" className="px-6 py-5 text-left text-sm font-semibold text-slate-300">
-                      Feature
+                      Workflow or safeguard
                     </th>
                     <th scope="col" className="px-6 py-5 text-center text-sm font-semibold text-slate-400">
                       Free
@@ -476,23 +732,23 @@ export const PricingPage: React.FC = () => {
           <div className="space-y-4">
             <FAQItem
               question="Can I change plans at any time?"
-              answer="Yes! You can upgrade or downgrade your plan at any time. Upgrades take effect immediately, while downgrades happen at the end of your current billing period."
+              answer="Yes. You can upgrade or downgrade at any time. Upgrades take effect immediately, while downgrades happen at the end of your current billing period. Free remains available as the trust anchor, not as a trial timer."
             />
             <FAQItem
               question="What happens to my data if I downgrade?"
-              answer="Your data is always safe. If you exceed limits after downgrading, older entries will be archived but not deleted. You can upgrade again to restore full access."
+              answer="Your data stays safe. Downgrading does not erase the record you already built. If you exceed limits after a downgrade, older entries may be archived rather than deleted, and you can upgrade again to restore the higher-tier workflow."
             />
             <FAQItem
               question="Do I need a credit card to start?"
-              answer="No. You can use the Free plan indefinitely. Upgrade anytime when you need additional reporting and structured export capabilities. Organizations can request evaluation access for Enterprise."
+              answer="No. You can use the Free plan indefinitely. Upgrade only when you need cleaner summaries, easier exports, or less manual work turning daily entries into useful records. Organizations can request evaluation access for Enterprise."
             />
             <FAQItem
               question="Is my health data secure?"
-              answer="Absolutely. All plans use local-first storage and encryption at rest. Pro and Enterprise add audit logs and privacy-aligned security controls; Enterprise customers can request security documentation for organizational review."
+              answer="All plans use local-first storage and encryption at rest. Pro and Enterprise add audit logs and additional privacy-aligned security controls, and Enterprise customers can request security documentation for organizational review."
             />
             <FAQItem
               question="What payment methods do you accept?"
-              answer="We accept all major credit cards, debit cards, and PayPal through our secure Stripe payment processing. Enterprise customers can pay via invoice."
+              answer="Paid upgrades run through Stripe Checkout. Available payment methods depend on your location and Stripe configuration at checkout time."
             />
           </div>
         </div>
@@ -501,20 +757,23 @@ export const PricingPage: React.FC = () => {
         <div className="max-w-3xl mx-auto mt-20 text-center">
           <div className="glass-card-premium p-8 lg:p-12">
             <h3 className="text-2xl lg:text-3xl font-bold text-white mb-4">
-              Ready to start tracking?
+              Start free. Upgrade only when the burden shifts.
             </h3>
             <p className="text-slate-400 mb-8 max-w-xl mx-auto">
-              Used by patients and healthcare professionals to document, understand, and communicate chronic pain clearly.
+              Free is for starting and staying in control. Paid plans are for the moment when the record needs to become easier to use before appointments, documentation, or care coordination.
             </p>
             <button
-              onClick={() => navigate('/start')}
+              onClick={() => {
+                trackPricingEvent('app_open_intent', { surface: 'pricing_bottom_cta' });
+                navigate('/start');
+              }}
               className="btn-cta-primary text-lg px-10 py-4 inline-flex items-center gap-3"
             >
-              Start Tracking Free
+              Use the app free
               <ArrowRight className="h-5 w-5" />
             </button>
             <p className="text-sm text-slate-500 mt-4">
-              Free plan available • No credit card required • Cancel anytime
+              Free plan available • No credit card required • Upgrade when you need cleaner summaries
             </p>
           </div>
         </div>
@@ -528,22 +787,22 @@ export const PricingPage: React.FC = () => {
  */
 export function getTopFeatures(tier: SubscriptionTier): string[] {
   const features: Record<SubscriptionTier, string[]> = {
-    free: ['Unlimited entries', 'Basic analytics', 'PDF & WCB reports (5/mo)', 'Offline mode', 'Mobile app access'],
+    free: ['Private pain tracking', 'Offline-first use', 'No account required to start', 'Printable templates and starter pack', 'Good for building the habit'],
     basic: [
-      'Unlimited entries',
-      'Advanced analytics',
-      'PDF & WCB reports',
-      'Family sharing (2 users)',
-      'Pattern-aware insights',
-      '2FA security',
+      'Cleaner pain summaries',
+      'Appointment-ready notes',
+      'Pattern review across days and weeks',
+      'Better export organization',
+      'Less manual rewriting',
+      'Good for doctor visits and personal documentation',
     ],
     pro: [
-      'Unlimited entries',
-      'Pattern-based alerts',
-      'Clinical PDF export',
-      'Privacy-aligned security controls',
-      'Structured clinical export formats',
-      'Priority support (4h)',
+      'Documentation-ready summaries',
+      'Functional impact organization',
+      'Medication response review',
+      'Claim-prep record structure',
+      'Longer timeline review',
+      'Priority access to advanced documentation tools',
     ],
     enterprise: [
       'Unlimited everything',

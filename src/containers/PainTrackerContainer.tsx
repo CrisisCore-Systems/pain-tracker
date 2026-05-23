@@ -11,8 +11,14 @@ import { maybeCaptureWeatherForNewEntry } from '../services/weatherAutoCapture';
 import { EmptyStatePanel } from '../components/widgets/EmptyStatePanel';
 import { BrandedLoadingScreen } from '../components/branding/BrandedLoadingScreen';
 import { HistoryPage } from '../components/history/HistoryPage';
+import { subscriptionService } from '../services/SubscriptionService';
+import { getLocalUserId } from '../utils/user-identity';
+import { readWorkflowPreferences } from '../utils/workflowPreferences';
 
 // Lazy load heavy components for faster initial load (mobile optimization)
+const AnalyticsDashboard = lazy(() =>
+  import('../components/analytics/AnalyticsDashboard').then(m => ({ default: m.AnalyticsDashboard }))
+);
 const PremiumAnalyticsDashboard = lazy(() =>
   import('../components/analytics/PremiumAnalyticsDashboard').then(m => ({ default: m.PremiumAnalyticsDashboard }))
 );
@@ -53,10 +59,14 @@ export function PainTrackerContainer({ initialView }: { initialView?: string } =
   const { entries, ui, addEntry, setShowOnboarding, setShowWalkthrough, setError, loadSampleData } =
     usePainTrackerStore();
   const updateEntry = usePainTrackerStore(s => s.updateEntry);
+  const workflowPreferences = typeof window === 'undefined' ? null : readWorkflowPreferences();
+  const industrialFieldMode = workflowPreferences?.industrialFieldMode ?? false;
 
   const toast = useToast();
   const [walkthroughSteps, setWalkthroughSteps] = useState<WalkthroughStep[]>([]);
-  const [currentView, setCurrentView] = useState<string>(initialView ?? 'dashboard');
+  const [currentView, setCurrentView] = useState<string>(() =>
+    initialView ?? (industrialFieldMode || entries.length === 0 ? 'new-entry' : 'dashboard')
+  );
   const [editingEntryId, setEditingEntryId] = useState<PainEntry['id'] | null>(null);
 
   // Load walkthrough steps dynamically to avoid circular dependency
@@ -264,6 +274,7 @@ export function PainTrackerContainer({ initialView }: { initialView?: string } =
       case 'new-entry':
         return (
           <QuickLogOneScreen
+            interactionMode={industrialFieldMode ? 'industrial' : 'standard'}
             onComplete={data => {
               const entryToAdd: Omit<PainEntry, 'id' | 'timestamp'> = {
                 baselineData: {
@@ -310,6 +321,7 @@ export function PainTrackerContainer({ initialView }: { initialView?: string } =
                 triggers: data.triggers,
                 medicationAdherence: data.medicationAdherence,
                 sleep: data.sleep,
+                occupationalImpact: data.occupationalImpact,
               };
 
               handleAddEntry(entryToAdd);
@@ -343,6 +355,7 @@ export function PainTrackerContainer({ initialView }: { initialView?: string } =
         return (
           <QuickLogOneScreen
             mode="edit"
+            interactionMode={industrialFieldMode ? 'industrial' : 'standard'}
             initialData={{
               pain: entry.baselineData.pain,
               locations: entry.baselineData.locations ?? [],
@@ -353,6 +366,7 @@ export function PainTrackerContainer({ initialView }: { initialView?: string } =
               medicationAdherence: entry.medicationAdherence,
               activities: entry.activities,
               triggers: entry.triggers,
+              occupationalImpact: entry.occupationalImpact,
             }}
             onComplete={data => {
               try {
@@ -392,6 +406,10 @@ export function PainTrackerContainer({ initialView }: { initialView?: string } =
                   updates.triggers = data.triggers;
                 }
 
+                if (data.occupationalImpact) {
+                  updates.occupationalImpact = data.occupationalImpact;
+                }
+
                 updateEntry(entry.id, updates);
                 toast.success('Entry updated', 'Your changes are saved locally.');
                 setCurrentView('history');
@@ -424,11 +442,18 @@ export function PainTrackerContainer({ initialView }: { initialView?: string } =
         );
 
       case 'analytics':
+        {
+          const analyticsTier = subscriptionService.getUserTier(getLocalUserId());
+          const AnalyticsView = analyticsTier === 'pro' || analyticsTier === 'enterprise'
+            ? PremiumAnalyticsDashboard
+            : AnalyticsDashboard;
+
         return (
           <Suspense fallback={<ViewLoadingFallback />}>
-            <PremiumAnalyticsDashboard entries={entries} />
+            <AnalyticsView entries={entries} />
           </Suspense>
         );
+        }
 
       case 'body-map':
         return (

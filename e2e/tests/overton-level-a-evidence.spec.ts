@@ -24,6 +24,37 @@ async function gotoApp(page: import('@playwright/test').Page) {
   await expect(page.locator('#main-content')).toBeVisible({ timeout: 120_000 });
 }
 
+async function unlockWcbExportForEvidence(page: import('@playwright/test').Page) {
+  await page.addInitScript(() => {
+    try {
+      const key = 'pain-tracker:entitlements-v1';
+      const raw = globalThis.localStorage.getItem(key);
+
+      let modules: string[] = [];
+      if (raw) {
+        const parsed = JSON.parse(raw) as { modules?: unknown };
+        if (Array.isArray(parsed.modules)) {
+          modules = parsed.modules.filter((value): value is string => typeof value === 'string');
+        }
+      }
+
+      if (!modules.includes('reports_wcb_forms')) {
+        modules.push('reports_wcb_forms');
+      }
+
+      globalThis.localStorage.setItem(
+        key,
+        JSON.stringify({
+          modules,
+          updatedAt: new Date().toISOString(),
+        })
+      );
+    } catch {
+      // Best-effort setup for deterministic evidence runs.
+    }
+  });
+}
+
 test.describe('Overton Level A evidence capture (self-assessed)', () => {
   test('PC-1 offline cache load (evidence)', async ({ page, context, browserName }) => {
     await gotoApp(page);
@@ -79,6 +110,7 @@ test.describe('Overton Level A evidence capture (self-assessed)', () => {
   });
 
   test('PC-5 offline export (CSV/JSON/PDF/WCB) (evidence)', async ({ page }) => {
+    await unlockWcbExportForEvidence(page);
     await gotoApp(page);
 
     // Navigate to Reports via stable nav target.

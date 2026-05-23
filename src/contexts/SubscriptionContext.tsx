@@ -9,6 +9,7 @@ import React, {
   useState,
   useEffect,
   useCallback,
+  useMemo,
   ReactNode,
 } from 'react';
 import type {
@@ -17,10 +18,15 @@ import type {
   FeatureAccessResult,
   TierChangeOption,
   SubscriptionAnalytics,
+  TierFeatures,
 } from '../types/subscription';
-import type { TierFeatures } from '../types/subscription';
 import { subscriptionService } from '../services/SubscriptionService';
+import { fetchAuthoritativeSubscription } from '../services/authoritative-subscription';
 import { SUBSCRIPTION_PLANS } from '../config/subscription-tiers';
+import {
+  buildMissingSubscriptionReason,
+  buildSubscriptionManagementReason,
+} from '../lib/subscriptionAccessCopy';
 
 interface SubscriptionContextValue {
   // Current subscription state
@@ -61,6 +67,12 @@ export const SubscriptionProvider: React.FC<SubscriptionProviderProps> = ({ chil
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const getManagementError = useCallback(() => {
+    const message = buildSubscriptionManagementReason();
+    setError(message);
+    return new Error(message);
+  }, []);
+
   /**
    * Initialize subscription for user
    */
@@ -69,13 +81,26 @@ export const SubscriptionProvider: React.FC<SubscriptionProviderProps> = ({ chil
     setError(null);
 
     try {
-      // Try to get existing subscription
-      let sub = await subscriptionService.getSubscription(uid);
+      let authoritativeSubscription: UserSubscription | null = null;
+
+      try {
+        authoritativeSubscription = await fetchAuthoritativeSubscription(uid);
+      } catch {
+        authoritativeSubscription = null;
+      }
+
+      if (authoritativeSubscription) {
+        const hydratedSubscription = subscriptionService.setSubscription(authoritativeSubscription);
+        setSubscription(hydratedSubscription);
+        setCurrentTier(hydratedSubscription.tier);
+        return;
+      }
+
+      // Try to get existing local subscription when offline or before first paid sync
+      let sub = subscriptionService.getSubscription(uid);
 
       // If no subscription exists, create a free one
-      if (!sub) {
-        sub = await subscriptionService.createSubscription(uid, 'free');
-      }
+      sub ??= await subscriptionService.createSubscription(uid, 'free');
 
       setSubscription(sub);
       setCurrentTier(sub.tier);
@@ -101,7 +126,7 @@ export const SubscriptionProvider: React.FC<SubscriptionProviderProps> = ({ chil
   const upgradeTier = useCallback(
     async (newTier: SubscriptionTier, immediate: boolean = true): Promise<TierChangeOption> => {
       if (!subscription) {
-        throw new Error('No active subscription');
+        throw getManagementError();
       }
 
       setIsLoading(true);
@@ -124,7 +149,7 @@ export const SubscriptionProvider: React.FC<SubscriptionProviderProps> = ({ chil
         setIsLoading(false);
       }
     },
-    [subscription, refresh]
+    [getManagementError, subscription, refresh]
   );
 
   /**
@@ -133,7 +158,7 @@ export const SubscriptionProvider: React.FC<SubscriptionProviderProps> = ({ chil
   const downgradeTier = useCallback(
     async (newTier: SubscriptionTier): Promise<TierChangeOption> => {
       if (!subscription) {
-        throw new Error('No active subscription');
+        throw getManagementError();
       }
 
       setIsLoading(true);
@@ -152,7 +177,7 @@ export const SubscriptionProvider: React.FC<SubscriptionProviderProps> = ({ chil
         setIsLoading(false);
       }
     },
-    [subscription, refresh]
+    [getManagementError, subscription, refresh]
   );
 
   /**
@@ -161,7 +186,7 @@ export const SubscriptionProvider: React.FC<SubscriptionProviderProps> = ({ chil
   const cancelSubscription = useCallback(
     async (immediate: boolean = false) => {
       if (!subscription) {
-        throw new Error('No active subscription');
+        throw getManagementError();
       }
 
       setIsLoading(true);
@@ -178,7 +203,7 @@ export const SubscriptionProvider: React.FC<SubscriptionProviderProps> = ({ chil
         setIsLoading(false);
       }
     },
-    [subscription, refresh]
+    [getManagementError, subscription, refresh]
   );
 
   /**
@@ -186,7 +211,7 @@ export const SubscriptionProvider: React.FC<SubscriptionProviderProps> = ({ chil
    */
   const reactivateSubscription = useCallback(async () => {
     if (!subscription) {
-      throw new Error('No active subscription');
+      throw getManagementError();
     }
 
     setIsLoading(true);
@@ -202,7 +227,7 @@ export const SubscriptionProvider: React.FC<SubscriptionProviderProps> = ({ chil
     } finally {
       setIsLoading(false);
     }
-  }, [subscription, refresh]);
+  }, [getManagementError, subscription, refresh]);
 
   /**
    * Check feature access
@@ -212,7 +237,7 @@ export const SubscriptionProvider: React.FC<SubscriptionProviderProps> = ({ chil
       if (!subscription) {
         return {
           hasAccess: false,
-          reason: 'No active subscription',
+          reason: buildMissingSubscriptionReason(),
           upgradeRequired: 'basic',
         };
       }
@@ -253,7 +278,7 @@ export const SubscriptionProvider: React.FC<SubscriptionProviderProps> = ({ chil
       try {
         const result = await subscriptionService.trackUsage(subscription.userId, usageType, amount);
 
-        if (result.success && result.quota && result.quota.remaining === 0) {
+        if (result.success && result.quota?.remaining === 0) {
           setError(`You've reached your ${usageType} limit. Consider upgrading your plan.`);
         }
 
@@ -280,22 +305,40 @@ export const SubscriptionProvider: React.FC<SubscriptionProviderProps> = ({ chil
     }
   }, [userId, initialize]);
 
-  const value: SubscriptionContextValue = {
-    subscription,
-    currentTier,
-    isLoading,
-    error,
-    initialize,
-    upgradeTier,
-    downgradeTier,
-    cancelSubscription,
-    reactivateSubscription,
-    checkFeatureAccess,
-    hasFeature,
-    trackUsage,
-    getAnalytics,
-    refresh,
-  };
+  const value: SubscriptionContextValue = useMemo(
+    () => ({
+      subscription,
+      currentTier,
+      isLoading,
+      error,
+      initialize,
+      upgradeTier,
+      downgradeTier,
+      cancelSubscription,
+      reactivateSubscription,
+      checkFeatureAccess,
+      hasFeature,
+      trackUsage,
+      getAnalytics,
+      refresh,
+    }),
+    [
+      subscription,
+      currentTier,
+      isLoading,
+      error,
+      initialize,
+      upgradeTier,
+      downgradeTier,
+      cancelSubscription,
+      reactivateSubscription,
+      checkFeatureAccess,
+      hasFeature,
+      trackUsage,
+      getAnalytics,
+      refresh,
+    ]
+  );
 
   return <SubscriptionContext.Provider value={value}>{children}</SubscriptionContext.Provider>;
 };

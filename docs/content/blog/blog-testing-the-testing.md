@@ -12,6 +12,8 @@ If our simulations are wrong—if real panic attacks don't actually look like ou
 
 This is the meta-problem of simulation testing: validating the validity of our validations.
 
+For the full series map that leads up to this point, see [Testing Trauma-Informed Systems: Start Here](/blog/testing-trauma-informed-systems-start-here).
+
 ## The Ground Truth Problem
 
 In most testing, ground truth is clear. A button either works or it doesn't. A calculation is either correct or incorrect.
@@ -729,7 +731,7 @@ Testing crisis simulations is meta-work that feels removed from "real" developme
 
 Key takeaways:
 
-1. **Ground truth is indirect**: We can't observe crises directly, so we validate through retrospective analysis and outcome correlation.
+1. **Ground truth is indirect**: We can't observe crises directly, so we validate through retrospective analysis and outcome correlation. That only works if your simulation data was built ethically in the first place, which is why [The Ethics of Simulation](/blog/ethics-of-simulation) matters upstream.
 
 2. **Quantify fidelity**: Signal fidelity scores give us a measurable target for simulation quality.
 

@@ -48,6 +48,7 @@ Homepage intent lock (choose one and keep it stable for at least one crawl cycle
 - Option A: `Patients-first homepage` (patient-forward title/meta, route branching handled by `Start Here`).
 - Option B: `Route-hub homepage` (title/meta clearly describe routing to lane hubs).
 
+<!-- markdownlint-disable MD060 -->
 | Priority | URL | Lane | Proposed Title | Proposed Meta Description | Primary CTA Target | Status | Canonical/IA Notes |
 |---|---|---|---|---|---|---|---|
 | P0 | `https://blog.paintracker.ca/` | Patients | `Pain Tracker Blog: Private, Offline-First Chronic Pain Tracking` | `Privacy-first chronic pain tracking with no accounts and local-only data. Guides for patients, builders, and WorkSafeBC documentation.` | `https://blog.paintracker.ca/page/start-here` | Keep | Publication home should use `Pain Tracker` consistently. |
@@ -65,6 +66,7 @@ Homepage intent lock (choose one and keep it stable for at least one crawl cycle
 | P2 | `https://blog.paintracker.ca/four-months-on-the-floor` | Founder Journal | `Four Months on the Floor: Founder Journal` | `A personal account of collapse and recovery context behind Pain Tracker's protective computing principles.` | `/founder-journal` | Re-scope | Journal lane only; do not interleave in builder nav blocks. |
 | P2 | `https://blog.paintracker.ca/understanding-collapse-a-comprehensive-guide` | Founder Journal | `Understanding Collapse: A Practical Framework` | `A framework for understanding functional collapse and why reliability and agency matter in chronic pain tools.` | `/founder-journal` | Re-scope | Choose one lane. Default to `Founder Journal` unless rewritten as technical methods content. |
 | P2 | `https://blog.paintracker.ca/getting-started` | Patients | `Getting Started with Pain Tracker: Your First Week` | `Track flares, spot patterns, prepare for appointments, and keep records private in your first week with Pain Tracker.` | `https://paintracker.ca/app` | Keep | Use as key onboarding target from `Start Here`. |
+<!-- markdownlint-enable MD060 -->
 
 ## 4) New Hub Pages (Needed to Fix Audience Mixing)
 
@@ -83,7 +85,8 @@ Hub page requirements:
 
 Lane guardrails:
 
-- `For Patients` copy should prefer plain-language intent phrases: `track flares`, `spot patterns`, `prepare for appointments`, `keep records private`.
+- `For Patients` copy should prefer plain-language intent phrases.
+- Examples: `track flares`, `spot patterns`, `prepare for appointments`, and `keep records private`.
 - `For Builders` copy should stay technical and avoid memoir framing.
 - `Founder Journal` copy should not become a primary navigation destination for patient or claims journeys.
 

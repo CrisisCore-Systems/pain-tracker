@@ -31,6 +31,10 @@ interface UseSubscriptionEntryResult {
   isLoading: boolean;
 }
 
+function getQuotaFailureMessage(error?: string): string {
+  return error || 'Unable to verify your current plan limits right now. Please try again.';
+}
+
 /**
  * Hook for subscription-aware entry creation
  * Handles quota checks, usage tracking, and user feedback
@@ -59,6 +63,13 @@ export function useSubscriptionEntry(userId: string): UseSubscriptionEntryResult
   const [quotaMessage, setQuotaMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
+  const handleQuotaFailure = (quotaCheck: { error?: string; quotaExceeded?: boolean }) => {
+    const message = getQuotaFailureMessage(quotaCheck.error);
+    setIsQuotaExceeded(Boolean(quotaCheck.quotaExceeded));
+    setQuotaMessage(message);
+    throw new Error(message);
+  };
+
   const addPainEntry = async (entry: Omit<PainEntry, 'id' | 'timestamp'>) => {
     setIsLoading(true);
     try {
@@ -66,9 +77,7 @@ export function useSubscriptionEntry(userId: string): UseSubscriptionEntryResult
       const quotaCheck = await checkPainEntryQuota(userId);
 
       if (!quotaCheck.success) {
-        setIsQuotaExceeded(true);
-        setQuotaMessage(quotaCheck.error || 'Pain entry quota exceeded. Please upgrade your plan.');
-        throw new Error(quotaCheck.error || 'Quota exceeded');
+        handleQuotaFailure(quotaCheck);
       }
 
       // Try to enrich the entry with local weather when possible. This is
@@ -87,12 +96,19 @@ export function useSubscriptionEntry(userId: string): UseSubscriptionEntryResult
       // Track analytics for pain entry (privacy-safe)
       const weatherSummary = (entry as Record<string, unknown>).weather as string | undefined;
       const painLevel = entry.baselineData?.pain ?? 0;
+      let severity: 'mild' | 'moderate' | 'severe' = 'mild';
+      if (painLevel >= 7) {
+        severity = 'severe';
+      } else if (painLevel >= 4) {
+        severity = 'moderate';
+      }
+
       const painAnalytics: PainEntryAnalytics = {
         painLevel,
         symptoms: entry.baselineData?.symptoms,
         triggers: entry.triggers,
         weather: weatherSummary,
-        severity: painLevel >= 7 ? 'severe' : painLevel >= 4 ? 'moderate' : 'mild',
+        severity,
       };
       trackPainEntry(painAnalytics);
 
@@ -123,9 +139,7 @@ export function useSubscriptionEntry(userId: string): UseSubscriptionEntryResult
       const quotaCheck = await checkMoodEntryQuota(userId);
 
       if (!quotaCheck.success) {
-        setIsQuotaExceeded(true);
-        setQuotaMessage(quotaCheck.error || 'Mood entry quota exceeded. Please upgrade your plan.');
-        throw new Error(quotaCheck.error || 'Quota exceeded');
+        handleQuotaFailure(quotaCheck);
       }
 
       // Add entry using store action
@@ -158,11 +172,7 @@ export function useSubscriptionEntry(userId: string): UseSubscriptionEntryResult
       const quotaCheck = await checkActivityLogQuota(userId);
 
       if (!quotaCheck.success) {
-        setIsQuotaExceeded(true);
-        setQuotaMessage(
-          quotaCheck.error || 'Activity log quota exceeded. Please upgrade your plan.'
-        );
-        throw new Error(quotaCheck.error || 'Quota exceeded');
+        handleQuotaFailure(quotaCheck);
       }
 
       // Add entry using store action

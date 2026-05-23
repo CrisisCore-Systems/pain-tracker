@@ -11,7 +11,18 @@ canonical_url: "https://github.com/CrisisCore-Systems/pain-tracker"
 published: false
 ---
 
-**Series:** [Start here](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-00-start-here.md) · [Part 1](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-01-offline-first-local-first-architecture.md) · [Part 2](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-02-three-storage-layers-state-cache-offline-db-encrypted-vault.md) · **Part 3** · [Part 4](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-04-zod-defensive-parsing.md) · [Part 5](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-05-trauma-informed-ux-accessibility-as-architecture.md) · [Part 6](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-06-exports-as-a-security-boundary.md) · [Part 7](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-07-worksafebc-oriented-workflows-careful-language.md) · [Part 8](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-08-analytics-without-surveillance-explicit-consent.md) · [Part 9](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-09-quality-gates-that-earn-trust.md) · [Part 10](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-10-maintaining-truthful-docs-over-time.md)
+**Series:**
+[Start here](https://dev.to/crisiscoresystems/start-here-paintracker-crisiscore-build-log-privacy-first-offline-first-no-surveillance-3h0k)
+· [Part 1](https://dev.to/crisiscoresystems/offline-first-without-a-backend-a-local-first-pwa-architecture-you-can-trust-3j15)
+· [Part 2](https://dev.to/crisiscoresystems/three-storage-layers-in-an-offline-first-health-pwa-state-cache-vs-indexeddb-vs-encrypted-vault-19b7)
+· **Part 3**
+· [Part 4](https://dev.to/crisiscoresystems/zod-defensive-parsing-in-a-local-first-app-make-your-offline-data-trustworthy-1016)
+· [Part 5](https://dev.to/crisiscoresystems/trauma-informed-ux-accessibility-as-architecture-not-polish-22jg)
+· [Part 6](https://dev.to/crisiscoresystems/exports-are-a-security-boundary-the-moment-local-first-becomes-shareable-3gj9)
+· [Part 7](https://dev.to/crisiscoresystems/worksafebc-oriented-workflows-without-overclaims-structured-summaries-careful-language-2n3i)
+· [Part 8](https://dev.to/crisiscoresystems/analytics-without-surveillance-explicit-consent-layered-gates-and-never-sending-class-a-data-59f1)
+· [Part 9](https://dev.to/crisiscoresystems/quality-gates-that-earn-trust-checks-you-can-run-not-promises-you-cant-58a3)
+· [Part 10](https://dev.to/crisiscoresystems/maintaining-truthful-docs-over-time-how-to-keep-security-claims-honest-2778)
 
 This post is Part 3 in a Dev.to series grounded in the open-source **Pain Tracker** repo.
 
@@ -20,7 +31,12 @@ This post is Part 3 in a Dev.to series grounded in the open-source **Pain Tracke
 - It’s about *deterministic behavior* and truthful boundaries.
 
 If you haven’t read Part 2 yet:
-- Part 2: [Three storage layers (state cache vs offline DB vs encrypted vault)](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-02-three-storage-layers-state-cache-offline-db-encrypted-vault.md)
+
+- Part 2: [Three storage layers (state cache vs offline DB vs encrypted vault)](https://dev.to/crisiscoresystems/three-storage-layers-in-an-offline-first-health-pwa-state-cache-vs-indexeddb-vs-encrypted-vault-19b7)
+
+If you want the full local-first architecture this service worker is serving, step back to Part 1:
+
+- Part 1: [Offline-first without a backend: a local-first PWA architecture you can trust](https://dev.to/crisiscoresystems/offline-first-without-a-backend-a-local-first-pwa-architecture-you-can-trust-3j15)
 
 ---
 
@@ -30,22 +46,26 @@ If you’ve been burned by service workers, it’s usually one of these:
 
 (And if you haven’t been burned yet: congrats. Your day is coming.)
 
-1) **Stale HTML** breaks your app after deploy
+1. **Stale HTML** breaks your app after deploy
+
 - the browser keeps serving an old `index.html`
 - the module graph changes
 - suddenly you’re getting chunk 404s or a blank screen
 
-2) **Base paths** don’t match reality
+1. **Base paths** don’t match reality
+
 - it works on `/`
 - it breaks on GitHub Pages under `/pain-tracker/`
 - you register the wrong scope and nothing behaves the way you think it does
 
-3) **Caching becomes accidental data retention**
+1. **Caching becomes accidental data retention**
+
 - you didn’t intend to cache responses
 - you cache “everything” because it’s easy
 - you end up with user-specific payloads in caches (which is a problem for sensitive apps)
 
-4) **Updates are confusing**
+1. **Updates are confusing**
+
 - new worker installs but doesn’t activate
 - users don’t refresh
 - you can’t tell what version is running
@@ -68,9 +88,9 @@ There’s no “offline magic,” no runtime caching of arbitrary API responses,
 Two service worker scripts exist:
 
 - Root scope (normal deploy):
-  - https://github.com/CrisisCore-Systems/pain-tracker/blob/main/public/sw.js
+  - [github.com/CrisisCore-Systems/pain-tracker/blob/main/public/sw.js](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/public/sw.js)
 - GitHub Pages base path (`/pain-tracker/`):
-  - https://github.com/CrisisCore-Systems/pain-tracker/blob/main/public/pain-tracker/sw.js
+  - [github.com/CrisisCore-Systems/pain-tracker/blob/main/public/pain-tracker/sw.js](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/public/pain-tracker/sw.js)
 
 ---
 
@@ -141,6 +161,10 @@ No guessing. No “maybe it’ll update.” It either updates or it doesn’t.
 
 The repo includes a second service worker at `public/pain-tracker/sw.js` for a GitHub Pages-style base path.
 
+If you want the broader healthcare-PWA context for why this base-path and
+caching discipline matters, read
+[Building a Healthcare PWA That Actually Works When It Matters](https://dev.to/crisiscoresystems/building-a-healthcare-pwa-that-actually-works-when-it-matters-md4).
+
 What changes:
 
 - The precache URL for the manifest becomes `/pain-tracker/manifest.json`
@@ -155,11 +179,12 @@ This is the kind of boring duplication that prevents hours of “why is it offli
 
 The app registers the SW in the PWA manager:
 
-- https://github.com/CrisisCore-Systems/pain-tracker/blob/main/src/utils/pwa-utils.ts
+- [github.com/CrisisCore-Systems/pain-tracker/blob/main/src/utils/pwa-utils.ts](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/src/utils/pwa-utils.ts)
 
 Key behaviors:
 
-- It computes a `baseUrl` from `VITE_BASE` (when set), or Vite’s `BASE_URL`, and falls back to `location.pathname` when Vite gives a relative base.
+- It computes a `baseUrl` from `VITE_BASE` when set, or Vite’s `BASE_URL`, and
+  falls back to `location.pathname` when Vite gives a relative base.
 - It registers `${baseUrl}sw.js` with `scope: baseUrl`.
 - It sets `updateViaCache: 'none'` to force update checks.
 
@@ -199,16 +224,16 @@ If you add more SW features later (background sync, offline processing, etc.), t
 
 ## Verify it yourself (no trust required)
 
-1) Inspect the service worker script:
+1. Inspect the service worker script:
 
-- https://github.com/CrisisCore-Systems/pain-tracker/blob/main/public/sw.js
+- [github.com/CrisisCore-Systems/pain-tracker/blob/main/public/sw.js](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/public/sw.js)
 
-2) In DevTools:
+1. In DevTools:
 
 - Application → Service Workers (confirm scope + script URL)
 - Application → Cache Storage (look for `pain-tracker-static-v…`)
 
-3) Test offline behavior:
+1. Test offline behavior:
 
 - DevTools → Network → Offline
 - Refresh a route
@@ -220,5 +245,14 @@ If you add more SW features later (background sync, offline processing, etc.), t
 
 Part 4 will cover defensive parsing (Zod + schema-first inputs) and how to keep “offline-first” from becoming “silently accepts garbage.”
 
-Prev: [Part 2 — Three storage layers](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-02-three-storage-layers-state-cache-offline-db-encrypted-vault.md)
-Next: [Part 4 — Zod + defensive parsing](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-04-zod-defensive-parsing.md)
+Prev: [Part 2 — Three storage layers](https://dev.to/crisiscoresystems/three-storage-layers-in-an-offline-first-health-pwa-state-cache-vs-indexeddb-vs-encrypted-vault-19b7)
+Next: [Part 4 — Zod + defensive parsing](https://dev.to/crisiscoresystems/zod-defensive-parsing-in-a-local-first-app-make-your-offline-data-trustworthy-1016)
+
+## Proof network
+
+If you want the broader route around this series:
+
+- **Main site:** [CrisisCore Systems](https://crisiscore-systems.ca/)
+- **Framework:** [Protective Computing](https://protective-computing.github.io/)
+- **Reference implementation:** [private offline pain tracker](https://paintracker.ca/)
+- **Proof route:** [paintracker.ca/proof](https://paintracker.ca/proof)

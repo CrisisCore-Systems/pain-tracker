@@ -571,6 +571,49 @@ describe('WCB Export', () => {
       expect(mockJsPDF.setFillColor).toHaveBeenCalledWith(248, 250, 252);
       expect(mockJsPDF.rect).toHaveBeenCalled();
     });
+
+    it('renders hostile-bureaucracy provenance and device-state sections when requested', async () => {
+      const entries: PainEntry[] = [
+        createMockEntry({
+          occupationalImpact: { impairedMobility: true, unableToOperateMachinery: true },
+          recordIntegrity: {
+            createdAt: '2024-01-15T10:00:00.000Z',
+            originalTimestamp: '2024-01-15T10:00:00.000Z',
+            lastAmendedAt: '2024-01-16T11:30:00.000Z',
+            revisionCount: 1,
+            revisions: [
+              {
+                amendedAt: '2024-01-16T11:30:00.000Z',
+                changedFields: ['notes'],
+                summary: ['Notes updated'],
+                captureContext: {
+                  networkState: 'offline',
+                  storageLocation: 'local-device',
+                  captureChannel: 'quick-log',
+                },
+              },
+            ],
+            captureContext: {
+              networkState: 'offline',
+              storageLocation: 'local-device',
+              captureChannel: 'quick-log',
+            },
+          },
+        }),
+      ];
+
+      await exportWorkSafeBCPDF(entries, {
+        ...defaultOptions,
+        templateStyle: 'hostile-bureaucracy',
+      });
+
+      const calls = (mockJsPDF.text as unknown as { mock: { calls: unknown[][] } }).mock.calls;
+      const text = JSON.stringify(calls).toLowerCase();
+      expect(text).toContain('append-only amendment log');
+      expect(text).toContain('network state counts');
+      expect(text).toContain('incapable of lifting >10 lbs');
+      expect(mockJsPDF.setFont).toHaveBeenCalledWith('courier', 'bold');
+    });
   });
 
   describe('downloadWorkSafeBCPDF', () => {

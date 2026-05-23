@@ -58,6 +58,10 @@ import {
   CardHeader,
   CardTitle,
 } from '../../design-system';
+import { subscriptionService } from '../../services/SubscriptionService';
+import { getLocalUserId } from '../../utils/user-identity';
+import { UpgradePrompt } from '../subscription/FeatureGates';
+import { getPlanRestrictionReason } from '../subscription/planRestrictionCopy';
 
 type TimePeriod = 'morning' | 'afternoon' | 'evening' | 'night';
 
@@ -284,6 +288,24 @@ interface PremiumAnalyticsDashboardProps {
 }
 
 export const PremiumAnalyticsDashboard: React.FC<PremiumAnalyticsDashboardProps> = ({
+  entries,
+}) => {
+  const currentTier = subscriptionService.getUserTier(getLocalUserId());
+
+  if (currentTier !== 'pro' && currentTier !== 'enterprise') {
+    return (
+      <UpgradePrompt
+        requiredTier="pro"
+        currentTier={currentTier}
+        reason={getPlanRestrictionReason('pro')}
+      />
+    );
+  }
+
+  return <PremiumAnalyticsDashboardContent entries={entries} />;
+};
+
+const PremiumAnalyticsDashboardContent: React.FC<PremiumAnalyticsDashboardProps> = ({
   entries,
 }) => {
   const [timeRange, setTimeRange] = useState<'7d' | '30d' | '90d' | '1y' | 'all'>('7d');

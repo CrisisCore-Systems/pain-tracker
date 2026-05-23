@@ -1,19 +1,255 @@
 {
   "meta": {
+    "schemaVersion": 2,
     "timezoneNote": "All times are UTC. Schedule was planned for 9:00 AM PT (PST, UTC-8) => 17:00 UTC for these dates.",
-    "created": "2025-12-13"
+    "created": "2025-12-13",
+    "lastReviewed": "2026-05-01",
+    "sourceOfTruth": "Repo-backed markdown front matter should stay aligned with schedule entries for title, description, tags, and canonical metadata."
   },
   "defaults": {
     "series": "CrisisCore Build Log",
     "organization_id": null,
     "sponsor_url": "https://github.com/sponsors/CrisisCore-Systems",
     "repo_url": "https://github.com/CrisisCore-Systems/pain-tracker",
-    "series_start_url": null
+    "try_url": "https://crisiscore-systems.ca",
+    "series_start_url": null,
+    "series_profiles": {
+      "crisiscore-build-log": {
+        "series": "CrisisCore Build Log",
+        "startHereKey": "devto-series-start-here"
+      },
+      "crisis-simulation-testing": {
+        "series": "CrisisCore Build Log",
+        "startHereKey": "devto-series-start-here",
+        "orderedKeys": [
+          "privacy-preserving-analytics",
+          "performance-under-pressure",
+          "testing-across-the-stack",
+          "testing-co-occurrence",
+          "testing-the-testing",
+          "testing-recovery",
+          "cross-crisis-calibration",
+          "internationalization-of-trauma",
+          "ethics-of-simulation"
+        ]
+      },
+      "protective-computing-essays": {
+        "series": "CrisisCore Build Log",
+        "startHereKey": "devto-series-start-here",
+        "orderedKeys": [
+          "devto-architecting-vulnerability",
+          "privacy-first-default-standard",
+          "protective-computing-not-privacy-theater",
+          "protective-legitimacy-score-how-it-works",
+          "subpoena-proofing-zero-knowledge",
+          "micro-coercion-of-speed",
+          "coercion-resistant-ux",
+          "friction-prerequisite-ui"
+        ]
+      },
+      "release-and-trust-artifacts": {
+        "series": "CrisisCore Build Log",
+        "startHereKey": "devto-series-start-here",
+        "orderedKeys": [
+          "whitepaper-v1-3-0",
+          "overton-framework-doi-backed",
+          "proofvault-trust-case-release-artifact",
+          "worksafebc-ready-audit"
+        ]
+      },
+      "offline-first-failure-modes": {
+        "series": "CrisisCore Build Log",
+        "startHereKey": "devto-series-start-here",
+        "orderedKeys": [
+          "service-worker-failure-modes",
+          "rollback-patterns-offline-first-pwas",
+          "testing-indexeddb-schema-migrations",
+          "trust-boundaries-client-side-health-apps",
+          "offline-queue-replay-idempotency"
+        ]
+      },
+      "protective-computing-in-practice": {
+        "series": "Protective Computing in Practice",
+        "chainKey": "protective-computing-in-practice",
+        "startHereKey": "devto-series-start-here",
+        "orderedKeys": [
+          "devto-series-01-offline-first",
+          "devto-series-02-storage-layers",
+          "devto-series-03-service-workers",
+          "devto-series-04-zod-defensive-parsing",
+          "devto-series-05-trauma-informed-ux",
+          "devto-series-06-exports-boundary",
+          "devto-series-07-worksafebc-workflows",
+          "devto-series-08-analytics-without-surveillance",
+          "devto-series-09-quality-gates",
+          "devto-series-10-truthful-docs"
+        ]
+      },
+      "honest-offline-first-systems": {
+        "series": "Honest Offline First Systems",
+        "orderedKeys": [
+          "devto-sync-conflict-handling-offline-first-pwas"
+        ]
+      }
+    },
+    "target_link_map": {
+      "devto-series-start-here": {
+        "path": "/resources",
+        "anchorText": "chronic pain tracking resources",
+        "cue": "If you are starting from implementation evidence"
+      },
+      "devto-sync-conflict-handling-offline-first-pwas": {
+        "path": "/download",
+        "anchorText": "download a private pain tracker",
+        "cue": "See the production app behavior"
+      },
+      "devto-openclaw-boundary-problem": {
+        "path": "/resources/what-to-include-in-pain-journal",
+        "anchorText": "what to include in a pain journal",
+        "cue": "Use this practical checklist"
+      },
+      "privacy-first-default-standard": {
+        "path": "/download",
+        "anchorText": "private offline pain tracker",
+        "cue": "Try the local-first flow"
+      },
+      "privacy-preserving-analytics": {
+        "path": "/resources",
+        "anchorText": "chronic pain tracking resources",
+        "cue": "Patient-facing resources"
+      },
+      "performance-under-pressure": {
+        "path": "/download",
+        "anchorText": "download the free pain tracker",
+        "cue": "Measure real-world behavior"
+      },
+      "testing-across-the-stack": {
+        "path": "/download",
+        "anchorText": "private offline pain tracking app",
+        "cue": "Validate behavior end to end"
+      },
+      "testing-co-occurrence": {
+        "path": "/resources/doctor-visit-pain-summary-template",
+        "anchorText": "pain journal for appointments",
+        "cue": "Structured summary template"
+      },
+      "testing-recovery": {
+        "path": "/resources/daily-pain-tracker-printable",
+        "anchorText": "free pain journal templates",
+        "cue": "Printable fallback path"
+      },
+      "cross-crisis-calibration": {
+        "path": "/resources/what-to-include-in-pain-journal",
+        "anchorText": "what to include in a pain journal",
+        "cue": "Minimal capture guidance"
+      },
+      "testing-the-testing": {
+        "path": "/resources",
+        "anchorText": "chronic pain tracking resources",
+        "cue": "Reference resources and templates"
+      },
+      "internationalization-of-trauma": {
+        "path": "/resources/doctor-visit-pain-summary-template",
+        "anchorText": "pain journal for appointments",
+        "cue": "Appointment-ready structure"
+      },
+      "whitepaper-v1-3-0": {
+        "path": "/pricing",
+        "anchorText": "PainTracker pricing and upgrades",
+        "cue": "Support sustainability without surveillance"
+      },
+      "overton-framework-doi-backed": {
+        "path": "/pricing",
+        "anchorText": "PainTracker pricing and upgrades",
+        "cue": "Support ongoing protocol work"
+      },
+      "devto-architecting-vulnerability": {
+        "path": "/resources",
+        "anchorText": "private offline pain tracker resources",
+        "cue": "Human-state-first implementation references"
+      },
+      "anchor-preview-mode-first-agent-plans-as-prs": {
+        "path": "/download",
+        "anchorText": "download a private pain tracker",
+        "cue": "Reference implementation download"
+      },
+      "micro-coercion-of-speed": {
+        "path": "/resources/what-to-include-in-pain-journal",
+        "anchorText": "what to include in a pain journal",
+        "cue": "Reduce cognitive load with this template"
+      },
+      "coercion-resistant-ux": {
+        "path": "/resources/doctor-visit-pain-summary-template",
+        "anchorText": "pain journal for appointments",
+        "cue": "Low-friction summary format"
+      },
+      "friction-prerequisite-ui": {
+        "path": "/resources/daily-pain-tracker-printable",
+        "anchorText": "free pain journal templates",
+        "cue": "Printable flow with intentional friction"
+      },
+      "service-worker-failure-modes": {
+        "path": "/download",
+        "anchorText": "download the free pain tracker",
+        "cue": "Test offline update behavior"
+      },
+      "rollback-patterns-offline-first-pwas": {
+        "path": "/download",
+        "anchorText": "private offline pain tracking app",
+        "cue": "Verify rollback assumptions"
+      },
+      "testing-indexeddb-schema-migrations": {
+        "path": "/download",
+        "anchorText": "download a private pain tracker",
+        "cue": "Migration behavior in production build"
+      },
+      "trust-boundaries-client-side-health-apps": {
+        "path": "/resources",
+        "anchorText": "chronic pain tracking resources",
+        "cue": "Trust-boundary-aligned resource set"
+      },
+      "offline-queue-replay-idempotency": {
+        "path": "/download",
+        "anchorText": "download the free pain tracker",
+        "cue": "Observe retry behavior in app"
+      },
+      "proofvault-trust-case-release-artifact": {
+        "path": "/pricing",
+        "anchorText": "PainTracker pricing and upgrades",
+        "cue": "Funding trust evidence upkeep"
+      },
+      "worksafebc-ready-audit": {
+        "path": "/resources/worksafebc-pain-journal-template",
+        "anchorText": "WorkSafeBC pain documentation tool",
+        "cue": "WorkSafeBC-oriented template"
+      },
+      "protective-computing-not-privacy-theater": {
+        "path": "/resources/daily-pain-tracker-printable",
+        "anchorText": "free pain journal templates",
+        "cue": "Concrete artifact over claims"
+      },
+      "subpoena-proofing-zero-knowledge": {
+        "path": "/resources/worksafebc-pain-journal-template",
+        "anchorText": "WorkSafeBC pain documentation tool",
+        "cue": "User-controlled export boundary"
+      },
+      "stability-assumption-hidden-defect-source": {
+        "path": "/resources/daily-pain-tracker-printable",
+        "anchorText": "free pain journal templates",
+        "cue": "Fallback when conditions degrade"
+      },
+      "protective-legitimacy-score-how-it-works": {
+        "path": "/pricing",
+        "anchorText": "PainTracker pricing and upgrades",
+        "cue": "Support structural verification work"
+      }
+    }
   },
   "posts": [
     {
       "key": "devto-series-start-here",
-      "enabled": false,
+      "enabled": true,
+      "series": null,
       "title": "Start Here: PainTracker and the CrisisCore Build Log",
       "sourceFile": "docs/content/blog/devto-series-00-start-here.md",
       "publishAt": "2026-01-22T17:00:00Z",
@@ -23,7 +259,7 @@
         "webdev",
         "testing"
       ],
-      "description": "Start here for PainTracker and the CrisisCore Build Log: privacy-first, offline-first architecture patterns, plain-language security choices, and trust-oriented quality gates.",
+      "description": "A protocol-first table of contents for Protective Computing, PainTracker, and the CrisisCore implementation stack.",
       "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
       "articleId": 3104202,
       "devtoUrl": "https://dev.to/crisiscoresystems/start-here-paintracker-crisiscore-build-log-privacy-first-offline-first-no-surveillance-3h0k",
@@ -32,8 +268,10 @@
     {
       "key": "devto-series-01-offline-first",
       "enabled": false,
-      "title": "Offline-first without a backend: a local-first PWA architecture you can trust",
-      "devtoUrl": null,
+      "seriesProfile": "protective-computing-in-practice",
+      "title": "Offline-first without a backend: building a local-first PWA you can actually trust",
+      "sourceFile": "docs/content/blog/devto-series-01-offline-first-local-first-architecture.md",
+      "devtoUrl": "https://dev.to/crisiscoresystems/offline-first-without-a-backend-a-local-first-pwa-architecture-you-can-trust-3j15",
       "publishAt": "2026-01-24T17:00:00Z",
       "tags": [
         "pwa",
@@ -42,17 +280,275 @@
         "privacy",
         "accessibility"
       ],
-      "description": "A practical walkthrough: deterministic offline behavior, local-first storage layering, and honest trust boundaries (using the Pain Tracker repo as a real example).",
+      "description": "A practical walkthrough of deterministic offline behavior, layered local storage, and honest trust boundaries—using the Pain Tracker repo as a real, opinionated example.",
+      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
+      "articleId": 3190811,
+      "published": true
+    },
+    {
+      "key": "devto-series-02-storage-layers",
+      "enabled": false,
+      "seriesProfile": "protective-computing-in-practice",
+      "title": "Three storage layers in an offline-first health PWA: state cache vs IndexedDB vs encrypted vault",
+      "sourceFile": "docs/content/blog/devto-series-02-three-storage-layers-state-cache-offline-db-encrypted-vault.md",
+      "publishAt": "2026-01-29T17:18:00.000Z",
+      "tags": [
+        "pwa",
+        "privacy",
+        "typescript",
+        "indexeddb",
+        "security"
+      ],
+      "description": "How Pain Tracker separates fast UI state, durable offline IndexedDB storage, and a vault-gated encrypted-at-rest layer—so “local-first” doesn’t quietly become “local-leak.”",
+      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
+      "articleId": 3190812,
+      "devtoUrl": "https://dev.to/crisiscoresystems/three-storage-layers-in-an-offline-first-health-pwa-state-cache-vs-indexeddb-vs-encrypted-vault-19b7",
+      "published": true
+    },
+    {
+      "key": "devto-series-03-service-workers",
+      "enabled": false,
+      "seriesProfile": "protective-computing-in-practice",
+      "title": "Service workers that don’t surprise you: deterministic caching for offline-first PWAs",
+      "sourceFile": "docs/content/blog/devto-series-03-service-workers-that-dont-surprise-you.md",
+      "publishAt": "2026-02-03T17:18:00.000Z",
+      "tags": [
+        "pwa",
+        "serviceworker",
+        "webdev",
+        "privacy",
+        "performance"
+      ],
+      "description": "A repo-grounded guide to service worker strategies that avoid stale HTML, confusing updates, and accidental caching of sensitive data—using Pain Tracker’s minimal SW as the example.",
+      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
+      "articleId": 3190813,
+      "devtoUrl": "https://dev.to/crisiscoresystems/service-workers-that-dont-surprise-you-deterministic-caching-for-offline-first-pwas-5480",
+      "published": true
+    },
+    {
+      "key": "devto-series-04-zod-defensive-parsing",
+      "enabled": false,
+      "seriesProfile": "protective-computing-in-practice",
+      "title": "Zod + defensive parsing in a local-first app: make your offline data trustworthy",
+      "sourceFile": "docs/content/blog/devto-series-04-zod-defensive-parsing.md",
+      "publishAt": "2026-02-05T17:14:00.000Z",
+      "tags": [
+        "typescript",
+        "zod",
+        "pwa",
+        "privacy",
+        "testing"
+      ],
+      "description": "Offline-first means your inputs aren’t just user forms—they’re also migrations, backups, and stale persisted blobs. This post shows how Pain Tracker uses Zod to keep local data honest.",
+      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
+      "articleId": 3190814,
+      "devtoUrl": "https://dev.to/crisiscoresystems/zod-defensive-parsing-in-a-local-first-app-make-your-offline-data-trustworthy-1016",
+      "published": true
+    },
+    {
+      "key": "devto-series-05-trauma-informed-ux",
+      "enabled": false,
+      "seriesProfile": "protective-computing-in-practice",
+      "title": "Trauma-informed UX + accessibility as architecture (not polish)",
+      "sourceFile": "docs/content/blog/devto-series-05-trauma-informed-ux-accessibility-as-architecture.md",
+      "publishAt": "2026-02-10T17:11:00.000Z",
+      "tags": [
+        "accessibility",
+        "webdev",
+        "react",
+        "ux",
+        "pwa"
+      ],
+      "description": "In health-adjacent PWAs, accessibility and trauma-informed patterns aren’t optional UI niceties—they’re core reliability features. Here’s how Pain Tracker structures those concerns.",
+      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
+      "articleId": 3190815,
+      "devtoUrl": "https://dev.to/crisiscoresystems/trauma-informed-ux-accessibility-as-architecture-not-polish-22jg",
+      "published": true
+    },
+    {
+      "key": "devto-series-06-exports-boundary",
+      "enabled": false,
+      "seriesProfile": "protective-computing-in-practice",
+      "title": "Exports are a security boundary: the moment local-first becomes shareable",
+      "sourceFile": "docs/content/blog/devto-series-06-exports-as-a-security-boundary.md",
+      "publishAt": "2026-02-12T17:15:00.000Z",
+      "tags": [
+        "privacy",
+        "security",
+        "pwa",
+        "export",
+        "webdev"
+      ],
+      "description": "In a local-first PWA, exports are where privacy can intentionally break. This post shows how Pain Tracker treats export as an explicit boundary: user-triggered, local download, minimal tracking, and calm UX.",
+      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
+      "articleId": 3190816,
+      "devtoUrl": "https://dev.to/crisiscoresystems/exports-are-a-security-boundary-the-moment-local-first-becomes-shareable-3gj9",
+      "published": true
+    },
+    {
+      "key": "devto-series-07-worksafebc-workflows",
+      "enabled": false,
+      "seriesProfile": "protective-computing-in-practice",
+      "title": "WorkSafeBC-oriented workflows without overclaims: structured summaries, careful language",
+      "sourceFile": "docs/content/blog/devto-series-07-worksafebc-oriented-workflows-careful-language.md",
+      "publishAt": "2026-02-17T17:11:00.000Z",
+      "tags": [
+        "ux",
+        "documentation",
+        "privacy",
+        "export",
+        "webdev"
+      ],
+      "description": "Pain Tracker includes WorkSafeBC-oriented export/report tooling — but the bigger lesson is how to design ‘forms + clinicians’ workflows without turning into surveillance or making legal/medical promises.",
+      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
+      "articleId": 3190817,
+      "devtoUrl": "https://dev.to/crisiscoresystems/worksafebc-oriented-workflows-without-overclaims-structured-summaries-careful-language-2n3i",
+      "published": true
+    },
+    {
+      "key": "devto-series-08-analytics-without-surveillance",
+      "enabled": false,
+      "seriesProfile": "protective-computing-in-practice",
+      "title": "Analytics without surveillance: explicit consent, layered gates, and never sending Class A data",
+      "sourceFile": "docs/content/blog/devto-series-08-analytics-without-surveillance-explicit-consent.md",
+      "publishAt": "2026-02-19T17:02:00.000Z",
+      "tags": [
+        "privacy",
+        "security",
+        "analytics",
+        "ux",
+        "webdev"
+      ],
+      "description": "Pain Tracker keeps analytics behind an env flag + explicit consent, avoids sending health data, and prefers local-only tracking where possible. Here’s the concrete pattern, grounded in the repo.",
+      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
+      "articleId": 3190818,
+      "devtoUrl": "https://dev.to/crisiscoresystems/analytics-without-surveillance-explicit-consent-layered-gates-and-never-sending-class-a-data-59f1",
+      "published": true
+    },
+    {
+      "key": "devto-series-09-quality-gates",
+      "enabled": false,
+      "seriesProfile": "protective-computing-in-practice",
+      "title": "Quality gates that earn trust: checks you can run, not promises you can’t",
+      "sourceFile": "docs/content/blog/devto-series-09-quality-gates-that-earn-trust.md",
+      "publishAt": "2026-02-24T17:07:00.000Z",
+      "tags": [
+        "testing",
+        "typescript",
+        "security",
+        "accessibility",
+        "webdev"
+      ],
+      "description": "Offline-first + health-adjacent means regressions are harm. Pain Tracker treats quality gates as part of the product: typecheck, lint, tests, build, security checks, and accessibility scans.",
+      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
+      "articleId": 3190819,
+      "devtoUrl": "https://dev.to/crisiscoresystems/quality-gates-that-earn-trust-checks-you-can-run-not-promises-you-cant-58a3",
+      "published": true
+    },
+    {
+      "key": "devto-series-10-truthful-docs",
+      "enabled": false,
+      "seriesProfile": "protective-computing-in-practice",
+      "title": "Maintaining truthful docs over time: how to keep security claims honest",
+      "sourceFile": "docs/content/blog/devto-series-10-maintaining-truthful-docs-over-time.md",
+      "publishAt": "2026-02-26T17:06:00.000Z",
+      "tags": [
+        "documentation",
+        "security",
+        "webdev",
+        "testing",
+        "privacy"
+      ],
+      "description": "Docs drift. In privacy-first software, drift becomes misinformation. This post is a practical strategy for keeping docs anchored to code, tests, and commands you can run.",
+      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
+      "articleId": 3190820,
+      "devtoUrl": "https://dev.to/crisiscoresystems/maintaining-truthful-docs-over-time-how-to-keep-security-claims-honest-2778",
+      "published": true
+    },
+    {
+      "key": "devto-worksafebc-case-study",
+      "enabled": false,
+      "series": null,
+      "title": "How Pain Tracker Pro Streamlines WorkSafeBC Claims: A Composite Case Study",
+      "sourceFile": "docs/content/blog/devto-worksafe-bc-case-study-documentation-time-savings.md",
+      "publishAt": "2026-03-03T17:09:00.000Z",
+      "tags": [
+        "privacy",
+        "healthcare",
+        "accessibility",
+        "pwa",
+        "typescript"
+      ],
+      "description": "A composite (privacy-safe) case study showing how structured, local-first pain tracking can reduce WorkSafeBC claim documentation burden.",
+      "canonical_url": "https://blog.paintracker.ca/worksafe-bc-case-study-documentation-time-savings",
+      "articleId": 3190821,
+      "devtoUrl": "https://dev.to/crisiscoresystems/how-pain-tracker-pro-streamlines-worksafebc-claims-a-composite-case-study-4ce8",
+      "published": true
+    },
+    {
+      "key": "devto-sync-conflict-handling-offline-first-pwas",
+      "enabled": true,
+      "seriesProfile": "honest-offline-first-systems",
+      "title": "Sync Conflict Handling in Offline-First PWAs: How to Merge Without Lying to the User",
+      "sourceFile": "docs/content/blog/devto-sync-conflict-handling-offline-first-pwas.md",
+      "publishAt": "2026-04-21T16:00:00Z",
+      "tags": [
+        "webdev",
+        "pwa",
+        "offlinefirst",
+        "distributed"
+      ],
+      "description": "Offline first sync is not just a data problem. It is a trust problem. Here is how to handle conflicts without silently erasing user intent.",
+      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
+      "articleId": 3512233,
+      "devtoUrl": "https://dev.to/crisiscoresystems/sync-conflict-handling-in-offline-first-pwas-how-to-merge-without-lying-to-the-user-59i3",
+      "published": true
+    },
+    {
+      "key": "devto-openclaw-boundary-problem",
+      "enabled": true,
+      "series": null,
+      "title": "OpenClaw and the Boundary Problem",
+      "sourceFile": "docs/content/blog/devto-openclaw-boundary-problem.md",
+      "publishAt": "2026-04-16T00:00:00Z",
+      "tags": [
+        "openclawchallenge",
+        "devchallenge",
+        "privacy",
+        "security"
+      ],
+      "description": "Personal AI is not mainly a feature problem. It is a boundary problem. OpenClaw makes that truth visible.",
+      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
+      "articleId": 3512877,
+      "devtoUrl": "https://dev.to/crisiscoresystems/openclaw-and-the-boundary-problem-5f85",
+      "published": true
+    },
+    {
+      "key": "devto-blackoutbench-real-planet",
+      "enabled": false,
+      "series": null,
+      "title": "BlackoutBench: I Built a Tool That Tests Whether Your App Survives the Real Planet",
+      "sourceFile": "docs/content/blog/devto-blackoutbench-tests-whether-your-app-survives-the-real-planet.md",
+      "publishAt": "2026-04-24T16:00:00Z",
+      "tags": [
+        "webdev",
+        "testing",
+        "pwa",
+        "architecture"
+      ],
+      "description": "BlackoutBench is a planetary stress harness for web apps. It tests what remains useful when stability assumptions fail: signal, power, continuity, and human attention.",
       "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
       "articleId": null,
+      "devtoUrl": null,
       "published": false
     },
     {
       "key": "privacy-first-default-standard",
-      "enabled": false,
+      "enabled": true,
+      "seriesProfile": "protective-computing-essays",
       "title": "Privacy-first, offline-capable, trauma-informed, open-source health tools should be the default",
       "sourceFile": "docs/content/articles/article-privacy-first-trauma-informed-open-source-digital-health.md",
-      "publishAt": "2026-02-05T17:00:00Z",
+      "publishAt": "2026-05-08T17:00:00Z",
       "tags": [
         "healthtech",
         "privacy",
@@ -61,13 +557,74 @@
       ],
       "description": "Why local-first, trauma-informed, open-source design should be the baseline for pain diaries and digital health tools.",
       "canonical_url": null,
-      "articleId": null,
-      "devtoUrl": null,
-      "published": false
+      "articleId": 3597218,
+      "devtoUrl": "https://dev.to/crisiscoresystems/privacy-first-offline-capable-trauma-informed-open-source-health-tools-should-be-the-default-56jc",
+      "published": true
+    },
+    {
+      "key": "article-encryption-transparency",
+      "enabled": false,
+      "series": null,
+      "title": "If Your Health App Can't Explain Its Encryption, It Doesn't Have Any",
+      "sourceFile": "docs/content/articles/article-encryption-transparency.md",
+      "publishAt": "2025-12-07T09:13:58.735Z",
+      "tags": [
+        "security",
+        "privacy",
+        "healthtech",
+        "webdev"
+      ],
+      "description": "Most 'encrypted' health apps are lying. Here's how to tell the difference, and what real client-side encryption actually looks like.",
+      "main_image": "https://dev-to-uploads.s3.amazonaws.com/uploads/articles/encryption-transparency-cover.png",
+      "canonical_url": null,
+      "articleId": 3090043,
+      "devtoUrl": "https://dev.to/crisiscoresystems/if-your-health-app-cant-explain-its-encryption-it-doesnt-have-any-57pf",
+      "published": true
+    },
+    {
+      "key": "article-encryption-deep-dive",
+      "enabled": false,
+      "series": null,
+      "title": "Client-Side Encryption for Healthcare Apps",
+      "sourceFile": "docs/content/articles/article-part2-encryption-deep-dive.md",
+      "publishAt": "2025-12-07T08:11:23.486Z",
+      "tags": [
+        "security",
+        "javascript",
+        "webdev",
+        "encryption"
+      ],
+      "description": "AES-GCM encryption, PBKDF2 key derivation, secure key management. Web Crypto API. No backend. No trust required.",
+      "main_image": "https://dev-to-uploads.s3.amazonaws.com/uploads/articles/encryption-healthcare-cover.png",
+      "canonical_url": null,
+      "articleId": 3089961,
+      "devtoUrl": "https://dev.to/crisiscoresystems/client-side-encryption-for-healthcare-apps-dhm",
+      "published": true
+    },
+    {
+      "key": "article-trauma-informed-hooks",
+      "enabled": false,
+      "series": null,
+      "title": "Trauma-Informed React Hooks",
+      "sourceFile": "docs/content/articles/article-part3-trauma-informed-hooks.md",
+      "publishAt": "2025-12-07T09:06:41.899Z",
+      "tags": [
+        "react",
+        "accessibility",
+        "typescript",
+        "ux"
+      ],
+      "description": "React hooks that adapt to user stress, cognitive load, and emotional states. Crisis detection without surveillance.",
+      "main_image": "https://dev-to-uploads.s3.amazonaws.com/uploads/articles/trauma-informed-hooks-cover.png",
+      "canonical_url": null,
+      "articleId": 3090036,
+      "devtoUrl": "https://dev.to/crisiscoresystems/trauma-informed-react-hooks-483n",
+      "published": true
     },
     {
       "key": "privacy-preserving-analytics",
       "enabled": true,
+      "seriesProfile": "crisis-simulation-testing",
       "title": "Privacy-Preserving Analytics: Proving You Can Measure Without Identity",
       "sourceFile": "docs/content/blog/blog-testing-privacy-preserving-analytics.md",
       "publishAt": "2025-12-16T17:00:00Z",
@@ -81,11 +638,12 @@
       "canonical_url": null,
       "articleId": 3093416,
       "devtoUrl": "https://dev.to/crisiscoresystems/testing-privacy-preserving-analytics-verifying-that-insights-dont-leak-identity-e37",
-      "published": false
+      "published": true
     },
     {
       "key": "performance-under-pressure",
       "enabled": true,
+      "seriesProfile": "crisis-simulation-testing",
       "title": "Performance Under Pressure: Crisis Detection Without UI Lag",
       "sourceFile": "docs/content/blog/blog-performance-under-pressure.md",
       "publishAt": "2025-12-18T17:00:00Z",
@@ -99,11 +657,12 @@
       "canonical_url": null,
       "articleId": 3093410,
       "devtoUrl": "https://dev.to/crisiscoresystems/performance-under-pressure-ensuring-crisis-detection-doesnt-degrade-user-experience-h4m",
-      "published": false
+      "published": true
     },
     {
       "key": "testing-across-the-stack",
       "enabled": true,
+      "seriesProfile": "crisis-simulation-testing",
       "title": "Testing Across the Stack: UI → Storage → Encryption → Offline Resilience",
       "sourceFile": "docs/content/blog/blog-testing-across-the-stack.md",
       "publishAt": "2025-12-23T17:00:00Z",
@@ -117,11 +676,12 @@
       "canonical_url": null,
       "articleId": 3093417,
       "devtoUrl": "https://dev.to/crisiscoresystems/testing-across-the-stack-from-frontend-ui-to-local-database-resilience-4c5i",
-      "published": false
+      "published": true
     },
     {
       "key": "testing-co-occurrence",
       "enabled": true,
+      "seriesProfile": "crisis-simulation-testing",
       "title": "When Crises Stack: Testing Co-Occurrence Without Cascading Failures",
       "sourceFile": "docs/content/blog/blog-testing-co-occurrence.md",
       "publishAt": "2025-12-30T17:00:00Z",
@@ -135,11 +695,12 @@
       "canonical_url": null,
       "articleId": 3093415,
       "devtoUrl": "https://dev.to/crisiscoresystems/testing-for-co-occurrence-when-multiple-crises-happen-simultaneously-4dj4",
-      "published": false
+      "published": true
     },
     {
       "key": "testing-recovery",
       "enabled": true,
+      "seriesProfile": "crisis-simulation-testing",
       "title": "Testing Recovery: Proving Your App Helps People Stabilize",
       "sourceFile": "docs/content/blog/blog-testing-recovery.md",
       "publishAt": "2026-01-08T21:00:00Z",
@@ -153,11 +714,12 @@
       "canonical_url": null,
       "articleId": 3093412,
       "devtoUrl": "https://dev.to/crisiscoresystems/testing-recovery-verifying-that-systems-actually-help-people-get-better-1o6o",
-      "published": false
+      "published": true
     },
     {
       "key": "cross-crisis-calibration",
       "enabled": true,
+      "seriesProfile": "crisis-simulation-testing",
       "title": "Cross-Crisis Calibration: Panic, Dissociation, Sensory Overload",
       "sourceFile": "docs/content/blog/blog-cross-crisis-calibration.md",
       "publishAt": "2026-01-13T17:00:00Z",
@@ -171,11 +733,12 @@
       "canonical_url": null,
       "articleId": 3093411,
       "devtoUrl": "https://dev.to/crisiscoresystems/cross-crisis-calibration-testing-for-panic-attacks-dissociation-and-sensory-overload-2abi",
-      "published": false
+      "published": true
     },
     {
       "key": "ethics-of-simulation",
       "enabled": false,
+      "seriesProfile": "crisis-simulation-testing",
       "title": "The Ethics of Simulation: How to Test Trauma-Informed Features Without Exploiting Real Pain",
       "sourceFile": "docs/content/blog/blog-ethics-of-simulation.md",
       "publishAt": "2026-01-20T17:00:00Z",
@@ -194,6 +757,7 @@
     {
       "key": "testing-the-testing",
       "enabled": true,
+      "seriesProfile": "crisis-simulation-testing",
       "title": "Test Your Tests: Does Your Crisis Simulation Match Reality?",
       "sourceFile": "docs/content/blog/blog-testing-the-testing.md",
       "publishAt": "2026-01-07T17:00:00Z",
@@ -207,11 +771,12 @@
       "canonical_url": null,
       "articleId": 3093414,
       "devtoUrl": "https://dev.to/crisiscoresystems/testing-the-testing-validating-that-your-crisis-simulation-actually-matches-reality-6df",
-      "published": false
+      "published": true
     },
     {
       "key": "internationalization-of-trauma",
       "enabled": true,
+      "seriesProfile": "crisis-simulation-testing",
       "title": "Internationalizing Trauma-Informed UX: Testing Across Cultures",
       "sourceFile": "docs/content/blog/blog-internationalization-of-trauma.md",
       "publishAt": "2026-01-15T17:00:00Z",
@@ -225,11 +790,12 @@
       "canonical_url": null,
       "articleId": 3093413,
       "devtoUrl": "https://dev.to/crisiscoresystems/internationalization-of-trauma-testing-across-cultural-contexts-41fe",
-      "published": false
+      "published": true
     },
     {
       "key": "whitepaper-v1-3-0",
       "enabled": true,
+      "seriesProfile": "release-and-trust-artifacts",
       "title": "Pain Tracker whitepaper v1.3.0 (PDF)",
       "sourceFile": "docs/content/blog/blog-whitepaper-v1.3.0.md",
       "publishAt": "2026-02-13T00:00:00Z",
@@ -248,7 +814,8 @@
     {
       "key": "overton-framework-doi-backed",
       "enabled": true,
-      "title": "The Overton Framework is now DOI-backed",
+      "seriesProfile": "release-and-trust-artifacts",
+      "title": "Protective Computing Canon v1.0 is now DOI-backed",
       "sourceFile": "docs/content/blog/devto-overton-framework-doi-backed.md",
       "publishAt": "2026-02-19T00:00:00Z",
       "tags": [
@@ -257,7 +824,7 @@
         "security",
         "opensource"
       ],
-      "description": "A citable canon for Protective Computing (v1.3), archived on Zenodo with a minted DOI—plus a reference implementation in Pain Tracker.",
+      "description": "The formal structural paper for Protective Computing is now published with a canonical DOI, with Pain Tracker as a reference implementation.",
       "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
       "articleId": 3267082,
       "devtoUrl": "https://dev.to/crisiscoresystems/the-overton-framework-is-now-doi-backed-ko7",
@@ -266,6 +833,7 @@
     {
       "key": "devto-architecting-vulnerability",
       "enabled": true,
+      "seriesProfile": "protective-computing-essays",
       "title": "Architecting for Vulnerability: Introducing Protective Computing Core v1.0",
       "sourceFile": "docs/content/blog/devto-architecting-for-vulnerability.md",
       "publishAt": "2026-02-24T17:00:00Z",
@@ -275,7 +843,7 @@
         "offlinefirst",
         "engineering"
       ],
-      "description": "Why standard software architecture fails under human degradation, and how to build systems that don't.",
+      "description": "A testable systems discipline for software built for crisis, coercion, displacement, and cognitive overload.",
       "injectCtas": false,
       "canonical_url": "https://github.com/CrisisCore-Systems/overton-framework",
       "articleId": 3313257,
@@ -303,6 +871,7 @@
     {
       "key": "micro-coercion-of-speed",
       "enabled": true,
+      "seriesProfile": "protective-computing-essays",
       "title": "The Micro-Coercion of Speed: Why Friction Is an Engineering Prerequisite",
       "sourceFile": "docs/content/blog/devto-micro-coercion-of-speed.md",
       "publishAt": "2026-03-01T00:00:00Z",
@@ -319,9 +888,143 @@
       "published": true
     },
     {
+      "key": "coercion-resistant-ux",
+      "enabled": true,
+      "seriesProfile": "protective-computing-essays",
+      "title": "Coercion-Resistant UX: Designing Interfaces That Don't Pressure Users Under Stress",
+      "sourceFile": "docs/content/blog/devto-coercion-resistant-ux-designing-interfaces-that-dont-pressure-users-under-stress.md",
+      "publishAt": "2026-04-28T16:00:00Z",
+      "tags": [
+        "webdev",
+        "design",
+        "accessibility",
+        "privacy"
+      ],
+      "description": "Interfaces are part of the pressure around the user. Coercion-resistant UX keeps defaults honest, recovery possible, and urgency truthful when people are under strain.",
+      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
+      "articleId": 3512234,
+      "devtoUrl": "https://dev.to/crisiscoresystems/coercion-resistant-ux-designing-interfaces-that-dont-pressure-users-under-stress-18m9",
+      "published": true
+    },
+    {
+      "key": "friction-prerequisite-ui",
+      "enabled": true,
+      "seriesProfile": "protective-computing-essays",
+      "title": "The Friction Prerequisite: Why We Intentionally Slowed Down the UI",
+      "sourceFile": "docs/content/blog/devto-friction-prerequisite-why-we-intentionally-slowed-down-the-ui.md",
+      "publishAt": "2026-05-29T16:00:00Z",
+      "tags": [
+        "design",
+        "accessibility",
+        "privacy",
+        "webdev"
+      ],
+      "description": "Fast is not always safe. In vulnerable-state software, some delays, confirmations, and extra steps are not UX debt. They are protective controls.",
+      "canonical_url": null,
+      "published": false,
+      "articleId": 3623050,
+      "devtoUrl": "https://dev.to/crisiscoresystems/the-friction-prerequisite-why-we-intentionally-slowed-down-the-ui-e8j-temp-slug-5879740"
+    },
+    {
+      "key": "service-worker-failure-modes",
+      "enabled": true,
+      "seriesProfile": "offline-first-failure-modes",
+      "title": "Service Worker Failure Modes in Offline-First PWAs",
+      "sourceFile": "docs/content/blog/devto-service-worker-failure-modes-what-breaks-when-your-offline-app-updates-in-the-wild.md",
+      "publishAt": "2026-05-05T16:00:00Z",
+      "tags": [
+        "pwa",
+        "serviceworker",
+        "webdev",
+        "architecture"
+      ],
+      "description": "Offline-first PWAs do not update in one clean motion. Service workers, stale assets, and mixed-version sessions can break trust long before the UI crashes.",
+      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
+      "articleId": 3512235,
+      "devtoUrl": "https://dev.to/crisiscoresystems/service-worker-failure-modes-in-offline-first-pwas-3dnp",
+      "published": true
+    },
+    {
+      "key": "rollback-patterns-offline-first-pwas",
+      "enabled": true,
+      "seriesProfile": "offline-first-failure-modes",
+      "title": "Rollback Patterns in Offline-First PWAs",
+      "sourceFile": "docs/content/blog/devto-rollback-patterns-offline-first-pwas-how-to-recover-without-corrupting-local-state.md",
+      "publishAt": "2026-05-12T16:00:00Z",
+      "tags": [
+        "pwa",
+        "webdev",
+        "architecture",
+        "databases"
+      ],
+      "description": "Rollback in an offline-first PWA is not just redeploying old code. It has to survive mixed versions, local history, and queued intent without silent corruption.",
+      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
+      "articleId": 3512236,
+      "devtoUrl": "https://dev.to/crisiscoresystems/rollback-patterns-in-offline-first-pwas-13f9",
+      "published": true
+    },
+    {
+      "key": "testing-indexeddb-schema-migrations",
+      "enabled": true,
+      "seriesProfile": "offline-first-failure-modes",
+      "title": "Testing IndexedDB Schema Migrations in Offline-First PWAs",
+      "sourceFile": "docs/content/blog/devto-testing-indexeddb-schema-migrations-in-offline-first-apps.md",
+      "publishAt": "2026-05-19T16:00:00Z",
+      "tags": [
+        "pwa",
+        "javascript",
+        "testing",
+        "databases"
+      ],
+      "description": "Schema migration safety in an offline-first PWA means proving that old local data survives upgrades, partial failures, and delayed clients without losing meaning.",
+      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
+      "articleId": 3512237,
+      "devtoUrl": "https://dev.to/crisiscoresystems/testing-indexeddb-schema-migrations-in-offline-first-pwas-26m8",
+      "published": true
+    },
+    {
+      "key": "trust-boundaries-client-side-health-apps",
+      "enabled": true,
+      "seriesProfile": "offline-first-failure-modes",
+      "title": "Trust Boundaries in Client-Side Health Apps",
+      "sourceFile": "docs/content/blog/devto-trust-boundaries-client-side-health-apps-what-never-leaves-the-device.md",
+      "publishAt": "2026-05-26T16:00:00Z",
+      "tags": [
+        "privacy",
+        "healthtech",
+        "pwa",
+        "architecture"
+      ],
+      "description": "Health-app privacy is an architectural boundary: what stays on device, what leaves by choice, and what must never become product exhaust.",
+      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
+      "articleId": 3512238,
+      "devtoUrl": "https://dev.to/crisiscoresystems/trust-boundaries-in-client-side-health-apps-2pa9",
+      "published": true
+    },
+    {
+      "key": "offline-queue-replay-idempotency",
+      "enabled": true,
+      "seriesProfile": "offline-first-failure-modes",
+      "title": "Offline Queue Replay and Idempotency in Offline-First PWAs",
+      "sourceFile": "docs/content/blog/devto-offline-queue-replay-idempotency-how-to-retry-without-making-a-mess.md",
+      "publishAt": "2026-06-02T16:00:00Z",
+      "tags": [
+        "pwa",
+        "webdev",
+        "distributed",
+        "architecture"
+      ],
+      "description": "Offline queues hold user intent for later. Replay only stays trustworthy if retries, duplicates, and stale-world writes are handled idempotently.",
+      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
+      "articleId": 3512239,
+      "devtoUrl": "https://dev.to/crisiscoresystems/offline-queue-replay-and-idempotency-in-offline-first-pwas-3hpg",
+      "published": true
+    },
+    {
       "key": "proofvault-trust-case-release-artifact",
       "enabled": true,
-      "title": "How ProofVault turned trust from a documentation claim into a reproducible release artifact",
+      "seriesProfile": "release-and-trust-artifacts",
+      "title": "ProofVault as a Release Artifact: Turning Trust Into Something You Can Verify",
       "sourceFile": "docs/content/blog/devto-proofvault-trust-case-release-artifact.md",
       "publishAt": "2026-03-14T00:00:00Z",
       "tags": [
@@ -330,12 +1033,107 @@
         "privacy",
         "showdev"
       ],
-      "description": "How ProofVault turned trust from a documentation claim into a reproducible, release-bound artifact.",
+      "description": "Trust is not real until it survives contact with evidence. ProofVault turns release trust into something you can inspect instead of something you have to believe.",
       "injectCtas": false,
       "main_image": "https://dev-to-uploads.s3.amazonaws.com/uploads/articles/1awypd543rg4724oq3i9.png",
       "canonical_url": null,
       "articleId": 3351761,
       "devtoUrl": "https://dev.to/crisiscoresystems/how-proofvault-turned-trust-from-a-documentation-claim-into-a-reproducible-release-artifact-22pb",
+      "published": true
+    },
+    {
+      "key": "worksafebc-ready-audit",
+      "enabled": true,
+      "seriesProfile": "release-and-trust-artifacts",
+      "title": "Bureaucratic Combat: Turning Pain Into a WorkSafeBC-Ready Audit",
+      "sourceFile": "docs/content/blog/devto-bureaucratic-combat-turning-pain-into-a-worksafebc-ready-audit.md",
+      "publishAt": "2026-05-22T16:00:00Z",
+      "tags": [
+        "privacy",
+        "documentation",
+        "healthtech",
+        "export"
+      ],
+      "description": "A protective documentation workflow is not just a PDF export. It is a local-first audit chain: repeatable entries, structured summaries, careful language, and user-controlled disclosure.",
+      "canonical_url": null,
+      "published": false,
+      "articleId": 3622730,
+      "devtoUrl": "https://dev.to/crisiscoresystems/bureaucratic-combat-turning-pain-into-a-worksafebc-ready-audit-ki4-temp-slug-151760"
+    },
+    {
+      "key": "protective-computing-not-privacy-theater",
+      "enabled": true,
+      "seriesProfile": "protective-computing-essays",
+      "title": "Protective Computing Is Not Privacy Theater",
+      "sourceFile": "docs/content/blog/devto-protective-computing-is-not-privacy-theater.md",
+      "publishAt": "2026-03-24T16:00:00Z",
+      "tags": [
+        "protectivecomputing",
+        "architecture",
+        "privacy",
+        "webdev"
+      ],
+      "description": "Why privacy claims are not enough, and what structural protection looks like when software has to stay legible, non-coercive, and useful under instability.",
+      "canonical_url": null,
+      "articleId": 3385231,
+      "devtoUrl": "https://dev.to/crisiscoresystems/protective-computing-is-not-privacy-theater-2job",
+      "published": true
+    },
+    {
+      "key": "subpoena-proofing-zero-knowledge",
+      "enabled": true,
+      "seriesProfile": "protective-computing-essays",
+      "title": "Subpoena-Proofing by Design: Why Real Zero-Knowledge Has No Back Door",
+      "sourceFile": "docs/content/blog/devto-subpoena-proofing-by-design-technical-reality-zero-knowledge.md",
+      "publishAt": "2026-05-15T16:00:00Z",
+      "tags": [
+        "privacy",
+        "security",
+        "healthtech",
+        "architecture"
+      ],
+      "description": "Zero-knowledge is not encryption branding. It is a custody architecture: no operator-held plaintext, no silent mirror, and no privileged reset path when the records matter.",
+      "canonical_url": null,
+      "published": false,
+      "articleId": 3622426,
+      "devtoUrl": "https://dev.to/crisiscoresystems/subpoena-proofing-by-design-why-real-zero-knowledge-has-no-back-door-21cg"
+    },
+    {
+      "key": "stability-assumption-hidden-defect-source",
+      "enabled": true,
+      "series": null,
+      "title": "The Stability Assumption: The Hidden Defect Source",
+      "sourceFile": "docs/content/blog/devto-stability-assumption-hidden-defect-source.md",
+      "publishAt": "2026-04-07T15:30:00Z",
+      "tags": [
+        "architecture",
+        "privacy",
+        "offlinefirst",
+        "security"
+      ],
+      "description": "Most software does not fail at the bug layer first. It fails at the assumption layer.",
+      "canonical_url": null,
+      "articleId": 3459426,
+      "devtoUrl": "https://dev.to/crisiscoresystems/the-stability-assumption-the-hidden-defect-source-5cpd",
+      "published": true
+    },
+    {
+      "key": "protective-legitimacy-score-how-it-works",
+      "enabled": true,
+      "seriesProfile": "protective-computing-essays",
+      "title": "The Protective Legitimacy Score: How to Tell Whether a Trust Claim Is Structural",
+      "sourceFile": "docs/content/blog/devto-protective-legitimacy-score-how-it-works.md",
+      "publishAt": "2026-05-08T12:00:00Z",
+      "tags": [
+        "architecture",
+        "privacy",
+        "security",
+        "webdev"
+      ],
+      "description": "The Protective Legitimacy Score is a structural test for trust claims. It asks whether privacy, offline-first, and safety language is backed by architecture, defaults, and failure behavior.",
+      "canonical_url": null,
+      "articleId": 3635757,
+      "devtoUrl": "https://dev.to/crisiscoresystems/the-protective-legitimacy-score-how-to-tell-whether-a-trust-claim-is-structural-1lgm",
       "published": true
     }
   ]

@@ -54,11 +54,11 @@ import '../../styles/pages/landing.css';
 // ---------------------------------------------------------------------------
 const SEO = {
   slug: 'weekly-pain-log-pdf',
-  title: 'Weekly Pain Log PDF (Free 7-Day Template)',
+  title: 'Weekly Pain Log PDF in 2026',
   metaTitle:
-    'Weekly Pain Log PDF — Free 7-Day Pain Tracker Template | PainTracker',
+    'Weekly Pain Log PDF (2026) | Free 7-Day Template, No Email',
   metaDescription:
-    'Download a free weekly pain log PDF. 8-section 7-day spread tracks daily pain, sleep, medications, activity, mood, triggers, and weekly patterns — ideal for appointments and disability claims.',
+    'Download a free weekly pain log PDF for 2026. No email required. This 7-day spread tracks daily pain, sleep, medications, activity, mood, triggers, and weekly patterns for appointments and disability claims.',
   keywords: [
     'weekly pain log pdf',
     '7 day pain diary',
@@ -290,7 +290,7 @@ const FAQS = [
   {
     question: 'Can I use this alongside the digital app?',
     answer:
-      'Absolutely. Paper weekly logs work well alongside PainTracker. Some people use the app for quick daily entries and paper for the weekly spread view. Others use paper when traveling or when they need a break from screens. The data is compatible — you\'re tracking the same clinical dimensions either way.',
+      'Absolutely. Paper weekly logs work well alongside Pain Tracker. Some people use the app for quick daily entries and paper for the weekly spread view. Others use paper when traveling or when they need a break from screens. The data is compatible — you\'re tracking the same clinical dimensions either way.',
   },
   {
     question: 'Is my privacy protected?',
@@ -453,7 +453,7 @@ export const WeeklyPainLogPdfPage: React.FC = () => {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <Link to="/" className="flex items-center gap-2">
-              <span className="landing-brand text-xl">PainTracker</span>
+              <span className="landing-brand text-xl">Pain Tracker</span>
             </Link>
             <div className="flex items-center gap-4">
               <Link
@@ -520,13 +520,16 @@ export const WeeklyPainLogPdfPage: React.FC = () => {
             >
               See Your Pain Patterns{' '}
               <span className="bg-gradient-to-r from-sky-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">
-                Across an Entire Week
+                Across an Entire Week in 2026
               </span>
             </h1>
 
             <p className="landing-subhead text-lg sm:text-xl max-w-2xl mx-auto mb-4">
               Daily pain, sleep, medications, activity impact, triggers, mood,
               and a weekly pattern analysis — 8 structured sections on one printable spread.
+            </p>
+            <p className="text-slate-300 text-base sm:text-lg max-w-2xl mx-auto mb-4">
+              Use the printable if you need a paper-first weekly view. Switch to the app when you want trends, exports, and less manual review work before appointments.
             </p>
             <p className="text-slate-500 text-sm mb-8">
               100% free &bull; No email required &bull; No tracking &bull; Prints on standard letter paper
@@ -786,7 +789,7 @@ export const WeeklyPainLogPdfPage: React.FC = () => {
                 <div>
                   <h3 className="font-semibold text-white mb-1">Claims-Ready Format</h3>
                   <p className="text-sm text-slate-400">
-                    Accepted for WorkSafeBC, ICBC, CPP-D, private insurance, and medical appointments. Weekly consistency strengthens your case.
+                    Useful for appointments or claim-related discussions with WorkSafeBC, ICBC, CPP-D, or private insurers. This PDF is a documentation aid, not an official decision document. Approval depends on the reviewer, medical evidence, policy, and case context.
                   </p>
                 </div>
               </div>
@@ -883,7 +886,7 @@ export const WeeklyPainLogPdfPage: React.FC = () => {
                   <div className="w-10 h-10 bg-primary/15 rounded-lg flex items-center justify-center">
                     <Sparkles className="w-5 h-5 text-primary" />
                   </div>
-                  <h3 className="text-xl font-bold text-white">PainTracker (Digital)</h3>
+                  <h3 className="text-xl font-bold text-white">Pain Tracker (Digital)</h3>
                 </div>
                 <ul className="space-y-3 flex-1">
                   {[
@@ -979,7 +982,7 @@ export const WeeklyPainLogPdfPage: React.FC = () => {
                 to="/start"
                 className="px-8 py-4 text-lg font-medium text-slate-300 hover:text-white border border-slate-600 hover:border-slate-500 rounded-xl transition-all flex items-center gap-2"
               >
-                Open PainTracker
+                Use the app free
                 <ArrowRight className="w-5 h-5" />
               </Link>
             </div>

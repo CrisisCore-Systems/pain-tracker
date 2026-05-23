@@ -15,6 +15,8 @@ ogImage: https://cdn.hashnode.com/res/hashnode/image/upload/v1764661443834/9394b
 <!-- pain-tracker:product-hunt-badge:end -->
 
 > **Try Pain Tracker →** [Start Tracking (Free & Private)](https://paintracker.ca)
+>
+> **Related reading:** start with [The Day I Decided My Pain App Didn't Need a Server](https://blog.paintracker.ca/the-day-i-decided-my-pain-app-didnt-need-a-server-what-i-learned-building-healthcare-software-that-lives-entirely-on-your-device) for the architecture origin story.
 
 # When Healthcare Apps Fail You: Building Tech That Works When Everything Else Doesn't
 

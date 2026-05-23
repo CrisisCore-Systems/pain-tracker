@@ -9,9 +9,9 @@ license: "CC-BY-4.0"
 keywords: ["protective computing", "software architecture", "artificial intelligence", "cognitive load", "system integrity", "Overton Framework"]
 ---
 
-# Overton Framework Companion Note v0.1: The Micro-Coercion of Speed
+<!-- markdownlint-disable MD013 MD025 MD036 MD060 -->
 
-**Why friction is an engineering prerequisite in AI-assisted development systems**
+## Why friction is an engineering prerequisite in AI-assisted development systems
 
 **Author:** K Overton  
 **Date:** March 2026  
@@ -20,13 +20,20 @@ keywords: ["protective computing", "software architecture", "artificial intellig
 
 ---
 
-# Abstract
+## Abstract
 
-AI-assisted development environments compress generation time while leaving verification cost largely unchanged. This asymmetry creates a recurrent operational hazard: under velocity pressure, developers increasingly accept plausible outputs without sufficient validation.
+AI-assisted development environments compress generation time while leaving
+verification cost largely unchanged. This asymmetry creates a recurrent
+operational hazard: under velocity pressure, developers increasingly accept
+plausible outputs without sufficient validation.
 
-We define this effect as the **micro-coercion of speed**: a system-level pressure gradient that shifts the burden-of-proof from tool output to human rebuttal.
+We define this effect as the **micro-coercion of speed**: a system-level
+pressure gradient that shifts the burden-of-proof from tool output to human
+rebuttal.
 
-This paper proposes a control orientation for Protective Computing contexts: the engineering of **cognitive interlocks** that force verification before integration in high-impact paths.
+This paper proposes a control orientation for Protective Computing contexts:
+the engineering of **cognitive interlocks** that force verification before
+integration in high-impact paths.
 
 Three implementation classes are defined:
 
@@ -38,7 +45,7 @@ These controls restore system integrity by constraining the interaction between 
 
 ---
 
-# 1. Introduction and Problem Statement
+## 1. Introduction and Problem Statement
 
 AI coding systems optimize **generation throughput**.
 
@@ -83,7 +90,7 @@ Failures emerge **downstream**, far from the original generation event.
 
 ---
 
-# 2. Theoretical Framework: Physical vs Cognitive Interlocks
+## 2. Theoretical Framework: Physical vs Cognitive Interlocks
 
 Safety-critical physical systems assume imperfect operators.
 
@@ -115,7 +122,7 @@ In both domains, **safety emerges from design constraints rather than operator p
 
 ---
 
-# 3. Architectural Control Model
+## 3. Architectural Control Model
 
 ## 3.1 Risk Pathway
 
@@ -169,7 +176,7 @@ These mechanisms shift the developer from **fast intuition to deliberate reasoni
 
 ---
 
-# 4. Implementation Guidelines
+## 4. Implementation Guidelines
 
 ## 4.1 Minimal Adoption Baseline
 
@@ -201,7 +208,7 @@ The objective is **reduced defect transfer from generation to production under c
 
 ---
 
-# 5. Governance and Framework Integration
+## 5. Governance and Framework Integration
 
 ## 5.1 Status
 
@@ -211,7 +218,7 @@ The objective is **reduced defect transfer from generation to production under c
 
 ---
 
-# 6. Velocity Pressure: Formal Metric
+## 6. Velocity Pressure: Formal Metric
 
 ## 6.1 Definition
 
@@ -232,7 +239,7 @@ Where:
 ## 6.2 Interpretation
 
 | Condition | Meaning |
-| ----------- | ------------------------------------------------ |
+| --- | --- |
 | $P_v \le 1$ | Verification capacity keeps pace with generation |
 | $P_v > 1$ | Verification gap forms |
 | $P_v \gg 1$ | Micro-coercion conditions likely |
@@ -264,7 +271,7 @@ Estimated using:
 ## 6.4 Thresholds
 
 | Threshold | Meaning | Action |
-| -------------- | --------------- | ------------------------ |
+| --- | --- | --- |
 | 0.8 | Warning | enable slow-path reviews |
 | 1.0 | Critical | enforce interlocks |
 | >1.0 sustained | Structural risk | audit modules |
@@ -277,7 +284,7 @@ Estimated using:
 
 ---
 
-# Suggested Citation
+## Suggested Citation
 
 Overton, K. (2026).  
 *Overton Framework Companion Note v0.1: The Micro-Coercion of Speed*.  
