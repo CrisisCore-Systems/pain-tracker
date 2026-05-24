@@ -96,7 +96,7 @@ jobs:
           VITE_APP_TITLE: Pain Tracker
           VITE_APP_ENVIRONMENT: ${{ inputs.environment || 'production' }}
           VITE_APP_VERSION: ${{ inputs.rollback_to }}
-          VITE_APP_BUILD_TIME: ${{ github.event.head_commit.timestamp }}
+          VITE_APP_BUILD_TIME: ${{ github.event.head_commit.timestamp || github.run_started_at }}
           VITE_SENTRY_DSN: ${{ secrets.SENTRY_DSN || '' }}
           VITE_SENTRY_ENVIRONMENT: ${{ inputs.environment || 'production' }}
           VITE_SENTRY_RELEASE: ${{ inputs.rollback_to }}
@@ -283,7 +283,7 @@ jobs:
           VITE_APP_TITLE: Pain Tracker
           VITE_APP_ENVIRONMENT: ${{ inputs.environment || 'production' }}
           VITE_APP_VERSION: ${{ inputs.version || github.sha }}
-          VITE_APP_BUILD_TIME: ${{ github.event.head_commit.timestamp }}
+          VITE_APP_BUILD_TIME: ${{ github.event.head_commit.timestamp || github.run_started_at }}
           VITE_SENTRY_DSN: ${{ secrets.SENTRY_DSN || '' }}
           VITE_SENTRY_ENVIRONMENT: ${{ inputs.environment || 'production' }}
           VITE_SENTRY_RELEASE: ${{ inputs.version || github.sha }}
