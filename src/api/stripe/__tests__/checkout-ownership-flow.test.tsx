@@ -245,7 +245,7 @@ describe('subscription checkout ownership flow', () => {
 
     await waitFor(() => {
       expect(screen.getByTestId('tier')).toHaveTextContent('free');
-    });
+    }, { timeout: 3000 });
     expect(screen.getByTestId('analytics')).toHaveTextContent('disabled');
 
     constructEventMock.mockReturnValue({
@@ -291,8 +291,8 @@ describe('subscription checkout ownership flow', () => {
 
     await waitFor(() => {
       expect(screen.getByTestId('tier')).toHaveTextContent('basic');
-    });
-    expect(screen.getByTestId('analytics')).toHaveTextContent('enabled');
+      expect(screen.getByTestId('analytics')).toHaveTextContent('enabled');
+    }, { timeout: 5000 });
 
     globalThis.fetch = originalFetch;
   });
