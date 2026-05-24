@@ -3,7 +3,7 @@ name: Preview Deployment
 on:
   pull_request:
     branches: [ main, develop ]
-    types: [opened, synchronize, reopened]
+    types: [opened, synchronize, reopened, closed]
 
 permissions:
   contents: read
@@ -20,7 +20,7 @@ jobs:
   build-preview:
     name: Build Preview
     runs-on: ubuntu-latest
-    if: github.event.pull_request.draft == false
+    if: github.event.action != 'closed' && github.event.pull_request.draft == false
     outputs:
       build-hash: ${{ steps.build-hash.outputs.hash }}
       preview-url: ${{ steps.preview-url.outputs.url }}
@@ -128,6 +128,7 @@ jobs:
     name: Deploy Preview
     runs-on: ubuntu-latest
     needs: build-preview
+    if: github.event.action != 'closed'
     environment: 
       name: preview-pr-${{ github.event.pull_request.number }}
       url: ${{ needs.build-preview.outputs.preview-url }}
@@ -156,7 +157,7 @@ jobs:
     name: Update PR with Preview Info
     runs-on: ubuntu-latest
     needs: [build-preview, deploy-preview]
-    if: always()
+    if: github.event.action != 'closed' && github.event.pull_request.draft == false && always()
     steps:
       - name: Find existing preview comment
         uses: peter-evans/find-comment@v3
