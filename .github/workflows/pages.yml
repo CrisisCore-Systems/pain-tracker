@@ -139,7 +139,10 @@ jobs:
           </script>
           EOF
           
-          sed -i '/<body>/r rollback-notice.html' dist/index.html
+          perl -0777 -pe "s/(<body[^>]*>)/\1\n`cat rollback-notice.html`/sge" -i dist/index.html
+
+      - uses: actions/upload-pages-artifact@v3
+        with: { path: dist }
 
       - name: Deploy rollback
         id: deployment
@@ -193,8 +196,6 @@ jobs:
               labels: ['rollback', 'urgent', 'production']
             });
 
-      - uses: actions/upload-pages-artifact@v3
-        with: { path: dist }
   security-audit:
     if: inputs.rollback_to == ''
     runs-on: ubuntu-latest

@@ -46,7 +46,7 @@ jobs:
         env:
           CI: 'true'
         run: |
-          npx playwright test --config=e2e/playwright.config.ts --reporter=list --workers=1 || true
+          npx playwright test --config=e2e/playwright.config.ts --reporter=list --workers=1
 
       - name: Collect Playwright artifacts
         if: always()

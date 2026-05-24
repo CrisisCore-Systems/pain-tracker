@@ -18,7 +18,7 @@ jobs:
           cache: 'npm'
       - run: npm ci --legacy-peer-deps --omit=optional || echo "npm ci failed, continuing with npx"
       - name: Run Stryker (phase 1)
-        run: npx -y @stryker-mutator/core@8.2.0 run || true
+        run: npx -y @stryker-mutator/core@8.2.0 run
       - name: Generate mutation badge
         run: node scripts/generate-mutation-badge.mjs
       - name: Commit badge
