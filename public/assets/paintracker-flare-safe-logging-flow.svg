@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" viewBox="0 0 1600 720">
+  <title id="title">PainTracker flare-safe logging flow visual</title>
+  <desc id="desc">A four-step visual showing pain intensity capture, location selection, context tags, and local save for low-cognitive-load tracking.</desc>
+  <defs>
+    <linearGradient id="bgGlow" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0B1720"/>
+      <stop offset="52%" stop-color="#071014"/>
+      <stop offset="100%" stop-color="#101827"/>
+    </linearGradient>
+    <radialGradient id="mintHalo" cx="50%" cy="45%" r="60%">
+      <stop offset="0%" stop-color="#6EE7B7" stop-opacity=".22"/>
+      <stop offset="60%" stop-color="#67E8F9" stop-opacity=".08"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#000000" flood-opacity=".35"/>
+    </filter>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <style>
+      .bg { fill: url(#bgGlow); }
+      .halo { fill: url(#mintHalo); }
+      .panel { fill: #10212A; stroke: #25414C; stroke-width: 2; filter: url(#softShadow); }
+      .panel2 { fill: #142B35; stroke: #315768; stroke-width: 2; }
+      .soft { fill: #0B1720; stroke: #25414C; stroke-width: 1.5; }
+      .title { font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 48px; font-weight: 800; fill: #F6FAFC; letter-spacing: -1px; }
+      .subtitle { font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 23px; font-weight: 500; fill: #A8BAC3; }
+      .label { font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 22px; font-weight: 700; fill: #F6FAFC; }
+      .small { font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 16px; font-weight: 500; fill: #A8BAC3; }
+      .tiny { font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 13px; font-weight: 700; fill: #A8BAC3; letter-spacing: .8px; text-transform: uppercase; }
+      .mint { fill: #6EE7B7; }
+      .cyan { fill: #67E8F9; }
+      .violet { fill: #A78BFA; }
+      .amber { fill: #FBBF24; }
+      .red { fill: #FB7185; }
+      .stroke-mint { stroke: #6EE7B7; }
+      .stroke-cyan { stroke: #67E8F9; }
+      .stroke-violet { stroke: #A78BFA; }
+      .stroke-amber { stroke: #FBBF24; }
+      .stroke-muted { stroke: #496979; }
+      .noFill { fill: none; }
+      .dash { stroke-dasharray: 8 10; }
+      .round { stroke-linecap: round; stroke-linejoin: round; }
+      
+    </style>
+  </defs>
+  
+<rect class="bg" width="1600" height="720"/>
+<circle class="halo" cx="330" cy="370" r="420"/>
+<text x="92" y="108" class="title">Flare-safe logging flow</text>
+<text x="94" y="148" class="subtitle">Fewer steps. Larger targets. No shame loops. No streak pressure.</text>
+
+<rect x="100" y="230" width="330" height="330" rx="38" class="panel"/>
+<text x="140" y="295" class="label">1 · Capture intensity</text>
+<text x="140" y="328" class="small">slider first, typing last</text>
+<line x1="150" y1="420" x2="380" y2="420" class="stroke-muted round" stroke-width="16"/>
+<line x1="150" y1="420" x2="310" y2="420" class="stroke-red round" stroke-width="16"/>
+<circle cx="310" cy="420" r="30" fill="#FB7185" filter="url(#glow)"/>
+<text x="148" y="492" class="tiny">PAIN LEVEL</text>
+<text x="296" y="502" class="title" style="font-size:72px">8</text>
+
+<rect x="500" y="230" width="330" height="330" rx="38" class="panel"/>
+<text x="540" y="295" class="label">2 · Mark location</text>
+<text x="540" y="328" class="small">body map replaces paragraphs</text>
+<path d="M665 365 c35 0 60 28 60 64 v64 c0 35 -27 64 -60 64 s-60 -29 -60 -64 v-64 c0 -36 25 -64 60 -64z" fill="#142B35" stroke="#67E8F9" stroke-width="3"/>
+<circle cx="665" cy="335" r="32" fill="#142B35" stroke="#67E8F9" stroke-width="3"/>
+<path d="M603 430 h-54 m178 0 h54 m-116 125 v58 m0 -58 l-48 55 m48 -55 l48 55" class="noFill stroke-cyan round" stroke-width="10" opacity=".85"/>
+<circle cx="705" cy="447" r="18" class="red" filter="url(#glow)"/>
+<circle cx="630" cy="492" r="14" class="amber"/>
+
+<rect x="900" y="230" width="330" height="330" rx="38" class="panel"/>
+<text x="940" y="295" class="label">3 · Add context</text>
+<text x="940" y="328" class="small">tap tags, skip what is optional</text>
+<rect x="940" y="382" width="116" height="46" rx="23" fill="#142B35" stroke="#6EE7B7" stroke-width="2"/>
+<text x="968" y="412" class="small" style="fill:#F6FAFC">sleep</text>
+<rect x="1076" y="382" width="110" height="46" rx="23" fill="#142B35" stroke="#67E8F9" stroke-width="2"/>
+<text x="1100" y="412" class="small" style="fill:#F6FAFC">work</text>
+<rect x="940" y="450" width="145" height="46" rx="23" fill="#142B35" stroke="#A78BFA" stroke-width="2"/>
+<text x="968" y="480" class="small" style="fill:#F6FAFC">medication</text>
+<rect x="940" y="520" width="212" height="12" rx="6" fill="#496979"/>
+<rect x="940" y="545" width="156" height="12" rx="6" fill="#315768"/>
+
+<rect x="1300" y="230" width="210" height="330" rx="38" class="panel"/>
+<text x="1334" y="295" class="label">Save</text>
+<circle cx="1405" cy="410" r="58" fill="#071014" stroke="#6EE7B7" stroke-width="5"/>
+<path d="M1375 410 l22 24 l42 -52" class="noFill stroke-mint round" stroke-width="10"/>
+<text x="1340" y="506" class="small">local record updated</text>
+
+<path d="M442 395 H488" class="noFill stroke-cyan round" stroke-width="5"/>
+<path d="M470 377 l18 18 l-18 18" class="noFill stroke-cyan round" stroke-width="5"/>
+<path d="M842 395 H888" class="noFill stroke-cyan round" stroke-width="5"/>
+<path d="M870 377 l18 18 l-18 18" class="noFill stroke-cyan round" stroke-width="5"/>
+<path d="M1242 395 H1288" class="noFill stroke-cyan round" stroke-width="5"/>
+<path d="M1270 377 l18 18 l-18 18" class="noFill stroke-cyan round" stroke-width="5"/>
+
+<text x="102" y="640" class="small">Designed for low battery, weak signal, brain fog, pain spikes, and interrupted sessions.</text>
+
+</svg>

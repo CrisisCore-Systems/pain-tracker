@@ -55,9 +55,9 @@ const weeklyPainTrackerPrintableContent: SEOPageContent = {
   badge: 'Printable',
   headline: 'Weekly Pain Tracker Printable',
   subheadline: 'Track seven days of symptoms, flare-ups, medication, sleep, and daily function in one clear format.',
-  primaryCTA: { text: 'Download the weekly tracker', href: '/resources/weekly-pain-tracker-printable' },
+  primaryCTA: { text: 'Download the weekly tracker', href: '/resources/weekly-pain-log-pdf' },
   secondaryCTA: { text: 'Use the app free', href: '/start' },
-  utilityBlock: { type: 'download', downloadUrl: '/resources/weekly-pain-log-pdf', downloadFileName: 'weekly-pain-tracker-printable' },
+  utilityBlock: { type: 'download', downloadUrl: '/assets/weekly-pain-log.pdf', downloadFileName: 'weekly-pain-log.pdf' },
   whatIsThis:
     'A weekly pain tracker printable for people who need one-page weekly visibility before appointments, treatment reviews, or personal pattern checks.',
   whoShouldUse: [
@@ -281,9 +281,9 @@ const chronicPainJournalTemplateContent: SEOPageContent = {
   badge: 'Template',
   headline: 'Chronic Pain Journal Template',
   subheadline: 'Use a repeatable daily template that is fast enough for difficult days and structured enough for pattern review.',
-  primaryCTA: { text: 'Download chronic pain journal template', href: '/resources/chronic-pain-journal-template' },
+  primaryCTA: { text: 'Download chronic pain journal template', href: '/assets/chronic-pain-diary-template.pdf', download: true },
   secondaryCTA: { text: 'Use the app free', href: '/start' },
-  utilityBlock: { type: 'download', downloadUrl: '/resources/chronic-pain-journal-template', downloadFileName: 'chronic-pain-journal-template' },
+  utilityBlock: { type: 'download', downloadUrl: '/assets/chronic-pain-diary-template.pdf', downloadFileName: 'chronic-pain-diary-template.pdf' },
   whatIsThis: 'A daily chronic pain journal template designed for consistency over long-term tracking windows.',
   whoShouldUse: ['People with persistent pain conditions', 'Patients monitoring treatment changes', 'Anyone documenting multi-factor symptom patterns'],
   howToUse: [
@@ -327,7 +327,7 @@ const howToStartPainJournalContent: SEOPageContent = {
   subheadline: 'Start with a low-friction routine you can keep on hard days, not a perfect system you abandon in week two.',
   primaryCTA: { text: 'Start with a free template', href: '/resources/chronic-pain-journal-template' },
   secondaryCTA: { text: 'Use the app free', href: '/start' },
-  utilityBlock: { type: 'download', downloadUrl: '/resources/how-to-start-a-pain-journal', downloadFileName: 'how-to-start-a-pain-journal' },
+  utilityBlock: { type: 'download', downloadUrl: '/assets/chronic-pain-diary-template.pdf', downloadFileName: 'chronic-pain-diary-template.pdf' },
   whatIsThis: 'A practical guide for starting a pain journal with minimal daily burden and maximum consistency.',
   whoShouldUse: ['First-time pain journal users', 'People who quit previous tracking attempts', 'Patients preparing for appointments'],
   howToUse: [
@@ -369,9 +369,9 @@ const howToDescribePainContent: SEOPageContent = {
   badge: 'Guide',
   headline: 'How to Describe Pain Clearly for Doctors',
   subheadline: 'Use consistent language for pain quality, location, severity, timing, and functional impact so visits are more productive.',
-  primaryCTA: { text: 'Use the pain description checklist', href: '/resources/how-to-describe-pain' },
+  primaryCTA: { text: 'Use the pain description checklist', href: '/assets/pain-journal-checklist.pdf', download: true },
   secondaryCTA: { text: 'Use the app free', href: '/start' },
-  utilityBlock: { type: 'download', downloadUrl: '/resources/how-to-describe-pain', downloadFileName: 'how-to-describe-pain' },
+  utilityBlock: { type: 'download', downloadUrl: '/assets/pain-journal-checklist.pdf', downloadFileName: 'pain-journal-checklist.pdf' },
   whatIsThis: 'A practical guide to describing pain in terms clinicians can use for assessment and follow-up decisions.',
   whoShouldUse: ['Patients unsure how to describe symptoms', 'People preparing first specialist visit', 'Anyone needing more consistent symptom language'],
   howToUse: [
@@ -413,9 +413,9 @@ const howToTrackPainTriggersContent: SEOPageContent = {
   badge: 'Guide',
   headline: 'How to Track Pain Triggers',
   subheadline: 'Use a repeatable trigger log to connect pain shifts with sleep, stress, weather, activity, and medication timing.',
-  primaryCTA: { text: 'Use the trigger tracking template', href: '/resources/how-to-track-pain-triggers' },
+  primaryCTA: { text: 'Use the trigger tracking template', href: '/assets/symptom-tracker.pdf', download: true },
   secondaryCTA: { text: 'Use the app free', href: '/start' },
-  utilityBlock: { type: 'download', downloadUrl: '/resources/how-to-track-pain-triggers', downloadFileName: 'how-to-track-pain-triggers' },
+  utilityBlock: { type: 'download', downloadUrl: '/assets/symptom-tracker.pdf', downloadFileName: 'symptom-tracker.pdf' },
   whatIsThis: 'A practical framework for identifying likely trigger patterns using daily and flare-level observations.',
   whoShouldUse: ['People with unpredictable pain spikes', 'Patients testing lifestyle/medication changes', 'Anyone preparing specialist pattern discussions'],
   howToUse: [
@@ -498,8 +498,9 @@ export const ChronicPainJournalTemplatePage: React.FC = () => (
   <ResourcePageTemplate
     content={chronicPainJournalTemplateContent}
     opening="A chronic pain journal works best when it is brief, consistent, and structured. Record baseline pain, triggers, treatment response, and daily function in the same format each day."
-    ctaHref="/resources/chronic-pain-journal-template"
+    ctaHref="/assets/chronic-pain-diary-template.pdf"
     ctaText="Download the free chronic pain journal template"
+    ctaDownload
   />
 );
 
@@ -516,8 +517,9 @@ export const HowToDescribePainPage: React.FC = () => (
   <ResourcePageTemplate
     content={howToDescribePainContent}
     opening="Describe pain using five anchors: quality words, location, severity scale, timing pattern, and function impact. This makes clinical conversations faster and clearer."
-    ctaHref="/resources/how-to-describe-pain"
+    ctaHref="/assets/pain-journal-checklist.pdf"
     ctaText="Use the pain description checklist"
+    ctaDownload
   />
 );
 
@@ -525,7 +527,8 @@ export const HowToTrackPainTriggersPage: React.FC = () => (
   <ResourcePageTemplate
     content={howToTrackPainTriggersContent}
     opening="Track pain triggers by linking symptom changes to sleep, stress, weather, movement, and medication timing. Focus on repeatable categories, not perfect detail."
-    ctaHref="/resources/how-to-track-pain-triggers"
+    ctaHref="/assets/symptom-tracker.pdf"
     ctaText="Use the trigger tracking template"
+    ctaDownload
   />
 );

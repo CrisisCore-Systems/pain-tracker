@@ -198,6 +198,16 @@ export const PainTrackingAppsComparisonPage: React.FC = () => (
         })}
       </div>
 
+      <section className="rounded-2xl border border-slate-700 bg-slate-900/70 p-4 sm:p-5 text-left">
+        <img
+          src="/assets/paintracker-privacy-refusal-strip.svg"
+          alt="Trust strip listing default privacy refusals such as no account gate and no cloud-default pain database"
+          loading="lazy"
+          decoding="async"
+          className="w-full rounded-xl border border-slate-700"
+        />
+      </section>
+
       <section className="rounded-2xl border border-slate-700 bg-slate-900/70 p-6 text-left">
         <h2 className="mb-3 text-2xl font-semibold text-white">Quick comparison table</h2>
         <p className="mb-4 text-sm leading-relaxed text-slate-300">

@@ -94,7 +94,7 @@ export const PrivacyPolicyPage: React.FC = () => {
             Where Your Data Is Stored
           </h2>
           <p className="text-slate-300 mb-4">
-            <strong className="text-white">All data is stored locally on your device.</strong> Pain Tracker uses
+            <strong className="text-white">Core health data is stored locally on your device by default.</strong> Pain Tracker uses
             your browser&#39;s IndexedDB for persistence. Your health data is encrypted at rest using AES-GCM encryption.
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -120,7 +120,7 @@ export const PrivacyPolicyPage: React.FC = () => {
           </h2>
           <div className="space-y-3">
             {[
-              { label: 'No cloud transmission', desc: 'your health data is never sent to our servers' },
+              { label: 'No cloud-default transmission', desc: 'your health data is not sent to our servers during routine use by default' },
               { label: 'No analytics on health data', desc: 'we do not analyze or profile your pain entries' },
               { label: 'No background health telemetry', desc: 'we do not send your entries, notes, or report contents to analytics providers by default' },
               { label: 'No third-party data sharing', desc: 'your data is never sold or shared' },

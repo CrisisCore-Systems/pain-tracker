@@ -178,8 +178,8 @@ export const DownloadPage: React.FC = () => {
             {/* Source Code */}
             <div className="p-6 rounded-xl bg-slate-800/80 border border-violet-500/30 text-center">
               <Monitor className="h-10 w-10 mx-auto mb-4 text-violet-400" aria-hidden="true" />
-              <h3 className="font-bold text-lg mb-2">Source Code</h3>
-              <p className="text-sm text-slate-400 mb-4">Review the code or self-host if that matters to your trust model.</p>
+              <h3 className="font-bold text-lg mb-2">Source Code (Advanced)</h3>
+              <p className="text-sm text-slate-400 mb-4">For technical users who want to review code or self-host.</p>
               <a
                 href="https://github.com/CrisisCore-Systems/pain-tracker"
                 target="_blank"
@@ -250,11 +250,11 @@ export const DownloadPage: React.FC = () => {
             <h2 id="privacy-promise" className="text-2xl font-bold text-white">Privacy Promise</h2>
           </div>
           <div className="space-y-3 text-slate-300">
-            <p>Your health data stays on your device. Always.</p>
+            <p>Your core health records stay on your device by default.</p>
             <ul className="space-y-2 ml-4">
-              <li>✅ All data stored locally and encrypted</li>
-              <li>✅ No cloud database, no server-side storage</li>
-              <li>✅ No analytics on health data, no telemetry</li>
+              <li>✅ Core records are stored locally with encryption controls</li>
+              <li>✅ No cloud-default pain record database for routine use</li>
+              <li>✅ No health-content telemetry in routine use by default</li>
               <li>✅ No account or registration required</li>
               <li>✅ You control all exports and sharing</li>
             </ul>

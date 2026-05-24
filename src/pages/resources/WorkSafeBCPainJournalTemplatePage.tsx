@@ -496,7 +496,7 @@ const pageContent: SEOPageContent = {
     {
       title: 'Daily Functioning Log',
       description: 'Track functional limitations for evaluators',
-      href: '/resources/daily-functioning-log-disability',
+      href: '/resources/daily-functioning-log-for-disability',
     },
     {
       title: 'How to Track Pain for Doctors',

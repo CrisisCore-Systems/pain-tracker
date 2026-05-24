@@ -26,7 +26,7 @@ jobs:
         run: npm ci
 
       - name: Run tests
-        run: npm test -- --run || true
+        run: npm test -- --run
 
       - name: Build static files
         run: npm run build
@@ -76,4 +76,11 @@ jobs:
           DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
         run: |
           sleep 5
-          curl -f https://${DEPLOY_HOST}/healthz || curl -f http://${DEPLOY_HOST}/healthz || echo "Health check failed (expected if HTTPS not yet configured)"
+          if curl -f -s https://${DEPLOY_HOST}/healthz; then
+            exit 0
+          fi
+          if curl -f -s http://${DEPLOY_HOST}/healthz; then
+            exit 0
+          fi
+          echo "Health check failed"
+          exit 1

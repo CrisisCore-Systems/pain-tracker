@@ -3,7 +3,7 @@ name: Preview Deployment
 on:
   pull_request:
     branches: [ main, develop ]
-    types: [opened, synchronize, reopened]
+    types: [opened, synchronize, reopened, closed]
 
 permissions:
   contents: read
@@ -20,7 +20,7 @@ jobs:
   build-preview:
     name: Build Preview
     runs-on: ubuntu-latest
-    if: github.event.pull_request.draft == false
+    if: github.event.action != 'closed' && github.event.pull_request.draft == false
     outputs:
       build-hash: ${{ steps.build-hash.outputs.hash }}
       preview-url: ${{ steps.preview-url.outputs.url }}
@@ -67,34 +67,34 @@ jobs:
           echo "📝 Adding preview environment banner..."
 
           cat > preview-banner.html << 'EOF'
-<div id="preview-banner" style="
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  background: linear-gradient(90deg, #ff6b35 0%, #f7931e 100%);
-  color: white;
-  padding: 8px 16px;
-  text-align: center;
-  font-family: system-ui, -apple-system, sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  z-index: 9999;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-">
-  🚧 PREVIEW ENVIRONMENT - PR #${{ github.event.pull_request.number }} |
-  <a href="${{ github.event.pull_request.html_url }}" style="color: white; text-decoration: underline;">View PR</a> |
-  <span style="font-family: monospace;">Build: ${{ github.event.pull_request.head.sha }}</span>
-</div>
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // Only set margin if body has not already been adjusted
-    if (!document.body.style.marginTop || document.body.style.marginTop === '0px') {
-      document.body.style.marginTop = '44px';
-    }
-  });
-</script>
-EOF
+          <div id="preview-banner" style="
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(90deg, #ff6b35 0%, #f7931e 100%);
+            color: white;
+            padding: 8px 16px;
+            text-align: center;
+            font-family: system-ui, -apple-system, sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            z-index: 9999;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+          ">
+            🚧 PREVIEW ENVIRONMENT - PR #${{ github.event.pull_request.number }} |
+            <a href="${{ github.event.pull_request.html_url }}" style="color: white; text-decoration: underline;">View PR</a> |
+            <span style="font-family: monospace;">Build: ${{ github.event.pull_request.head.sha }}</span>
+          </div>
+          <script>
+            document.addEventListener('DOMContentLoaded', function() {
+              // Only set margin if body has not already been adjusted
+              if (!document.body.style.marginTop || document.body.style.marginTop === '0px') {
+                document.body.style.marginTop = '44px';
+              }
+            });
+          </script>
+          EOF
 
           # Insert banner into index.html robustly: find opening <body ...> tag and insert after it
           # Use perl to preserve attributes on the body tag and avoid brittle replacements
@@ -128,6 +128,7 @@ EOF
     name: Deploy Preview
     runs-on: ubuntu-latest
     needs: build-preview
+    if: github.event.action != 'closed'
     environment: 
       name: preview-pr-${{ github.event.pull_request.number }}
       url: ${{ needs.build-preview.outputs.preview-url }}
@@ -156,7 +157,7 @@ EOF
     name: Update PR with Preview Info
     runs-on: ubuntu-latest
     needs: [build-preview, deploy-preview]
-    if: always()
+    if: github.event.action != 'closed' && github.event.pull_request.draft == false && always()
     steps:
       - name: Find existing preview comment
         uses: peter-evans/find-comment@v3

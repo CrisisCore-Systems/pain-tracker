@@ -1,0 +1,44 @@
+
+:root {
+  --pt-bg: #071014;
+  --pt-bg-2: #0B1720;
+  --pt-panel: #10212A;
+  --pt-panel-2: #142B35;
+  --pt-line: #25414C;
+  --pt-text: #F6FAFC;
+  --pt-muted: #A8BAC3;
+  --pt-mint: #6EE7B7;
+  --pt-cyan: #67E8F9;
+  --pt-violet: #A78BFA;
+  --pt-amber: #FBBF24;
+  --pt-red: #FB7185;
+}
+
+.paintracker-asset-shell {
+  margin: clamp(2rem, 5vw, 5rem) auto;
+  max-width: 1120px;
+  border: 1px solid rgba(110, 231, 183, 0.18);
+  border-radius: 28px;
+  overflow: hidden;
+  background: #071014;
+  box-shadow: 0 24px 80px rgba(0,0,0,.22);
+}
+
+.paintracker-asset-shell img,
+.paintracker-asset-shell svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.paintracker-trust-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+@media (max-width: 760px) {
+  .paintracker-trust-grid {
+    grid-template-columns: 1fr;
+  }
+}

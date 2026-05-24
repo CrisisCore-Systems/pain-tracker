@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" viewBox="0 0 1200 630">
+  <title id="title">PainTracker no account no cloud Open Graph visual</title>
+  <desc id="desc">A 1200 by 630 social card explaining local records, offline use, and deliberate export.</desc>
+  <defs>
+    <linearGradient id="bgGlow" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0B1720"/>
+      <stop offset="52%" stop-color="#071014"/>
+      <stop offset="100%" stop-color="#101827"/>
+    </linearGradient>
+    <radialGradient id="mintHalo" cx="50%" cy="45%" r="60%">
+      <stop offset="0%" stop-color="#6EE7B7" stop-opacity=".22"/>
+      <stop offset="60%" stop-color="#67E8F9" stop-opacity=".08"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#000000" flood-opacity=".35"/>
+    </filter>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <style>
+      .bg { fill: url(#bgGlow); }
+      .halo { fill: url(#mintHalo); }
+      .panel { fill: #10212A; stroke: #25414C; stroke-width: 2; filter: url(#softShadow); }
+      .panel2 { fill: #142B35; stroke: #315768; stroke-width: 2; }
+      .soft { fill: #0B1720; stroke: #25414C; stroke-width: 1.5; }
+      .title { font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 48px; font-weight: 800; fill: #F6FAFC; letter-spacing: -1px; }
+      .subtitle { font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 23px; font-weight: 500; fill: #A8BAC3; }
+      .label { font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 22px; font-weight: 700; fill: #F6FAFC; }
+      .small { font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 16px; font-weight: 500; fill: #A8BAC3; }
+      .tiny { font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 13px; font-weight: 700; fill: #A8BAC3; letter-spacing: .8px; text-transform: uppercase; }
+      .mint { fill: #6EE7B7; }
+      .cyan { fill: #67E8F9; }
+      .violet { fill: #A78BFA; }
+      .amber { fill: #FBBF24; }
+      .red { fill: #FB7185; }
+      .stroke-mint { stroke: #6EE7B7; }
+      .stroke-cyan { stroke: #67E8F9; }
+      .stroke-violet { stroke: #A78BFA; }
+      .stroke-amber { stroke: #FBBF24; }
+      .stroke-muted { stroke: #496979; }
+      .noFill { fill: none; }
+      .dash { stroke-dasharray: 8 10; }
+      .round { stroke-linecap: round; stroke-linejoin: round; }
+      
+    </style>
+  </defs>
+  
+<rect class="bg" width="1200" height="630"/>
+<circle class="halo" cx="850" cy="310" r="460"/>
+<text x="70" y="100" class="tiny">PAINTRACKER PRIVACY VISUAL</text>
+<text x="70" y="160" class="title">No account. No cloud. No silent sharing.</text>
+<text x="74" y="205" class="subtitle">A pain diary built around user-held records and explicit export.</text>
+
+<rect x="70" y="285" width="320" height="215" rx="28" class="panel"/>
+<circle cx="130" cy="353" r="30" fill="#071014" stroke="#6EE7B7" stroke-width="4"/>
+<path d="M116 354 l10 12 l22 -28" class="noFill stroke-mint round" stroke-width="6"/>
+<text x="180" y="344" class="label">Record locally</text>
+<text x="180" y="374" class="small">Pain, symptoms, triggers, notes</text>
+<line x1="112" y1="432" x2="348" y2="432" class="stroke-muted round" stroke-width="3"/>
+<text x="112" y="465" class="tiny">Device first by default</text>
+
+<rect x="440" y="285" width="320" height="215" rx="28" class="panel"/>
+<circle cx="500" cy="353" r="30" fill="#071014" stroke="#67E8F9" stroke-width="4"/>
+<path d="M480 356 c20 -50 60 -50 80 0" class="noFill stroke-cyan round" stroke-width="5"/>
+<circle cx="520" cy="359" r="6" class="cyan"/>
+<text x="550" y="344" class="label">Use offline</text>
+<text x="550" y="374" class="small">Track when signal fails</text>
+<line x1="482" y1="432" x2="718" y2="432" class="stroke-muted round" stroke-width="3"/>
+<text x="482" y="465" class="tiny">PWA resilience</text>
+
+<rect x="810" y="285" width="320" height="215" rx="28" class="panel"/>
+<circle cx="870" cy="353" r="30" fill="#071014" stroke="#A78BFA" stroke-width="4"/>
+<path d="M856 338 h30 v31 h-30z M862 338 v-9 c0 -12 18 -12 18 0 v9" class="noFill stroke-violet round" stroke-width="5"/>
+<text x="920" y="344" class="label">Export deliberately</text>
+<text x="920" y="374" class="small">Share summaries by choice</text>
+<line x1="852" y1="432" x2="1088" y2="432" class="stroke-muted round" stroke-width="3"/>
+<text x="852" y="465" class="tiny">Clinician-ready files</text>
+
+<path d="M390 392 H440 M760 392 H810" class="noFill stroke-cyan dash round" stroke-width="5"/>
+<path d="M420 374 l20 18 l-20 18 M790 374 l20 18 l-20 18" class="noFill stroke-cyan round" stroke-width="5"/>
+<text x="70" y="570" class="small">Drop-in section graphic or Open Graph image · 1200 × 630</text>
+
+</svg>
