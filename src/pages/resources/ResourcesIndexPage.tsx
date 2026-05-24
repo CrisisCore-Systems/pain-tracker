@@ -1532,6 +1532,18 @@ export const ResourcesIndexPage: React.FC = () => {
           </div>
         </section>
 
+        <section className="border-y border-slate-800 bg-slate-950/80 py-8">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <img
+              src="/assets/paintracker-privacy-refusal-strip.svg"
+              alt="PainTracker trust strip describing no account gate and user-controlled export defaults"
+              loading="lazy"
+              decoding="async"
+              className="w-full rounded-2xl border border-slate-700 bg-slate-900/80"
+            />
+          </div>
+        </section>
+
         <section className="sticky top-16 z-40 border-y border-slate-800 bg-slate-950/95 backdrop-blur-sm">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">

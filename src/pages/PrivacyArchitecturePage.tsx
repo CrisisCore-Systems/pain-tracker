@@ -229,6 +229,16 @@ export const PrivacyArchitecturePage: React.FC = () => {
           </ul>
         </section>
 
+        <section className="mb-16 lg:mb-20">
+          <img
+            src="/assets/paintracker-privacy-refusal-strip.svg"
+            alt="Trust strip describing what PainTracker refuses to do by default, including no account gate and no cloud-default collection"
+            loading="lazy"
+            decoding="async"
+            className="w-full rounded-2xl border border-white/10 bg-slate-950/70"
+          />
+        </section>
+
         <section className="mb-16 lg:mb-20 rounded-2xl border border-white/10 bg-white/5 p-6 lg:p-8">
           <h2 className="flex items-center gap-3 text-2xl font-semibold mb-4">
             <Database className="h-6 w-6 text-rose-300" />

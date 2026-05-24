@@ -148,10 +148,13 @@ const TEMPLATE_SECTIONS = [
 ];
 
 const IMPACT_STATS = [
-  { value: '34%', label: 'better provider communication', source: 'Journal of Pain Research, 2019' },
-  { value: '2.4×', label: 'stronger disability claim outcomes', source: 'WorkSafeBC guidelines' },
-  { value: '89%', label: 'of pain specialists endorse patient diaries', source: 'APS survey data' },
+  { value: '34%', label: 'reported communication improvement in one study cohort', source: 'Journal of Pain Research, 2019' },
+  { value: '2.4×', label: 'claim-documentation association in one guidance context', source: 'WorkSafeBC guidance context' },
+  { value: '89%', label: 'endorsement figure reported in one APS survey dataset', source: 'APS survey data' },
 ];
+
+const EVIDENCE_CONTEXT_NOTE =
+  'External figures are context dependent and may not generalize to every patient or claim process. These references support documentation planning and do not guarantee medical, legal, insurance, or disability outcomes.';
 
 const WHO_SHOULD_USE = [
   {
@@ -659,15 +662,19 @@ export const PainDiaryTemplatePdfPage: React.FC = () => {
               ))}
             </div>
 
+            <p className="mt-4 text-xs text-slate-400 leading-relaxed">
+              {EVIDENCE_CONTEXT_NOTE}
+            </p>
+
             <div className="mt-10 bg-slate-800/50 rounded-2xl p-6 sm:p-8 border border-slate-700/50">
               <p className="text-slate-300 leading-relaxed text-base sm:text-lg">
                 Memory is unreliable — especially when you're in pain.{' '}
                 <strong className="text-white">
                   A structured pain diary replaces vague recall with objective evidence.
                 </strong>{' '}
-                Research in the <em>Journal of Pain Research</em> (2019) found that patients who kept
-                daily pain logs had 34% better communication with their providers and received more
-                accurate diagnoses. For disability or insurance claims, contemporaneous records —
+                One <em>Journal of Pain Research</em> (2019) cohort reported better provider
+                communication among patients who kept daily logs, but study design and effect size
+                can vary by setting. For disability or insurance claims, contemporaneous records —
                 filled in close to when events happened — carry substantially more weight than
                 retrospective statements. WorkSafeBC, ICBC, and CPP-D adjudicators all look for
                 consistent, dated documentation over self-reported summaries.

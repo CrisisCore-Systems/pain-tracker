@@ -178,8 +178,12 @@ export const LandingPage: React.FC = () => {
     updateMeta('meta[property="og:title"]', meta.title);
     updateMeta('meta[property="og:description"]', meta.description);
     updateMeta('meta[property="og:site_name"]', defaultSEOConfig.siteName);
+    updateMeta('meta[property="og:image"]', `${defaultSEOConfig.siteUrl}/assets/paintracker-no-account-no-cloud-og.svg`);
+    updateMeta('meta[property="og:image:alt"]', 'No account and no cloud-default pain database architecture visual');
     updateMeta('meta[name="twitter:title"]', meta.title);
     updateMeta('meta[name="twitter:description"]', meta.description);
+    updateMeta('meta[name="twitter:image"]', `${defaultSEOConfig.siteUrl}/assets/paintracker-no-account-no-cloud-og.svg`);
+    updateMeta('meta[name="twitter:image:alt"]', 'No account and no cloud-default pain database architecture visual');
 
     const canonicalLink = document.querySelector('link[rel="canonical"]');
     if (canonicalLink) canonicalLink.setAttribute('href', `${defaultSEOConfig.siteUrl}/`);
@@ -229,7 +233,7 @@ export const LandingPage: React.FC = () => {
               </Link>
             </div>
             <p className="text-sm text-slate-300">
-              No account. No cloud pain database. Works offline after first load.
+              No account. No cloud-default pain database. Designed to work offline after first load on supported browsers.
             </p>
             <div className="mt-5 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-slate-200">
               <Link
@@ -248,6 +252,18 @@ export const LandingPage: React.FC = () => {
           </div>
         </section>
 
+        <section className="border-b border-white/10 bg-slate-900/45">
+          <div className="container mx-auto px-4 py-10 lg:py-12 max-w-5xl">
+            <img
+              src="/assets/paintracker-local-first-architecture.svg"
+              alt="Local-first architecture diagram showing on-device pain tracking and user-controlled export boundary"
+              loading="lazy"
+              decoding="async"
+              className="w-full rounded-2xl border border-white/10 bg-slate-950/70"
+            />
+          </div>
+        </section>
+
         <section id="trust-proof" className="border-b border-white/10 bg-slate-900/45">
           <div className="container mx-auto px-4 py-14 lg:py-16 max-w-5xl">
             <h2 className="landing-headline landing-headline-md mb-4 text-white text-center">
@@ -256,6 +272,15 @@ export const LandingPage: React.FC = () => {
             <p className="landing-subhead text-center max-w-3xl mx-auto mb-8">
               PainTracker.ca is built around local control. You can begin without an account, log pain records on your device, and export only when you choose.
             </p>
+            <div className="mb-8">
+              <img
+                src="/assets/paintracker-privacy-refusal-strip.svg"
+                alt="Privacy refusal strip showing no account gate, no cloud default, no silent sharing, and user-controlled export"
+                loading="lazy"
+                decoding="async"
+                className="w-full rounded-2xl border border-white/10 bg-slate-950/70"
+              />
+            </div>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 mb-6">
               <div className="rounded-xl border border-white/10 bg-slate-900/70 p-4">
                 <h3 className="font-semibold text-white mb-1">No account required</h3>
@@ -318,6 +343,15 @@ export const LandingPage: React.FC = () => {
                   <p className="text-sm text-slate-300">{card.text}</p>
                 </article>
               ))}
+            </div>
+            <div className="mt-8">
+              <img
+                src="/assets/paintracker-flare-safe-logging-flow.svg"
+                alt="Flare-safe logging flow showing low-friction capture and delayed export by user choice"
+                loading="lazy"
+                decoding="async"
+                className="w-full rounded-2xl border border-white/10 bg-slate-950/70"
+              />
             </div>
           </div>
         </section>

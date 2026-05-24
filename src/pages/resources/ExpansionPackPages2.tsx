@@ -249,7 +249,7 @@ const printableSymptomChecklistContent: SEOPageContent = {
   subheadline: 'Check off 40+ symptoms, rate severity, and note changes — one page that summarizes what your body has been doing since your last appointment.',
   primaryCTA: { text: 'Download the symptom tracker printable', href: '/resources/symptom-tracker-printable' },
   secondaryCTA: { text: 'Track symptoms with the app', href: '/start' },
-  utilityBlock: { type: 'download', downloadUrl: '/resources/symptom-tracker-printable', downloadFileName: 'printable-symptom-checklist' },
+  utilityBlock: { type: 'download', downloadUrl: '/assets/symptom-tracker.pdf', downloadFileName: 'symptom-tracker.pdf' },
   whatIsThis:
     'A printable symptom checklist covering the most common physical, cognitive, sleep, mood, and pain symptoms for people managing chronic illness.',
   whoShouldUse: [
@@ -318,7 +318,7 @@ const painReliefLogContent: SEOPageContent = {
   subheadline: 'Record what you tried, what worked, and how long relief lasted — so you and your care team can see what actually helps.',
   primaryCTA: { text: 'Start tracking relief with the app', href: '/start' },
   secondaryCTA: { text: 'Get the medication and pain log', href: '/resources/medication-and-pain-log' },
-  utilityBlock: { type: 'download', downloadUrl: '/resources/medication-and-pain-log', downloadFileName: 'pain-relief-log' },
+  utilityBlock: { type: 'download', downloadUrl: '/assets/medication-and-pain-log.pdf', downloadFileName: 'medication-and-pain-log.pdf' },
   whatIsThis:
     'A focused log for recording pain relief interventions — medication, heat or cold, movement, rest, pacing — and their effectiveness over time.',
   whoShouldUse: [

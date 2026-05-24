@@ -215,7 +215,7 @@ const PdfContentsPreview: React.FC = () => {
 const MigraineStatsBanner: React.FC = () => {
   const stats = [
     { value: '1 Billion+', label: 'People affected by migraines worldwide' },
-    { value: '30–50%', label: 'Fewer attacks with diary-based trigger avoidance' },
+    { value: '30–50%', label: 'Reduction range reported in one structured-diary review context' },
     { value: '72 hrs', label: 'Max migraine duration (status migrainosus if longer)' },
     { value: '3×', label: 'More common in women than men' },
   ];
@@ -241,7 +241,7 @@ const pageContent: SEOPageContent = {
   slug: 'migraine-pain-diary-printable',
   title: 'Migraine Pain Diary Printable (Free)',
   metaTitle: 'Migraine Pain Diary Printable - Free Headache Tracker Template (2026) | PainTracker.ca',
-  metaDescription: 'Download our free 6-page migraine diary PDF. Track all 4 migraine phases, auras, 30+ common triggers, medications, and monthly patterns. Recommended by the American Headache Society tracking framework.',
+  metaDescription: 'Download our free 6-page migraine diary PDF. Track all 4 migraine phases, auras, 30+ common triggers, medications, and monthly patterns using data points commonly referenced in migraine diary guidance.',
   keywords: [
     'migraine pain diary printable',
     'migraine tracker',
@@ -262,7 +262,7 @@ const pageContent: SEOPageContent = {
   // Above-the-fold
   badge: 'Free 6-Page PDF',
   headline: 'Migraine Pain Diary Printable',
-  subheadline: 'Track all 4 migraine phases — prodrome, aura, headache, and postdrome — plus triggers, medications, and monthly patterns. Designed with the American Headache Society tracking framework so your neurologist gets exactly what they need.',
+  subheadline: 'Track all 4 migraine phases — prodrome, aura, headache, and postdrome — plus triggers, medications, and monthly patterns. Structured around data points commonly referenced in American Headache Society migraine diary guidance.',
   primaryCTA: {
     text: 'Download Free PDF (6 Pages)',
     href: '/assets/migraine-pain-diary.pdf',
@@ -281,7 +281,7 @@ const pageContent: SEOPageContent = {
   },
   
   // Content sections
-  whatIsThis: 'This is a comprehensive, 6-page migraine-specific diary template that goes far beyond generic pain tracking. It covers every phase of a migraine attack — from the earliest prodrome warning signs (mood shifts, yawning, food cravings) through aura (visual disturbances, tingling, speech changes), the headache phase itself (location, quality, intensity progression), and the often-overlooked postdrome or "migraine hangover" (brain fog, fatigue, residual sensitivity). It also includes dedicated sections for logging 30+ known triggers across dietary, environmental, hormonal, and lifestyle categories, a medication and treatment effectiveness tracker, and a monthly summary page that gives your neurologist a complete clinical picture at a glance. Every section is based on the data points recommended by the American Headache Society for effective migraine management.',
+  whatIsThis: 'This is a comprehensive, 6-page migraine-specific diary template that goes far beyond generic pain tracking. It covers every phase of a migraine attack — from the earliest prodrome warning signs (mood shifts, yawning, food cravings) through aura (visual disturbances, tingling, speech changes), the headache phase itself (location, quality, intensity progression), and the often-overlooked postdrome or "migraine hangover" (brain fog, fatigue, residual sensitivity). It also includes dedicated sections for logging 30+ known triggers across dietary, environmental, hormonal, and lifestyle categories, a medication and treatment effectiveness tracker, and a monthly summary page that gives your neurologist a complete clinical picture at a glance. The structure aligns with data points commonly referenced in headache-diary guidance.',
   
   whoShouldUse: [
     'Anyone with episodic or chronic migraines trying to identify personal trigger patterns',
@@ -322,11 +322,11 @@ const pageContent: SEOPageContent = {
     },
   ],
   
-  whyItMatters: 'The evidence is unambiguous: migraine diaries are the single most effective tool for reducing migraine frequency without medication changes. A systematic review published in Cephalalgia found that patients who maintained structured migraine diaries for 3+ months reduced attack frequency by 30–50% through trigger identification and avoidance alone. The American Headache Society and World Health Organization both recommend headache diaries as a first-line component of migraine management. Beyond trigger identification, diaries are essential for medication optimization — insurance companies increasingly require documented treatment failure before approving CGRP inhibitors (Aimovig, Ajovy, Emgality), Botox for migraine, or newer treatments like gepants and ditans. A well-kept diary is simultaneously a treatment tool, a clinical communication tool, and a legal document.',
+  whyItMatters: 'Structured migraine diaries can improve pattern recognition, treatment conversations, and documentation quality. External literature often reports meaningful reductions in attack frequency in some cohorts when trigger identification and avoidance are consistent, but outcomes vary by person, diagnosis, and care context. Headache-diary guidance from major organizations frequently includes diary use as part of first-line management. Beyond trigger identification, diaries are useful for medication optimization because many review workflows require documented treatment timelines before escalation. A well-kept diary can function as a treatment aid, communication aid, and documentation aid; it does not guarantee a specific clinical or administrative outcome.',
   
   // Trust signals
   trustSignals: {
-    medicalNote: 'Structured around the American Headache Society and International Headache Society recommended data points for migraine tracking.',
+    medicalNote: 'Structured around migraine diary data points commonly referenced in American Headache Society and International Headache Society guidance.',
     privacyNote: 'Paper format — your migraine history, medication details, and hormonal data never leave your hands.',
     legalNote: 'Useful for FMLA, ADA accommodation, SSDI, and insurance prior authorization discussions. This diary is a documentation aid, not an official decision document. Approval depends on the reviewer, medical evidence, policy, and case context.',
   },

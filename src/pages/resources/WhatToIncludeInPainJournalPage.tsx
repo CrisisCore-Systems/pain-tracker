@@ -144,7 +144,7 @@ const pageContent: SEOPageContent = {
   badge: 'Guide',
   headline: 'What to Include in a Pain Journal: 12 Things to Track',
   subheadline: 'A direct checklist for pain journal entries that actually help during appointments.',
-  primaryCTA: { text: 'Get the pain journal checklist', href: '/resources/what-to-include-in-pain-journal' },
+  primaryCTA: { text: 'Get the pain journal checklist', href: '/assets/pain-journal-checklist.pdf', download: true },
   secondaryCTA: { text: 'Use the free pain tracker', href: '/start' },
   utilityBlock: { type: 'download', downloadUrl: '/assets/pain-journal-checklist.pdf', downloadFileName: 'pain-journal-checklist.pdf' },
   whatIsThis: 'A complete guide to what belongs in a pain journal — and what doesn\'t. Most people either track too little (just pain numbers) or try to track everything (and quit after 3 days). This guide organizes pain journal content into 6 prioritized categories: 3 essential ones you should always track, and 3 additional ones for when you have time. It includes sample entries at different time commitments (1 minute, 3 minutes, 5 minutes) so you can match your journaling to your day.',

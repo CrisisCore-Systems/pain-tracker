@@ -186,6 +186,9 @@ export const ProofPage: React.FC = () => {
           <p className="text-slate-300 leading-relaxed mb-4">
             This section publishes the trust-proof deltas requested for launch readiness: explicit accessibility command surfaces, proof-stack framing, and direct evidence links for reviewers who do not need to inspect code first.
           </p>
+          <p className="text-sm text-amber-200/90 leading-relaxed mb-4">
+            Status note: the narrow degraded-mode accessibility review packet is published, but external signature remains pending. Current badge posture remains self-attested or repo-backed until signed findings are published.
+          </p>
           <div className="rounded-xl border border-white/10 bg-slate-900/70 p-4 mb-5">
             <p className="text-sm uppercase tracking-wide text-sky-200 mb-2">Accessibility scan command</p>
             <code className="text-sm text-sky-100">{accessibilityRunCommand}</code>
