@@ -122,11 +122,9 @@ jobs:
 
       - name: Upload staging build
         if: steps.validation.outputs.should-deploy == 'true'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-pages-artifact@v3
         with:
-          name: staging-build-${{ github.sha }}
           path: dist/
-          retention-days: 7
 
   # Deploy to staging environment
   deploy-staging:
@@ -138,28 +136,9 @@ jobs:
       name: staging
       url: https://crisiscore-systems.github.io/pain-tracker/staging/
     steps:
-      - name: Download build artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: staging-build-${{ github.sha }}
-          path: dist/
-
       - name: Deploy to staging (GitHub Pages)
+        id: deployment
         uses: actions/deploy-pages@v4
-        with:
-          # The pages action will deploy the uploaded artifact. We previously uploaded the artifact in the 'validate' job.
-          # Ensure repository has Pages configured to serve from the gh-pages-staging branch or the artifact name.
-          # This action uses the default GITHUB_TOKEN for authentication.
-          # For more advanced scenarios, replace with peaceiris/actions-gh-pages or actions-gh-pages.
-          # artifact_name is not required here because we will copy dist into the workspace before calling deploy.
-        run: |
-          echo "🚀 Preparing staging deployment artifact..."
-          # Copy dist into the workspace so deploy-pages can pick it up
-          mkdir -p ./staging-dist
-          cp -r dist/* ./staging-dist/
-          # Add a small staging marker
-          echo "<!-- Staging Environment - Build: ${{ github.sha }} -->" >> ./staging-dist/index.html
-          ls -la ./staging-dist | sed -n '1,200p'
 
       - name: Perform health checks
         run: |
@@ -169,7 +148,7 @@ jobs:
           sleep 30
 
           # Use environment URL where possible
-          staging_url="${{ job.environment.url || 'https://crisiscore-systems.github.io/pain-tracker/staging/' }}"
+          staging_url="${{ steps.deployment.outputs.page_url || 'https://crisiscore-systems.github.io/pain-tracker/staging/' }}"
           echo "Checking staging URL: $staging_url"
           if curl -f -s "$staging_url" > /dev/null; then
             echo "✅ Staging site is accessible"
