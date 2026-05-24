@@ -38,7 +38,7 @@ jobs:
           git config user.name "github-actions"
           git config user.email "actions@github.com"
           git add badges/test-badge.json badges/coverage-badge.json badges/security-badge.json
-          git diff --cached --quiet || git commit -m "ci(badge): update test count badge" || echo "No changes"
+          git diff --cached --quiet || git commit -m "ci(badge): update test count badge"
           git push
       - name: Coverage Summary Echo
         run: |

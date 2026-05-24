@@ -147,7 +147,7 @@ jobs:
           TAG_NAME: ${{ needs.prepare.outputs.tag-name }}
         run: |
           git add package.json package-lock.json
-          git commit -m "chore(release): ${TAG_NAME}" || echo "No changes to commit"
+          git commit -m "chore(release): ${TAG_NAME}"
 
       - name: Create and push tag
         env:
