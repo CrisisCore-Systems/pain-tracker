@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Help Test a Local First Pain Tracker - PainTracker Study 001</title>
+  <meta name="description" content="Request information about a pre-pilot usability study for PainTracker, a local-first pain tracking app." />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: linear-gradient(to bottom right, #f8fafc, #f1f5f9);
+      color: #0f172a;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+      line-height: 1.6;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      body {
+        background: linear-gradient(to bottom right, #0f172a, #1e293b);
+        color: #f1f5f9;
+      }
+    }
+
+    .container {
+      margin: 0 auto;
+      max-width: 1200px;
+      padding: 3rem 1.5rem;
+    }
+
+    .skip-link {
+      left: -9999px;
+      position: absolute;
+      top: -9999px;
+    }
+
+    .skip-link:focus {
+      background: #10b981;
+      border-radius: 0.375rem;
+      color: white;
+      left: 1rem;
+      padding: 0.5rem;
+      top: 1rem;
+      z-index: 1000;
+    }
+
+    .header {
+      margin: 0 auto 3rem;
+      max-width: 42rem;
+    }
+
+    h1 {
+      font-size: 2.25rem;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+
+    h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .intro-text {
+      font-size: 1.125rem;
+      line-height: 1.75;
+      margin-bottom: 1.5rem;
+      opacity: 0.85;
+    }
+
+    .notice {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 0.5rem;
+      margin-bottom: 1.5rem;
+      padding: 1rem;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .notice {
+        background: rgba(59, 130, 246, 0.1);
+        border-color: rgba(96, 165, 250, 0.3);
+      }
+    }
+
+    .notice p {
+      font-size: 0.875rem;
+    }
+
+    .grid {
+      display: grid;
+      gap: 2rem;
+      grid-template-columns: 1fr;
+      margin-bottom: 3rem;
+    }
+
+    @media (min-width: 1024px) {
+      .grid {
+        grid-template-columns: 2fr 1fr;
+      }
+    }
+
+    .content-column {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    section {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 0.5rem;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      padding: 1.5rem;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      section {
+        background: #1e293b;
+        border-color: #334155;
+      }
+    }
+
+    .sidebar section {
+      position: sticky;
+      top: 1.5rem;
+    }
+
+    ul {
+      padding-left: 1.25rem;
+    }
+
+    li {
+      margin-bottom: 0.75rem;
+    }
+
+    .button-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .btn {
+      align-items: center;
+      background: #f1f5f9;
+      border-radius: 0.5rem;
+      color: #0f172a;
+      display: inline-flex;
+      font-size: 0.875rem;
+      font-weight: 600;
+      gap: 0.5rem;
+      padding: 0.625rem 1rem;
+      text-decoration: none;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .btn {
+        background: #334155;
+        color: #f1f5f9;
+      }
+    }
+
+    .btn:hover {
+      background: #e2e8f0;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .btn:hover {
+        background: #475569;
+      }
+    }
+
+    .btn:focus,
+    input:focus,
+    textarea:focus,
+    button:focus {
+      outline: 2px solid #10b981;
+      outline-offset: 2px;
+    }
+
+    .contact-info {
+      font-size: 0.875rem;
+    }
+
+    .contact-info a {
+      color: #059669;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .contact-info a:hover {
+      text-decoration: underline;
+    }
+
+    .form-section {
+      margin: 0 auto;
+      max-width: 42rem;
+    }
+
+    .form-section > p {
+      margin-bottom: 1.5rem;
+      opacity: 0.8;
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    textarea {
+      background: white;
+      border: 1px solid #cbd5e1;
+      border-radius: 0.375rem;
+      color: #0f172a;
+      font: inherit;
+      padding: 0.5rem 1rem;
+      width: 100%;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      input[type="text"],
+      input[type="email"],
+      textarea {
+        background: #334155;
+        border-color: #475569;
+        color: #f1f5f9;
+      }
+    }
+
+    .checkbox-group {
+      align-items: flex-start;
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+
+    input[type="checkbox"] {
+      accent-color: #10b981;
+      flex-shrink: 0;
+      height: 1.25rem;
+      margin-top: 0.125rem;
+      width: 1.25rem;
+    }
+
+    .checkbox-label {
+      cursor: pointer;
+      font-size: 0.875rem;
+      margin-bottom: 0;
+    }
+
+    .error-message,
+    .success-message {
+      border-radius: 0.375rem;
+      display: none;
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+      padding: 1rem;
+    }
+
+    .error-message {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #991b1b;
+    }
+
+    .success-message {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      color: #166534;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .error-message {
+        background: rgba(185, 28, 28, 0.1);
+        border-color: rgba(239, 68, 68, 0.3);
+        color: #fca5a5;
+      }
+
+      .success-message {
+        background: rgba(34, 197, 94, 0.1);
+        border-color: rgba(134, 239, 172, 0.2);
+        color: #86efac;
+      }
+    }
+
+    .submit-btn {
+      background: #059669;
+      border: 0;
+      border-radius: 0.375rem;
+      color: white;
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 700;
+      padding: 0.75rem 1.5rem;
+      width: 100%;
+    }
+
+    .submit-btn:hover {
+      background: #047857;
+    }
+
+    .form-footer,
+    .small-note {
+      font-size: 0.75rem;
+      opacity: 0.72;
+    }
+
+    .form-footer {
+      margin-top: 1rem;
+      text-align: center;
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <main id="main-content" class="container">
+    <div class="header">
+      <h1>Help Test a Local First Pain Tracker</h1>
+
+      <p class="intro-text">
+        I am looking for adults with chronic pain, recurring pain, disability related symptoms,
+        or ongoing symptom tracking needs to try PainTracker in a single remote usability session.
+      </p>
+
+      <div class="notice">
+        <p>
+          <strong>Important:</strong> This is not medical care or a treatment study. No diagnosis,
+          medical history, legal history, or private records are required. You may use fictional or
+          sample information during the session.
+        </p>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="content-column">
+        <section>
+          <h2>Session Details</h2>
+          <ul>
+            <li><strong>Duration:</strong> 45 to 60 minutes</li>
+            <li><strong>Format:</strong> Remote</li>
+            <li><strong>Activities:</strong> Basic app tasks and feedback on usability, privacy, trust, and comfort</li>
+            <li><strong>Compensation:</strong> None provided</li>
+            <li><strong>Participation:</strong> Voluntary; you may stop at any time</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Study Status</h2>
+          <ul>
+            <li>Independent study</li>
+            <li>Unfunded</li>
+            <li>Solo developer conducting the research</li>
+            <li>Pre-pilot phase</li>
+            <li>Not institutionally ethics reviewed</li>
+          </ul>
+          <p class="small-note">
+            This study does not replace institutional review or medical ethics oversight.
+            Participation is voluntary and you may withdraw at any time.
+          </p>
+        </section>
+
+        <section>
+          <h2>Questions?</h2>
+          <div class="contact-info">
+            <p>
+              Contact the research lead at:
+              <a href="mailto:crisiscore-systems@proton.me">crisiscore-systems@proton.me</a>
+            </p>
+          </div>
+        </section>
+      </div>
+
+      <aside class="sidebar">
+        <section>
+          <h2>Before You Sign Up</h2>
+          <div class="button-group">
+            <a href="mailto:crisiscore-systems@proton.me?subject=Request%20Study%20001%20consent%20form" class="btn">
+              Request Consent Form
+            </a>
+            <a href="mailto:crisiscore-systems@proton.me?subject=Request%20Study%20001%20protocol" class="btn">
+              Request Study Protocol
+            </a>
+          </div>
+          <p class="small-note">
+            Request the current consent form and protocol before deciding whether to volunteer.
+          </p>
+        </section>
+      </aside>
+    </div>
+
+    <section class="form-section">
+      <h2>I'm Interested</h2>
+      <p>
+        This page does not store or send your information. It opens an email draft so you can
+        review it before sending.
+      </p>
+
+      <form id="studyForm" onsubmit="handleFormSubmit(event)">
+        <div class="form-group">
+          <label for="name">Name or Preferred Name</label>
+          <input type="text" id="name" name="name" placeholder="Your name" required />
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" placeholder="your.email@example.com" required />
+        </div>
+
+        <div class="checkbox-group">
+          <input type="checkbox" id="ageConfirm" name="ageConfirm" required />
+          <label for="ageConfirm" class="checkbox-label">I am 18 years of age or older</label>
+        </div>
+
+        <div class="checkbox-group">
+          <input type="checkbox" id="painExperience" name="painExperience" required />
+          <label for="painExperience" class="checkbox-label">
+            I live with chronic pain, recurring pain, or have symptom tracking needs
+          </label>
+        </div>
+
+        <div class="checkbox-group">
+          <input type="checkbox" id="remoteComfort" name="remoteComfort" required />
+          <label for="remoteComfort" class="checkbox-label">
+            I am comfortable participating in a remote session
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label for="accessibility">Accessibility Needs (Optional)</label>
+          <textarea
+            id="accessibility"
+            name="accessibility"
+            placeholder="Let us know if you need any accommodations, such as a quiet environment, extra time, or specific software."
+          ></textarea>
+        </div>
+
+        <div id="errorMessage" class="error-message"></div>
+        <div id="successMessage" class="success-message">
+          <strong>Email draft opened.</strong> Review it in your email app before sending.
+          Nothing was stored by this page.
+        </div>
+
+        <button type="submit" class="submit-btn">Open Email Draft</button>
+
+        <p class="form-footer">
+          Do not include private medical details. Request and review the current consent form and
+          protocol before volunteering.
+        </p>
+      </form>
+    </section>
+  </main>
+
+  <script>
+    const CONTACT_EMAIL = 'crisiscore-systems@proton.me';
+
+    function handleFormSubmit(event) {
+      event.preventDefault();
+
+      const errorDiv = document.getElementById('errorMessage');
+      const successDiv = document.getElementById('successMessage');
+      errorDiv.style.display = 'none';
+      successDiv.style.display = 'none';
+
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const ageConfirm = document.getElementById('ageConfirm').checked;
+      const painExperience = document.getElementById('painExperience').checked;
+      const remoteComfort = document.getElementById('remoteComfort').checked;
+      const accessibility = document.getElementById('accessibility').value.trim();
+
+      if (!name) {
+        showError('Please provide your name or preferred name.');
+        return;
+      }
+
+      if (!email) {
+        showError('Please provide your email address.');
+        return;
+      }
+
+      if (!ageConfirm) {
+        showError('You must confirm you are 18 or older.');
+        return;
+      }
+
+      if (!painExperience) {
+        showError('Please confirm your experience with pain or symptom tracking.');
+        return;
+      }
+
+      if (!remoteComfort) {
+        showError('Please confirm your comfort with a remote session.');
+        return;
+      }
+
+      const subject = encodeURIComponent('Study 001 interest');
+      const body = encodeURIComponent([
+        'I am interested in Study 001.',
+        '',
+        `Name or preferred name: ${name}`,
+        `Email address: ${email}`,
+        `18 or older: ${ageConfirm ? 'yes' : 'no'}`,
+        `Pain or symptom tracking experience: ${painExperience ? 'yes' : 'no'}`,
+        `Comfortable with a remote session: ${remoteComfort ? 'yes' : 'no'}`,
+        `Accessibility needs: ${accessibility || 'none stated'}`,
+        '',
+        'I understand this is a usability study, not medical care, and I do not need to share private medical details.',
+      ].join('\n'));
+
+      window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
+      successDiv.style.display = 'block';
+      successDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function showError(message) {
+      const errorDiv = document.getElementById('errorMessage');
+      errorDiv.textContent = message;
+      errorDiv.style.display = 'block';
+      errorDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  </script>
+</body>
+</html>

@@ -10,6 +10,9 @@ permissions:
   pull-requests: write
   checks: write
 
+env:
+  NODE_VERSION: '22.x'
+
 # Allow only one concurrent preview deployment per PR
 concurrency:
   group: preview-${{ github.event.pull_request.number }}
@@ -33,7 +36,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION || '20' }}
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
       - name: Install dependencies

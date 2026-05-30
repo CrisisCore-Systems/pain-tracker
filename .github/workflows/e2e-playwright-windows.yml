@@ -6,13 +6,16 @@ on:
   pull_request:
     branches: [ main ]
 
+env:
+  NODE_VERSION: '22.x'
+
 jobs:
   e2e:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        node: [20]
+        node: ['22.x']
         browser: [chromium, firefox]
     steps:
       - uses: actions/checkout@v4
@@ -44,7 +47,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '22.x'
+          node-version: ${{ env.NODE_VERSION }}
       - name: Install MSYS2 and dependencies
         uses: msys2/setup-msys2@v2
         with:

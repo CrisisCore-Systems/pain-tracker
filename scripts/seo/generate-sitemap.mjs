@@ -54,10 +54,6 @@ const changefreqOverrides = new Map([
   ['/resources', 'weekly'],
 ]);
 
-const lastmodOverrides = new Map([
-  ['/resources', today],
-]);
-
 const imageOverrides = new Map([
   ['/', [
     {
@@ -117,7 +113,7 @@ export function derivePriority(routePath) {
 }
 
 export function deriveLastmod(routePath, existingLastmods) {
-  return lastmodOverrides.get(routePath) ?? existingLastmods.get(routePath) ?? today;
+  return existingLastmods.get(routePath) ?? today;
 }
 
 export function createUrlNode(route, existingLastmods) {

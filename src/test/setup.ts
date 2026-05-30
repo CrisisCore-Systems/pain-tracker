@@ -173,62 +173,131 @@ if (typeof window !== 'undefined' && !('localStorage' in window)) {
   } as Storage;
 }
 
-  // Prevent jsdom's navigation API from throwing "Not implemented: navigation" during tests
-  // by stubbing navigation methods and making anchor clicks no-op for external links.
-  try {
-    if (typeof window !== 'undefined') {
-      // Ensure location is writable and has safe no-op methods used by app code
-      try {
-        Object.defineProperty(window, 'location', {
-          value: {
-            href: (window.location && window.location.href) || 'http://localhost/',
-            origin: (window.location && window.location.origin) || 'http://localhost',
-            assign: () => {},
-            replace: () => {},
-          },
-          writable: true,
-        });
-      } catch {
-        // ignore if jsdom prevents redefining location
-      }
+// Prevent jsdom's navigation API from throwing "Not implemented: navigation" during tests
+// without losing path/search/hash behavior used by routing and analytics code.
+try {
+  if (typeof window !== 'undefined') {
+    type TestLocation = {
+      href: string;
+      readonly origin: string;
+      readonly protocol: string;
+      readonly hostname: string;
+      readonly port: string;
+      readonly pathname: string;
+      readonly search: string;
+      readonly hash: string;
+      assign: (url: string | URL) => void;
+      replace: (url: string | URL) => void;
+      reload: () => void;
+      toString: () => string;
+    };
 
-      // No-op assign/replace if they exist
-      try {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        if (typeof window.location.assign !== 'function') window.location.assign = () => {};
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        if (typeof window.location.replace !== 'function') window.location.replace = () => {};
-      } catch {
-        // ignore
-      }
+    const createTestLocation = (initialHref: string): TestLocation => {
+      let currentHref = initialHref || 'http://localhost/';
+      const resolve = (url: string | URL) => new URL(url.toString(), currentHref).href;
+      const parsed = () => new URL(currentHref);
+      const setHref = (url: string | URL) => {
+        currentHref = resolve(url);
+      };
 
-      // Override anchor clicks to avoid triggering jsdom navigation which throws in some versions
-      try {
-        const originalClick = HTMLAnchorElement.prototype.click;
-        HTMLAnchorElement.prototype.click = function () {
-          const href = this.getAttribute && this.getAttribute('href');
-          if (href && !href.startsWith('#') && !href.startsWith('mailto:') && !href.startsWith('javascript:')) {
-            try {
-              // simulate a safe location change without invoking jsdom navigation
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore
-              window.location.href = href;
-            } catch {
-              // ignore
-            }
-            return;
-          }
-          return originalClick.call(this);
-        };
-      } catch {
-        // ignore if prototype cannot be modified
-      }
+      return {
+        get href() {
+          return currentHref;
+        },
+        set href(value: string) {
+          setHref(value);
+        },
+        get origin() {
+          return parsed().origin;
+        },
+        get protocol() {
+          return parsed().protocol;
+        },
+        get hostname() {
+          return parsed().hostname;
+        },
+        get port() {
+          return parsed().port;
+        },
+        get pathname() {
+          return parsed().pathname;
+        },
+        get search() {
+          return parsed().search;
+        },
+        get hash() {
+          return parsed().hash;
+        },
+        assign: setHref,
+        replace: setHref,
+        reload: () => {},
+        toString: () => currentHref,
+      };
+    };
+
+    try {
+      Object.defineProperty(window, 'location', {
+        value: createTestLocation(window.location?.href || 'http://localhost/'),
+        configurable: true,
+        writable: true,
+      });
+    } catch {
+      // ignore if jsdom prevents redefining location
     }
-  } catch {
-    // swallow any failures in test-only shims
+
+    try {
+      const historyWithWritableMethods = window.history as History & {
+        pushState: History['pushState'];
+        replaceState: History['replaceState'];
+      };
+      const originalPushState = historyWithWritableMethods.pushState.bind(window.history);
+      const originalReplaceState = historyWithWritableMethods.replaceState.bind(window.history);
+      const applyHistoryUrl = (url?: string | URL | null) => {
+        if (url !== undefined && url !== null) {
+          window.location.href = new URL(url.toString(), window.location.href).href;
+        }
+      };
+
+      historyWithWritableMethods.pushState = function (
+        data: unknown,
+        unused: string,
+        url?: string | URL | null
+      ) {
+        const result = originalPushState(data, unused, url);
+        applyHistoryUrl(url);
+        return result;
+      };
+      historyWithWritableMethods.replaceState = function (
+        data: unknown,
+        unused: string,
+        url?: string | URL | null
+      ) {
+        const result = originalReplaceState(data, unused, url);
+        applyHistoryUrl(url);
+        return result;
+      };
+    } catch {
+      // ignore if history methods cannot be patched
+    }
+
+    // Override anchor clicks to avoid triggering jsdom navigation which throws in some versions.
+    try {
+      const originalClick = HTMLAnchorElement.prototype.click;
+      HTMLAnchorElement.prototype.click = function () {
+        const href = this.getAttribute && this.getAttribute('href');
+        if (href && !href.startsWith('#') && !href.startsWith('mailto:') && !href.startsWith('javascript:')) {
+          window.location.href = href;
+          return;
+        }
+        return originalClick.call(this);
+      };
+    } catch {
+      // ignore if prototype cannot be modified
+    }
   }
+} catch {
+  // swallow any failures in test-only shims
+}
 
 // --- Heavy async init (must run before test modules import) ---
 // Vitest runs `setupFiles` before importing test files, but `beforeAll` hooks run later.

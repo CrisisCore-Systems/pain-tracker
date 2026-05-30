@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { buildSitemapXml, deriveChangefreq, derivePriority } from '../../scripts/seo/generate-sitemap.mjs';
+import {
+  buildSitemapXml,
+  deriveChangefreq,
+  deriveLastmod,
+  derivePriority,
+} from '../../scripts/seo/generate-sitemap.mjs';
 
 describe('SEO sitemap generator', () => {
   it('applies explicit priority overrides and resource defaults', () => {
@@ -14,6 +19,14 @@ describe('SEO sitemap generator', () => {
     expect(deriveChangefreq('/resources/how-to-start-a-pain-journal')).toBe('monthly');
     expect(deriveChangefreq('/privacy')).toBe('yearly');
     expect(deriveChangefreq('/some-other-page')).toBe('weekly');
+  });
+
+  it('preserves committed lastmod values instead of stamping routes with the current date', () => {
+    const existingLastmods = new Map([
+      ['/resources', '2026-02-11'],
+    ]);
+
+    expect(deriveLastmod('/resources', existingLastmods)).toBe('2026-02-11');
   });
 
   it('allows the intentional /resources-query canonical overlap but blocks leaked private paths', () => {

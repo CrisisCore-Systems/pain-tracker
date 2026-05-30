@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [20, 22]
+        node-version: ['22.x']
     steps:
       - name: Checkout
         uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955
@@ -24,7 +24,7 @@ jobs:
           cache: 'npm'
 
       - name: Cache node_modules
-        uses: actions/cache@0057852b2e2e2e7e2e2e2e2e2e2e2e2e2e2e2e2e
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
         with:
           path: node_modules
           key: ${{ runner.os }}-node-${{ matrix.node-version }}-node-modules-${{ hashFiles('**/package-lock.json') }}
@@ -99,7 +99,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Use Node.js 20
+      - name: Use Node.js 22
         uses: actions/setup-node@v4
         with:
           node-version: '22.x'
@@ -109,9 +109,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: node_modules
-          key: ${{ runner.os }}-node-20-node-modules-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-node-22-node-modules-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-node-20-node-modules-
+            ${{ runner.os }}-node-22-node-modules-
             ${{ runner.os }}-node-
 
       - name: Validate clinic auth production guard
