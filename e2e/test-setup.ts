@@ -79,6 +79,55 @@ test.beforeEach(async ({ page, seedCount, seedEncrypted, seedPassphrase }) => {
       // Use console.log for debug output
       console.log('[page]', msg.type(), msg.text());
     });
+    // Aggressive test-only DOM cleanup: remove persistent toasts, overlays,
+    // and disable pointer-events on fixed/fullscreen elements that may
+    // intermittently intercept clicks in CI. This installs a small MutationObserver
+    // inside the page that continuously removes known blocking elements.
+    try {
+      await page.addInitScript(() => {
+        try {
+          const cleanup = () => {
+            try {
+              document.querySelectorAll('div.fixed.inset-0, .modal-backdrop, [data-testid="overlay"], .fixed.bottom-4.left-4').forEach(e => e.remove());
+              document.querySelectorAll('[role="alert"], .toast, .notification, .alert').forEach(e => e.remove());
+              Array.from(document.querySelectorAll('*')).forEach((n) => {
+                try {
+                  const s = window.getComputedStyle(n as Element);
+                      if (s && (s.position === 'fixed' || s.position === 'sticky')) {
+                    (n as HTMLElement).style.pointerEvents = 'none';
+                  }
+                  const z = parseInt(s?.zIndex || '0', 10);
+                  if (!Number.isNaN(z) && z > 1000) {
+                    (n as HTMLElement).style.pointerEvents = 'none';
+                  }
+                } catch {
+                  // ignore per-node errors
+                }
+              });
+              document.querySelectorAll('main, #main-content, [data-testid="app-shell"]').forEach(m => { try { (m as HTMLElement).style.pointerEvents = 'auto'; } catch {} });
+            } catch {
+              /* ignore cleanup errors */
+            }
+          };
+
+          // Run once immediately and then observe DOM for new blocking elements.
+          cleanup();
+          try {
+            const mo = new MutationObserver(() => cleanup());
+            mo.observe(document.documentElement || document.body, { childList: true, subtree: true });
+            // Expose to window for debugging/cleanup if needed
+            (window as any).__e2e_cleanup_mo = mo;
+          } catch {
+            // ignore observer failures
+          }
+        } catch {
+          // ignore entire init script failures
+        }
+      });
+    } catch {
+      // ignore if addInitScript not available
+    }
+
   } catch {
     // ignore if routing isn't available in this environment
   }

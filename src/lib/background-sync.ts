@@ -155,7 +155,7 @@ export class BackgroundSyncService {
 
     try {
       const syncQueue = await offlineStorage.getSyncQueue();
-      if (syncQueue.length === 0) {
+      if (!Array.isArray(syncQueue) || syncQueue.length === 0) {
         this.maintenanceLogger.localOnlyNoDestination();
         this.dispatchSyncEvent('local-only', { message: this.localOnlyReason, clearedItems: 0 });
         return 0;

@@ -265,7 +265,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: '22.x'
       - run: npm ci --legacy-peer-deps
       - name: Run deployment precheck
         run: npm run -s deploy:precheck

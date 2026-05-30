@@ -173,6 +173,63 @@ if (typeof window !== 'undefined' && !('localStorage' in window)) {
   } as Storage;
 }
 
+  // Prevent jsdom's navigation API from throwing "Not implemented: navigation" during tests
+  // by stubbing navigation methods and making anchor clicks no-op for external links.
+  try {
+    if (typeof window !== 'undefined') {
+      // Ensure location is writable and has safe no-op methods used by app code
+      try {
+        Object.defineProperty(window, 'location', {
+          value: {
+            href: (window.location && window.location.href) || 'http://localhost/',
+            origin: (window.location && window.location.origin) || 'http://localhost',
+            assign: () => {},
+            replace: () => {},
+          },
+          writable: true,
+        });
+      } catch {
+        // ignore if jsdom prevents redefining location
+      }
+
+      // No-op assign/replace if they exist
+      try {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        if (typeof window.location.assign !== 'function') window.location.assign = () => {};
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        if (typeof window.location.replace !== 'function') window.location.replace = () => {};
+      } catch {
+        // ignore
+      }
+
+      // Override anchor clicks to avoid triggering jsdom navigation which throws in some versions
+      try {
+        const originalClick = HTMLAnchorElement.prototype.click;
+        HTMLAnchorElement.prototype.click = function () {
+          const href = this.getAttribute && this.getAttribute('href');
+          if (href && !href.startsWith('#') && !href.startsWith('mailto:') && !href.startsWith('javascript:')) {
+            try {
+              // simulate a safe location change without invoking jsdom navigation
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore
+              window.location.href = href;
+            } catch {
+              // ignore
+            }
+            return;
+          }
+          return originalClick.call(this);
+        };
+      } catch {
+        // ignore if prototype cannot be modified
+      }
+    }
+  } catch {
+    // swallow any failures in test-only shims
+  }
+
 // --- Heavy async init (must run before test modules import) ---
 // Vitest runs `setupFiles` before importing test files, but `beforeAll` hooks run later.
 // Encryption-related singletons are created at import time, so crypto/vault init must happen here.

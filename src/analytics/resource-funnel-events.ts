@@ -27,7 +27,8 @@ export function inferResourcePageType(slug: string): ResourcePageType {
   return 'general';
 }
 
-export function getResourcePageSlugFromPath(pathname: string): string | null {
+export function getResourcePageSlugFromPath(pathname?: string | null): string | null {
+  if (!pathname || typeof pathname !== 'string') return null;
   if (!pathname.startsWith(RESOURCE_PREFIX)) {
     return null;
   }
