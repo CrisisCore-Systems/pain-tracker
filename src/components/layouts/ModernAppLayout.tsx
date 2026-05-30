@@ -40,6 +40,7 @@ interface ModernAppLayoutProps {
     avgPain: number;
     streak: number;
   };
+  showFibromyalgiaNavItem?: boolean;
 }
 
 type NavigationItem = {
@@ -465,6 +466,7 @@ export function ModernAppLayout({
   onNavigate,
   currentView = 'dashboard',
   stats,
+  showFibromyalgiaNavItem = true,
 }: Readonly<ModernAppLayoutProps>) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [panicModeActive, setPanicModeActive] = useState(false);
@@ -475,6 +477,9 @@ export function ModernAppLayout({
   const themeClasses = getLayoutThemeClasses(isDark);
   const themeToggle = getThemeToggleProps(mode);
   const ThemeToggleIcon = themeToggle.icon;
+  const effectiveNavigation = showFibromyalgiaNavItem
+    ? NAVIGATION_ITEMS
+    : NAVIGATION_ITEMS.filter(item => item.id !== 'fibromyalgia');
 
   useEffect(() => {
     if (typeof document === 'undefined') return;
@@ -627,7 +632,7 @@ export function ModernAppLayout({
         isDark={isDark}
         onNavigate={onNavigate}
         bottomNavigation={BOTTOM_NAVIGATION_ITEMS}
-        navigation={NAVIGATION_ITEMS}
+        navigation={effectiveNavigation}
         inactiveDesktopNavClass={themeClasses.inactiveDesktopNavClass}
         activeBottomNavClass={themeClasses.activeBottomNavClass}
         inactiveBottomNavClass={themeClasses.inactiveBottomNavClass}
@@ -640,7 +645,7 @@ export function ModernAppLayout({
         isDark={isDark}
         onNavigate={onNavigate}
         bottomNavigation={BOTTOM_NAVIGATION_ITEMS}
-        navigation={NAVIGATION_ITEMS}
+        navigation={effectiveNavigation}
         inactiveMobileNavClass={themeClasses.inactiveMobileNavClass}
         activeBottomNavClass={themeClasses.activeBottomNavClass}
         inactiveMobileBottomNavClass={themeClasses.inactiveMobileBottomNavClass}

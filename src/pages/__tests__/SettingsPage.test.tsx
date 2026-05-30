@@ -22,6 +22,7 @@ describe('SettingsPage', () => {
 
     // Workflow preferences panel
     expect(screen.getByText(/Workflow & Field Mode/i)).toBeInTheDocument();
+    expect(screen.getByRole('checkbox', { name: /Show Fibromyalgia Hub in navigation/i })).toBeInTheDocument();
 
     // Alerts settings
     expect(screen.getByText(/Alerts settings/i)).toBeInTheDocument();
