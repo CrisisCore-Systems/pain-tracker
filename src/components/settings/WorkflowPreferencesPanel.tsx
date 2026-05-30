@@ -74,6 +74,21 @@ export default function WorkflowPreferencesPanel() {
           />
         </label>
 
+        <label className="flex items-center justify-between gap-4">
+          <div>
+            <div className="font-medium text-gray-700 dark:text-slate-200">Show Fibromyalgia Hub in navigation</div>
+            <div className="text-sm text-gray-500 dark:text-slate-400">
+              Hide this top-level item if you do not want fibromyalgia-specific navigation in the main app menu.
+            </div>
+          </div>
+          <input
+            type="checkbox"
+            checked={preferences.showFibromyalgiaHubNavItem}
+            onChange={e => updatePreferences({ showFibromyalgiaHubNavItem: e.target.checked })}
+            className="h-5 w-5 rounded border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-emerald-500 focus:ring-emerald-500/50 focus:ring-offset-white dark:focus:ring-offset-slate-900"
+          />
+        </label>
+
         <p className="text-sm text-gray-500 dark:text-slate-400">
           These preferences only change local workflow defaults. They do not alter stored entries unless you explicitly log new information.
         </p>

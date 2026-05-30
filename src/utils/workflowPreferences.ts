@@ -5,14 +5,17 @@ export type WcbTemplateStyle = 'standard' | 'hostile-bureaucracy';
 export interface WorkflowPreferences {
   defaultWcbTemplateStyle: WcbTemplateStyle;
   industrialFieldMode: boolean;
+  showFibromyalgiaHubNavItem: boolean;
 }
 
 export const DEFAULT_WORKFLOW_PREFERENCES: WorkflowPreferences = {
   defaultWcbTemplateStyle: 'hostile-bureaucracy',
   industrialFieldMode: false,
+  showFibromyalgiaHubNavItem: true,
 };
 
 export const WORKFLOW_PREFERENCES_STORAGE_KEY = 'pain-tracker:workflow-preferences';
+export const WORKFLOW_PREFERENCES_UPDATED_EVENT = 'workflow-preferences-updated';
 
 function coerceWorkflowPreferences(raw: unknown): WorkflowPreferences {
   const candidate = raw as Partial<WorkflowPreferences> | null | undefined;
@@ -27,7 +30,19 @@ function coerceWorkflowPreferences(raw: unknown): WorkflowPreferences {
       typeof candidate?.industrialFieldMode === 'boolean'
         ? candidate.industrialFieldMode
         : DEFAULT_WORKFLOW_PREFERENCES.industrialFieldMode,
+    showFibromyalgiaHubNavItem:
+      typeof candidate?.showFibromyalgiaHubNavItem === 'boolean'
+        ? candidate.showFibromyalgiaHubNavItem
+        : DEFAULT_WORKFLOW_PREFERENCES.showFibromyalgiaHubNavItem,
   };
+}
+
+function notifyWorkflowPreferencesUpdated(): void {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  window.dispatchEvent(new Event(WORKFLOW_PREFERENCES_UPDATED_EVENT));
 }
 
 export function readWorkflowPreferences(): WorkflowPreferences {
@@ -44,6 +59,12 @@ export function writeWorkflowPreferences(
 ): WorkflowPreferences {
   const current = readWorkflowPreferences();
   const next = coerceWorkflowPreferences({ ...current, ...updates });
-  secureStorage.set(WORKFLOW_PREFERENCES_STORAGE_KEY, next);
+  const writeResult = secureStorage.set(WORKFLOW_PREFERENCES_STORAGE_KEY, next);
+
+  if (writeResult?.success === false) {
+    return current;
+  }
+
+  notifyWorkflowPreferencesUpdated();
   return next;
 }

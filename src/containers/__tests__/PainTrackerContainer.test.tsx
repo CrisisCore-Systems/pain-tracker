@@ -8,9 +8,11 @@ import { readWorkflowPreferences } from '../../utils/workflowPreferences';
 
 vi.mock('../../stores/pain-tracker-store');
 vi.mock('../../utils/workflowPreferences', () => ({
+  WORKFLOW_PREFERENCES_UPDATED_EVENT: 'workflow-preferences-updated',
   readWorkflowPreferences: vi.fn(() => ({
     defaultWcbTemplateStyle: 'hostile-bureaucracy',
     industrialFieldMode: false,
+    showFibromyalgiaHubNavItem: true,
   })),
 }));
 
@@ -23,11 +25,18 @@ vi.mock('../../design-system/fused-v2', () => ({
   ),
 }));
 
+type QuickLogOneScreenData = {
+  pain: number;
+  locations: string[];
+  symptoms: string[];
+  notes: string;
+};
+
 vi.mock('../../design-system/fused-v2/QuickLogOneScreen', () => ({
   default: function QuickLogOneScreenMock({
     onComplete,
   }: {
-    onComplete: (data: any) => void;
+    onComplete: (data: QuickLogOneScreenData) => void;
   }) {
     const [checked, setChecked] = React.useState(false);
     return (
@@ -83,6 +92,7 @@ describe('PainTrackerContainer - entry success toast', () => {
     vi.mocked(readWorkflowPreferences).mockReturnValue({
       defaultWcbTemplateStyle: 'hostile-bureaucracy',
       industrialFieldMode: true,
+      showFibromyalgiaHubNavItem: true,
     });
 
     const storeState = {
@@ -121,6 +131,7 @@ describe('PainTrackerContainer - entry success toast', () => {
     vi.mocked(readWorkflowPreferences).mockReturnValue({
       defaultWcbTemplateStyle: 'hostile-bureaucracy',
       industrialFieldMode: false,
+      showFibromyalgiaHubNavItem: true,
     });
 
     const storeState = {
@@ -152,6 +163,7 @@ describe('PainTrackerContainer - entry success toast', () => {
     vi.mocked(readWorkflowPreferences).mockReturnValue({
       defaultWcbTemplateStyle: 'hostile-bureaucracy',
       industrialFieldMode: false,
+      showFibromyalgiaHubNavItem: true,
     });
 
     const user = userEvent.setup();

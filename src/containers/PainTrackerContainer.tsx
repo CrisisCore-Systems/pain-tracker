@@ -13,7 +13,11 @@ import { BrandedLoadingScreen } from '../components/branding/BrandedLoadingScree
 import { HistoryPage } from '../components/history/HistoryPage';
 import { subscriptionService } from '../services/SubscriptionService';
 import { getLocalUserId } from '../utils/user-identity';
-import { readWorkflowPreferences } from '../utils/workflowPreferences';
+import {
+  DEFAULT_WORKFLOW_PREFERENCES,
+  WORKFLOW_PREFERENCES_UPDATED_EVENT,
+  readWorkflowPreferences,
+} from '../utils/workflowPreferences';
 
 // Lazy load heavy components for faster initial load (mobile optimization)
 const AnalyticsDashboard = lazy(() =>
@@ -59,15 +63,36 @@ export function PainTrackerContainer({ initialView }: { initialView?: string } =
   const { entries, ui, addEntry, setShowOnboarding, setShowWalkthrough, setError, loadSampleData } =
     usePainTrackerStore();
   const updateEntry = usePainTrackerStore(s => s.updateEntry);
-  const workflowPreferences = typeof window === 'undefined' ? null : readWorkflowPreferences();
-  const industrialFieldMode = workflowPreferences?.industrialFieldMode ?? false;
+  const [workflowPreferences, setWorkflowPreferences] = useState(() =>
+    typeof window === 'undefined'
+      ? DEFAULT_WORKFLOW_PREFERENCES
+      : readWorkflowPreferences()
+  );
+  const industrialFieldMode = workflowPreferences.industrialFieldMode;
 
   const toast = useToast();
   const [walkthroughSteps, setWalkthroughSteps] = useState<WalkthroughStep[]>([]);
-  const [currentView, setCurrentView] = useState<string>(() =>
-    initialView ?? (industrialFieldMode || entries.length === 0 ? 'new-entry' : 'dashboard')
-  );
+  const [currentView, setCurrentView] = useState<string>(() => {
+    const defaultView = initialView ?? (industrialFieldMode || entries.length === 0 ? 'new-entry' : 'dashboard');
+    return workflowPreferences.showFibromyalgiaHubNavItem || defaultView !== 'fibromyalgia'
+      ? defaultView
+      : 'dashboard';
+  });
   const [editingEntryId, setEditingEntryId] = useState<PainEntry['id'] | null>(null);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const handlePreferencesUpdate = () => setWorkflowPreferences(readWorkflowPreferences());
+    window.addEventListener(WORKFLOW_PREFERENCES_UPDATED_EVENT, handlePreferencesUpdate);
+    return () => window.removeEventListener(WORKFLOW_PREFERENCES_UPDATED_EVENT, handlePreferencesUpdate);
+  }, []);
+
+  useEffect(() => {
+    if (!workflowPreferences.showFibromyalgiaHubNavItem && currentView === 'fibromyalgia') {
+      setCurrentView('dashboard');
+    }
+  }, [workflowPreferences.showFibromyalgiaHubNavItem, currentView]);
 
   // Load walkthrough steps dynamically to avoid circular dependency
   useEffect(() => {
@@ -168,6 +193,15 @@ export function PainTrackerContainer({ initialView }: { initialView?: string } =
 
   const handleWalkthroughSkip = () => {
     setShowWalkthrough(false);
+  };
+
+  const handleNavigate = (nextView: string) => {
+    if (nextView === 'fibromyalgia' && !workflowPreferences.showFibromyalgiaHubNavItem) {
+      setCurrentView('dashboard');
+      return;
+    }
+
+    setCurrentView(nextView);
   };
 
   const validatePainEntry = (entry: Omit<PainEntry, 'id' | 'timestamp'>): boolean => {
@@ -524,7 +558,12 @@ export function PainTrackerContainer({ initialView }: { initialView?: string } =
 
   return (
     <>
-      <ModernAppLayout currentView={currentView} onNavigate={setCurrentView} stats={stats}>
+      <ModernAppLayout
+        currentView={currentView}
+        onNavigate={handleNavigate}
+        stats={stats}
+        showFibromyalgiaNavItem={workflowPreferences.showFibromyalgiaHubNavItem}
+      >
         {renderView()}
       </ModernAppLayout>
 
