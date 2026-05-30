@@ -55,6 +55,9 @@ describe('VoiceCommandService', () => {
       expect(parseLocations('pain in my neck')).toContain('Neck');
       expect(parseLocations('left shoulder is aching')).toContain('Shoulder (L)');
       expect(parseLocations('right knee pain')).toContain('Knee (R)');
+      expect(parseLocations('my left hand is sore')).toContain('Hand (L)');
+      expect(parseLocations('there is pain in my right elbow')).toContain('Elbow (R)');
+      expect(parseLocations('my joints hurt')).toContain('Joints');
     });
 
     it('should recognize multiple locations', () => {

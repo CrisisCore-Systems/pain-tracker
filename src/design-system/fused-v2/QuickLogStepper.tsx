@@ -38,6 +38,8 @@ const LOCATION_TAGS = [
   'Wrist (R)',
   'Shoulder (L)',
   'Shoulder (R)',
+  'Elbow (L)',
+  'Elbow (R)',
   'Hip (L)',
   'Hip (R)',
   'Knee (L)',
@@ -53,6 +55,7 @@ const LOCATION_TAGS = [
   'Cervical spine',
   'Thoracic spine',
   'Lumbar spine',
+  'Joints',
 ];
 
 const SYMPTOM_TAGS = [

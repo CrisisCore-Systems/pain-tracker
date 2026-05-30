@@ -78,12 +78,19 @@ const LOCATION_TAGS = [
   'Neck',
   'Shoulder (L)',
   'Shoulder (R)',
+  'Elbow (L)',
+  'Elbow (R)',
+  'Wrist (L)',
+  'Wrist (R)',
+  'Hand (L)',
+  'Hand (R)',
   'Hip (L)',
   'Hip (R)',
   'Knee (L)',
   'Knee (R)',
   'Head',
   'Abdomen',
+  'Joints',
 ];
 
 // Symptom tags available

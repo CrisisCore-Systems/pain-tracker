@@ -124,8 +124,12 @@ const LOCATION_KEYWORDS: Record<string, string[]> = {
   'Head': ['head', 'headache', 'temple', 'forehead'],
   'Shoulder (L)': ['left shoulder', 'l shoulder'],
   'Shoulder (R)': ['right shoulder', 'r shoulder'],
+  'Elbow (L)': ['left elbow', 'l elbow'],
+  'Elbow (R)': ['right elbow', 'r elbow'],
   'Wrist (L)': ['left wrist', 'l wrist'],
   'Wrist (R)': ['right wrist', 'r wrist'],
+  'Hand (L)': ['left hand', 'l hand'],
+  'Hand (R)': ['right hand', 'r hand'],
   'Hip (L)': ['left hip', 'l hip'],
   'Hip (R)': ['right hip', 'r hip'],
   'Knee (L)': ['left knee', 'l knee'],
@@ -133,6 +137,7 @@ const LOCATION_KEYWORDS: Record<string, string[]> = {
   'Ankle (L)': ['left ankle', 'l ankle'],
   'Ankle (R)': ['right ankle', 'r ankle'],
   'Abdomen': ['abdomen', 'stomach', 'belly', 'gut'],
+  'Joints': ['my joints', 'joints', 'joint pain'],
 };
 
 // Symptom keywords
