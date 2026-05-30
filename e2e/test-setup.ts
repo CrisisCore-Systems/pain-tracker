@@ -104,7 +104,13 @@ test.beforeEach(async ({ page, seedCount, seedEncrypted, seedPassphrase }) => {
                   // ignore per-node errors
                 }
               });
-              document.querySelectorAll('main, #main-content, [data-testid="app-shell"]').forEach(m => { try { (m as HTMLElement).style.pointerEvents = 'auto'; } catch {} });
+              document.querySelectorAll('main, #main-content, [data-testid="app-shell"]').forEach(m => {
+                try {
+                  (m as HTMLElement).style.pointerEvents = 'auto';
+                } catch {
+                  // ignore per-node errors
+                }
+              });
             } catch {
               /* ignore cleanup errors */
             }
@@ -150,6 +156,7 @@ test.afterEach(async ({ page, seedEncrypted }) => {
         localStorage.removeItem('pt:test_mode');
         localStorage.removeItem('pain_tracker_entries');
         localStorage.removeItem('pt:pain_tracker_entries');
+        localStorage.removeItem('pain-tracker-onboarding-completed');
         localStorage.removeItem('pt:pain-tracker-onboarding-completed');
       } catch {
         // ignore

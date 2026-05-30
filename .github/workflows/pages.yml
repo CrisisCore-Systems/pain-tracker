@@ -30,6 +30,9 @@ on:
 
 permissions: { contents: write, pages: write, id-token: write, actions: read }
 
+env:
+  NODE_VERSION: '22.x'
+
 # Cancel in-progress workflow runs for the same PR/branch (except rollbacks)
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-${{ inputs.environment || 'production' }}
@@ -75,7 +78,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION || '20' }}
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
@@ -201,7 +204,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION || '20' }}
+          node-version: ${{ env.NODE_VERSION }}
       - run: npm ci --legacy-peer-deps
       - name: Security audit
         run: |
@@ -233,7 +236,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION || '20' }}
+          node-version: ${{ env.NODE_VERSION }}
       - run: npm ci --legacy-peer-deps
       - name: Type checking
         run: |

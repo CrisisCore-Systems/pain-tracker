@@ -124,7 +124,11 @@ export class PrivacyPreservingAnalyticsService {
 
   private generateSessionHash(): string {
     // Generate a one-way hash for session tracking without identification
-    const randomData = `${Date.now()}-${Math.random()}-${navigator.userAgent}`;
+    const userAgent =
+      typeof navigator !== 'undefined' && typeof navigator.userAgent === 'string'
+        ? navigator.userAgent
+        : 'non-browser-runtime';
+    const randomData = `${Date.now()}-${Math.random()}-${userAgent}`;
     let hash = 0;
     for (let i = 0; i < randomData.length; i++) {
       const char = randomData.charCodeAt(i);

@@ -38,6 +38,7 @@ export async function removeBlockingOverlays(page: Page) {
 export async function disableOnboarding(page: Page) {
   await page.addInitScript(() => {
     try {
+      localStorage.setItem('pain-tracker-onboarding-completed', 'true');
       localStorage.setItem('pt:pain-tracker-onboarding-completed', JSON.stringify('true'));
     } catch {
       // ignore
