@@ -9,7 +9,8 @@ import {
   faqPageJsonLd,
   breadcrumbJsonLd,
 } from '@/lib/schema';
-import { articles, getArticleBySlug, APP_CTA_URL } from '@/data/articles';
+import { HighIntentResourceLinks } from '@/components/HighIntentResourceLinks';
+import { articles, getArticleBySlug } from '@/data/articles';
 import type { ArticleData } from '@/data/articles';
 
 const HOMEPAGE_URL = 'https://www.paintracker.ca/';
@@ -64,7 +65,7 @@ const PRINTABLE_RECOMMENDATIONS: Record<string, { label: string; href: string }>
 // ── Static params for all 30 SEO pages ──────────────────────────────
 
 export function generateStaticParams() {
-  return articles.map((a) => ({ slug: a.slug }));
+  return articles.map(a => ({ slug: a.slug }));
 }
 
 // ── Metadata ─────────────────────────────────────────────────────────
@@ -124,7 +125,7 @@ function buildSchemas(article: ArticleData) {
         title: article.h1,
         description: article.description,
         steps: article.howToSteps,
-      }),
+      })
     );
   }
 
@@ -138,7 +139,7 @@ function buildSchemas(article: ArticleData) {
     breadcrumbJsonLd([
       { name: 'Home', url: siteConfig.url },
       { name: article.h1, url },
-    ]),
+    ])
   );
 
   return schemas;
@@ -159,14 +160,12 @@ const clusterLabels: Record<string, string> = {
 // ── Related articles helper ──────────────────────────────────────────
 
 function getRelated(article: ArticleData): ArticleData[] {
-  return articles
-    .filter((a) => a.slug !== article.slug && a.cluster === article.cluster)
-    .slice(0, 3);
+  return articles.filter(a => a.slug !== article.slug && a.cluster === article.cluster).slice(0, 3);
 }
 
 function getPrintableRecommendation(article: ArticleData): { label: string; href: string } {
   const resourcePrintable = article.resourceLinks?.find(
-    (link) => link.href.includes('/resources/') && !link.href.includes('/download'),
+    link => link.href.includes('/resources/') && !link.href.includes('/download')
   );
 
   if (resourcePrintable) {
@@ -259,18 +258,24 @@ export default async function ArticlePage({ params }: Readonly<Props>) {
               Helpful printables and next steps
             </h2>
             <p className="mb-4 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
-              These resource pages give you direct templates, clinician-facing guidance, and a low-friction way to try Pain Tracker.
+              These resource pages give you direct templates, clinician-facing guidance, and a
+              low-friction way to try Pain Tracker.
             </p>
             <ul className="space-y-3">
-              {article.resourceLinks.map((link) => (
-                <li key={link.href} className="rounded-lg border border-white/70 bg-white/80 p-4 dark:border-gray-700 dark:bg-gray-900/40">
+              {article.resourceLinks.map(link => (
+                <li
+                  key={link.href}
+                  className="rounded-lg border border-white/70 bg-white/80 p-4 dark:border-gray-700 dark:bg-gray-900/40"
+                >
                   <a
                     href={link.href}
                     className="font-medium text-blue-600 underline decoration-blue-300 underline-offset-2 hover:text-blue-800 hover:decoration-blue-500 dark:text-blue-400 dark:decoration-blue-600 dark:hover:text-blue-300"
                   >
                     {link.label}
                   </a>
-                  <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">{link.description}</p>
+                  <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">
+                    {link.description}
+                  </p>
                 </li>
               ))}
             </ul>
@@ -283,24 +288,34 @@ export default async function ArticlePage({ params }: Readonly<Props>) {
               Quick comparison
             </h2>
             <p className="mb-4 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
-              Use this table to separate apps that are convenient in screenshots from tools that still hold up in real-life symptom tracking.
+              Use this table to separate apps that are convenient in screenshots from tools that
+              still hold up in real-life symptom tracking.
             </p>
             <div className="overflow-x-auto">
               <table className="min-w-full border-collapse text-left text-sm">
                 <thead>
                   <tr className="border-b border-gray-200 dark:border-gray-700">
-                    {article.comparisonTable.columns.map((column) => (
-                      <th key={column} className="px-3 py-3 font-semibold text-gray-900 dark:text-white">
+                    {article.comparisonTable.columns.map(column => (
+                      <th
+                        key={column}
+                        className="px-3 py-3 font-semibold text-gray-900 dark:text-white"
+                      >
                         {column}
                       </th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
-                  {article.comparisonTable.rows.map((row) => (
-                    <tr key={row.join('|')} className="border-b border-gray-100 align-top dark:border-gray-800">
+                  {article.comparisonTable.rows.map(row => (
+                    <tr
+                      key={row.join('|')}
+                      className="border-b border-gray-100 align-top dark:border-gray-800"
+                    >
                       {row.map((cell, cellIndex) => (
-                        <td key={`${row[0]}-${cellIndex}`} className="px-3 py-3 leading-relaxed text-gray-700 dark:text-gray-300">
+                        <td
+                          key={`${row[0]}-${cellIndex}`}
+                          className="px-3 py-3 leading-relaxed text-gray-700 dark:text-gray-300"
+                        >
                           {cell}
                         </td>
                       ))}
@@ -331,7 +346,12 @@ export default async function ArticlePage({ params }: Readonly<Props>) {
             {sectionIndex === 1 && article.internalLinks && (
               <aside className="my-6 rounded-lg border border-blue-100 bg-blue-50/50 p-4 dark:border-blue-800/50 dark:bg-blue-900/20">
                 <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
-                  <span className="mr-1.5 inline-block text-blue-600 dark:text-blue-400" aria-hidden="true">→</span>
+                  <span
+                    className="mr-1.5 inline-block text-blue-600 dark:text-blue-400"
+                    aria-hidden="true"
+                  >
+                    →
+                  </span>
                   Learn more in our comprehensive guide:{' '}
                   <a
                     href={article.internalLinks.pillarUrl}
@@ -347,13 +367,19 @@ export default async function ArticlePage({ params }: Readonly<Props>) {
             {sectionIndex === Math.min(3, article.sections.length - 1) && article.internalLinks && (
               <aside className="my-6 rounded-lg border border-gray-100 bg-gray-50/50 p-4 dark:border-gray-700/50 dark:bg-gray-800/30">
                 <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
-                  <span className="mr-1.5 inline-block text-gray-500 dark:text-gray-400" aria-hidden="true">📖</span>
+                  <span
+                    className="mr-1.5 inline-block text-gray-500 dark:text-gray-400"
+                    aria-hidden="true"
+                  >
+                    📖
+                  </span>
                   Related reading:{' '}
                   <Link
                     href={`/${article.internalLinks.relatedSlug}`}
                     className="font-medium text-blue-600 underline decoration-blue-300 underline-offset-2 hover:text-blue-800 hover:decoration-blue-500 dark:text-blue-400 dark:decoration-blue-600 dark:hover:text-blue-300"
                   >
-                    {articles.find(a => a.slug === article.internalLinks!.relatedSlug)?.title ?? article.internalLinks.relatedSlug}
+                    {articles.find(a => a.slug === article.internalLinks!.relatedSlug)?.title ??
+                      article.internalLinks.relatedSlug}
                   </Link>
                 </p>
               </aside>
@@ -368,11 +394,9 @@ export default async function ArticlePage({ params }: Readonly<Props>) {
               Frequently Asked Questions
             </h2>
             <dl className="space-y-6">
-              {article.faqs.map((faq) => (
+              {article.faqs.map(faq => (
                 <div key={faq.question}>
-                  <dt className="mb-1 font-medium text-gray-900 dark:text-white">
-                    {faq.question}
-                  </dt>
+                  <dt className="mb-1 font-medium text-gray-900 dark:text-white">{faq.question}</dt>
                   <dd className="text-gray-600 dark:text-gray-300">{faq.answer}</dd>
                 </div>
               ))}
@@ -381,19 +405,22 @@ export default async function ArticlePage({ params }: Readonly<Props>) {
         )}
 
         {/* CTA — links to root domain for authority transfer */}
+        <HighIntentResourceLinks currentSlug={article.slug} />
+
         <div className="mb-12 rounded-lg border border-blue-200 bg-blue-50 p-6 text-center dark:border-blue-800 dark:bg-blue-900/30">
           <h2 className="mb-2 text-xl font-semibold text-gray-900 dark:text-white">
-            Ready to move from research to use?
+            Track pain privately without an account
           </h2>
           <p className="mb-4 text-gray-600 dark:text-gray-300">
-            Pain Tracker is private by default, works offline after install, and gives you printable and clinician-facing paths when you need them.
+            Pain Tracker works offline after first load, keeps core records on your device, and
+            helps you document pain patterns for appointments, claims, and personal records.
           </p>
           <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
             <a
-              href={APP_CTA_URL}
+              href={HOMEPAGE_URL}
               className="inline-block rounded-lg bg-blue-600 px-6 py-3 font-medium text-white transition hover:bg-blue-700"
             >
-              Download Pain Tracker
+              Use the free private pain tracker app
             </a>
             <a
               href={printableRecommendation.href}
@@ -403,9 +430,12 @@ export default async function ArticlePage({ params }: Readonly<Props>) {
             </a>
           </div>
           <p className="mt-4 text-sm text-gray-600 dark:text-gray-300">
-            Prefer to keep exploring first? Visit the{' '}
-            <a href={HOMEPAGE_URL} className="font-medium text-blue-600 underline decoration-blue-300 underline-offset-2 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
-              Pain Tracker homepage
+            Prefer to compare first? Visit the{' '}
+            <a
+              href="/best-pain-tracking-apps"
+              className="font-medium text-blue-600 underline decoration-blue-300 underline-offset-2 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+            >
+              best pain tracking apps comparison
             </a>
             .
           </p>
@@ -418,7 +448,7 @@ export default async function ArticlePage({ params }: Readonly<Props>) {
               Related reading
             </h2>
             <ul className="space-y-3">
-              {related.map((r) => (
+              {related.map(r => (
                 <li key={r.slug}>
                   <Link
                     href={`/${r.slug}`}

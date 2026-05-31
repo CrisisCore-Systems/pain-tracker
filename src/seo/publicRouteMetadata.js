@@ -157,7 +157,7 @@ const RESOURCES_PRERENDER_BODY = `
   </section>
   <section style="margin-top: 2rem;">
     <h2 style="font-size: 1.5rem; margin-bottom: 0.75rem;">Private Offline App Guides</h2>
-    <p style="line-height: 1.7; color: #cbd5e1;">When paper stops being enough, move into the product lane through <a href="/resources/free-pain-tracker-app" style="color: #7dd3fc;">How to use PainTracker offline</a>, <a href="/privacy-architecture" style="color: #7dd3fc;">how private local tracking works</a>, <a href="/privacy" style="color: #7dd3fc;">why no account matters</a>, <a href="/pain-tracker-app" style="color: #7dd3fc;">how to export pain records</a>, and <a href="/download" style="color: #7dd3fc;">how to install the app</a>. The intended flow is printable to habit to doctor usefulness to private app.</p>
+    <p style="line-height: 1.7; color: #cbd5e1;">When paper stops being enough, move into the product lane through <a href="/resources/free-pain-tracker-app" style="color: #7dd3fc;">How to use PainTracker offline</a>, <a href="/privacy-architecture" style="color: #7dd3fc;">how private local tracking works</a>, <a href="/privacy" style="color: #7dd3fc;">why no account matters</a>, <a href="/pain-tracker-app" style="color: #7dd3fc;">how to export pain records</a>, <a href="/download" style="color: #7dd3fc;">how to install the app</a>, and the <a href="https://blog.paintracker.ca/best-pain-tracking-apps" style="color: #7dd3fc;">best pain tracking apps</a> comparison. The intended flow is printable to habit to doctor usefulness to private app.</p>
   </section>
   <section style="margin-top: 2rem;">
     <h2 style="font-size: 1.5rem; margin-bottom: 0.75rem;">How to start tracking pain without overthinking it</h2>

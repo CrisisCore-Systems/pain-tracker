@@ -1,10 +1,10 @@
 /**
  * Daily Pain Tracker Printable - Premium SEO Landing Page
- * 
+ *
  * Target keyword: "daily pain tracker printable"
  * Search intent: User wants a quick daily tracking sheet to print
  * Conversion goal: Download template → discover Pain Tracker
- * 
+ *
  * Fully custom layout for maximum conversion & engagement.
  */
 
@@ -46,7 +46,13 @@ import {
   generateBreadcrumbSchema,
   combineSchemas,
 } from '../../lib/seo';
-import { ResourceCtaStack, ResourceOutcomeBridge, ResourceWorkflowSteps } from '../../components/seo';
+import {
+  ResourceCtaStack,
+  ResourceOutcomeBridge,
+  ResourceWorkflowSteps,
+  RelatedPainResourceLinks,
+  mergeRelatedPainResourceLinks,
+} from '../../components/seo';
 import '../../styles/pages/landing.css';
 
 // ---------------------------------------------------------------------------
@@ -55,8 +61,7 @@ import '../../styles/pages/landing.css';
 const SEO = {
   slug: 'daily-pain-tracker-printable',
   title: 'Daily Pain Tracker Printable in 2026',
-  metaTitle:
-    'Daily Pain Tracker Printable (2026) | Free PDF, No Email Required',
+  metaTitle: 'Daily Pain Tracker Printable (2026) | Free PDF, No Email Required',
   metaDescription:
     'Download the free daily pain tracker printable PDF for 2026. No email required. Record pain levels, medications, flare ups, triggers, daily limits, mood, and notes for doctor visits.',
   keywords: [
@@ -90,7 +95,8 @@ const TEMPLATE_SECTIONS = [
   {
     icon: Sunrise,
     title: 'Morning Check-In',
-    description: 'Overnight pain, sleep hours & quality, morning stiffness duration, and baseline energy',
+    description:
+      'Overnight pain, sleep hours & quality, morning stiffness duration, and baseline energy',
     color: 'text-amber-400',
     bg: 'bg-amber-500/10',
   },
@@ -104,7 +110,8 @@ const TEMPLATE_SECTIONS = [
   {
     icon: Pill,
     title: 'Medications & Treatments',
-    description: '5-row log for meds, therapies, exercises — with dose, relief rating, and side effects',
+    description:
+      '5-row log for meds, therapies, exercises — with dose, relief rating, and side effects',
     color: 'text-emerald-400',
     bg: 'bg-emerald-500/10',
   },
@@ -125,14 +132,16 @@ const TEMPLATE_SECTIONS = [
   {
     icon: Sunset,
     title: 'End-of-Day Summary',
-    description: 'Worst/average pain, best & worst times, most effective treatment, biggest barrier',
+    description:
+      'Worst/average pain, best & worst times, most effective treatment, biggest barrier',
     color: 'text-indigo-400',
     bg: 'bg-indigo-500/10',
   },
   {
     icon: Clipboard,
     title: 'Notes for Provider',
-    description: 'Dedicated space for questions, observations, and concerns for your next appointment',
+    description:
+      'Dedicated space for questions, observations, and concerns for your next appointment',
     color: 'text-sky-400',
     bg: 'bg-sky-500/10',
   },
@@ -151,7 +160,8 @@ const DAY_FLOW = [
     icon: Sunrise,
     color: 'text-amber-400',
     bg: 'bg-amber-500/15',
-    description: 'Record overnight pain, sleep quality, stiffness, and set your baseline for the day.',
+    description:
+      'Record overnight pain, sleep quality, stiffness, and set your baseline for the day.',
   },
   {
     time: 'Throughout the Day',
@@ -165,7 +175,8 @@ const DAY_FLOW = [
     icon: Sunset,
     color: 'text-indigo-400',
     bg: 'bg-indigo-500/15',
-    description: 'Complete the summary: worst/average pain, mood, energy, and notes for your provider.',
+    description:
+      'Complete the summary: worst/average pain, mood, energy, and notes for your provider.',
   },
 ];
 
@@ -250,7 +261,7 @@ const FAQS = [
   {
     question: 'How is this different from the Pain Diary Template?',
     answer:
-      'The Pain Diary Template is a comprehensive multi-day document with weekly summaries — ideal for detailed long-term tracking. This Daily Pain Tracker focuses on capturing one complete day with structured sections (morning, episodes, meds, function, mood, evening summary). It\'s faster to fill out and easier to review day-by-day. Many users prefer the daily tracker for appointments and the diary template for long-term pattern analysis.',
+      "The Pain Diary Template is a comprehensive multi-day document with weekly summaries — ideal for detailed long-term tracking. This Daily Pain Tracker focuses on capturing one complete day with structured sections (morning, episodes, meds, function, mood, evening summary). It's faster to fill out and easier to review day-by-day. Many users prefer the daily tracker for appointments and the diary template for long-term pattern analysis.",
   },
   {
     question: 'How long does it take to fill out each day?',
@@ -258,14 +269,14 @@ const FAQS = [
       'The morning check-in takes about 30 seconds. Logging episodes and meds happens throughout the day as they occur (15-30 seconds each). The end-of-day summary takes about 2 minutes. Total: roughly 5 minutes spread across the day. On tough days, even filling in just the pain scores and a few checkboxes takes under a minute and still captures useful data.',
   },
   {
-    question: 'What if I don\'t have enough pain episodes to fill all 6 rows?',
+    question: "What if I don't have enough pain episodes to fill all 6 rows?",
     answer:
       'That\'s actually great news — leave the extra rows blank. Not every day involves 6 distinct episodes. The rows are there for flare days when pain shifts throughout the day. On low-pain days, even a single entry ("constant low ache, 2/10, all day") is valuable because it documents your good days too.',
   },
   {
     question: 'Should I track on good days too?',
     answer:
-      'Absolutely. Good days are clinically important because they show what works and establish your baseline. If your provider only sees data from bad days, they can\'t gauge improvement. A mix of good and bad days gives the truest picture of your pain pattern.',
+      "Absolutely. Good days are clinically important because they show what works and establish your baseline. If your provider only sees data from bad days, they can't gauge improvement. A mix of good and bad days gives the truest picture of your pain pattern.",
   },
   {
     question: 'Can I use this for workers compensation or disability claims?',
@@ -285,7 +296,7 @@ const FAQS = [
   {
     question: 'What if I miss a day?',
     answer:
-      'Skip it and continue the next day. Don\'t try to fill in from memory — inaccurate data is worse than missing data. A few gaps won\'t undermine your tracking. What matters is the trend over weeks, not perfect daily compliance.',
+      "Skip it and continue the next day. Don't try to fill in from memory — inaccurate data is worse than missing data. A few gaps won't undermine your tracking. What matters is the trend over weeks, not perfect daily compliance.",
   },
   {
     question: 'Is there a digital version?',
@@ -299,7 +310,7 @@ const FAQS = [
   },
 ];
 
-const RELATED_LINKS = [
+const RELATED_LINKS = mergeRelatedPainResourceLinks([
   {
     title: 'Pain Diary Template PDF',
     description: 'Comprehensive multi-day format with weekly summaries for detailed tracking',
@@ -330,7 +341,7 @@ const RELATED_LINKS = [
     description: 'Build documentation that supports your claim',
     href: '/resources/documenting-pain-for-disability-claim',
   },
-];
+]);
 
 // ---------------------------------------------------------------------------
 // Reusable sub-components
@@ -344,16 +355,10 @@ const SectionHeading: React.FC<{
 }> = ({ eyebrow, children, subtitle, center }) => (
   <div className={center ? 'text-center' : ''}>
     {eyebrow && (
-      <p className="text-sm font-semibold uppercase tracking-wider text-primary mb-2">
-        {eyebrow}
-      </p>
+      <p className="text-sm font-semibold uppercase tracking-wider text-primary mb-2">{eyebrow}</p>
     )}
-    <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3 leading-tight">
-      {children}
-    </h2>
-    {subtitle && (
-      <p className="text-slate-400 text-lg max-w-2xl mx-auto">{subtitle}</p>
-    )}
+    <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3 leading-tight">{children}</h2>
+    {subtitle && <p className="text-slate-400 text-lg max-w-2xl mx-auto">{subtitle}</p>}
   </div>
 );
 
@@ -406,7 +411,11 @@ export const DailyPainTrackerPrintablePage: React.FC = () => {
     document.body.appendChild(ariaLive);
 
     return () => {
-      try { ariaLive?.remove(); } catch { /* already removed */ }
+      try {
+        ariaLive?.remove();
+      } catch {
+        /* already removed */
+      }
     };
   }, []);
 
@@ -425,20 +434,17 @@ export const DailyPainTrackerPrintablePage: React.FC = () => {
     }),
     generateFAQSchema(FAQS),
     generateSoftwareApplicationSchema(),
-    generateBreadcrumbSchema(breadcrumbs, { siteUrl: 'https://www.paintracker.ca' }),
+    generateBreadcrumbSchema(breadcrumbs, { siteUrl: 'https://www.paintracker.ca' })
   );
 
   const handleDownload = () => {
-    setDownloadCount((c) => c + 1);
+    setDownloadCount(c => c + 1);
   };
 
   return (
     <div className="min-h-screen bg-background landing-always-dark">
       {/* Structured data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: schema }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: schema }} />
 
       {/* Skip link */}
       <a
@@ -482,9 +488,14 @@ export const DailyPainTrackerPrintablePage: React.FC = () => {
                 <li key={crumb.url} className="flex items-center gap-2">
                   {i > 0 && <span className="text-slate-600">/</span>}
                   {i === breadcrumbs.length - 1 ? (
-                    <span className="text-slate-400" aria-current="page">{crumb.name}</span>
+                    <span className="text-slate-400" aria-current="page">
+                      {crumb.name}
+                    </span>
                   ) : (
-                    <Link to={crumb.url} className="text-slate-300 hover:text-primary transition-colors">
+                    <Link
+                      to={crumb.url}
+                      className="text-slate-300 hover:text-primary transition-colors"
+                    >
                       {crumb.name}
                     </Link>
                   )}
@@ -497,7 +508,6 @@ export const DailyPainTrackerPrintablePage: React.FC = () => {
 
       {/* ────────────────────────────────────────────────────────────────────── */}
       <main id="main-content" role="main">
-
         {/* ═══ HERO ═══ */}
         <section className="hero-section-dramatic py-20 sm:py-28" aria-labelledby="hero-heading">
           <div className="hero-bg-mesh" />
@@ -514,21 +524,22 @@ export const DailyPainTrackerPrintablePage: React.FC = () => {
               <span>5 Minutes a Day</span>
             </div>
 
-            <h1
-              id="hero-heading"
-              className="landing-headline landing-headline-lg text-white mb-6"
-            >
+            <h1 id="hero-heading" className="landing-headline landing-headline-lg text-white mb-6">
               Free Daily Pain Tracker Printable PDF in 2026
             </h1>
 
             <p className="landing-subhead text-lg sm:text-xl max-w-2xl mx-auto mb-4">
-              Use this printable pain tracker to log one full day of symptoms, medications, flare ups, activity limits, and notes in a format that is easy to keep and easy to bring to appointments.
+              Use this printable pain tracker to log one full day of symptoms, medications, flare
+              ups, activity limits, and notes in a format that is easy to keep and easy to bring to
+              appointments.
             </p>
             <p className="text-slate-300 text-base sm:text-lg max-w-2xl mx-auto mb-4">
-              Start on paper if that is the easiest move today. Use the free app instead when you want less manual summarizing and a record that stays searchable on your device.
+              Start on paper if that is the easiest move today. Use the free app instead when you
+              want less manual summarizing and a record that stays searchable on your device.
             </p>
             <p className="text-slate-500 text-sm mb-8">
-              100% free &bull; No email required &bull; No tracking &bull; Prints on standard letter paper
+              100% free &bull; No email required &bull; No tracking &bull; Prints on standard letter
+              paper
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -560,7 +571,10 @@ export const DailyPainTrackerPrintablePage: React.FC = () => {
         </section>
 
         {/* ═══ QUICK-DOWNLOAD BAR ═══ */}
-        <section className="py-6 bg-slate-900 border-y border-slate-800" aria-label="Download template">
+        <section
+          className="py-6 bg-slate-900 border-y border-slate-800"
+          aria-label="Download template"
+        >
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-800/70 backdrop-blur rounded-2xl p-5 border border-slate-700/60">
               <div className="flex items-center gap-4">
@@ -570,9 +584,15 @@ export const DailyPainTrackerPrintablePage: React.FC = () => {
                 <div>
                   <h2 className="text-lg font-semibold text-white">daily-pain-tracker.pdf</h2>
                   <p className="text-slate-400 text-sm flex items-center gap-3 flex-wrap">
-                    <span className="flex items-center gap-1"><Printer className="w-3.5 h-3.5" /> Print-ready</span>
-                    <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> 1 sheet per day</span>
-                    <span className="flex items-center gap-1"><Lock className="w-3.5 h-3.5" /> No sign-up</span>
+                    <span className="flex items-center gap-1">
+                      <Printer className="w-3.5 h-3.5" /> Print-ready
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Clock className="w-3.5 h-3.5" /> 1 sheet per day
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Lock className="w-3.5 h-3.5" /> No sign-up
+                    </span>
                   </p>
                 </div>
               </div>
@@ -608,12 +628,14 @@ export const DailyPainTrackerPrintablePage: React.FC = () => {
             </SectionHeading>
 
             <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-              {TEMPLATE_SECTIONS.map((section) => (
+              {TEMPLATE_SECTIONS.map(section => (
                 <div
                   key={section.title}
                   className="group p-5 rounded-xl bg-slate-800/50 border border-slate-700/50 hover:border-slate-600 transition-all hover:bg-slate-800/70"
                 >
-                  <div className={`w-11 h-11 ${section.bg} rounded-lg flex items-center justify-center mb-4`}>
+                  <div
+                    className={`w-11 h-11 ${section.bg} rounded-lg flex items-center justify-center mb-4`}
+                  >
                     <section.icon className={`w-5 h-5 ${section.color}`} />
                   </div>
                   <h3 className="font-semibold text-white mb-1.5">{section.title}</h3>
@@ -625,7 +647,10 @@ export const DailyPainTrackerPrintablePage: React.FC = () => {
         </section>
 
         {/* ═══ YOUR DAY AT A GLANCE ═══ */}
-        <section className="py-14 bg-slate-800/40 border-y border-slate-700/50" aria-labelledby="day-flow-heading">
+        <section
+          className="py-14 bg-slate-800/40 border-y border-slate-700/50"
+          aria-labelledby="day-flow-heading"
+        >
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <SectionHeading eyebrow="How It Flows" center>
               <span id="day-flow-heading">Three natural touchpoints through your day</span>
@@ -643,7 +668,9 @@ export const DailyPainTrackerPrintablePage: React.FC = () => {
                   {i < DAY_FLOW.length - 1 && (
                     <ArrowRight className="hidden sm:block absolute -right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-600 z-10" />
                   )}
-                  <div className={`w-14 h-14 ${segment.bg} rounded-2xl flex items-center justify-center mx-auto mb-4`}>
+                  <div
+                    className={`w-14 h-14 ${segment.bg} rounded-2xl flex items-center justify-center mx-auto mb-4`}
+                  >
                     <segment.icon className={`w-7 h-7 ${segment.color}`} />
                   </div>
                   <h3 className="text-lg font-bold text-white mb-2">{segment.time}</h3>
@@ -663,10 +690,22 @@ export const DailyPainTrackerPrintablePage: React.FC = () => {
 
             <div className="mt-10 grid sm:grid-cols-3 gap-6">
               {[
-                { value: '3\u00D7', label: 'longer tracking consistency', source: 'Pain Medicine, 2021 — structured vs. unstructured formats' },
-                { value: '34%', label: 'better provider communication', source: 'Journal of Pain Research, 2019' },
-                { value: '89%', label: 'of pain specialists endorse daily diaries', source: 'APS survey data' },
-              ].map((stat) => (
+                {
+                  value: '3\u00D7',
+                  label: 'longer tracking consistency',
+                  source: 'Pain Medicine, 2021 — structured vs. unstructured formats',
+                },
+                {
+                  value: '34%',
+                  label: 'better provider communication',
+                  source: 'Journal of Pain Research, 2019',
+                },
+                {
+                  value: '89%',
+                  label: 'of pain specialists endorse daily diaries',
+                  source: 'APS survey data',
+                },
+              ].map(stat => (
                 <div
                   key={stat.label}
                   className="text-center p-6 rounded-2xl bg-gradient-to-b from-slate-800/80 to-slate-800/40 border border-slate-700/50"
@@ -686,25 +725,28 @@ export const DailyPainTrackerPrintablePage: React.FC = () => {
                 <strong className="text-white">
                   A structured daily tracker turns subjective experience into objective data.
                 </strong>{' '}
-                When you hand your provider a stack of completed daily sheets, they can immediately see
-                patterns in timing, triggers, medication response, and functional impact. Studies show
-                this leads to faster, more accurate treatment decisions. For disability claims,
-                contemporaneous daily records — written the same day the pain occurred — are among
-                the strongest evidence you can provide.
+                When you hand your provider a stack of completed daily sheets, they can immediately
+                see patterns in timing, triggers, medication response, and functional impact.
+                Studies show this leads to faster, more accurate treatment decisions. For disability
+                claims, contemporaneous daily records — written the same day the pain occurred — are
+                among the strongest evidence you can provide.
               </p>
             </div>
           </div>
         </section>
 
         {/* ═══ WHO SHOULD USE IT ═══ */}
-        <section className="py-16 sm:py-20 bg-slate-800/30 border-y border-slate-700/50" aria-labelledby="who-should-use">
+        <section
+          className="py-16 sm:py-20 bg-slate-800/30 border-y border-slate-700/50"
+          aria-labelledby="who-should-use"
+        >
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <SectionHeading eyebrow="Is This For You?" center>
               <span id="who-should-use">Who benefits most from daily tracking</span>
             </SectionHeading>
 
             <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {WHO_SHOULD_USE.map((item) => (
+              {WHO_SHOULD_USE.map(item => (
                 <div
                   key={item.title}
                   className="p-6 rounded-xl bg-slate-800/60 border border-slate-700/50 hover:border-slate-600 transition-colors"
@@ -732,7 +774,7 @@ export const DailyPainTrackerPrintablePage: React.FC = () => {
             </SectionHeading>
 
             <ol className="mt-12 space-y-8">
-              {HOW_TO_STEPS.map((step) => (
+              {HOW_TO_STEPS.map(step => (
                 <li
                   key={step.step}
                   className="flex gap-5 bg-slate-800/40 rounded-xl p-6 border border-slate-700/40"
@@ -746,7 +788,9 @@ export const DailyPainTrackerPrintablePage: React.FC = () => {
                     {step.tip && (
                       <p className="text-sm text-slate-500 flex items-start gap-2">
                         <Star className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" />
-                        <span><strong className="text-slate-400">Tip:</strong> {step.tip}</span>
+                        <span>
+                          <strong className="text-slate-400">Tip:</strong> {step.tip}
+                        </span>
                       </p>
                     )}
                   </div>
@@ -757,7 +801,10 @@ export const DailyPainTrackerPrintablePage: React.FC = () => {
         </section>
 
         {/* ═══ TRUST SIGNALS ═══ */}
-        <section className="py-12 bg-slate-800/40 border-y border-slate-700/50" aria-label="Trust signals">
+        <section
+          className="py-12 bg-slate-800/40 border-y border-slate-700/50"
+          aria-label="Trust signals"
+        >
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid sm:grid-cols-3 gap-5">
               <div className="flex items-start gap-4 p-5 bg-slate-800/60 rounded-xl border border-slate-700/40">
@@ -767,7 +814,8 @@ export const DailyPainTrackerPrintablePage: React.FC = () => {
                 <div>
                   <h3 className="font-semibold text-white mb-1">Clinically Structured</h3>
                   <p className="text-sm text-slate-400">
-                    Uses the standard 0-10 NRS scale, clinical pain descriptors, and functional impact ratings that providers immediately understand.
+                    Uses the standard 0-10 NRS scale, clinical pain descriptors, and functional
+                    impact ratings that providers immediately understand.
                   </p>
                 </div>
               </div>
@@ -778,7 +826,8 @@ export const DailyPainTrackerPrintablePage: React.FC = () => {
                 <div>
                   <h3 className="font-semibold text-white mb-1">Zero Data Collection</h3>
                   <p className="text-sm text-slate-400">
-                    No email, no account, no tracking pixels. The PDF downloads directly to your device. Your health data belongs to you.
+                    No email, no account, no tracking pixels. The PDF downloads directly to your
+                    device. Your health data belongs to you.
                   </p>
                 </div>
               </div>
@@ -789,7 +838,10 @@ export const DailyPainTrackerPrintablePage: React.FC = () => {
                 <div>
                   <h3 className="font-semibold text-white mb-1">Claims-Ready Format</h3>
                   <p className="text-sm text-slate-400">
-                    Useful for appointments or claim-related discussions with WorkSafeBC, ICBC, CPP-D, or private insurers. This PDF is a documentation aid, not an official decision document. Approval depends on the reviewer, medical evidence, policy, and case context.
+                    Useful for appointments or claim-related discussions with WorkSafeBC, ICBC,
+                    CPP-D, or private insurers. This PDF is a documentation aid, not an official
+                    decision document. Approval depends on the reviewer, medical evidence, policy,
+                    and case context.
                   </p>
                 </div>
               </div>
@@ -802,12 +854,10 @@ export const DailyPainTrackerPrintablePage: React.FC = () => {
           <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <div className="bg-gradient-to-b from-slate-800 to-slate-800/60 rounded-2xl p-8 sm:p-10 border border-slate-700/50 shadow-xl">
               <Printer className="w-10 h-10 text-primary mx-auto mb-4" />
-              <h2 className="text-2xl font-bold text-white mb-3">
-                Ready to start tracking?
-              </h2>
+              <h2 className="text-2xl font-bold text-white mb-3">Ready to start tracking?</h2>
               <p className="text-slate-400 mb-6 max-w-lg mx-auto">
-                Print 14 copies — two weeks of daily tracking is the minimum threshold
-                where patterns become visible and the data becomes actionable for your provider.
+                Print 14 copies — two weeks of daily tracking is the minimum threshold where
+                patterns become visible and the data becomes actionable for your provider.
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <a
@@ -832,7 +882,10 @@ export const DailyPainTrackerPrintablePage: React.FC = () => {
         </section>
 
         {/* ═══ PAPER vs DIGITAL ═══ */}
-        <section className="py-16 sm:py-20 bg-slate-800/30 border-y border-slate-700/50" aria-labelledby="compare-heading">
+        <section
+          className="py-16 sm:py-20 bg-slate-800/30 border-y border-slate-700/50"
+          aria-labelledby="compare-heading"
+        >
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <SectionHeading eyebrow="Paper vs Digital" center>
               <span id="compare-heading">Choose the format that fits your life</span>
@@ -857,7 +910,7 @@ export const DailyPainTrackerPrintablePage: React.FC = () => {
                     'Tangible — hand directly to your doctor',
                     'Structured sections guide you through the day',
                     'No device required on high-pain days',
-                  ].map((item) => (
+                  ].map(item => (
                     <li key={item} className="flex items-start gap-2.5 text-sm text-slate-300">
                       <CheckCircle className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
                       {item}
@@ -896,7 +949,7 @@ export const DailyPainTrackerPrintablePage: React.FC = () => {
                     'Encrypted storage for maximum privacy',
                     'Takes 30 seconds on high-pain days',
                     'Weather correlation & trigger insights',
-                  ].map((item) => (
+                  ].map(item => (
                     <li key={item} className="flex items-start gap-2.5 text-sm text-slate-300">
                       <CheckCircle className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
                       {item}
@@ -924,45 +977,25 @@ export const DailyPainTrackerPrintablePage: React.FC = () => {
 
             <div className="mt-10 space-y-3">
               {FAQS.map((faq, i) => (
-                <Faq key={faq.question} question={faq.question} answer={faq.answer} defaultOpen={i === 0} />
+                <Faq
+                  key={faq.question}
+                  question={faq.question}
+                  answer={faq.answer}
+                  defaultOpen={i === 0}
+                />
               ))}
             </div>
           </div>
         </section>
 
         {/* ═══ RELATED RESOURCES ═══ */}
-        <section className="py-16 sm:py-20 bg-slate-800/30 border-t border-slate-700/50" aria-labelledby="related-heading">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <SectionHeading eyebrow="Keep Reading" center>
-              <span id="related-heading">Related pain tracking resources</span>
-            </SectionHeading>
-
-            <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              {RELATED_LINKS.map((link) => (
-                <Link
-                  key={link.href}
-                  to={link.href}
-                  className="group p-6 bg-slate-800/60 hover:bg-slate-800/80 rounded-xl border border-slate-700/50 hover:border-primary/40 transition-all"
-                >
-                  <h3 className="font-semibold text-white group-hover:text-primary transition-colors mb-2">
-                    {link.title}
-                  </h3>
-                  <p className="text-sm text-slate-400 mb-3">{link.description}</p>
-                  <span className="text-sm text-primary flex items-center gap-1">
-                    Read more <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </span>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
+        <RelatedPainResourceLinks links={RELATED_LINKS} />
 
         <ResourceCtaStack
           intent="printable"
           heading="Keep the patient funnel moving"
           body="Use the app free, download a printable, or prepare records for appointments and documentation. The last step on the page should still match the real reason people searched."
         />
-
       </main>
 
       <LandingFooter />

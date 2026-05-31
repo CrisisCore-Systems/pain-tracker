@@ -8,3 +8,4 @@ export { ShareButtons } from './ShareButtons';
 export { ReadingProgress } from './ReadingProgress';
 export { TableOfContents } from './TableOfContents';
 export { BackToTop } from './BackToTop';
+export { AppCtaBlock, HighIntentResourceLinks } from './HighIntentResourceLinks';

@@ -1,10 +1,10 @@
 /**
  * Pain Diary Template PDF - Premium SEO Landing Page
- * 
+ *
  * Target keyword: "pain diary template pdf"
  * Search intent: User wants a downloadable/printable pain diary
  * Conversion goal: Download template → discover Pain Tracker Pro
- * 
+ *
  * Fully custom layout for maximum conversion & engagement.
  */
 
@@ -37,6 +37,7 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import { LandingFooter } from '../../components/landing/LandingFooter';
+import { RelatedPainResourceLinks, mergeRelatedPainResourceLinks } from '../../components/seo';
 import {
   generateMedicalWebPageSchema,
   generateFAQSchema,
@@ -133,24 +134,36 @@ const TEMPLATE_SECTIONS = [
   {
     icon: Heart,
     title: 'Mood & Functioning',
-    description:
-      'Simple 5-point mood scale plus functional impact: work, chores, social, mobility',
+    description: 'Simple 5-point mood scale plus functional impact: work, chores, social, mobility',
     color: 'text-pink-400',
     bg: 'bg-pink-500/10',
   },
   {
     icon: Clipboard,
     title: 'Notes for Your Provider',
-    description: 'Dedicated space to write questions, concerns, or observations for your next appointment',
+    description:
+      'Dedicated space to write questions, concerns, or observations for your next appointment',
     color: 'text-sky-400',
     bg: 'bg-sky-500/10',
   },
 ];
 
 const IMPACT_STATS = [
-  { value: '34%', label: 'reported communication improvement in one study cohort', source: 'Journal of Pain Research, 2019' },
-  { value: '2.4×', label: 'claim-documentation association in one guidance context', source: 'WorkSafeBC guidance context' },
-  { value: '89%', label: 'endorsement figure reported in one APS survey dataset', source: 'APS survey data' },
+  {
+    value: '34%',
+    label: 'reported communication improvement in one study cohort',
+    source: 'Journal of Pain Research, 2019',
+  },
+  {
+    value: '2.4×',
+    label: 'claim-documentation association in one guidance context',
+    source: 'WorkSafeBC guidance context',
+  },
+  {
+    value: '89%',
+    label: 'endorsement figure reported in one APS survey dataset',
+    source: 'APS survey data',
+  },
 ];
 
 const EVIDENCE_CONTEXT_NOTE =
@@ -257,7 +270,7 @@ const FAQS = [
   {
     question: 'What if I have too much pain to write?',
     answer:
-      'On high-pain days, just fill in the number (0-10) and check a few boxes — that takes under 30 seconds. The template is designed so you can capture meaningful data even with minimal effort. If paper is consistently difficult, Pain Tracker\'s digital version lets you log entries with a few taps on your phone.',
+      "On high-pain days, just fill in the number (0-10) and check a few boxes — that takes under 30 seconds. The template is designed so you can capture meaningful data even with minimal effort. If paper is consistently difficult, Pain Tracker's digital version lets you log entries with a few taps on your phone.",
   },
   {
     question: 'Is there a digital version of this template?',
@@ -272,10 +285,10 @@ const FAQS = [
   {
     question: 'Is my data private? Do you track downloads?',
     answer:
-      'Your privacy is a core principle. We do not collect personal data from downloads, we do not embed tracking pixels in the PDF, and we do not require an account or email address. The file goes directly to your device. What you write on the printed diary stays with you — it\'s your data, period.',
+      "Your privacy is a core principle. We do not collect personal data from downloads, we do not embed tracking pixels in the PDF, and we do not require an account or email address. The file goes directly to your device. What you write on the printed diary stays with you — it's your data, period.",
   },
   {
-    question: 'What\'s the difference between a pain diary and a pain journal?',
+    question: "What's the difference between a pain diary and a pain journal?",
     answer:
       'A pain diary (like this template) is structured and clinical — it captures quantitative data (pain scores, med doses, sleep hours) that clinicians can quickly scan. A pain journal is more free-form and narrative, useful for processing emotions and experiences. Ideally, use both: the diary for your doctor, the journal for yourself.',
   },
@@ -286,7 +299,7 @@ const FAQS = [
   },
 ];
 
-const RELATED_LINKS = [
+const RELATED_LINKS = mergeRelatedPainResourceLinks([
   {
     title: 'Daily Pain Tracker Printable',
     description: 'A simpler one-page daily tracking sheet for quick entries',
@@ -317,7 +330,7 @@ const RELATED_LINKS = [
     description: 'Specialized template for migraine-specific symptoms and triggers',
     href: '/resources/migraine-pain-diary-printable',
   },
-];
+]);
 
 // ---------------------------------------------------------------------------
 // Reusable sub-components
@@ -331,16 +344,10 @@ const SectionHeading: React.FC<{
 }> = ({ eyebrow, children, subtitle, center }) => (
   <div className={center ? 'text-center' : ''}>
     {eyebrow && (
-      <p className="text-sm font-semibold uppercase tracking-wider text-primary mb-2">
-        {eyebrow}
-      </p>
+      <p className="text-sm font-semibold uppercase tracking-wider text-primary mb-2">{eyebrow}</p>
     )}
-    <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3 leading-tight">
-      {children}
-    </h2>
-    {subtitle && (
-      <p className="text-slate-400 text-lg max-w-2xl mx-auto">{subtitle}</p>
-    )}
+    <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3 leading-tight">{children}</h2>
+    {subtitle && <p className="text-slate-400 text-lg max-w-2xl mx-auto">{subtitle}</p>}
   </div>
 );
 
@@ -393,7 +400,11 @@ export const PainDiaryTemplatePdfPage: React.FC = () => {
     document.body.appendChild(ariaLive);
 
     return () => {
-      try { ariaLive?.remove(); } catch { /* already removed */ }
+      try {
+        ariaLive?.remove();
+      } catch {
+        /* already removed */
+      }
     };
   }, []);
 
@@ -412,20 +423,17 @@ export const PainDiaryTemplatePdfPage: React.FC = () => {
     }),
     generateFAQSchema(FAQS),
     generateSoftwareApplicationSchema(),
-    generateBreadcrumbSchema(breadcrumbs, { siteUrl: 'https://www.paintracker.ca' }),
+    generateBreadcrumbSchema(breadcrumbs, { siteUrl: 'https://www.paintracker.ca' })
   );
 
   const handleDownload = () => {
-    setDownloadCount((c) => c + 1);
+    setDownloadCount(c => c + 1);
   };
 
   return (
     <div className="min-h-screen bg-background landing-always-dark">
       {/* Structured data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: schema }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: schema }} />
 
       {/* Skip link */}
       <a
@@ -469,9 +477,14 @@ export const PainDiaryTemplatePdfPage: React.FC = () => {
                 <li key={crumb.url} className="flex items-center gap-2">
                   {i > 0 && <span className="text-slate-600">/</span>}
                   {i === breadcrumbs.length - 1 ? (
-                    <span className="text-slate-400" aria-current="page">{crumb.name}</span>
+                    <span className="text-slate-400" aria-current="page">
+                      {crumb.name}
+                    </span>
                   ) : (
-                    <Link to={crumb.url} className="text-slate-300 hover:text-primary transition-colors">
+                    <Link
+                      to={crumb.url}
+                      className="text-slate-300 hover:text-primary transition-colors"
+                    >
                       {crumb.name}
                     </Link>
                   )}
@@ -484,7 +497,6 @@ export const PainDiaryTemplatePdfPage: React.FC = () => {
 
       {/* ────────────────────────────────────────────────────────────────────── */}
       <main id="main-content" role="main">
-
         {/* ═══ HERO ═══ */}
         <section className="hero-section-dramatic py-20 sm:py-28" aria-labelledby="hero-heading">
           <div className="hero-bg-mesh" />
@@ -501,10 +513,7 @@ export const PainDiaryTemplatePdfPage: React.FC = () => {
               <span>Free Clinician-Designed PDF</span>
             </div>
 
-            <h1
-              id="hero-heading"
-              className="landing-headline landing-headline-lg text-white mb-6"
-            >
+            <h1 id="hero-heading" className="landing-headline landing-headline-lg text-white mb-6">
               Free pain diary template{' '}
               <span className="bg-gradient-to-r from-sky-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">
                 PDF in 2026.
@@ -512,14 +521,17 @@ export const PainDiaryTemplatePdfPage: React.FC = () => {
             </h1>
 
             <p className="landing-subhead text-lg sm:text-xl max-w-2xl mx-auto mb-4">
-              Track pain intensity, location, medications, triggers, sleep, and mood — all on one page.
-              Designed with pain management specialists so it captures exactly what clinicians need.
+              Track pain intensity, location, medications, triggers, sleep, and mood — all on one
+              page. Designed with pain management specialists so it captures exactly what clinicians
+              need.
             </p>
             <p className="text-slate-300 text-base sm:text-lg max-w-2xl mx-auto mb-4">
-              Start with the printable if you need something today. Move to the offline-first app when paper starts getting harder to review, summarize, or carry forward.
+              Start with the printable if you need something today. Move to the offline-first app
+              when paper starts getting harder to review, summarize, or carry forward.
             </p>
             <p className="text-slate-500 text-sm mb-8">
-              100% free &bull; No email required &bull; No tracking &bull; Prints on standard letter paper
+              100% free &bull; No email required &bull; No tracking &bull; Prints on standard letter
+              paper
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -551,7 +563,10 @@ export const PainDiaryTemplatePdfPage: React.FC = () => {
         </section>
 
         {/* ═══ QUICK-DOWNLOAD BAR (sticky utility) ═══ */}
-        <section className="py-6 bg-slate-900 border-y border-slate-800" aria-label="Download template">
+        <section
+          className="py-6 bg-slate-900 border-y border-slate-800"
+          aria-label="Download template"
+        >
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-800/70 backdrop-blur rounded-2xl p-5 border border-slate-700/60">
               <div className="flex items-center gap-4">
@@ -561,9 +576,15 @@ export const PainDiaryTemplatePdfPage: React.FC = () => {
                 <div>
                   <h2 className="text-lg font-semibold text-white">pain-diary-template.pdf</h2>
                   <p className="text-slate-400 text-sm flex items-center gap-3 flex-wrap">
-                    <span className="flex items-center gap-1"><Printer className="w-3.5 h-3.5" /> Print-ready</span>
-                    <span className="flex items-center gap-1"><CalendarDays className="w-3.5 h-3.5" /> 1 page per day</span>
-                    <span className="flex items-center gap-1"><Lock className="w-3.5 h-3.5" /> No sign-up</span>
+                    <span className="flex items-center gap-1">
+                      <Printer className="w-3.5 h-3.5" /> Print-ready
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <CalendarDays className="w-3.5 h-3.5" /> 1 page per day
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Lock className="w-3.5 h-3.5" /> No sign-up
+                    </span>
                   </p>
                 </div>
               </div>
@@ -592,12 +613,14 @@ export const PainDiaryTemplatePdfPage: React.FC = () => {
             </SectionHeading>
 
             <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-              {TEMPLATE_SECTIONS.map((section) => (
+              {TEMPLATE_SECTIONS.map(section => (
                 <div
                   key={section.title}
                   className="group p-5 rounded-xl bg-slate-800/50 border border-slate-700/50 hover:border-slate-600 transition-all hover:bg-slate-800/70"
                 >
-                  <div className={`w-11 h-11 ${section.bg} rounded-lg flex items-center justify-center mb-4`}>
+                  <div
+                    className={`w-11 h-11 ${section.bg} rounded-lg flex items-center justify-center mb-4`}
+                  >
                     <section.icon className={`w-5 h-5 ${section.color}`} />
                   </div>
                   <h3 className="font-semibold text-white mb-1.5">{section.title}</h3>
@@ -609,25 +632,58 @@ export const PainDiaryTemplatePdfPage: React.FC = () => {
         </section>
 
         {/* ═══ PAIN SCALE REFERENCE ═══ */}
-        <section className="py-14 bg-slate-800/40 border-y border-slate-700/50" aria-labelledby="pain-scale-heading">
+        <section
+          className="py-14 bg-slate-800/40 border-y border-slate-700/50"
+          aria-labelledby="pain-scale-heading"
+        >
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <SectionHeading eyebrow="Pain Scale Reference" center>
               <span id="pain-scale-heading">Understanding the 0-10 NRS Scale</span>
             </SectionHeading>
             <p className="text-slate-400 text-center mt-2 mb-8 max-w-2xl mx-auto">
-              The template uses the Numeric Rating Scale — the global clinical standard.
-              Here's how to interpret each level.
+              The template uses the Numeric Rating Scale — the global clinical standard. Here's how
+              to interpret each level.
             </p>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
               {[
-                { range: '0', label: 'No pain', color: 'from-emerald-500/20 to-emerald-600/10 border-emerald-500/30', text: 'text-emerald-400' },
-                { range: '1-2', label: 'Mild — barely noticeable', color: 'from-green-500/20 to-green-600/10 border-green-500/30', text: 'text-green-400' },
-                { range: '3-4', label: 'Moderate — distracting', color: 'from-yellow-500/20 to-yellow-600/10 border-yellow-500/30', text: 'text-yellow-400' },
-                { range: '5-6', label: 'Moderate-severe — limits activity', color: 'from-orange-500/20 to-orange-600/10 border-orange-500/30', text: 'text-orange-400' },
-                { range: '7-8', label: 'Severe — hard to think', color: 'from-red-500/20 to-red-600/10 border-red-500/30', text: 'text-red-400' },
-                { range: '9-10', label: 'Worst imaginable', color: 'from-rose-600/20 to-rose-700/10 border-rose-600/30', text: 'text-rose-400' },
-              ].map((level) => (
+                {
+                  range: '0',
+                  label: 'No pain',
+                  color: 'from-emerald-500/20 to-emerald-600/10 border-emerald-500/30',
+                  text: 'text-emerald-400',
+                },
+                {
+                  range: '1-2',
+                  label: 'Mild — barely noticeable',
+                  color: 'from-green-500/20 to-green-600/10 border-green-500/30',
+                  text: 'text-green-400',
+                },
+                {
+                  range: '3-4',
+                  label: 'Moderate — distracting',
+                  color: 'from-yellow-500/20 to-yellow-600/10 border-yellow-500/30',
+                  text: 'text-yellow-400',
+                },
+                {
+                  range: '5-6',
+                  label: 'Moderate-severe — limits activity',
+                  color: 'from-orange-500/20 to-orange-600/10 border-orange-500/30',
+                  text: 'text-orange-400',
+                },
+                {
+                  range: '7-8',
+                  label: 'Severe — hard to think',
+                  color: 'from-red-500/20 to-red-600/10 border-red-500/30',
+                  text: 'text-red-400',
+                },
+                {
+                  range: '9-10',
+                  label: 'Worst imaginable',
+                  color: 'from-rose-600/20 to-rose-700/10 border-rose-600/30',
+                  text: 'text-rose-400',
+                },
+              ].map(level => (
                 <div
                   key={level.range}
                   className={`rounded-xl p-4 bg-gradient-to-b ${level.color} border text-center`}
@@ -648,7 +704,7 @@ export const PainDiaryTemplatePdfPage: React.FC = () => {
             </SectionHeading>
 
             <div className="mt-10 grid sm:grid-cols-3 gap-6">
-              {IMPACT_STATS.map((stat) => (
+              {IMPACT_STATS.map(stat => (
                 <div
                   key={stat.label}
                   className="text-center p-6 rounded-2xl bg-gradient-to-b from-slate-800/80 to-slate-800/40 border border-slate-700/50"
@@ -662,9 +718,7 @@ export const PainDiaryTemplatePdfPage: React.FC = () => {
               ))}
             </div>
 
-            <p className="mt-4 text-xs text-slate-400 leading-relaxed">
-              {EVIDENCE_CONTEXT_NOTE}
-            </p>
+            <p className="mt-4 text-xs text-slate-400 leading-relaxed">{EVIDENCE_CONTEXT_NOTE}</p>
 
             <div className="mt-10 bg-slate-800/50 rounded-2xl p-6 sm:p-8 border border-slate-700/50">
               <p className="text-slate-300 leading-relaxed text-base sm:text-lg">
@@ -684,14 +738,17 @@ export const PainDiaryTemplatePdfPage: React.FC = () => {
         </section>
 
         {/* ═══ WHO SHOULD USE IT ═══ */}
-        <section className="py-16 sm:py-20 bg-slate-800/30 border-y border-slate-700/50" aria-labelledby="who-should-use">
+        <section
+          className="py-16 sm:py-20 bg-slate-800/30 border-y border-slate-700/50"
+          aria-labelledby="who-should-use"
+        >
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <SectionHeading eyebrow="Is This For You?" center>
               <span id="who-should-use">Who benefits most from a pain diary</span>
             </SectionHeading>
 
             <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {WHO_SHOULD_USE.map((item) => (
+              {WHO_SHOULD_USE.map(item => (
                 <div
                   key={item.title}
                   className="p-6 rounded-xl bg-slate-800/60 border border-slate-700/50 hover:border-slate-600 transition-colors"
@@ -719,7 +776,7 @@ export const PainDiaryTemplatePdfPage: React.FC = () => {
             </SectionHeading>
 
             <ol className="mt-12 space-y-8">
-              {HOW_TO_STEPS.map((step) => (
+              {HOW_TO_STEPS.map(step => (
                 <li
                   key={step.step}
                   className="flex gap-5 bg-slate-800/40 rounded-xl p-6 border border-slate-700/40"
@@ -733,7 +790,9 @@ export const PainDiaryTemplatePdfPage: React.FC = () => {
                     {step.tip && (
                       <p className="text-sm text-slate-500 flex items-start gap-2">
                         <Star className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" />
-                        <span><strong className="text-slate-400">Tip:</strong> {step.tip}</span>
+                        <span>
+                          <strong className="text-slate-400">Tip:</strong> {step.tip}
+                        </span>
                       </p>
                     )}
                   </div>
@@ -744,7 +803,10 @@ export const PainDiaryTemplatePdfPage: React.FC = () => {
         </section>
 
         {/* ═══ TRUST SIGNALS ═══ */}
-        <section className="py-12 bg-slate-800/40 border-y border-slate-700/50" aria-label="Trust signals">
+        <section
+          className="py-12 bg-slate-800/40 border-y border-slate-700/50"
+          aria-label="Trust signals"
+        >
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid sm:grid-cols-3 gap-5">
               <div className="flex items-start gap-4 p-5 bg-slate-800/60 rounded-xl border border-slate-700/40">
@@ -754,7 +816,8 @@ export const PainDiaryTemplatePdfPage: React.FC = () => {
                 <div>
                   <h3 className="font-semibold text-white mb-1">Clinician-Designed</h3>
                   <p className="text-sm text-slate-400">
-                    Developed with pain management specialists. Uses standard NRS scale and clinical terminology that providers immediately recognize.
+                    Developed with pain management specialists. Uses standard NRS scale and clinical
+                    terminology that providers immediately recognize.
                   </p>
                 </div>
               </div>
@@ -765,7 +828,8 @@ export const PainDiaryTemplatePdfPage: React.FC = () => {
                 <div>
                   <h3 className="font-semibold text-white mb-1">Zero Data Collection</h3>
                   <p className="text-sm text-slate-400">
-                    No email required, no tracking pixels, no analytics on the PDF. The file goes straight to your device. Your health data stays yours.
+                    No email required, no tracking pixels, no analytics on the PDF. The file goes
+                    straight to your device. Your health data stays yours.
                   </p>
                 </div>
               </div>
@@ -776,7 +840,10 @@ export const PainDiaryTemplatePdfPage: React.FC = () => {
                 <div>
                   <h3 className="font-semibold text-white mb-1">Claims-Ready Format</h3>
                   <p className="text-sm text-slate-400">
-                    Useful for appointments or claim-related discussions with WorkSafeBC, ICBC, CPP-D disability, or private insurers. This PDF is a documentation aid, not an official decision document. Approval depends on the reviewer, medical evidence, policy, and case context.
+                    Useful for appointments or claim-related discussions with WorkSafeBC, ICBC,
+                    CPP-D disability, or private insurers. This PDF is a documentation aid, not an
+                    official decision document. Approval depends on the reviewer, medical evidence,
+                    policy, and case context.
                   </p>
                 </div>
               </div>
@@ -789,12 +856,10 @@ export const PainDiaryTemplatePdfPage: React.FC = () => {
           <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <div className="bg-gradient-to-b from-slate-800 to-slate-800/60 rounded-2xl p-8 sm:p-10 border border-slate-700/50 shadow-xl">
               <Printer className="w-10 h-10 text-primary mx-auto mb-4" />
-              <h2 className="text-2xl font-bold text-white mb-3">
-                Ready to start tracking?
-              </h2>
+              <h2 className="text-2xl font-bold text-white mb-3">Ready to start tracking?</h2>
               <p className="text-slate-400 mb-6 max-w-lg mx-auto">
-                Print 14 copies and commit to two weeks. That's the minimum threshold where
-                patterns become visible — and the data becomes actionable for your care team.
+                Print 14 copies and commit to two weeks. That's the minimum threshold where patterns
+                become visible — and the data becomes actionable for your care team.
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <a
@@ -819,7 +884,10 @@ export const PainDiaryTemplatePdfPage: React.FC = () => {
         </section>
 
         {/* ═══ COMPARISON: Paper vs Digital ═══ */}
-        <section className="py-16 sm:py-20 bg-slate-800/30 border-y border-slate-700/50" aria-labelledby="compare-heading">
+        <section
+          className="py-16 sm:py-20 bg-slate-800/30 border-y border-slate-700/50"
+          aria-labelledby="compare-heading"
+        >
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <SectionHeading eyebrow="Paper vs Digital" center>
               <span id="compare-heading">Choose the format that fits your life</span>
@@ -844,7 +912,7 @@ export const PainDiaryTemplatePdfPage: React.FC = () => {
                     'Tangible — hand directly to your doctor',
                     'Good for people who prefer pen and paper',
                     'No device required on high-pain days',
-                  ].map((item) => (
+                  ].map(item => (
                     <li key={item} className="flex items-start gap-2.5 text-sm text-slate-300">
                       <CheckCircle className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
                       {item}
@@ -883,7 +951,7 @@ export const PainDiaryTemplatePdfPage: React.FC = () => {
                     'Encrypted storage for maximum privacy',
                     'Takes 30 seconds on high-pain days',
                     'Weather correlation & trigger insights',
-                  ].map((item) => (
+                  ].map(item => (
                     <li key={item} className="flex items-start gap-2.5 text-sm text-slate-300">
                       <CheckCircle className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
                       {item}
@@ -911,49 +979,33 @@ export const PainDiaryTemplatePdfPage: React.FC = () => {
 
             <div className="mt-10 space-y-3">
               {FAQS.map((faq, i) => (
-                <Faq key={faq.question} question={faq.question} answer={faq.answer} defaultOpen={i === 0} />
+                <Faq
+                  key={faq.question}
+                  question={faq.question}
+                  answer={faq.answer}
+                  defaultOpen={i === 0}
+                />
               ))}
             </div>
           </div>
         </section>
 
         {/* ═══ RELATED RESOURCES ═══ */}
-        <section className="py-16 sm:py-20 bg-slate-800/30 border-t border-slate-700/50" aria-labelledby="related-heading">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <SectionHeading eyebrow="Keep Reading" center>
-              <span id="related-heading">Related pain tracking resources</span>
-            </SectionHeading>
-
-            <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              {RELATED_LINKS.map((link) => (
-                <Link
-                  key={link.href}
-                  to={link.href}
-                  className="group p-6 bg-slate-800/60 hover:bg-slate-800/80 rounded-xl border border-slate-700/50 hover:border-primary/40 transition-all"
-                >
-                  <h3 className="font-semibold text-white group-hover:text-primary transition-colors mb-2">
-                    {link.title}
-                  </h3>
-                  <p className="text-sm text-slate-400 mb-3">{link.description}</p>
-                  <span className="text-sm text-primary flex items-center gap-1">
-                    Read more <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </span>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
+        <RelatedPainResourceLinks links={RELATED_LINKS} />
 
         {/* ═══ FINAL CTA ═══ */}
-        <section className="py-16 bg-gradient-to-b from-slate-900 to-slate-800" aria-label="Final call to action">
+        <section
+          className="py-16 bg-gradient-to-b from-slate-900 to-slate-800"
+          aria-label="Final call to action"
+        >
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <AlertCircle className="w-8 h-8 text-sky-400 mx-auto mb-4" />
             <h2 className="text-3xl font-bold text-white mb-4">
               Your pain experience deserves to be documented
             </h2>
             <p className="text-slate-400 text-lg mb-8 max-w-2xl mx-auto">
-              Whether you choose paper or digital, the important thing is to start.
-              Two weeks of consistent tracking can change the way your provider understands your pain.
+              Whether you choose paper or digital, the important thing is to start. Two weeks of
+              consistent tracking can change the way your provider understands your pain.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <a
@@ -975,7 +1027,6 @@ export const PainDiaryTemplatePdfPage: React.FC = () => {
             </div>
           </div>
         </section>
-
       </main>
 
       <LandingFooter />

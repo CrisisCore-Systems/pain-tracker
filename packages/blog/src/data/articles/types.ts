@@ -33,10 +33,13 @@ export interface ComparisonTable {
 /**
  * Cross-domain internal linking for subdomain SEO architecture.
  *
- * Every blog article on blog.paintracker.ca must include exactly 3 outbound links:
+ * Every blog article on blog.paintracker.ca includes a baseline authority path:
  *   1. Contextual link to an assigned root-domain pillar page (mid-article)
  *   2. Related blog article link (preserves topical clustering)
- *   3. App CTA link (rendered in the CTA block)
+ *   3. App CTA link to the root homepage (rendered in the CTA block)
+ *
+ * Article templates may also render the standardized high-intent resource block
+ * for printables, pain-journal guidance, and the app comparison page.
  *
  * See docs/seo/SUBDOMAIN_LINKING_ARCHITECTURE.md for the full specification.
  */

@@ -27,7 +27,7 @@ All authority must flow toward these 4 URLs:
 | Clinical | `https://paintracker.ca/pain-log-for-doctors` | Clinical / Documentation |
 | Chronic | `https://paintracker.ca/track-chronic-pain-symptoms` | Chronic Conditions |
 
-**App entry point:** `https://paintracker.ca/app`
+**Primary app discovery entry point:** `https://www.paintracker.ca/`
 
 ---
 
@@ -38,7 +38,7 @@ All authority must flow toward these 4 URLs:
 Each of the 30 SEO articles on `blog.paintracker.ca` MUST include:
 
 1. **1 contextual link to its assigned root-domain pillar** (mid-article, not footer)
-2. **1 CTA link to `https://paintracker.ca/app`** (bottom of article)
+2. **1 CTA link to `https://www.paintracker.ca/`** (bottom of article, using the anchor "free private pain tracker app")
 
 This ensures PageRank flows **blog → root**.
 
@@ -50,15 +50,24 @@ Each blog article MUST also link to:
 
 This preserves topical clustering, crawl efficiency, and long-tail rankings.
 
-### Rule C — 3 Links Per Article (Exact Formula)
+### Rule C - Baseline Links Plus High-Intent Resource Block
 
-Every blog article has exactly **3 outbound links**:
+Every blog article keeps the baseline authority path:
 
 | # | Link Type | Target Domain | Placement |
 |---|-----------|---------------|-----------|
 | 1 | Pillar link | `paintracker.ca` | Mid-article contextual |
 | 2 | Related article | `blog.paintracker.ca` | Mid-article or end |
-| 3 | App CTA | `paintracker.ca/app` | Bottom CTA block |
+| 3 | App CTA | `www.paintracker.ca` | Bottom CTA block |
+
+The article templates also render a standardized high-intent resource block. This is intentional: recent link data showed homepage and blog-homepage authority were over-concentrated while resource pages and the comparison page were underfed. The standardized block links to:
+
+- `https://www.paintracker.ca/` with the anchor "free private pain tracker app"
+- `https://www.paintracker.ca/resources/daily-pain-tracker-printable`
+- `https://www.paintracker.ca/resources/what-to-include-in-pain-journal`
+- `https://www.paintracker.ca/resources/7-day-pain-diary-template`
+- `https://www.paintracker.ca/resources/monthly-pain-tracker-printable`
+- `/best-pain-tracking-apps` on the blog subdomain, except on that page itself
 
 ---
 
@@ -137,7 +146,7 @@ Every blog article has exactly **3 outbound links**:
 | Features | `/features` | blog.paintracker.ca |
 | Offline Pain Diary | `https://paintracker.ca/offline-pain-diary` | paintracker.ca |
 | For Doctors | `https://paintracker.ca/pain-log-for-doctors` | paintracker.ca |
-| Try the App | `https://paintracker.ca/app` | paintracker.ca |
+| Try the App | `https://www.paintracker.ca/` | paintracker.ca |
 
 ### Blog Footer (mass PageRank transfer)
 
@@ -154,8 +163,8 @@ Every blog article has exactly **3 outbound links**:
 - Open Source on GitHub → external
 
 **Main site:**
-- Homepage → `https://paintracker.ca`
-- Open the App → `https://paintracker.ca/app`
+- Homepage → `https://www.paintracker.ca/`
+- Open the App → `https://www.paintracker.ca/`
 
 ---
 

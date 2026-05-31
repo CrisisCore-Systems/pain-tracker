@@ -1,7 +1,7 @@
 /**
  * SEO Page Layout Component
  * Reusable layout for all SEO-optimized landing pages following the ranking blueprint.
- * 
+ *
  * Structure:
  * 1. Above-the-fold clarity (headline, subhead, CTA)
  * 2. Instant utility block (download/tool preview)
@@ -15,13 +15,7 @@
 
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { 
-  Download, 
-  CheckCircle, 
-  Shield, 
-  FileText, 
-  ArrowRight
-} from 'lucide-react';
+import { Download, CheckCircle, Shield, FileText, ArrowRight } from 'lucide-react';
 import { LandingFooter } from '../landing/LandingFooter';
 import {
   generateMedicalWebPageSchema,
@@ -32,10 +26,11 @@ import {
   combineSchemas,
   defaultSEOConfig,
   type FAQItem,
-  type BreadcrumbItem
+  type BreadcrumbItem,
 } from '../../lib/seo';
 import { ResourceCtaStack } from './ResourceCtaStack';
 import { ResourceOutcomeBridge } from './ResourceOutcomeBridge';
+import { RelatedPainResourceLinks } from './RelatedPainResourceLinks';
 import { ResourceWorkflowSteps, type ResourcePageIntent } from './ResourceWorkflowSteps';
 import {
   trackResourcePrintableDownloadClick,
@@ -51,7 +46,7 @@ export interface SEOPageContent {
   metaTitle: string;
   metaDescription: string;
   keywords: string[];
-  
+
   // Above-the-fold
   badge?: string;
   headline: string;
@@ -65,7 +60,7 @@ export interface SEOPageContent {
     text: string;
     href: string;
   };
-  
+
   // Utility block
   utilityBlock?: {
     type: 'pdf-preview' | 'tool-embed' | 'download';
@@ -73,30 +68,30 @@ export interface SEOPageContent {
     downloadUrl?: string;
     downloadFileName?: string;
   };
-  
+
   // Content sections
   whatIsThis: string;
   whoShouldUse: string[];
   howToUse: Array<{ step: number; title: string; description: string }>;
   whyItMatters: string;
-  
+
   // Trust signals
   trustSignals?: {
     medicalNote?: string;
     privacyNote?: string;
     legalNote?: string;
   };
-  
+
   // FAQ
   faqs: FAQItem[];
-  
+
   // Related links
   relatedLinks: Array<{
     title: string;
     description: string;
     href: string;
   }>;
-  
+
   // Breadcrumbs
   breadcrumbs: BreadcrumbItem[];
 }
@@ -148,26 +143,26 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
       routeTarget,
     });
   };
-  
+
   // Set document title and meta tags
   useEffect(() => {
     document.title = content.metaTitle;
-    
+
     // Track if we created the canonical link (for cleanup)
     let createdCanonicalLink: HTMLLinkElement | null = null;
-    
+
     // Update meta description
     let metaDescription = document.querySelector('meta[name="description"]');
     if (metaDescription) {
       metaDescription.setAttribute('content', content.metaDescription);
     }
-    
+
     // Update meta keywords
     let metaKeywords = document.querySelector('meta[name="keywords"]');
     if (metaKeywords) {
       metaKeywords.setAttribute('content', content.keywords.join(', '));
     }
-    
+
     // Update canonical URL
     let canonicalLink = document.querySelector('link[rel="canonical"]');
     if (canonicalLink) {
@@ -178,34 +173,34 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
       createdCanonicalLink.setAttribute('href', canonicalUrl);
       document.head.appendChild(createdCanonicalLink);
     }
-    
+
     // Update OG tags
     let ogTitle = document.querySelector('meta[property="og:title"]');
     if (ogTitle) {
       ogTitle.setAttribute('content', content.metaTitle);
     }
-    
+
     let ogDescription = document.querySelector('meta[property="og:description"]');
     if (ogDescription) {
       ogDescription.setAttribute('content', content.metaDescription);
     }
-    
+
     let ogUrl = document.querySelector('meta[property="og:url"]');
     if (ogUrl) {
       ogUrl.setAttribute('content', canonicalUrl);
     }
-    
+
     // Update Twitter Card tags
     let twitterTitle = document.querySelector('meta[name="twitter:title"]');
     if (twitterTitle) {
       twitterTitle.setAttribute('content', content.metaTitle);
     }
-    
+
     let twitterDescription = document.querySelector('meta[name="twitter:description"]');
     if (twitterDescription) {
       twitterDescription.setAttribute('content', content.metaDescription);
     }
-    
+
     // Announce page to screen readers
     const announcement = `${content.headline}. ${content.subheadline}`;
     const ariaLive = document.createElement('div');
@@ -214,7 +209,7 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
     ariaLive.className = 'sr-only';
     ariaLive.textContent = announcement;
     document.body.appendChild(ariaLive);
-    
+
     return () => {
       try {
         ariaLive?.remove();
@@ -225,26 +220,26 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
       }
     };
   }, [content, canonicalUrl]);
-  
+
   // Generate structured data
   const medicalPageSchema = generateMedicalWebPageSchema({
     name: content.title,
     description: content.metaDescription,
     url: canonicalUrl,
-    keywords: content.keywords
+    keywords: content.keywords,
   });
-  
+
   const faqSchema = generateFAQSchema(content.faqs);
   const articleSchema = generateArticleSchema({
     headline: content.title,
     description: content.metaDescription,
-    url: canonicalUrl
+    url: canonicalUrl,
   });
   const softwareSchema = generateSoftwareApplicationSchema();
   const breadcrumbSchema = generateBreadcrumbSchema(content.breadcrumbs, {
-    siteUrl: defaultSEOConfig.siteUrl
+    siteUrl: defaultSEOConfig.siteUrl,
   });
-  
+
   const combinedSchema = combineSchemas(
     medicalPageSchema,
     faqSchema,
@@ -252,15 +247,12 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
     softwareSchema,
     breadcrumbSchema
   );
-  
+
   return (
     <div className="min-h-screen bg-background landing-always-dark">
       {/* Structured Data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: combinedSchema }}
-      />
-      
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: combinedSchema }} />
+
       {/* Skip to main content */}
       <a
         href="#main-content"
@@ -268,7 +260,7 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
       >
         Skip to main content
       </a>
-      
+
       {/* Navigation */}
       <nav className="sticky top-0 z-50 nav-floating-glass">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -294,7 +286,7 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
           </div>
         </div>
       </nav>
-      
+
       {/* Breadcrumbs */}
       <div className="bg-slate-900/50 border-b border-slate-800">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
@@ -319,20 +311,20 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
           </nav>
         </div>
       </div>
-      
+
       <main id="main-content" role="main">
         {/* ===== SECTION 1: Above-the-Fold Clarity ===== */}
         <section className="hero-section-dramatic py-16 sm:py-24">
           <div className="hero-bg-mesh" />
           <div className="hero-grid-pattern" />
-          
+
           {/* Floating orbs for visual interest */}
           <div className="orb-container">
             <div className="orb-glow orb-glow-sky w-96 h-96 -top-48 -left-48" />
             <div className="orb-glow orb-glow-purple w-72 h-72 top-1/4 -right-36" />
             <div className="orb-glow orb-glow-emerald w-64 h-64 bottom-0 left-1/4" />
           </div>
-          
+
           <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             {content.badge && (
               <div className="inline-flex items-center gap-2 landing-badge mb-6">
@@ -340,21 +332,23 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
                 <span>{content.badge}</span>
               </div>
             )}
-            
+
             <h1 className="landing-headline landing-headline-lg text-white mb-6">
               {content.headline}
             </h1>
-            
+
             <p className="landing-subhead text-lg sm:text-xl max-w-2xl mx-auto mb-8">
               {content.subheadline}
             </p>
-            
+
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               {content.primaryCTA.download ? (
                 <a
                   href={content.primaryCTA.href}
                   download={content.utilityBlock?.downloadFileName}
-                  onClick={() => trackPrintableClick('hero_primary_download', content.primaryCTA.href)}
+                  onClick={() =>
+                    trackPrintableClick('hero_primary_download', content.primaryCTA.href)
+                  }
                   className="btn-cta-primary px-8 py-4 text-lg font-semibold rounded-xl flex items-center gap-3"
                 >
                   <Download className="w-5 h-5" />
@@ -374,7 +368,7 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
                   <ArrowRight className="w-5 h-5" />
                 </Link>
               )}
-              
+
               {content.secondaryCTA && (
                 <Link
                   to={content.secondaryCTA.href}
@@ -391,7 +385,7 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
             </div>
           </div>
         </section>
-        
+
         {/* ===== SECTION 2: Instant Utility Block ===== */}
         <section className="py-12 bg-slate-900 border-y border-slate-800">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -405,7 +399,7 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
                 />
               </div>
             )}
-            
+
             {content.utilityBlock?.type === 'download' && (
               <div className="text-center">
                 <div className="inline-flex items-center gap-4 bg-slate-800 rounded-2xl p-6 border border-slate-700">
@@ -421,7 +415,9 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
                   <a
                     href={content.utilityBlock.downloadUrl}
                     download={content.utilityBlock.downloadFileName}
-                    onClick={() => trackPrintableClick('utility_download', content.utilityBlock?.downloadUrl)}
+                    onClick={() =>
+                      trackPrintableClick('utility_download', content.utilityBlock?.downloadUrl)
+                    }
                     className="btn-cta-primary px-6 py-3 rounded-xl flex items-center gap-2"
                   >
                     <Download className="w-5 h-5" />
@@ -430,7 +426,7 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
                 </div>
               </div>
             )}
-            
+
             {/* Custom children slot for tool embeds */}
             {children}
           </div>
@@ -444,7 +440,7 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
         />
 
         <ResourceWorkflowSteps intent={resourceIntent} />
-        
+
         {/* ===== SECTION 3: Ultra-Clear Explanation ===== */}
         <section className="py-16 bg-slate-900">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -452,16 +448,14 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
               {/* What is this */}
               <div>
                 <h2 className="text-2xl font-bold text-white mb-4">What is this?</h2>
-                <p className="text-slate-300 text-lg leading-relaxed">
-                  {content.whatIsThis}
-                </p>
+                <p className="text-slate-300 text-lg leading-relaxed">{content.whatIsThis}</p>
               </div>
-              
+
               {/* Who should use it */}
               <div>
                 <h2 className="text-2xl font-bold text-white mb-4">Who should use it?</h2>
                 <ul className="space-y-3">
-                  {content.whoShouldUse.map((item) => (
+                  {content.whoShouldUse.map(item => (
                     <li key={item} className="flex items-start gap-3">
                       <CheckCircle className="w-6 h-6 text-emerald-400 flex-shrink-0 mt-0.5" />
                       <span className="text-slate-300 text-lg">{item}</span>
@@ -469,12 +463,12 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
                   ))}
                 </ul>
               </div>
-              
+
               {/* How to use it */}
               <div>
                 <h2 className="text-2xl font-bold text-white mb-6">How to use it</h2>
                 <ol className="space-y-6">
-                  {content.howToUse.map((step) => (
+                  {content.howToUse.map(step => (
                     <li key={step.step} className="flex gap-4">
                       <div className="flex-shrink-0 w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center">
                         <span className="text-primary font-bold">{step.step}</span>
@@ -487,18 +481,16 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
                   ))}
                 </ol>
               </div>
-              
+
               {/* Why it matters */}
               <div className="bg-slate-800/50 rounded-2xl p-8 border border-slate-700">
                 <h2 className="text-2xl font-bold text-white mb-4">Why tracking pain matters</h2>
-                <p className="text-slate-300 text-lg leading-relaxed">
-                  {content.whyItMatters}
-                </p>
+                <p className="text-slate-300 text-lg leading-relaxed">{content.whyItMatters}</p>
               </div>
             </div>
           </div>
         </section>
-        
+
         {/* ===== SECTION 4: Clinical & Legal Trust Signals ===== */}
         {content.trustSignals && (
           <section className="py-12 bg-slate-800/50 border-y border-slate-700">
@@ -515,7 +507,7 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
                     </div>
                   </div>
                 )}
-                
+
                 {content.trustSignals.privacyNote && (
                   <div className="flex items-start gap-4 p-4 bg-slate-800 rounded-xl">
                     <div className="w-10 h-10 bg-emerald-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
@@ -527,7 +519,7 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
                     </div>
                   </div>
                 )}
-                
+
                 {content.trustSignals.legalNote && (
                   <div className="flex items-start gap-4 p-4 bg-slate-800 rounded-xl">
                     <div className="w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
@@ -543,45 +535,14 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
             </div>
           </section>
         )}
-        
-        {/* ===== SECTION 5: Internal Authority Links ===== */}
-        <section className="py-16 bg-slate-900">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-2xl font-bold text-white mb-8">Related pain tracking resources</h2>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {content.relatedLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  to={link.href}
-                  className="group p-6 bg-slate-800 hover:bg-slate-750 rounded-xl border border-slate-700 hover:border-primary/50 transition-all"
-                >
-                  <h3 className="font-semibold text-white group-hover:text-primary transition-colors mb-2">
-                    {link.title}
-                  </h3>
-                  <p className="text-sm text-slate-400 mb-3">{link.description}</p>
-                  <span className="text-sm text-primary flex items-center gap-1">
-                    Learn more <ArrowRight className="w-4 h-4" />
-                  </span>
-                </Link>
-              ))}
-            </div>
 
-            <div className="mt-8 rounded-2xl border border-slate-700 bg-slate-800/60 p-6">
-              <h3 className="text-xl font-semibold text-white">Explore the full resource hub</h3>
-              <p className="mt-3 text-slate-300">
-                Explore all free pain tracker templates and pain journal printables if you need a different format for doctor visits, disability documentation, or private offline tracking.
-              </p>
-              <Link
-                to="/resources"
-                className="mt-4 inline-flex items-center gap-2 text-primary hover:text-sky-300 transition-colors"
-              >
-                <span>Explore all free pain tracker templates and pain journal printables</span>
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
-          </div>
-        </section>
-        
+        {/* ===== SECTION 5: Internal Authority Links ===== */}
+        <RelatedPainResourceLinks
+          links={content.relatedLinks}
+          className="py-16 bg-slate-900"
+          maxWidthClassName="max-w-4xl"
+        />
+
         {/* ===== SECTION 6: FAQ Block ===== */}
         <section className="py-16 bg-slate-800/50 border-t border-slate-700">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -589,7 +550,7 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
               Frequently Asked Questions
             </h2>
             <div className="space-y-4">
-              {content.faqs.map((faq) => (
+              {content.faqs.map(faq => (
                 <details
                   key={faq.question}
                   className="group bg-slate-800 rounded-xl border border-slate-700"
@@ -630,12 +591,14 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
         <section className="py-10 bg-slate-950 border-t border-slate-800">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <p className="text-sm leading-relaxed text-slate-400">
-              PainTracker does not diagnose, treat, or replace medical advice. These templates and guides are designed to help you organize your own notes so you can communicate patterns more clearly with clinicians, insurers, case managers, or support workers.
+              PainTracker does not diagnose, treat, or replace medical advice. These templates and
+              guides are designed to help you organize your own notes so you can communicate
+              patterns more clearly with clinicians, insurers, case managers, or support workers.
             </p>
           </div>
         </section>
       </main>
-      
+
       <LandingFooter />
     </div>
   );

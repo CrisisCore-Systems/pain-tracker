@@ -3,10 +3,12 @@
  *
  * Architecture: blog.paintracker.ca → paintracker.ca
  *
- * Every blog article gets exactly 3 outbound links:
- *   1. Contextual pillar link → root domain (authority transfer)
- *   2. Related article link → blog subdomain (topical clustering)
- *   3. App CTA → root domain (rendered by page component)
+ * Every blog article gets a baseline authority path plus a standardized
+ * high-intent resource block:
+ *   1. Contextual pillar link -> root domain (authority transfer)
+ *   2. Related article link -> blog subdomain (topical clustering)
+ *   3. App CTA -> root homepage (rendered by page component)
+ *   4. Core resource links -> printables, pain-journal guide, comparison page
  *
  * @see docs/seo/SUBDOMAIN_LINKING_ARCHITECTURE.md
  */
@@ -29,7 +31,7 @@ export const PILLAR_LABELS = {
   chronic: 'Track Chronic Pain Symptoms',
 } as const;
 
-export const APP_CTA_URL = 'https://www.paintracker.ca/start';
+export const APP_CTA_URL = 'https://www.paintracker.ca/';
 
 // ── Per-article linking directives ───────────────────────────────────
 

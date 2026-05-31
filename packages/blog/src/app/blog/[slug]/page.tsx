@@ -8,6 +8,7 @@ import { PostCard } from '@/components/PostCard';
 import { ShareButtons } from '@/components/ShareButtons';
 import { ReadingProgress } from '@/components/ReadingProgress';
 import { TableOfContents } from '@/components/TableOfContents';
+import { AppCtaBlock, HighIntentResourceLinks } from '@/components/HighIntentResourceLinks';
 import { findReadingPathsForSlug } from '@/lib/reading-paths';
 import { formatDate, formatReadingTime, getTagColor, siteConfig } from '@/lib/utils';
 
@@ -18,7 +19,7 @@ interface BlogPostPageProps {
 // Generate static paths for all posts
 export async function generateStaticParams() {
   const slugs = await getAllPostSlugs();
-  return slugs.map((slug) => ({ slug }));
+  return slugs.map(slug => ({ slug }));
 }
 
 // Generate metadata for each post
@@ -89,7 +90,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
             <div className="absolute inset-0 bg-gradient-to-b from-background/40 to-transparent h-32" />
           </div>
-          
+
           {/* Floating header content */}
           <div className="container-blog relative -mt-48 md:-mt-64 lg:-mt-80 z-10 pb-8 md:pb-12">
             {/* Back Link */}
@@ -97,13 +98,18 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               href="/"
               className="inline-flex items-center gap-2 text-sm text-white/80 hover:text-white transition-colors mb-6 group"
             >
-              <svg 
-                className="h-4 w-4 transition-transform group-hover:-translate-x-2" 
-                fill="none" 
-                stroke="currentColor" 
+              <svg
+                className="h-4 w-4 transition-transform group-hover:-translate-x-2"
+                fill="none"
+                stroke="currentColor"
                 viewBox="0 0 24 24"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 19l-7-7 7-7"
+                />
               </svg>
               Back to articles
             </Link>
@@ -111,7 +117,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             {/* Tags */}
             {post.tags && post.tags.length > 0 && (
               <div className="flex flex-wrap gap-2 mb-6">
-                {post.tags.map((tag) => (
+                {post.tags.map(tag => (
                   <Link
                     key={tag.slug}
                     href={`/tag/${tag.slug}`}
@@ -144,14 +150,24 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                 <div className="flex items-center gap-3 text-sm text-muted-foreground">
                   <time dateTime={post.publishedAt} className="flex items-center gap-1.5">
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
                     </svg>
                     {formatDate(post.publishedAt)}
                   </time>
                   <span className="text-muted-foreground/50">•</span>
                   <span className="flex items-center gap-1.5">
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
                     </svg>
                     {formatReadingTime(post.readTimeInMinutes)}
                   </span>
@@ -168,13 +184,18 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             href="/"
             className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors mb-8 group"
           >
-            <svg 
-              className="h-4 w-4 transition-transform group-hover:-translate-x-2" 
-              fill="none" 
-              stroke="currentColor" 
+            <svg
+              className="h-4 w-4 transition-transform group-hover:-translate-x-2"
+              fill="none"
+              stroke="currentColor"
               viewBox="0 0 24 24"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 19l-7-7 7-7"
+              />
             </svg>
             Back to articles
           </Link>
@@ -182,7 +203,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           {/* Tags */}
           {post.tags && post.tags.length > 0 && (
             <div className="flex flex-wrap gap-2 mb-6">
-              {post.tags.map((tag) => (
+              {post.tags.map(tag => (
                 <Link
                   key={tag.slug}
                   href={`/tag/${tag.slug}`}
@@ -225,20 +246,28 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       )}
 
       {/* Content */}
-      <div className="container-blog py-12 md:py-16 animate-fade-in-up relative" style={{ animationDelay: '200ms' }}>
+      <div
+        className="container-blog py-12 md:py-16 animate-fade-in-up relative"
+        style={{ animationDelay: '200ms' }}
+      >
         {/* Reading progress indicator */}
         <ReadingProgress />
-        
+
         {/* Table of contents for longer articles */}
         <TableOfContents content={post.content.markdown} />
-        
+
         <MarkdownContent content={post.content.markdown} />
+        <AppCtaBlock />
+        <HighIntentResourceLinks currentSlug={post.slug} />
       </div>
 
       {readingPaths.length > 0 && (
         <section className="container-blog mb-16" aria-labelledby="reading-path-heading">
           <div className="card p-6 md:p-8 relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/6 via-transparent to-accent/6" aria-hidden="true" />
+            <div
+              className="absolute inset-0 bg-gradient-to-br from-primary/6 via-transparent to-accent/6"
+              aria-hidden="true"
+            />
             <div className="relative">
               <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary mb-3">
                 Reading Path
@@ -247,30 +276,51 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                 Continue this series on purpose
               </h2>
               <p className="text-muted-foreground leading-relaxed mb-6 max-w-2xl">
-                This article belongs to one of the larger editorial paths on the site. If you want the surrounding context instead of a single post in isolation, start at the path entry point below.
+                This article belongs to one of the larger editorial paths on the site. If you want
+                the surrounding context instead of a single post in isolation, start at the path
+                entry point below.
               </p>
 
               <div className="grid grid-cols-1 gap-4">
-                {readingPaths.map((path) => (
-                  <div key={path.slug} className="rounded-2xl border border-border/70 bg-background/80 p-5">
+                {readingPaths.map(path => (
+                  <div
+                    key={path.slug}
+                    className="rounded-2xl border border-border/70 bg-background/80 p-5"
+                  >
                     <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                       <div>
                         <p className="text-sm font-bold text-foreground mb-1">{path.title}</p>
-                        <p className="text-sm text-muted-foreground leading-relaxed max-w-xl">{path.description}</p>
+                        <p className="text-sm text-muted-foreground leading-relaxed max-w-xl">
+                          {path.description}
+                        </p>
                       </div>
-                      <div className="text-sm text-muted-foreground shrink-0">{path.postCount} posts</div>
+                      <div className="text-sm text-muted-foreground shrink-0">
+                        {path.postCount} posts
+                      </div>
                     </div>
                     <div className="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                       <p className="text-sm text-muted-foreground">
-                        Start with <span className="font-semibold text-foreground">{path.startLabel}</span>
+                        Start with{' '}
+                        <span className="font-semibold text-foreground">{path.startLabel}</span>
                       </p>
                       <Link
                         href={path.startHref}
                         className="inline-flex items-center gap-2 text-primary font-semibold hover:gap-3 transition-all duration-300"
                       >
                         Open reading path
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                          aria-hidden="true"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M14 5l7 7m0 0l-7 7m7-7H3"
+                          />
                         </svg>
                       </Link>
                     </div>
@@ -287,7 +337,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary/10 via-card to-accent/10 border p-8 md:p-12 mb-16">
           {/* Background decoration */}
           <div className="absolute top-0 right-0 w-48 h-48 bg-primary/5 rounded-full blur-3xl" />
-          
+
           <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div>
               <h2 className="text-2xl font-bold mb-2">Enjoyed this article?</h2>
@@ -295,10 +345,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                 Share it with others who might find it helpful.
               </p>
             </div>
-            <ShareButtons
-              url={`${siteConfig.url}/blog/${post.slug}`}
-              title={post.title}
-            />
+            <ShareButtons url={`${siteConfig.url}/blog/${post.slug}`} title={post.title} />
           </div>
         </div>
       </section>
@@ -309,7 +356,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           <div className="card p-8 md:p-10 relative overflow-hidden">
             {/* Background gradient */}
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5" />
-            
+
             <div className="relative flex flex-col sm:flex-row items-start gap-6">
               {post.author.profilePicture && (
                 <div className="relative">
@@ -322,15 +369,23 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                   />
                   <div className="absolute -bottom-2 -right-2 w-8 h-8 rounded-full bg-success flex items-center justify-center shadow-lg">
                     <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      <path
+                        fillRule="evenodd"
+                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                        clipRule="evenodd"
+                      />
                     </svg>
                   </div>
                 </div>
               )}
               <div className="flex-1">
-                <p className="text-xs font-bold uppercase tracking-widest text-primary mb-2">Written by</p>
+                <p className="text-xs font-bold uppercase tracking-widest text-primary mb-2">
+                  Written by
+                </p>
                 <h2 className="text-2xl font-bold mb-3">{post.author.name}</h2>
-                <p className="text-muted-foreground leading-relaxed text-lg">{post.author.bio.text}</p>
+                <p className="text-muted-foreground leading-relaxed text-lg">
+                  {post.author.bio.text}
+                </p>
               </div>
             </div>
           </div>
@@ -344,13 +399,11 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             <h2 className="text-3xl md:text-4xl font-bold mb-2">
               Continue <span className="gradient-text">Reading</span>
             </h2>
-            <p className="text-muted-foreground text-lg">
-              More articles you might enjoy
-            </p>
+            <p className="text-muted-foreground text-lg">More articles you might enjoy</p>
           </div>
           <div className="container-blog-wide">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 stagger-children">
-              {relatedPosts.map((relatedPost) => (
+              {relatedPosts.map(relatedPost => (
                 <PostCard key={relatedPost.id} post={relatedPost} />
               ))}
             </div>

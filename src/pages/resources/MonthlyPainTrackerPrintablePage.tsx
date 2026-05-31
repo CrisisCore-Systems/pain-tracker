@@ -39,7 +39,12 @@ import {
   CalendarDays,
 } from 'lucide-react';
 import { LandingFooter } from '../../components/landing/LandingFooter';
-import { ResourceOutcomeBridge, ResourceWorkflowSteps } from '../../components/seo';
+import {
+  ResourceOutcomeBridge,
+  ResourceWorkflowSteps,
+  RelatedPainResourceLinks,
+  mergeRelatedPainResourceLinks,
+} from '../../components/seo';
 import {
   generateMedicalWebPageSchema,
   generateFAQSchema,
@@ -60,8 +65,7 @@ import '../../styles/pages/landing.css';
 const SEO = {
   slug: 'monthly-pain-tracker-printable',
   title: 'Monthly Pain Tracker Printable in 2026',
-  metaTitle:
-    'Monthly Pain Tracker Printable (2026) | Free 30-Day PDF, No Email',
+  metaTitle: 'Monthly Pain Tracker Printable (2026) | Free 30-Day PDF, No Email',
   metaDescription:
     'Download a free monthly pain tracker printable for 2026. No email required. This 30-day template tracks pain calendar, sleep, medications, function, triggers, mood, and monthly summary for treatment reviews and disability claims.',
   keywords: [
@@ -95,56 +99,64 @@ const TEMPLATE_SECTIONS = [
   {
     icon: CalendarDays,
     title: 'Monthly Pain Calendar',
-    description: '5-week calendar grid with daily pain ratings (0-10), weekly averages, and flare day markers',
+    description:
+      '5-week calendar grid with daily pain ratings (0-10), weekly averages, and flare day markers',
     color: 'text-red-400',
     bg: 'bg-red-500/10',
   },
   {
     icon: Moon,
     title: 'Sleep & Energy Summary',
-    description: 'Weekly averages for sleep hours, sleep quality (1-5), energy (0-10), and sleep disturbance notes',
+    description:
+      'Weekly averages for sleep hours, sleep quality (1-5), energy (0-10), and sleep disturbance notes',
     color: 'text-indigo-400',
     bg: 'bg-indigo-500/10',
   },
   {
     icon: Pill,
     title: 'Medications & Treatments',
-    description: '7-row log for every intervention this month — dose, frequency, start/stop dates, relief rating, and side effects',
+    description:
+      '7-row log for every intervention this month — dose, frequency, start/stop dates, relief rating, and side effects',
     color: 'text-emerald-400',
     bg: 'bg-emerald-500/10',
   },
   {
     icon: BarChart3,
     title: 'Weekly Functional Impact',
-    description: 'Self-care, housework, walking, work, social, and exercise rated 0-5 each week — shows disability over time',
+    description:
+      'Self-care, housework, walking, work, social, and exercise rated 0-5 each week — shows disability over time',
     color: 'text-cyan-400',
     bg: 'bg-cyan-500/10',
   },
   {
     icon: Eye,
     title: 'Trigger Pattern Tracker',
-    description: 'Tally 8 triggers by week — weather, stress, sleep, overexertion, posture, food, hormonal, and custom — with monthly totals',
+    description:
+      'Tally 8 triggers by week — weather, stress, sleep, overexertion, posture, food, hormonal, and custom — with monthly totals',
     color: 'text-amber-400',
     bg: 'bg-amber-500/10',
   },
   {
     icon: Smile,
     title: 'Mood & Wellbeing Trend',
-    description: 'Color-coded mood scale with weekly mood, anxiety, stress averages, and emotional patterns',
+    description:
+      'Color-coded mood scale with weekly mood, anxiety, stress averages, and emotional patterns',
     color: 'text-pink-400',
     bg: 'bg-pink-500/10',
   },
   {
     icon: TrendingUp,
     title: 'Monthly Summary & Analysis',
-    description: 'Two-column summary: pain stats, flare count, trend vs last month, treatments, triggers, and goals',
+    description:
+      'Two-column summary: pain stats, flare count, trend vs last month, treatments, triggers, and goals',
     color: 'text-sky-400',
     bg: 'bg-sky-500/10',
   },
   {
     icon: Clipboard,
     title: 'Notes for Provider',
-    description: 'Space for monthly patterns, treatment concerns, medication requests, and questions for your appointment',
+    description:
+      'Space for monthly patterns, treatment concerns, medication requests, and questions for your appointment',
     color: 'text-purple-400',
     bg: 'bg-purple-500/10',
   },
@@ -156,21 +168,24 @@ const MONTH_FLOW = [
     icon: Moon,
     color: 'text-indigo-400',
     bg: 'bg-indigo-500/15',
-    description: 'Write your daily pain number in the calendar cell. 30 seconds keeps a full month of data accurate.',
+    description:
+      'Write your daily pain number in the calendar cell. 30 seconds keeps a full month of data accurate.',
   },
   {
     time: 'Each Week-End',
     icon: LineChart,
     color: 'text-sky-400',
     bg: 'bg-sky-500/15',
-    description: 'Summarize the week\'s sleep, function, triggers, and mood. Calculate your weekly pain average for the trend.',
+    description:
+      "Summarize the week's sleep, function, triggers, and mood. Calculate your weekly pain average for the trend.",
   },
   {
     time: 'Month-End Review',
     icon: TrendingUp,
     color: 'text-emerald-400',
     bg: 'bg-emerald-500/15',
-    description: 'Complete the Monthly Summary: best/worst weeks, flare count, treatment effectiveness, and goals for next month.',
+    description:
+      'Complete the Monthly Summary: best/worst weeks, flare count, treatment effectiveness, and goals for next month.',
   },
 ];
 
@@ -225,7 +240,7 @@ const HOW_TO_STEPS = [
     step: 2,
     title: 'Fill in the calendar each evening',
     description:
-      'Write your average daily pain (0-10) in that day\'s cell. Circle flare days (6+). Mark medication changes with a star. Takes 30 seconds.',
+      "Write your average daily pain (0-10) in that day's cell. Circle flare days (6+). Mark medication changes with a star. Takes 30 seconds.",
     tip: 'Consistency matters more than precision. An approximate number written today beats a perfect number recalled later.',
   },
   {
@@ -240,7 +255,7 @@ const HOW_TO_STEPS = [
     title: 'Complete the monthly summary',
     description:
       'At month-end, fill in the analysis: average pain, flare count, trend vs last month, most effective treatment, most common trigger, and goals for next month.',
-    tip: 'The monthly summary section is the most clinically valuable part — it\'s what providers read first.',
+    tip: "The monthly summary section is the most clinically valuable part — it's what providers read first.",
   },
   {
     step: 5,
@@ -255,7 +270,7 @@ const FAQS = [
   {
     question: 'Is monthly tracking enough, or do I need daily logs too?',
     answer:
-      'Monthly tracking is ideal for seeing the big picture — treatment effectiveness, cyclical patterns, and long-term trends. If you\'re investigating specific triggers or need detailed documentation during a flare, combine it with daily tracking. Many people use monthly as their primary tracker and switch to daily only during flare-ups or treatment changes. The monthly format captures the essential data with the least daily effort.',
+      "Monthly tracking is ideal for seeing the big picture — treatment effectiveness, cyclical patterns, and long-term trends. If you're investigating specific triggers or need detailed documentation during a flare, combine it with daily tracking. Many people use monthly as their primary tracker and switch to daily only during flare-ups or treatment changes. The monthly format captures the essential data with the least daily effort.",
   },
   {
     question: 'How is this different from the Weekly Pain Log?',
@@ -270,7 +285,7 @@ const FAQS = [
   {
     question: 'How many months should I track before patterns emerge?',
     answer:
-      'You\'ll often spot initial patterns in your first month. Two to three months gives you statistical confidence and reveals whether patterns are consistent or variable. Six months is ideal for understanding seasonal effects and long-term treatment response. For disability claims, longer tracking histories (6-12 months) are substantially more compelling because they demonstrate sustained, documented impact.',
+      "You'll often spot initial patterns in your first month. Two to three months gives you statistical confidence and reveals whether patterns are consistent or variable. Six months is ideal for understanding seasonal effects and long-term treatment response. For disability claims, longer tracking histories (6-12 months) are substantially more compelling because they demonstrate sustained, documented impact.",
   },
   {
     question: 'Can I use this for workers compensation or disability claims?',
@@ -283,7 +298,7 @@ const FAQS = [
       'It tallies how many days each trigger was present during each week, with a monthly total. After a few months, you\'ll see clearly which triggers appear most consistently alongside high-pain periods. For example, "poor sleep" might tally 18 days in a bad month and 6 days in a good month — that correlation guides treatment priorities.',
   },
   {
-    question: 'Should I continue tracking when I\'m feeling better?',
+    question: "Should I continue tracking when I'm feeling better?",
     answer:
       'Absolutely. Tracking good months is just as important as bad ones. Good-month data provides evidence that treatment is working, establishes your "baseline" for comparison, and creates a complete record if pain returns. Stop-start tracking leaves gaps that weaken both clinical decision-making and disability documentation.',
   },
@@ -295,7 +310,7 @@ const FAQS = [
   {
     question: 'Can I use this alongside the digital app?',
     answer:
-      'Absolutely. Paper monthly logs work well alongside Pain Tracker. The app captures daily detail with less effort, auto-generates monthly reports, and detects patterns. Many people use paper for the calendar overview (it\'s satisfying to see a full month at a glance) and the app for the analysis and convenience. The data is compatible — you\'re tracking the same clinical dimensions.',
+      "Absolutely. Paper monthly logs work well alongside Pain Tracker. The app captures daily detail with less effort, auto-generates monthly reports, and detects patterns. Many people use paper for the calendar overview (it's satisfying to see a full month at a glance) and the app for the analysis and convenience. The data is compatible — you're tracking the same clinical dimensions.",
   },
   {
     question: 'Is my privacy protected?',
@@ -304,7 +319,7 @@ const FAQS = [
   },
 ];
 
-const RELATED_LINKS = [
+const RELATED_LINKS = mergeRelatedPainResourceLinks([
   {
     title: 'Weekly Pain Log PDF',
     description: 'Detailed 7-day spread for granular weekly tracking',
@@ -335,7 +350,7 @@ const RELATED_LINKS = [
     description: 'Build long-term documentation that supports your claim',
     href: '/resources/documenting-pain-for-disability-claim',
   },
-];
+]);
 
 // ---------------------------------------------------------------------------
 // Reusable sub-components
@@ -349,16 +364,10 @@ const SectionHeading: React.FC<{
 }> = ({ eyebrow, children, subtitle, center }) => (
   <div className={center ? 'text-center' : ''}>
     {eyebrow && (
-      <p className="text-sm font-semibold uppercase tracking-wider text-primary mb-2">
-        {eyebrow}
-      </p>
+      <p className="text-sm font-semibold uppercase tracking-wider text-primary mb-2">{eyebrow}</p>
     )}
-    <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3 leading-tight">
-      {children}
-    </h2>
-    {subtitle && (
-      <p className="text-slate-400 text-lg max-w-2xl mx-auto">{subtitle}</p>
-    )}
+    <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3 leading-tight">{children}</h2>
+    {subtitle && <p className="text-slate-400 text-lg max-w-2xl mx-auto">{subtitle}</p>}
   </div>
 );
 
@@ -411,7 +420,11 @@ export const MonthlyPainTrackerPrintablePage: React.FC = () => {
     document.body.appendChild(ariaLive);
 
     return () => {
-      try { ariaLive?.remove(); } catch { /* already removed */ }
+      try {
+        ariaLive?.remove();
+      } catch {
+        /* already removed */
+      }
     };
   }, []);
 
@@ -430,11 +443,11 @@ export const MonthlyPainTrackerPrintablePage: React.FC = () => {
     }),
     generateFAQSchema(FAQS),
     generateSoftwareApplicationSchema(),
-    generateBreadcrumbSchema(breadcrumbs, { siteUrl: 'https://www.paintracker.ca' }),
+    generateBreadcrumbSchema(breadcrumbs, { siteUrl: 'https://www.paintracker.ca' })
   );
 
   const handleDownload = (resourceCtaLocation: string) => {
-    setDownloadCount((c) => c + 1);
+    setDownloadCount(c => c + 1);
     trackResourcePrintableDownloadClick({
       resourcePageSlug: SEO.slug,
       resourcePageType: 'printable',
@@ -455,10 +468,7 @@ export const MonthlyPainTrackerPrintablePage: React.FC = () => {
   return (
     <div className="min-h-screen bg-background landing-always-dark">
       {/* Structured data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: schema }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: schema }} />
 
       {/* Skip link */}
       <a
@@ -503,9 +513,14 @@ export const MonthlyPainTrackerPrintablePage: React.FC = () => {
                 <li key={crumb.url} className="flex items-center gap-2">
                   {i > 0 && <span className="text-slate-600">/</span>}
                   {i === breadcrumbs.length - 1 ? (
-                    <span className="text-slate-400" aria-current="page">{crumb.name}</span>
+                    <span className="text-slate-400" aria-current="page">
+                      {crumb.name}
+                    </span>
                   ) : (
-                    <Link to={crumb.url} className="text-slate-300 hover:text-primary transition-colors">
+                    <Link
+                      to={crumb.url}
+                      className="text-slate-300 hover:text-primary transition-colors"
+                    >
                       {crumb.name}
                     </Link>
                   )}
@@ -518,7 +533,6 @@ export const MonthlyPainTrackerPrintablePage: React.FC = () => {
 
       {/* ────────────────────────────────────────────────────────────────────── */}
       <main id="main-content" role="main">
-
         {/* ═══ HERO ═══ */}
         <section className="hero-section-dramatic py-20 sm:py-28" aria-labelledby="hero-heading">
           <div className="hero-bg-mesh" />
@@ -535,10 +549,7 @@ export const MonthlyPainTrackerPrintablePage: React.FC = () => {
               <span>30-Day Calendar Format</span>
             </div>
 
-            <h1
-              id="hero-heading"
-              className="landing-headline landing-headline-lg text-white mb-6"
-            >
+            <h1 id="hero-heading" className="landing-headline landing-headline-lg text-white mb-6">
               Track Your Pain{' '}
               <span className="bg-gradient-to-r from-sky-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">
                 Across an Entire Month in 2026
@@ -546,15 +557,17 @@ export const MonthlyPainTrackerPrintablePage: React.FC = () => {
             </h1>
 
             <p className="landing-subhead text-lg sm:text-xl max-w-2xl mx-auto mb-4">
-              Daily pain calendar, sleep, medications, functional impact, triggers,
-              mood, and a monthly summary — 8 structured sections that reveal the trends
-              daily logs can&apos;t show.
+              Daily pain calendar, sleep, medications, functional impact, triggers, mood, and a
+              monthly summary — 8 structured sections that reveal the trends daily logs can&apos;t
+              show.
             </p>
             <p className="text-slate-300 text-base sm:text-lg max-w-2xl mx-auto mb-4">
-              Use the printable if you need something today. Use the free app when you need patterns, summaries, and records you can bring to an appointment.
+              Use the printable if you need something today. Use the free app when you need
+              patterns, summaries, and records you can bring to an appointment.
             </p>
             <p className="text-slate-500 text-sm mb-8">
-              100% free &bull; No email required &bull; No tracking &bull; Prints on standard letter paper
+              100% free &bull; No email required &bull; No tracking &bull; Prints on standard letter
+              paper
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -587,7 +600,10 @@ export const MonthlyPainTrackerPrintablePage: React.FC = () => {
         </section>
 
         {/* ═══ QUICK-DOWNLOAD BAR ═══ */}
-        <section className="py-6 bg-slate-900 border-y border-slate-800" aria-label="Download template">
+        <section
+          className="py-6 bg-slate-900 border-y border-slate-800"
+          aria-label="Download template"
+        >
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-800/70 backdrop-blur rounded-2xl p-5 border border-slate-700/60">
               <div className="flex items-center gap-4">
@@ -597,9 +613,15 @@ export const MonthlyPainTrackerPrintablePage: React.FC = () => {
                 <div>
                   <h2 className="text-lg font-semibold text-white">monthly-pain-tracker.pdf</h2>
                   <p className="text-slate-400 text-sm flex items-center gap-3 flex-wrap">
-                    <span className="flex items-center gap-1"><Printer className="w-3.5 h-3.5" /> Print-ready</span>
-                    <span className="flex items-center gap-1"><Calendar className="w-3.5 h-3.5" /> 1 sheet per month</span>
-                    <span className="flex items-center gap-1"><Lock className="w-3.5 h-3.5" /> No sign-up</span>
+                    <span className="flex items-center gap-1">
+                      <Printer className="w-3.5 h-3.5" /> Print-ready
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Calendar className="w-3.5 h-3.5" /> 1 sheet per month
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Lock className="w-3.5 h-3.5" /> No sign-up
+                    </span>
                   </p>
                 </div>
               </div>
@@ -635,12 +657,14 @@ export const MonthlyPainTrackerPrintablePage: React.FC = () => {
             </SectionHeading>
 
             <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-              {TEMPLATE_SECTIONS.map((section) => (
+              {TEMPLATE_SECTIONS.map(section => (
                 <div
                   key={section.title}
                   className="group p-5 rounded-xl bg-slate-800/50 border border-slate-700/50 hover:border-slate-600 transition-all hover:bg-slate-800/70"
                 >
-                  <div className={`w-11 h-11 ${section.bg} rounded-lg flex items-center justify-center mb-4`}>
+                  <div
+                    className={`w-11 h-11 ${section.bg} rounded-lg flex items-center justify-center mb-4`}
+                  >
                     <section.icon className={`w-5 h-5 ${section.color}`} />
                   </div>
                   <h3 className="font-semibold text-white mb-1.5">{section.title}</h3>
@@ -652,7 +676,10 @@ export const MonthlyPainTrackerPrintablePage: React.FC = () => {
         </section>
 
         {/* ═══ HOW IT WORKS ═══ */}
-        <section className="py-14 bg-slate-800/40 border-y border-slate-700/50" aria-labelledby="month-flow-heading">
+        <section
+          className="py-14 bg-slate-800/40 border-y border-slate-700/50"
+          aria-labelledby="month-flow-heading"
+        >
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <SectionHeading eyebrow="How It Works" center>
               <span id="month-flow-heading">Three rhythms that build a complete picture</span>
@@ -670,7 +697,9 @@ export const MonthlyPainTrackerPrintablePage: React.FC = () => {
                   {i < MONTH_FLOW.length - 1 && (
                     <ArrowRight className="hidden sm:block absolute -right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-600 z-10" />
                   )}
-                  <div className={`w-14 h-14 ${segment.bg} rounded-2xl flex items-center justify-center mx-auto mb-4`}>
+                  <div
+                    className={`w-14 h-14 ${segment.bg} rounded-2xl flex items-center justify-center mx-auto mb-4`}
+                  >
                     <segment.icon className={`w-7 h-7 ${segment.color}`} />
                   </div>
                   <h3 className="text-lg font-bold text-white mb-2">{segment.time}</h3>
@@ -690,10 +719,22 @@ export const MonthlyPainTrackerPrintablePage: React.FC = () => {
 
             <div className="mt-10 grid sm:grid-cols-3 gap-6">
               {[
-                { value: '6 mo', label: 'to identify seasonal & cyclical patterns', source: 'Chronic Pain Research — minimum for seasonal correlation' },
-                { value: '47%', label: 'of treatment changes guided by monthly data', source: 'Journal of Pain Research, 2021 — provider survey' },
-                { value: '30 sec', label: 'per evening for a full month of data', source: 'User feedback — median time for daily calendar entry' },
-              ].map((stat) => (
+                {
+                  value: '6 mo',
+                  label: 'to identify seasonal & cyclical patterns',
+                  source: 'Chronic Pain Research — minimum for seasonal correlation',
+                },
+                {
+                  value: '47%',
+                  label: 'of treatment changes guided by monthly data',
+                  source: 'Journal of Pain Research, 2021 — provider survey',
+                },
+                {
+                  value: '30 sec',
+                  label: 'per evening for a full month of data',
+                  source: 'User feedback — median time for daily calendar entry',
+                },
+              ].map(stat => (
                 <div
                   key={stat.label}
                   className="text-center p-6 rounded-2xl bg-gradient-to-b from-slate-800/80 to-slate-800/40 border border-slate-700/50"
@@ -709,31 +750,35 @@ export const MonthlyPainTrackerPrintablePage: React.FC = () => {
 
             <div className="mt-10 bg-slate-800/50 rounded-2xl p-6 sm:p-8 border border-slate-700/50">
               <p className="text-slate-300 leading-relaxed text-base sm:text-lg">
-                Memory is unreliable — especially for pain. Studies show patients
-                significantly misremember their pain levels even a week later, typically
-                recalling their worst days more vividly than their typical days.{' '}
+                Memory is unreliable — especially for pain. Studies show patients significantly
+                misremember their pain levels even a week later, typically recalling their worst
+                days more vividly than their typical days.{' '}
                 <strong className="text-white">
-                  A monthly tracker provides objective data that counters this &quot;peak bias.&quot;
+                  A monthly tracker provides objective data that counters this &quot;peak
+                  bias.&quot;
                 </strong>{' '}
-                When your provider sees 30 days of real numbers — not a summary from
-                memory — they can detect patterns you didn&apos;t notice: gradual improvement,
-                cyclical flares, medication wear-off timelines, and the true ratio of good
-                days to bad. For disability evaluations, 3-6 months of monthly tracking
-                creates a documentation trail that single-visit reports simply cannot match.
+                When your provider sees 30 days of real numbers — not a summary from memory — they
+                can detect patterns you didn&apos;t notice: gradual improvement, cyclical flares,
+                medication wear-off timelines, and the true ratio of good days to bad. For
+                disability evaluations, 3-6 months of monthly tracking creates a documentation trail
+                that single-visit reports simply cannot match.
               </p>
             </div>
           </div>
         </section>
 
         {/* ═══ WHO SHOULD USE IT ═══ */}
-        <section className="py-16 sm:py-20 bg-slate-800/30 border-y border-slate-700/50" aria-labelledby="who-should-use">
+        <section
+          className="py-16 sm:py-20 bg-slate-800/30 border-y border-slate-700/50"
+          aria-labelledby="who-should-use"
+        >
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <SectionHeading eyebrow="Is This For You?" center>
               <span id="who-should-use">Who benefits most from monthly tracking</span>
             </SectionHeading>
 
             <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {WHO_SHOULD_USE.map((item) => (
+              {WHO_SHOULD_USE.map(item => (
                 <div
                   key={item.title}
                   className="p-6 rounded-xl bg-slate-800/60 border border-slate-700/50 hover:border-slate-600 transition-colors"
@@ -761,7 +806,7 @@ export const MonthlyPainTrackerPrintablePage: React.FC = () => {
             </SectionHeading>
 
             <ol className="mt-12 space-y-8">
-              {HOW_TO_STEPS.map((step) => (
+              {HOW_TO_STEPS.map(step => (
                 <li
                   key={step.step}
                   className="flex gap-5 bg-slate-800/40 rounded-xl p-6 border border-slate-700/40"
@@ -775,7 +820,9 @@ export const MonthlyPainTrackerPrintablePage: React.FC = () => {
                     {step.tip && (
                       <p className="text-sm text-slate-500 flex items-start gap-2">
                         <Star className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" />
-                        <span><strong className="text-slate-400">Tip:</strong> {step.tip}</span>
+                        <span>
+                          <strong className="text-slate-400">Tip:</strong> {step.tip}
+                        </span>
                       </p>
                     )}
                   </div>
@@ -786,7 +833,10 @@ export const MonthlyPainTrackerPrintablePage: React.FC = () => {
         </section>
 
         {/* ═══ TRUST SIGNALS ═══ */}
-        <section className="py-12 bg-slate-800/40 border-y border-slate-700/50" aria-label="Trust signals">
+        <section
+          className="py-12 bg-slate-800/40 border-y border-slate-700/50"
+          aria-label="Trust signals"
+        >
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid sm:grid-cols-3 gap-5">
               <div className="flex items-start gap-4 p-5 bg-slate-800/60 rounded-xl border border-slate-700/40">
@@ -796,7 +846,8 @@ export const MonthlyPainTrackerPrintablePage: React.FC = () => {
                 <div>
                   <h3 className="font-semibold text-white mb-1">Clinically Structured</h3>
                   <p className="text-sm text-slate-400">
-                    Standard 0-10 NRS pain scale, functional impact ratings, medication log, and trend analysis that providers immediately understand.
+                    Standard 0-10 NRS pain scale, functional impact ratings, medication log, and
+                    trend analysis that providers immediately understand.
                   </p>
                 </div>
               </div>
@@ -807,7 +858,8 @@ export const MonthlyPainTrackerPrintablePage: React.FC = () => {
                 <div>
                   <h3 className="font-semibold text-white mb-1">Zero Data Collection</h3>
                   <p className="text-sm text-slate-400">
-                    No email, no account, no tracking pixels. The PDF downloads directly to your device. Your health data belongs to you.
+                    No email, no account, no tracking pixels. The PDF downloads directly to your
+                    device. Your health data belongs to you.
                   </p>
                 </div>
               </div>
@@ -818,7 +870,10 @@ export const MonthlyPainTrackerPrintablePage: React.FC = () => {
                 <div>
                   <h3 className="font-semibold text-white mb-1">Claims-Ready Format</h3>
                   <p className="text-sm text-slate-400">
-                    Useful for appointments or claim-related discussions with WorkSafeBC, ICBC, CPP-D, or private insurers. This PDF is a documentation aid, not an official decision document. Approval depends on the reviewer, medical evidence, policy, and case context.
+                    Useful for appointments or claim-related discussions with WorkSafeBC, ICBC,
+                    CPP-D, or private insurers. This PDF is a documentation aid, not an official
+                    decision document. Approval depends on the reviewer, medical evidence, policy,
+                    and case context.
                   </p>
                 </div>
               </div>
@@ -835,8 +890,8 @@ export const MonthlyPainTrackerPrintablePage: React.FC = () => {
                 Ready to see the bigger picture?
               </h2>
               <p className="text-slate-400 mb-6 max-w-lg mx-auto">
-                Print 3 copies — three months of tracking is where treatment trends
-                become clear and provider conversations get truly productive.
+                Print 3 copies — three months of tracking is where treatment trends become clear and
+                provider conversations get truly productive.
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <a
@@ -862,13 +917,17 @@ export const MonthlyPainTrackerPrintablePage: React.FC = () => {
         </section>
 
         {/* ═══ PAPER vs DIGITAL ═══ */}
-        <section className="py-16 sm:py-20 bg-slate-800/30 border-y border-slate-700/50" aria-labelledby="compare-heading">
+        <section
+          className="py-16 sm:py-20 bg-slate-800/30 border-y border-slate-700/50"
+          aria-labelledby="compare-heading"
+        >
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <SectionHeading eyebrow="Paper vs Digital" center>
               <span id="compare-heading">Choose the format that fits your life</span>
             </SectionHeading>
             <p className="text-slate-400 text-center mt-2 mb-10 max-w-xl mx-auto">
-              Both are free and capture the same clinical data. Pick whichever you&apos;ll actually use.
+              Both are free and capture the same clinical data. Pick whichever you&apos;ll actually
+              use.
             </p>
 
             <div className="grid sm:grid-cols-2 gap-6">
@@ -887,7 +946,7 @@ export const MonthlyPainTrackerPrintablePage: React.FC = () => {
                     'Zero learning curve — just print and start',
                     'Hand the sheet directly to your provider',
                     'A single pain number per day keeps it sustainable',
-                  ].map((item) => (
+                  ].map(item => (
                     <li key={item} className="flex items-start gap-2.5 text-sm text-slate-300">
                       <CheckCircle className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
                       {item}
@@ -926,7 +985,7 @@ export const MonthlyPainTrackerPrintablePage: React.FC = () => {
                     'Encrypted storage for maximum privacy',
                     'Weather correlation & trigger insights',
                     'Month-over-month comparison with charts',
-                  ].map((item) => (
+                  ].map(item => (
                     <li key={item} className="flex items-start gap-2.5 text-sm text-slate-300">
                       <CheckCircle className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
                       {item}
@@ -955,49 +1014,33 @@ export const MonthlyPainTrackerPrintablePage: React.FC = () => {
 
             <div className="mt-10 space-y-3">
               {FAQS.map((faq, i) => (
-                <Faq key={faq.question} question={faq.question} answer={faq.answer} defaultOpen={i === 0} />
+                <Faq
+                  key={faq.question}
+                  question={faq.question}
+                  answer={faq.answer}
+                  defaultOpen={i === 0}
+                />
               ))}
             </div>
           </div>
         </section>
 
         {/* ═══ RELATED RESOURCES ═══ */}
-        <section className="py-16 sm:py-20 bg-slate-800/30 border-t border-slate-700/50" aria-labelledby="related-heading">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <SectionHeading eyebrow="Keep Reading" center>
-              <span id="related-heading">Related pain tracking resources</span>
-            </SectionHeading>
-
-            <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              {RELATED_LINKS.map((link) => (
-                <Link
-                  key={link.href}
-                  to={link.href}
-                  className="group p-6 bg-slate-800/60 hover:bg-slate-800/80 rounded-xl border border-slate-700/50 hover:border-primary/40 transition-all"
-                >
-                  <h3 className="font-semibold text-white group-hover:text-primary transition-colors mb-2">
-                    {link.title}
-                  </h3>
-                  <p className="text-sm text-slate-400 mb-3">{link.description}</p>
-                  <span className="text-sm text-primary flex items-center gap-1">
-                    Read more <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </span>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
+        <RelatedPainResourceLinks links={RELATED_LINKS} />
 
         {/* ═══ FINAL CTA ═══ */}
-        <section className="py-16 bg-gradient-to-b from-slate-900 to-slate-800" aria-label="Final call to action">
+        <section
+          className="py-16 bg-gradient-to-b from-slate-900 to-slate-800"
+          aria-label="Final call to action"
+        >
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <Calendar className="w-8 h-8 text-sky-400 mx-auto mb-4" />
             <h2 className="text-3xl font-bold text-white mb-4">
               Three months of data can change your treatment plan
             </h2>
             <p className="text-slate-400 text-lg mb-8 max-w-2xl mx-auto">
-              Monthly tracking turns &quot;it&apos;s been a rough few months&quot; into specific, documented
-              trends your provider can act on. Start this month — even a single pain
+              Monthly tracking turns &quot;it&apos;s been a rough few months&quot; into specific,
+              documented trends your provider can act on. Start this month — even a single pain
               number per day builds the picture.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -1021,7 +1064,6 @@ export const MonthlyPainTrackerPrintablePage: React.FC = () => {
             </div>
           </div>
         </section>
-
       </main>
 
       <LandingFooter />

@@ -40,7 +40,12 @@ import {
   Cloudy,
 } from 'lucide-react';
 import { LandingFooter } from '../../components/landing/LandingFooter';
-import { ResourceOutcomeBridge, ResourceWorkflowSteps } from '../../components/seo';
+import {
+  ResourceOutcomeBridge,
+  ResourceWorkflowSteps,
+  RelatedPainResourceLinks,
+  mergeRelatedPainResourceLinks,
+} from '../../components/seo';
 import {
   generateMedicalWebPageSchema,
   generateFAQSchema,
@@ -57,8 +62,7 @@ import '../../styles/pages/landing.css';
 const SEO = {
   slug: 'symptom-tracker-printable',
   title: 'Symptom Tracker Printable in 2026',
-  metaTitle:
-    'Symptom Tracker Printable (2026) | Free PDF, No Email Required',
+  metaTitle: 'Symptom Tracker Printable (2026) | Free PDF, No Email Required',
   metaDescription:
     'Download a free symptom tracker printable for 2026. No email required. Track fatigue, sleep quality, mood, brain fog, energy, and pain in one symptom log for chronic illness management.',
   keywords: [
@@ -106,7 +110,8 @@ const TEMPLATE_SECTIONS = [
   {
     icon: Moon,
     title: 'Sleep Quality',
-    description: 'Hours slept, quality rating, times woken, morning refreshment — the data sleep clinics want',
+    description:
+      'Hours slept, quality rating, times woken, morning refreshment — the data sleep clinics want',
     color: 'text-indigo-400',
     bg: 'bg-indigo-500/10',
   },
@@ -161,8 +166,14 @@ const SYMPTOM_CLUSTERS = [
     icon: Battery,
     color: 'text-amber-400',
     bg: 'bg-amber-500/15',
-    symptoms: ['Energy levels', 'Post-exertional crash', 'Daytime sleepiness', 'Exercise tolerance'],
-    description: 'Common in fibromyalgia, ME/CFS, and autoimmune conditions — often the most limiting factor.',
+    symptoms: [
+      'Energy levels',
+      'Post-exertional crash',
+      'Daytime sleepiness',
+      'Exercise tolerance',
+    ],
+    description:
+      'Common in fibromyalgia, ME/CFS, and autoimmune conditions — often the most limiting factor.',
   },
   {
     name: 'Cognitive Cluster',
@@ -170,7 +181,8 @@ const SYMPTOM_CLUSTERS = [
     color: 'text-purple-400',
     bg: 'bg-purple-500/15',
     symptoms: ['Brain fog', 'Concentration', 'Word-finding', 'Memory'],
-    description: 'Under-reported but highly impactful. Tracking reveals correlations with sleep and pain.',
+    description:
+      'Under-reported but highly impactful. Tracking reveals correlations with sleep and pain.',
   },
   {
     name: 'Mood Cluster',
@@ -178,7 +190,8 @@ const SYMPTOM_CLUSTERS = [
     color: 'text-pink-400',
     bg: 'bg-pink-500/15',
     symptoms: ['Anxiety', 'Depression', 'Irritability', 'Emotional resilience'],
-    description: 'Mood and pain are bidirectional — each amplifies the other. Data helps break the cycle.',
+    description:
+      'Mood and pain are bidirectional — each amplifies the other. Data helps break the cycle.',
   },
 ];
 
@@ -193,7 +206,7 @@ const WHO_SHOULD_USE = [
     icon: Stethoscope,
     title: 'Patients seeking a diagnosis',
     description:
-      'When you have overlapping symptoms that don\'t fit neatly into one box, structured symptom data helps your doctor identify patterns and rule out conditions faster.',
+      "When you have overlapping symptoms that don't fit neatly into one box, structured symptom data helps your doctor identify patterns and rule out conditions faster.",
   },
   {
     icon: Pill,
@@ -209,7 +222,7 @@ const WHO_SHOULD_USE = [
   },
   {
     icon: Heart,
-    title: 'People whose worst symptom isn\'t pain',
+    title: "People whose worst symptom isn't pain",
     description:
       'For many chronic illness patients, fatigue or brain fog is more limiting than pain. Standard pain diaries miss this entirely. A symptom tracker captures your actual experience.',
   },
@@ -217,7 +230,7 @@ const WHO_SHOULD_USE = [
     icon: Users,
     title: 'Caregivers and support teams',
     description:
-      'Structured daily logs make it easy for caregivers to help document symptoms accurately, reducing cognitive load on the person who\'s struggling.',
+      "Structured daily logs make it easy for caregivers to help document symptoms accurately, reducing cognitive load on the person who's struggling.",
   },
 ];
 
@@ -226,8 +239,8 @@ const HOW_TO_STEPS = [
     step: 1,
     title: 'Download and personalize your symptoms',
     description:
-      'Print the template and review the pre-listed symptoms. Cross out any that don\'t apply to you and add 2-3 condition-specific symptoms in the blank rows. Keep the total between 6-10 symptoms for sustainability.',
-    tip: 'Don\'t track everything — track what matters most to YOUR daily life and YOUR doctor\'s questions.',
+      "Print the template and review the pre-listed symptoms. Cross out any that don't apply to you and add 2-3 condition-specific symptoms in the blank rows. Keep the total between 6-10 symptoms for sustainability.",
+    tip: "Don't track everything — track what matters most to YOUR daily life and YOUR doctor's questions.",
   },
   {
     step: 2,
@@ -238,7 +251,7 @@ const HOW_TO_STEPS = [
   },
   {
     step: 3,
-    title: 'Rate, don\'t describe — descriptions go in the notes',
+    title: "Rate, don't describe — descriptions go in the notes",
     description:
       'Use the 0-10 scale for each symptom. Quick numbers are faster and more comparable over time. Save detailed descriptions for the notes section — that\'s where you capture "brain fog was worse after the meeting" or "nausea started after lunch."',
     tip: 'Write your rating FIRST, then add a brief margin note only if something unusual happened.',
@@ -247,7 +260,7 @@ const HOW_TO_STEPS = [
     step: 4,
     title: 'Review weekly for clusters and patterns',
     description:
-      'Every Sunday, scan the week\'s sheet. Look for correlations: when fatigue was 8+, was sleep quality low? When brain fog spiked, was pain also high? Circle days where multiple symptoms spiked together — those are your flare signatures.',
+      "Every Sunday, scan the week's sheet. Look for correlations: when fatigue was 8+, was sleep quality low? When brain fog spiked, was pain also high? Circle days where multiple symptoms spiked together — those are your flare signatures.",
     tip: 'Use a highlighter to mark flare days — patterns become visible within 2-3 weeks.',
   },
   {
@@ -273,7 +286,7 @@ const FAQS = [
   {
     question: 'How do I rate something subjective like "brain fog"?',
     answer:
-      'Anchor to function, not feeling. Use a scale like: 0 = clear thinking, normal productivity. 2 = slightly slower, manageable. 4 = noticeable difficulty concentrating, work affected. 6 = can\'t follow conversations well, frequent mistakes. 8 = can\'t read, can\'t follow a show, significant memory gaps. 10 = disoriented, unsafe to drive. Consistency in YOUR scale is what matters — not matching anyone else\'s.',
+      "Anchor to function, not feeling. Use a scale like: 0 = clear thinking, normal productivity. 2 = slightly slower, manageable. 4 = noticeable difficulty concentrating, work affected. 6 = can't follow conversations well, frequent mistakes. 8 = can't read, can't follow a show, significant memory gaps. 10 = disoriented, unsafe to drive. Consistency in YOUR scale is what matters — not matching anyone else's.",
   },
   {
     question: 'Will doctors actually look at all this data?',
@@ -286,14 +299,14 @@ const FAQS = [
       'Two weeks reveals basic patterns: sleep-pain connections, weekly rhythms, medication timing effects. One month shows reliable correlations and flare signatures. For menstrual-related patterns, track at least two full cycles. For seasonal patterns, 3-6 months. The tracker becomes dramatically more useful after the first month.',
   },
   {
-    question: 'What if I\'m too exhausted to fill it out some days?',
+    question: "What if I'm too exhausted to fill it out some days?",
     answer:
-      'On your worst days, just rate pain and fatigue — two numbers take 5 seconds. Leave everything else blank. A partial entry is infinitely more useful than a gap. The template is designed so the most important columns are on the left. If you can only do the first three columns, that\'s still valuable data.',
+      "On your worst days, just rate pain and fatigue — two numbers take 5 seconds. Leave everything else blank. A partial entry is infinitely more useful than a gap. The template is designed so the most important columns are on the left. If you can only do the first three columns, that's still valuable data.",
   },
   {
     question: 'Can I track medication side effects with this?',
     answer:
-      'Absolutely — that\'s one of its best uses. When you start a new medication, the symptom tracker captures changes in ALL symptoms, not just pain. You might notice fatigue dropped by 3 points but brain fog increased by 2. This multi-symptom view helps your provider balance medication benefits against side effects more accurately.',
+      "Absolutely — that's one of its best uses. When you start a new medication, the symptom tracker captures changes in ALL symptoms, not just pain. You might notice fatigue dropped by 3 points but brain fog increased by 2. This multi-symptom view helps your provider balance medication benefits against side effects more accurately.",
   },
   {
     question: 'How does this help with disability claims?',
@@ -312,7 +325,7 @@ const FAQS = [
   },
 ];
 
-const RELATED_LINKS = [
+const RELATED_LINKS = mergeRelatedPainResourceLinks([
   {
     title: 'Pain Diary Template PDF',
     description: 'Detailed pain-specific tracking to complement multi-symptom logging',
@@ -343,7 +356,7 @@ const RELATED_LINKS = [
     description: 'Using multi-symptom data in disability and insurance claims',
     href: '/resources/documenting-pain-for-disability-claim',
   },
-];
+]);
 
 // ---------------------------------------------------------------------------
 // Reusable sub-components
@@ -357,16 +370,10 @@ const SectionHeading: React.FC<{
 }> = ({ eyebrow, children, subtitle, center }) => (
   <div className={center ? 'text-center' : ''}>
     {eyebrow && (
-      <p className="text-sm font-semibold uppercase tracking-wider text-primary mb-2">
-        {eyebrow}
-      </p>
+      <p className="text-sm font-semibold uppercase tracking-wider text-primary mb-2">{eyebrow}</p>
     )}
-    <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3 leading-tight">
-      {children}
-    </h2>
-    {subtitle && (
-      <p className="text-slate-400 text-lg max-w-2xl mx-auto">{subtitle}</p>
-    )}
+    <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3 leading-tight">{children}</h2>
+    {subtitle && <p className="text-slate-400 text-lg max-w-2xl mx-auto">{subtitle}</p>}
   </div>
 );
 
@@ -418,7 +425,11 @@ export const SymptomTrackerPrintablePage: React.FC = () => {
     document.body.appendChild(ariaLive);
 
     return () => {
-      try { ariaLive?.remove(); } catch { /* already removed */ }
+      try {
+        ariaLive?.remove();
+      } catch {
+        /* already removed */
+      }
     };
   }, []);
 
@@ -436,20 +447,17 @@ export const SymptomTrackerPrintablePage: React.FC = () => {
     }),
     generateFAQSchema(FAQS),
     generateSoftwareApplicationSchema(),
-    generateBreadcrumbSchema(breadcrumbs, { siteUrl: 'https://www.paintracker.ca' }),
+    generateBreadcrumbSchema(breadcrumbs, { siteUrl: 'https://www.paintracker.ca' })
   );
 
   const handleDownload = () => {
-    setDownloadCount((c) => c + 1);
+    setDownloadCount(c => c + 1);
   };
 
   return (
     <div className="min-h-screen bg-background landing-always-dark">
       {/* Structured data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: schema }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: schema }} />
 
       {/* Skip link */}
       <a
@@ -493,9 +501,14 @@ export const SymptomTrackerPrintablePage: React.FC = () => {
                 <li key={crumb.url} className="flex items-center gap-2">
                   {i > 0 && <span className="text-slate-600">/</span>}
                   {i === breadcrumbs.length - 1 ? (
-                    <span className="text-slate-400" aria-current="page">{crumb.name}</span>
+                    <span className="text-slate-400" aria-current="page">
+                      {crumb.name}
+                    </span>
                   ) : (
-                    <Link to={crumb.url} className="text-slate-300 hover:text-primary transition-colors">
+                    <Link
+                      to={crumb.url}
+                      className="text-slate-300 hover:text-primary transition-colors"
+                    >
                       {crumb.name}
                     </Link>
                   )}
@@ -508,7 +521,6 @@ export const SymptomTrackerPrintablePage: React.FC = () => {
 
       {/* ────────────────────────────────────────────────────────────────────── */}
       <main id="main-content" role="main">
-
         {/* ═══ HERO ═══ */}
         <section className="hero-section-dramatic py-20 sm:py-28" aria-labelledby="hero-heading">
           <div className="hero-bg-mesh" />
@@ -525,10 +537,7 @@ export const SymptomTrackerPrintablePage: React.FC = () => {
               <span>Beyond Pain Alone</span>
             </div>
 
-            <h1
-              id="hero-heading"
-              className="landing-headline landing-headline-lg text-white mb-6"
-            >
+            <h1 id="hero-heading" className="landing-headline landing-headline-lg text-white mb-6">
               Track the{' '}
               <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-amber-400 bg-clip-text text-transparent">
                 Complete Picture in 2026
@@ -537,14 +546,16 @@ export const SymptomTrackerPrintablePage: React.FC = () => {
             </h1>
 
             <p className="landing-subhead text-lg sm:text-xl max-w-2xl mx-auto mb-4">
-              Pain, fatigue, sleep, brain fog, mood, and functional impact — structured so
-              your provider sees the connections that standard pain diaries miss.
+              Pain, fatigue, sleep, brain fog, mood, and functional impact — structured so your
+              provider sees the connections that standard pain diaries miss.
             </p>
             <p className="text-slate-300 text-base sm:text-lg max-w-2xl mx-auto mb-4">
-              Use the printable if you need the full symptom picture on paper first. Move to the offline-first app when you want ongoing review, cleaner history, and easier summaries.
+              Use the printable if you need the full symptom picture on paper first. Move to the
+              offline-first app when you want ongoing review, cleaner history, and easier summaries.
             </p>
             <p className="text-slate-500 text-sm mb-8">
-              100% free &bull; No email required &bull; No tracking &bull; Prints on standard letter paper
+              100% free &bull; No email required &bull; No tracking &bull; Prints on standard letter
+              paper
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -576,7 +587,10 @@ export const SymptomTrackerPrintablePage: React.FC = () => {
         </section>
 
         {/* ═══ QUICK-DOWNLOAD BAR ═══ */}
-        <section className="py-6 bg-slate-900 border-y border-slate-800" aria-label="Download template">
+        <section
+          className="py-6 bg-slate-900 border-y border-slate-800"
+          aria-label="Download template"
+        >
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-800/70 backdrop-blur rounded-2xl p-5 border border-slate-700/60">
               <div className="flex items-center gap-4">
@@ -586,9 +600,15 @@ export const SymptomTrackerPrintablePage: React.FC = () => {
                 <div>
                   <h2 className="text-lg font-semibold text-white">symptom-tracker.pdf</h2>
                   <p className="text-slate-400 text-sm flex items-center gap-3 flex-wrap">
-                    <span className="flex items-center gap-1"><Printer className="w-3.5 h-3.5" /> Print-ready</span>
-                    <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> 7-day log per sheet</span>
-                    <span className="flex items-center gap-1"><Lock className="w-3.5 h-3.5" /> No sign-up</span>
+                    <span className="flex items-center gap-1">
+                      <Printer className="w-3.5 h-3.5" /> Print-ready
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Clock className="w-3.5 h-3.5" /> 7-day log per sheet
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Lock className="w-3.5 h-3.5" /> No sign-up
+                    </span>
                   </p>
                 </div>
               </div>
@@ -624,12 +644,14 @@ export const SymptomTrackerPrintablePage: React.FC = () => {
             </SectionHeading>
 
             <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-              {TEMPLATE_SECTIONS.map((section) => (
+              {TEMPLATE_SECTIONS.map(section => (
                 <div
                   key={section.title}
                   className="group p-5 rounded-xl bg-slate-800/50 border border-slate-700/50 hover:border-slate-600 transition-all hover:bg-slate-800/70"
                 >
-                  <div className={`w-11 h-11 ${section.bg} rounded-lg flex items-center justify-center mb-4`}>
+                  <div
+                    className={`w-11 h-11 ${section.bg} rounded-lg flex items-center justify-center mb-4`}
+                  >
                     <section.icon className={`w-5 h-5 ${section.color}`} />
                   </div>
                   <h3 className="font-semibold text-white mb-1.5">{section.title}</h3>
@@ -641,30 +663,37 @@ export const SymptomTrackerPrintablePage: React.FC = () => {
         </section>
 
         {/* ═══ SYMPTOM CLUSTERS ═══ */}
-        <section className="py-14 bg-slate-800/40 border-y border-slate-700/50" aria-labelledby="clusters-heading">
+        <section
+          className="py-14 bg-slate-800/40 border-y border-slate-700/50"
+          aria-labelledby="clusters-heading"
+        >
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <SectionHeading eyebrow="Understanding Symptom Clusters" center>
-              <span id="clusters-heading">Symptoms travel together — tracking reveals the connections</span>
+              <span id="clusters-heading">
+                Symptoms travel together — tracking reveals the connections
+              </span>
             </SectionHeading>
             <p className="text-slate-400 text-center mt-2 mb-10 max-w-xl mx-auto">
-              Research shows chronic illness symptoms cluster in predictable patterns.
-              Identifying YOUR clusters is the first step to managing them.
+              Research shows chronic illness symptoms cluster in predictable patterns. Identifying
+              YOUR clusters is the first step to managing them.
             </p>
 
             <div className="grid sm:grid-cols-2 gap-6">
-              {SYMPTOM_CLUSTERS.map((cluster) => (
+              {SYMPTOM_CLUSTERS.map(cluster => (
                 <div
                   key={cluster.name}
                   className="p-6 rounded-2xl bg-slate-800/60 border border-slate-700/50 hover:border-slate-600 transition-colors"
                 >
                   <div className="flex items-center gap-3 mb-4">
-                    <div className={`w-12 h-12 ${cluster.bg} rounded-xl flex items-center justify-center`}>
+                    <div
+                      className={`w-12 h-12 ${cluster.bg} rounded-xl flex items-center justify-center`}
+                    >
                       <cluster.icon className={`w-6 h-6 ${cluster.color}`} />
                     </div>
                     <h3 className="text-lg font-bold text-white">{cluster.name}</h3>
                   </div>
                   <div className="flex flex-wrap gap-2 mb-3">
-                    {cluster.symptoms.map((symptom) => (
+                    {cluster.symptoms.map(symptom => (
                       <span
                         key={symptom}
                         className="text-xs font-medium px-2.5 py-1 rounded-full bg-slate-700/80 text-slate-300"
@@ -689,10 +718,22 @@ export const SymptomTrackerPrintablePage: React.FC = () => {
 
             <div className="mt-10 grid sm:grid-cols-3 gap-6">
               {[
-                { value: '80%', label: 'of chronic pain patients also have significant fatigue', source: 'Pain Medicine, 2020 — multi-symptom prevalence study' },
-                { value: '65%', label: 'report cognitive complaints alongside pain', source: 'Journal of Pain, 2019 — brain fog & chronic pain' },
-                { value: '2.4\u00D7', label: 'better symptom management with structured tracking', source: 'BMC Health Services Research, 2021' },
-              ].map((stat) => (
+                {
+                  value: '80%',
+                  label: 'of chronic pain patients also have significant fatigue',
+                  source: 'Pain Medicine, 2020 — multi-symptom prevalence study',
+                },
+                {
+                  value: '65%',
+                  label: 'report cognitive complaints alongside pain',
+                  source: 'Journal of Pain, 2019 — brain fog & chronic pain',
+                },
+                {
+                  value: '2.4\u00D7',
+                  label: 'better symptom management with structured tracking',
+                  source: 'BMC Health Services Research, 2021',
+                },
+              ].map(stat => (
                 <div
                   key={stat.label}
                   className="text-center p-6 rounded-2xl bg-gradient-to-b from-slate-800/80 to-slate-800/40 border border-slate-700/50"
@@ -710,27 +751,31 @@ export const SymptomTrackerPrintablePage: React.FC = () => {
               <p className="text-slate-300 leading-relaxed text-base sm:text-lg">
                 Chronic pain rarely exists in isolation.{' '}
                 <strong className="text-white">
-                  Fatigue, sleep disturbance, mood changes, and cognitive dysfunction are not separate problems
-                  — they are interconnected symptoms of the same condition.
+                  Fatigue, sleep disturbance, mood changes, and cognitive dysfunction are not
+                  separate problems — they are interconnected symptoms of the same condition.
                 </strong>{' '}
                 Most pain diaries capture only one dimension: pain intensity. But a doctor who sees
-                that your worst pain days also have your worst sleep and worst brain fog can treat the
-                root cause rather than chasing individual symptoms. A comprehensive symptom tracker
-                gives your provider the complete picture that leads to whole-person treatment plans.
+                that your worst pain days also have your worst sleep and worst brain fog can treat
+                the root cause rather than chasing individual symptoms. A comprehensive symptom
+                tracker gives your provider the complete picture that leads to whole-person
+                treatment plans.
               </p>
             </div>
           </div>
         </section>
 
         {/* ═══ WHO SHOULD USE IT ═══ */}
-        <section className="py-16 sm:py-20 bg-slate-800/30 border-y border-slate-700/50" aria-labelledby="who-should-use">
+        <section
+          className="py-16 sm:py-20 bg-slate-800/30 border-y border-slate-700/50"
+          aria-labelledby="who-should-use"
+        >
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <SectionHeading eyebrow="Is This For You?" center>
               <span id="who-should-use">Who benefits most from multi-symptom tracking</span>
             </SectionHeading>
 
             <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {WHO_SHOULD_USE.map((item) => (
+              {WHO_SHOULD_USE.map(item => (
                 <div
                   key={item.title}
                   className="p-6 rounded-xl bg-slate-800/60 border border-slate-700/50 hover:border-slate-600 transition-colors"
@@ -758,7 +803,7 @@ export const SymptomTrackerPrintablePage: React.FC = () => {
             </SectionHeading>
 
             <ol className="mt-12 space-y-8">
-              {HOW_TO_STEPS.map((step) => (
+              {HOW_TO_STEPS.map(step => (
                 <li
                   key={step.step}
                   className="flex gap-5 bg-slate-800/40 rounded-xl p-6 border border-slate-700/40"
@@ -772,7 +817,9 @@ export const SymptomTrackerPrintablePage: React.FC = () => {
                     {step.tip && (
                       <p className="text-sm text-slate-500 flex items-start gap-2">
                         <Star className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" />
-                        <span><strong className="text-slate-400">Tip:</strong> {step.tip}</span>
+                        <span>
+                          <strong className="text-slate-400">Tip:</strong> {step.tip}
+                        </span>
                       </p>
                     )}
                   </div>
@@ -783,7 +830,10 @@ export const SymptomTrackerPrintablePage: React.FC = () => {
         </section>
 
         {/* ═══ TRUST SIGNALS ═══ */}
-        <section className="py-12 bg-slate-800/40 border-y border-slate-700/50" aria-label="Trust signals">
+        <section
+          className="py-12 bg-slate-800/40 border-y border-slate-700/50"
+          aria-label="Trust signals"
+        >
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid sm:grid-cols-3 gap-5">
               <div className="flex items-start gap-4 p-5 bg-slate-800/60 rounded-xl border border-slate-700/40">
@@ -793,7 +843,8 @@ export const SymptomTrackerPrintablePage: React.FC = () => {
                 <div>
                   <h3 className="font-semibold text-white mb-1">Clinically Relevant</h3>
                   <p className="text-sm text-slate-400">
-                    Tracks the symptom domains research shows are most interconnected with chronic pain: fatigue, sleep, cognitive function, and mood.
+                    Tracks the symptom domains research shows are most interconnected with chronic
+                    pain: fatigue, sleep, cognitive function, and mood.
                   </p>
                 </div>
               </div>
@@ -804,7 +855,8 @@ export const SymptomTrackerPrintablePage: React.FC = () => {
                 <div>
                   <h3 className="font-semibold text-white mb-1">Zero Data Collection</h3>
                   <p className="text-sm text-slate-400">
-                    No email, no account, no tracking pixels. The PDF downloads directly to your device. Your symptom data belongs to you alone.
+                    No email, no account, no tracking pixels. The PDF downloads directly to your
+                    device. Your symptom data belongs to you alone.
                   </p>
                 </div>
               </div>
@@ -815,7 +867,8 @@ export const SymptomTrackerPrintablePage: React.FC = () => {
                 <div>
                   <h3 className="font-semibold text-white mb-1">Claims-Ready Format</h3>
                   <p className="text-sm text-slate-400">
-                    Multi-symptom documentation shows total functional impact — exactly what WorkSafeBC, ICBC, CPP-D, and private insurers need to see.
+                    Multi-symptom documentation shows total functional impact — exactly what
+                    WorkSafeBC, ICBC, CPP-D, and private insurers need to see.
                   </p>
                 </div>
               </div>
@@ -858,13 +911,17 @@ export const SymptomTrackerPrintablePage: React.FC = () => {
         </section>
 
         {/* ═══ PAPER vs DIGITAL ═══ */}
-        <section className="py-16 sm:py-20 bg-slate-800/30 border-y border-slate-700/50" aria-labelledby="compare-heading">
+        <section
+          className="py-16 sm:py-20 bg-slate-800/30 border-y border-slate-700/50"
+          aria-labelledby="compare-heading"
+        >
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <SectionHeading eyebrow="Paper vs Digital" center>
               <span id="compare-heading">Choose the format that fits your energy level</span>
             </SectionHeading>
             <p className="text-slate-400 text-center mt-2 mb-10 max-w-xl mx-auto">
-              Both are free and track the same symptoms. Pick whichever you&apos;ll actually do on your worst days.
+              Both are free and track the same symptoms. Pick whichever you&apos;ll actually do on
+              your worst days.
             </p>
 
             <div className="grid sm:grid-cols-2 gap-6">
@@ -883,7 +940,7 @@ export const SymptomTrackerPrintablePage: React.FC = () => {
                     'Tangible — hand directly to your doctor',
                     'Customizable — add your own symptoms in blank rows',
                     'No battery or screen fatigue on bad days',
-                  ].map((item) => (
+                  ].map(item => (
                     <li key={item} className="flex items-start gap-2.5 text-sm text-slate-300">
                       <CheckCircle className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
                       {item}
@@ -922,7 +979,7 @@ export const SymptomTrackerPrintablePage: React.FC = () => {
                     'Works offline — encrypted on your device only',
                     'Takes 60 seconds on your worst days',
                     'Trend graphs show treatment response over time',
-                  ].map((item) => (
+                  ].map(item => (
                     <li key={item} className="flex items-start gap-2.5 text-sm text-slate-300">
                       <CheckCircle className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
                       {item}
@@ -950,49 +1007,33 @@ export const SymptomTrackerPrintablePage: React.FC = () => {
 
             <div className="mt-10 space-y-3">
               {FAQS.map((faq, i) => (
-                <Faq key={faq.question} question={faq.question} answer={faq.answer} defaultOpen={i === 0} />
+                <Faq
+                  key={faq.question}
+                  question={faq.question}
+                  answer={faq.answer}
+                  defaultOpen={i === 0}
+                />
               ))}
             </div>
           </div>
         </section>
 
         {/* ═══ RELATED RESOURCES ═══ */}
-        <section className="py-16 sm:py-20 bg-slate-800/30 border-t border-slate-700/50" aria-labelledby="related-heading">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <SectionHeading eyebrow="Keep Reading" center>
-              <span id="related-heading">Related tracking resources</span>
-            </SectionHeading>
-
-            <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              {RELATED_LINKS.map((link) => (
-                <Link
-                  key={link.href}
-                  to={link.href}
-                  className="group p-6 bg-slate-800/60 hover:bg-slate-800/80 rounded-xl border border-slate-700/50 hover:border-primary/40 transition-all"
-                >
-                  <h3 className="font-semibold text-white group-hover:text-primary transition-colors mb-2">
-                    {link.title}
-                  </h3>
-                  <p className="text-sm text-slate-400 mb-3">{link.description}</p>
-                  <span className="text-sm text-primary flex items-center gap-1">
-                    Read more <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </span>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
+        <RelatedPainResourceLinks links={RELATED_LINKS} />
 
         {/* ═══ FINAL CTA ═══ */}
-        <section className="py-16 bg-gradient-to-b from-slate-900 to-slate-800" aria-label="Final call to action">
+        <section
+          className="py-16 bg-gradient-to-b from-slate-900 to-slate-800"
+          aria-label="Final call to action"
+        >
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <AlertCircle className="w-8 h-8 text-purple-400 mx-auto mb-4" />
             <h2 className="text-3xl font-bold text-white mb-4">
               Your doctor can&apos;t treat what they can&apos;t see
             </h2>
             <p className="text-slate-400 text-lg mb-8 max-w-2xl mx-auto">
-              Fatigue, brain fog, and sleep disturbance are invisible to everyone except you.
-              A symptom tracker makes them visible — and actionable — for your entire care team.
+              Fatigue, brain fog, and sleep disturbance are invisible to everyone except you. A
+              symptom tracker makes them visible — and actionable — for your entire care team.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <a
@@ -1014,7 +1055,6 @@ export const SymptomTrackerPrintablePage: React.FC = () => {
             </div>
           </div>
         </section>
-
       </main>
 
       <LandingFooter />
