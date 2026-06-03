@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../../design-system/components/Button';
-import { Activity, Shield, Heart, ArrowRight, Sparkles, FileText, Download } from 'lucide-react';
+import { Shield, Heart, ArrowRight, Sparkles, FileText, Download } from 'lucide-react';
+import { BrandedLogo } from '../branding/BrandedLogo';
 
 // Preload the main app chunks when user shows intent to navigate
 const preloadAppChunks = () => {
@@ -89,12 +90,7 @@ export const Hero: React.FC = () => {
           <div className="flex items-center justify-between h-16 lg:h-20">
             {/* Logo */}
             <div className="flex items-center gap-3">
-              <div className="relative">
-                <div className="p-2.5 rounded-xl bg-gradient-to-br from-sky-400 to-sky-600 shadow-lg shadow-sky-500/30">
-                  <Activity className="h-5 w-5 text-white" />
-                </div>
-                <div className="absolute inset-0 rounded-xl bg-sky-500 blur-xl opacity-40" />
-              </div>
+              <BrandedLogo variant="icon" size="md" />
               <span className="text-xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent">
                 Pain Tracker
               </span>

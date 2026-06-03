@@ -1,7 +1,8 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Code, Heart, Shield, Activity, Mail, ArrowRight, BookOpen, Sparkles, ExternalLink, Zap, type LucideIcon } from 'lucide-react';
+import { Code, Heart, Shield, Mail, ArrowRight, BookOpen, Sparkles, ExternalLink, Zap, type LucideIcon } from 'lucide-react';
 import { Button } from '../../design-system/components/Button';
+import { BrandedLogo } from '../branding/BrandedLogo';
 
 interface ResourceLink {
   label: string;
@@ -139,15 +140,7 @@ export const LandingFooter: React.FC = () => {
             {/* Brand */}
             <div className="col-span-1 space-y-6 sm:col-span-2 lg:col-span-2">
               <div className="flex items-center gap-3">
-                <div 
-                  className="p-2.5 rounded-xl"
-                  style={{ 
-                    background: 'linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%)', 
-                    boxShadow: '0 8px 20px rgba(14, 165, 233, 0.3)' 
-                  }}
-                >
-                  <Activity className="h-6 w-6 text-white" />
-                </div>
+                <BrandedLogo variant="icon" size="md" />
                 <span className="font-bold text-2xl bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
                   Pain Tracker
                 </span>
