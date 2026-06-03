@@ -127,10 +127,11 @@ export const brand = {
 
   // Logo Variations
   logos: {
-    primary: getAssetUrl('logos/pain-tracker-logo.svg'),
-    wordmark: getAssetUrl('logos/pain-tracker-wordmark.svg'),
-    icon: getAssetUrl('logos/pain-tracker-icon.svg'),
-    iconWhite: getAssetUrl('logos/pain-tracker-icon-white.svg'),
+    primary: getAssetUrl('logos/pain-tracker-logo.png'),
+    wordmark: getAssetUrl('logos/pain-tracker-wordmark-white.png'),
+    icon: getAssetUrl('logos/pain-tracker-icon.png'),
+    iconWhite: getAssetUrl('logos/pain-tracker-wordmark-white.png'),
+    stacked: getAssetUrl('logos/pain-tracker-stacked.png'),
 
     // App Icons
     appIcon: getAssetUrl('icons/app-icon-512.png'),

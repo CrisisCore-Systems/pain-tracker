@@ -112,7 +112,7 @@ export const siteConfig = {
     'Insights on chronic pain management, privacy-first health tech, and building empathetic software.',
   url: normalizeBlogSiteUrl(process.env.NEXT_PUBLIC_SITE_URL),
   organizationName: 'CrisisCore Systems',
-  logoUrl: 'https://www.paintracker.ca/logos/pain-tracker-logo.svg',
+  logoUrl: 'https://www.paintracker.ca/logos/pain-tracker-logo.png',
   author: {
     name: 'CrisisCore Systems',
     twitter: '@crisiscore',
