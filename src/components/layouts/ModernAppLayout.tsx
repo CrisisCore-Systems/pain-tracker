@@ -66,11 +66,11 @@ const NAVIGATION_ITEMS: NavigationItem[] = [
   { id: 'analytics', name: 'Analytics', icon: TrendingUp, badge: 'Basic+', color: 'amber' },
   { id: 'calendar', name: 'Calendar', icon: Calendar, badge: null, color: 'cyan' },
   { id: 'reports', name: 'Reports', icon: FileText, badge: null, color: 'indigo' },
+  { id: 'settings', name: 'Settings', icon: Settings, badge: null, color: 'indigo' },
   { id: 'blog-resources', name: 'Blog & Resources', icon: BookOpen, badge: null, color: 'sky' },
 ];
 
 const BOTTOM_NAVIGATION_ITEMS: BottomNavigationItem[] = [
-  { id: 'settings', name: 'Settings', icon: Settings },
   { id: 'help', name: 'Help', icon: HelpCircle },
 ];
 
@@ -290,6 +290,7 @@ function DesktopSidebar({
                 <button
                   key={item.id}
                   onClick={() => onNavigate?.(item.id)}
+                  data-nav-target={item.id}
                   className={cn(
                     'group flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200',
                     isActive ? activeBottomNavClass : inactiveBottomNavClass,

@@ -366,6 +366,19 @@ function App() {
                       }
                     />
 
+                    {/* Direct protected settings entry point */}
+                    <Route
+                      path="/app/settings"
+                      element={
+                        withSubscription(
+                          userId,
+                          <VaultGate>
+                            <ProtectedAppShell initialView="settings" />
+                          </VaultGate>
+                        )
+                      }
+                    />
+
                     {/* Submit testimonial/stories */}
                     <Route path="/submit-story" element={<SubmitStoryPage />} />
 

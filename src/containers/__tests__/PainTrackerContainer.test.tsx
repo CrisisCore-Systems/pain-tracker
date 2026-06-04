@@ -76,6 +76,10 @@ vi.mock('../../services/weatherAutoCapture', () => ({
   maybeCaptureWeatherForNewEntry: async () => null,
 }));
 
+vi.mock('../../pages/SettingsPage', () => ({
+  default: () => <h2>Settings Surface</h2>,
+}));
+
 // Mock secureStorage to avoid real storage access
 vi.mock('../../lib/storage/secureStorage', () => ({
   secureStorage: {
@@ -88,6 +92,51 @@ vi.mock('../../lib/storage/secureStorage', () => ({
 }));
 
 describe('PainTrackerContainer - entry success toast', () => {
+  it('opens settings from the app navigation', async () => {
+    vi.mocked(readWorkflowPreferences).mockReturnValue({
+      defaultWcbTemplateStyle: 'hostile-bureaucracy',
+      industrialFieldMode: false,
+      showFibromyalgiaHubNavItem: true,
+    });
+
+    const user = userEvent.setup();
+    const storeState = {
+      entries: [
+        {
+          id: 'sample-1',
+          timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
+          baselineData: { pain: 5, locations: [], symptoms: [] },
+          notes: '',
+        },
+      ],
+      ui: { showOnboarding: false, showWalkthrough: false },
+      addEntry: vi.fn(),
+      updateEntry: vi.fn(),
+      setShowOnboarding: vi.fn(),
+      setShowWalkthrough: vi.fn(),
+      setError: vi.fn(),
+      loadSampleData: vi.fn(),
+    };
+
+    (usePainTrackerStore as unknown as { mockImplementation: (fn: unknown) => void }).mockImplementation(
+      (selector: unknown) => {
+        if (typeof selector === 'function') {
+          return (selector as (s: typeof storeState) => unknown)(storeState);
+        }
+        return storeState;
+      }
+    );
+
+    render(<PainTrackerContainer />);
+
+    const settingsNav = await screen.findByRole('button', { name: /settings/i });
+    expect(settingsNav).toHaveAttribute('data-nav-target', 'settings');
+
+    await user.click(settingsNav);
+
+    expect(await screen.findByRole('heading', { name: /settings surface/i })).toBeInTheDocument();
+  });
+
   it('opens quick log first when industrial field mode is enabled even with existing entries', async () => {
     vi.mocked(readWorkflowPreferences).mockReturnValue({
       defaultWcbTemplateStyle: 'hostile-bureaucracy',

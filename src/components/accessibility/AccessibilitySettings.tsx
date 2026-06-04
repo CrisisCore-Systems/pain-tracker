@@ -565,10 +565,14 @@ function ToggleSetting({
   checked: boolean;
   onChange: (checked: boolean) => void;
 }) {
+  const labelId = `toggle-${label.replace(/\s+/g, '-').toLowerCase()}`;
+
   return (
     <div className="flex items-start justify-between gap-4">
       <div className="flex-1">
-        <label className="font-medium text-gray-800 dark:text-slate-200 text-sm">{label}</label>
+        <label id={labelId} className="font-medium text-gray-800 dark:text-slate-200 text-sm">
+          {label}
+        </label>
         <p className="text-xs text-gray-600 dark:text-slate-400 mt-1">{description}</p>
       </div>
       <button
@@ -584,7 +588,7 @@ function ToggleSetting({
         }}
         role="switch"
         aria-checked={checked}
-        aria-labelledby={`toggle-${label.replace(/\s+/g, '-').toLowerCase()}`}
+        aria-labelledby={labelId}
       >
         <span
           className="pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow-md ring-0 transition duration-300 ease-in-out"

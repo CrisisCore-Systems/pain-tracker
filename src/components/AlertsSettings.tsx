@@ -115,16 +115,25 @@ export default function AlertsSettings({
         )}
       </div>
 
-      <label className="block text-sm font-medium text-gray-700 dark:text-slate-200">Sensitivity (pain increase threshold)</label>
+      <label
+        htmlFor="alerts-sensitivity-threshold"
+        className="block text-sm font-medium text-gray-700 dark:text-slate-200"
+      >
+        Sensitivity (pain increase threshold)
+      </label>
       <input
+        id="alerts-sensitivity-threshold"
         type="range"
         min={1}
         max={6}
         value={settings.threshold}
         onChange={e => setSettings({ threshold: Number(e.target.value) })}
+        aria-describedby="alerts-sensitivity-current"
         className="w-full accent-amber-500"
       />
-      <div className="text-sm text-gray-600 dark:text-slate-300">Current threshold: {settings.threshold} points</div>
+      <div id="alerts-sensitivity-current" className="text-sm text-gray-600 dark:text-slate-300">
+        Current threshold: {settings.threshold} points
+      </div>
       <div className="text-sm text-gray-500 dark:text-slate-400 space-y-2">
         <div>
           This slider affects <span className="font-medium">sudden jumps</span>: you&apos;ll get an alert
