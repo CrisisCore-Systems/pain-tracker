@@ -3,17 +3,28 @@ import { generateWCBReportPDF } from '../utils/pdf-generator';
 import type { WCBReport } from '../types';
 
 // Mock jsPDF save function by spying on it using Vitest's vi
+const { MockJsPDF } = vi.hoisted(() => {
+  const mockDoc = {
+    setFontSize: vi.fn().mockReturnThis(),
+    text: vi.fn().mockReturnThis(),
+    addPage: vi.fn().mockReturnThis(),
+    getNumberOfPages: vi.fn().mockReturnValue(1),
+    setPage: vi.fn().mockReturnThis(),
+    splitTextToSize: vi.fn((text: string) => [text]),
+    save: vi.fn(),
+  };
+
+  function MockJsPDF() {
+    return mockDoc;
+  }
+
+  return { MockJsPDF };
+});
+
 vi.mock('jspdf', () => {
   return {
-    jsPDF: vi.fn().mockImplementation(() => ({
-      setFontSize: vi.fn(),
-      text: vi.fn(),
-      addPage: vi.fn(),
-      getNumberOfPages: vi.fn().mockReturnValue(1),
-      setPage: vi.fn(),
-      splitTextToSize: vi.fn((text: string) => [text]),
-      save: vi.fn(),
-    })),
+    default: MockJsPDF,
+    jsPDF: MockJsPDF,
   };
 });
 

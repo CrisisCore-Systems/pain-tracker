@@ -4,7 +4,7 @@ const trackDataExport = vi.fn();
 const swallowed = vi.fn();
 
 vi.mock('jspdf', () => {
-  const doc = {
+  const mockDoc = {
     setFontSize: vi.fn().mockReturnThis(),
     text: vi.fn().mockReturnThis(),
     addPage: vi.fn().mockReturnThis(),
@@ -13,8 +13,14 @@ vi.mock('jspdf', () => {
     setPage: vi.fn().mockReturnThis(),
     output: vi.fn().mockReturnValue('data:application/pdf;base64,test'),
   };
+
+  function MockJsPDF() {
+    return mockDoc;
+  }
+
   return {
-    default: vi.fn(() => doc),
+    default: MockJsPDF,
+    jsPDF: MockJsPDF,
   };
 });
 

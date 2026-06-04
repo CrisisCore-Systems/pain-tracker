@@ -3,26 +3,38 @@ import { generatePDFReport, downloadPDF } from '../utils/pdfReportGenerator';
 import type { PainEntry, ReportTemplate } from '../types';
 
 // Mock jsPDF
-vi.mock('jspdf', () => {
+const { MockJsPDF } = vi.hoisted(() => {
   const mockDoc: Record<string, unknown> = {};
-  mockDoc.addPage = vi.fn();
-  mockDoc.setFontSize = vi.fn();
-  mockDoc.setFont = vi.fn();
-  mockDoc.text = vi.fn();
-  mockDoc.line = vi.fn();
+  mockDoc.addPage = vi.fn().mockReturnValue(mockDoc);
+  mockDoc.setFontSize = vi.fn().mockReturnValue(mockDoc);
+  mockDoc.setFont = vi.fn().mockReturnValue(mockDoc);
+  mockDoc.text = vi.fn().mockReturnValue(mockDoc);
+  mockDoc.line = vi.fn().mockReturnValue(mockDoc);
   mockDoc.getNumberOfPages = vi.fn().mockReturnValue(1);
-  mockDoc.setPage = vi.fn();
+  mockDoc.setPage = vi.fn().mockReturnValue(mockDoc);
   mockDoc.lastAutoTable = { finalY: 0 };
   mockDoc.autoTable = vi.fn().mockImplementation(() => {
     // Provide a plausible finalY so generator logic can continue
     (mockDoc as unknown as Record<string, unknown>)['lastAutoTable'] = { finalY: 80 };
+    return mockDoc;
   });
   mockDoc.output = vi
     .fn()
     .mockImplementation(() => new Blob(['%PDF-1.4'], { type: 'application/pdf' }));
   mockDoc.internal = { pageSize: { height: 297 } };
 
-  return { default: vi.fn().mockImplementation(() => mockDoc) };
+  function MockJsPDF() {
+    return mockDoc;
+  }
+
+  return { MockJsPDF };
+});
+
+vi.mock('jspdf', () => {
+  return {
+    default: MockJsPDF,
+    jsPDF: MockJsPDF,
+  };
 });
 
 // Mock jspdf-autotable
