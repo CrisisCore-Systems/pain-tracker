@@ -8,7 +8,9 @@ tags:
   - architecture
 published: false
 ---
-
+<!-- pain-tracker:target-link:start -->
+> User-controlled documentation boundary: [pain diary for long-term disability](https://paintracker.ca/resources/pain-diary-for-long-term-disability)
+<!-- pain-tracker:target-link:end -->
 If you want the short Layer 1 path into this argument, read these first:
 
 1. [Keeping Your Health Data Out of Court](https://dev.to/crisiscoresystems/keeping-your-health-data-out-of-court-3f0m)

@@ -1,3 +1,6 @@
+<!-- pain-tracker:target-link:start -->
+> Multi-system flare tracking example: [pain tracking for lupus flares](https://paintracker.ca/resources/pain-tracking-for-lupus)
+<!-- pain-tracker:target-link:end -->
 # Testing for Co-Occurrence: When Multiple Crises Happen Simultaneously
 
 *Real crises are often layered. How do you test system behavior when pain flare + panic attack + dissociation all occur together?*

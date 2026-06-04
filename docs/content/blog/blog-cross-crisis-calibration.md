@@ -1,3 +1,6 @@
+<!-- pain-tracker:target-link:start -->
+> Sensory-load tracking example: [pain tracking for migraines](https://paintracker.ca/resources/pain-tracking-for-migraines)
+<!-- pain-tracker:target-link:end -->
 # Cross-Crisis Calibration: Testing for Panic Attacks, Dissociation, and Sensory Overload
 
 *Your system is tuned for pain flares, but trauma manifests differently. Here's how to detect—and test for—diverse crisis states.*

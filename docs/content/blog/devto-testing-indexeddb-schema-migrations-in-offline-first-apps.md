@@ -9,7 +9,9 @@ tags:
 published: false
 canonical_url: "https://github.com/CrisisCore-Systems/pain-tracker"
 ---
-
+<!-- pain-tracker:target-link:start -->
+> Long-horizon symptom tracking example: [pain tracking for multiple sclerosis](https://paintracker.ca/resources/pain-tracking-for-ms)
+<!-- pain-tracker:target-link:end -->
 This is the migration-safety stop in the failure-mode and testing path.
 
 Read first:

@@ -1,3 +1,6 @@
+<!-- pain-tracker:target-link:start -->
+> Appointment-ready structure: [pain journal for appointments](https://paintracker.ca/resources/doctor-visit-pain-summary-template)
+<!-- pain-tracker:target-link:end -->
 # Internationalization of Trauma: Testing Across Cultural Contexts
 
 *Trauma expression varies culturally. How do you test a system that needs to work across different cultural frameworks?*

@@ -8,7 +8,9 @@ tags:
   - webdev
 published: false
 ---
-
+<!-- pain-tracker:target-link:start -->
+> Printable flow with intentional friction: [free pain journal templates](https://paintracker.ca/resources/daily-pain-tracker-printable)
+<!-- pain-tracker:target-link:end -->
 If you want the short route into this argument, read these first:
 
 1. [The Micro-Coercion of Speed: Why Friction Is an Engineering Prerequisite](https://dev.to/crisiscoresystems/the-micro-coercion-of-speed-why-friction-is-an-engineering-prerequisite-g4j)

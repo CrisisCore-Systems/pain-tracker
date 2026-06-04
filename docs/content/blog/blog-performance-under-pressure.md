@@ -1,3 +1,6 @@
+<!-- pain-tracker:target-link:start -->
+> Patient-facing flare logging path: [chronic pain flare tracker](https://paintracker.ca/resources/chronic-pain-flare-tracker)
+<!-- pain-tracker:target-link:end -->
 # Performance Under Pressure: Ensuring Crisis Detection Doesn't Degrade User Experience
 
 *When milliseconds matter: Testing performance-critical features in trauma-informed healthcare apps*

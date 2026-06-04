@@ -5,7 +5,9 @@ published: false
 tags: architecture, privacy, security, webdev
 cover_image:
 ---
-
+<!-- pain-tracker:target-link:start -->
+> Structural evaluation checklist: [best pain tracking app criteria](https://paintracker.ca/resources/best-pain-tracking-app)
+<!-- pain-tracker:target-link:end -->
 If a product says it is privacy first, offline first, trauma informed, or resilient, the hard question is not whether the copy sounds good.
 
 The hard question is whether the system earns the claim.

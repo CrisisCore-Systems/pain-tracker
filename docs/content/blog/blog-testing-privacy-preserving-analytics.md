@@ -1,3 +1,6 @@
+<!-- pain-tracker:target-link:start -->
+> Multi-symptom tracking without surveillance: [pain tracking for fibromyalgia](https://paintracker.ca/resources/pain-tracking-for-fibromyalgia)
+<!-- pain-tracker:target-link:end -->
 # Testing Privacy-Preserving Analytics: Verifying That Insights Don't Leak Identity
 
 *How do you test that your crisis detection analytics are truly anonymous and can't be reverse-engineered to identify users?*

@@ -5,6 +5,7 @@ import path from 'node:path';
 
 const ROOT = process.cwd();
 const SCHEDULE_PATH = path.join(ROOT, 'scripts', 'devto', 'schedule.json');
+const PUBLIC_SITEMAP_PATH = path.join(ROOT, 'public', 'sitemap.xml');
 
 function normalizeScalar(value) {
   if (value === undefined) return null;
@@ -77,6 +78,37 @@ function parseFrontMatter(md) {
   }
 
   return data;
+}
+
+function extractSitemapPaths(xml) {
+  const paths = new Set();
+  const locRegex = /<loc>([^<]+)<\/loc>/g;
+
+  for (const match of xml.matchAll(locRegex)) {
+    const url = new URL(match[1]);
+    const hostname = url.hostname.toLowerCase();
+    if (hostname !== 'paintracker.ca' && hostname !== 'www.paintracker.ca') continue;
+
+    paths.add(url.pathname.replace(/\/+$/, '') || '/');
+  }
+
+  return paths;
+}
+
+function readTargetLinkBlock(md) {
+  const normalized = String(md ?? '').replace(/\r\n/g, '\n');
+  const blockRegex =
+    /<!-- pain-tracker:target-link:start -->\n> ([^\n]+): \[([^\]]+)\]\((https:\/\/paintracker\.ca[^)]+)\)\n<!-- pain-tracker:target-link:end -->/g;
+  const matches = [...normalized.matchAll(blockRegex)];
+
+  if (matches.length === 0) return null;
+
+  return {
+    count: matches.length,
+    cue: matches[0][1],
+    anchorText: matches[0][2],
+    url: matches[0][3],
+  };
 }
 
 test('schedule metadata stays aligned with repo-backed source front matter', async () => {
@@ -159,4 +191,77 @@ test('schedule structure stays internally consistent', async () => {
       assert.ok(postKeySet.has(String(profile.startHereKey).trim()), `series profile ${profileKey} references unknown startHereKey ${profile.startHereKey}`);
     }
   }
+});
+
+test('Dev.to target CTA routing stays sitemap-backed and source-aligned', async () => {
+  const schedule = JSON.parse(await fs.readFile(SCHEDULE_PATH, 'utf8'));
+  const sitemapPaths = extractSitemapPaths(await fs.readFile(PUBLIC_SITEMAP_PATH, 'utf8'));
+  const posts = Array.isArray(schedule.posts) ? schedule.posts : [];
+  const postByKey = new Map(posts.map((post) => [String(post?.key ?? '').trim(), post]));
+  const targetMap = schedule.defaults?.target_link_map ?? {};
+  const mismatches = [];
+
+  const enabledMissingMaps = posts
+    .filter((post) => post?.enabled)
+    .map((post) => String(post?.key ?? '').trim())
+    .filter((key) => key && !targetMap[key]);
+
+  assert.deepEqual(enabledMissingMaps, [], 'enabled schedule posts must have target_link_map entries');
+
+  for (const [key, spec] of Object.entries(targetMap)) {
+    const post = postByKey.get(key);
+    const targetPath = String(spec?.path ?? '').trim();
+    const anchorText = String(spec?.anchorText ?? '').trim();
+    const cue = String(spec?.cue ?? '').trim();
+
+    if (!post) {
+      mismatches.push({ key, field: 'post', expected: 'scheduled post', actual: null });
+      continue;
+    }
+
+    if (!targetPath.startsWith('/')) {
+      mismatches.push({ key, field: 'path', expected: 'leading slash path', actual: targetPath });
+      continue;
+    }
+
+    if (!sitemapPaths.has(targetPath)) {
+      mismatches.push({ key, field: 'sitemap', expected: 'path present in public sitemap', actual: targetPath });
+    }
+
+    if (!anchorText) {
+      mismatches.push({ key, field: 'anchorText', expected: 'non-empty anchor text', actual: anchorText });
+    }
+
+    if (!cue) {
+      mismatches.push({ key, field: 'cue', expected: 'non-empty cue', actual: cue });
+    }
+
+    const sourcePath = path.join(ROOT, post.sourceFile);
+    const source = await fs.readFile(sourcePath, 'utf8');
+    const block = readTargetLinkBlock(source);
+    const expectedUrl = `https://paintracker.ca${targetPath}`;
+
+    if (!block) {
+      mismatches.push({ key, field: 'source target-link block', expected: expectedUrl, actual: null });
+      continue;
+    }
+
+    if (block.count !== 1) {
+      mismatches.push({ key, field: 'source target-link block count', expected: 1, actual: block.count });
+    }
+
+    if (block.cue !== cue) {
+      mismatches.push({ key, field: 'source cue', expected: cue, actual: block.cue });
+    }
+
+    if (block.anchorText !== anchorText) {
+      mismatches.push({ key, field: 'source anchorText', expected: anchorText, actual: block.anchorText });
+    }
+
+    if (block.url !== expectedUrl) {
+      mismatches.push({ key, field: 'source target URL', expected: expectedUrl, actual: block.url });
+    }
+  }
+
+  assert.deepEqual(mismatches, []);
 });

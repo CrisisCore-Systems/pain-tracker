@@ -1,7 +1,9 @@
 ---
 # Intentionally minimal front matter — Dev.to script controls title/tags.
 ---
-
+<!-- pain-tracker:target-link:start -->
+> Support sustainability without surveillance: [PainTracker pricing and upgrades](https://paintracker.ca/pricing)
+<!-- pain-tracker:target-link:end -->
 <!-- pain-tracker:cta-top -->
 <!-- pain-tracker:cta-bottom -->
 

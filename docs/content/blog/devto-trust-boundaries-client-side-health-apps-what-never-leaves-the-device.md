@@ -9,7 +9,9 @@ tags:
 published: false
 canonical_url: "https://github.com/CrisisCore-Systems/pain-tracker"
 ---
-
+<!-- pain-tracker:target-link:start -->
+> Sensitive-condition tracking guide: [pain tracking for endometriosis](https://paintracker.ca/resources/pain-tracking-for-endometriosis)
+<!-- pain-tracker:target-link:end -->
 If you came here from the failure-mode and testing path, this is the boundary
 question underneath it.
 

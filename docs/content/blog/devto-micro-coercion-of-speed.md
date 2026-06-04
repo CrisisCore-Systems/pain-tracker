@@ -8,7 +8,9 @@ tags:
   - devops
 published: true
 ---
-
+<!-- pain-tracker:target-link:start -->
+> Reduce cognitive load with this template: [what to include in a pain journal](https://paintracker.ca/resources/what-to-include-in-pain-journal)
+<!-- pain-tracker:target-link:end -->
 Modern software tools promise a simple future: remove friction, increase velocity, ship faster.
 
 Autocomplete, AI copilots, instant scaffolding—everything is designed to reduce the distance between thought and execution.

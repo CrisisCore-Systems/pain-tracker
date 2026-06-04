@@ -9,7 +9,9 @@ tags:
 canonical_url: "https://github.com/CrisisCore-Systems/pain-tracker"
 published: true
 ---
-
+<!-- pain-tracker:target-link:start -->
+> Support ongoing protocol work: [PainTracker pricing and upgrades](https://paintracker.ca/pricing)
+<!-- pain-tracker:target-link:end -->
 If you want the trust and release path instead of a single announcement, read this sequence:
 
 1. [Quality gates that earn trust](https://dev.to/crisiscoresystems/quality-gates-that-earn-trust-checks-you-can-run-not-promises-you-cant-58a3)

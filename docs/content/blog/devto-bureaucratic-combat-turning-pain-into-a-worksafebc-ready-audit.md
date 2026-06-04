@@ -8,7 +8,9 @@ tags:
   - export
 published: false
 ---
-
+<!-- pain-tracker:target-link:start -->
+> Workers' compensation documentation guide: [pain diary for workers' compensation](https://paintracker.ca/resources/pain-diary-for-workers-compensation)
+<!-- pain-tracker:target-link:end -->
 If you want the short route into this workflow cluster, read these first:
 
 1. [Exports are a security boundary: the moment local-first becomes shareable](https://dev.to/crisiscoresystems/exports-are-a-security-boundary-the-moment-local-first-becomes-shareable-3gj9)

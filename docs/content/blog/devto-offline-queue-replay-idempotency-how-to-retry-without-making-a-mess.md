@@ -9,7 +9,9 @@ tags:
 published: false
 canonical_url: "https://github.com/CrisisCore-Systems/pain-tracker"
 ---
-
+<!-- pain-tracker:target-link:start -->
+> Local journaling path: [private pain management journal](https://paintracker.ca/resources/pain-management-journal)
+<!-- pain-tracker:target-link:end -->
 This is the replay-safety stop in the failure-mode and testing path.
 
 Read first:

@@ -9,7 +9,9 @@ tags:
 description: Personal AI is not mainly a feature problem. It is a boundary problem. OpenClaw makes that truth visible.
 canonical_url: "https://github.com/CrisisCore-Systems/pain-tracker"
 ---
-
+<!-- pain-tracker:target-link:start -->
+> Use this practical checklist: [what to include in a pain journal](https://paintracker.ca/resources/what-to-include-in-pain-journal)
+<!-- pain-tracker:target-link:end -->
 *This is a submission for the [OpenClaw Writing Challenge](https://dev.to/challenges/openclaw-2026-04-16).*
 
 Personal AI is usually sold as convenience.

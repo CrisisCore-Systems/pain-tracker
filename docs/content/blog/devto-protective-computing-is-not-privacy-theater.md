@@ -4,7 +4,9 @@ published: true
 tags: protectivecomputing, architecture, privacy, webdev
 cover_image:
 ---
-
+<!-- pain-tracker:target-link:start -->
+> Condition guide backed by structure: [pain tracking for CRPS](https://paintracker.ca/resources/pain-tracking-for-crps)
+<!-- pain-tracker:target-link:end -->
 > Companion reading: if you want the fuller Core v1.0 pattern definitions,
 > conformance framing, and PLS links, read
 > [Architecting for Vulnerability: Introducing Protective Computing Core v1.0](https://dev.to/crisiscoresystems/architecting-for-vulnerability-introducing-protective-computing-core-v10-91g)

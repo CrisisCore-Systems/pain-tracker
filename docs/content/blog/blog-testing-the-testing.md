@@ -1,3 +1,6 @@
+<!-- pain-tracker:target-link:start -->
+> Concrete pattern-validation guide: [pain tracking for back pain](https://paintracker.ca/resources/pain-tracking-for-back-pain)
+<!-- pain-tracker:target-link:end -->
 # Testing the Testing: Validating That Your Crisis Simulation Actually Matches Reality
 
 *How do you know your simulated distress signals actually correlate with real distress?*

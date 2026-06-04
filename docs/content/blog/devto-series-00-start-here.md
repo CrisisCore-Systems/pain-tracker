@@ -9,7 +9,9 @@ tags:
 canonical_url: "https://github.com/CrisisCore-Systems/pain-tracker"
 published: false
 ---
-
+<!-- pain-tracker:target-link:start -->
+> If you are starting from implementation evidence: [chronic pain tracking resources](https://paintracker.ca/resources)
+<!-- pain-tracker:target-link:end -->
 PainTracker is a privacy-first, offline-first pain tracker built for moments where stability has already failed.
 No cloud dependency for the core workflow. No surveillance business model. Client-side protection where the data boundary demands it.
 

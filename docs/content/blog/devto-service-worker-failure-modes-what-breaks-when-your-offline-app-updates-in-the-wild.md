@@ -9,7 +9,9 @@ tags:
 published: false
 canonical_url: "https://github.com/CrisisCore-Systems/pain-tracker"
 ---
-
+<!-- pain-tracker:target-link:start -->
+> Offline app guide for users: [free private pain tracker app](https://paintracker.ca/resources/free-pain-tracker-app)
+<!-- pain-tracker:target-link:end -->
 If you want the failure-mode and testing path through the catalog, start here.
 
 Recommended route:

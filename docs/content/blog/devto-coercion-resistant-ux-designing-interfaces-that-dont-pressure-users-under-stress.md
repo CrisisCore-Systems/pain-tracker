@@ -9,7 +9,9 @@ tags:
 published: false
 canonical_url: "https://github.com/CrisisCore-Systems/pain-tracker"
 ---
-
+<!-- pain-tracker:target-link:start -->
+> Appointment-oriented condition guide: [pain tracking for arthritis](https://paintracker.ca/resources/pain-tracking-for-arthritis)
+<!-- pain-tracker:target-link:end -->
 Good UX is not just about clarity.
 
 It is about pressure.

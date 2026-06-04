@@ -1,3 +1,6 @@
+<!-- pain-tracker:target-link:start -->
+> Validate the local-first app path: [free private pain tracker app](https://paintracker.ca/resources/free-pain-tracker-app)
+<!-- pain-tracker:target-link:end -->
 # Testing Across the Stack: From Frontend UI to Local Database Resilience
 
 *Crisis features span multiple layers. How do you test the entire stack under simulated distress?*

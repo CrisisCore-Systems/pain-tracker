@@ -1,3 +1,6 @@
+<!-- pain-tracker:target-link:start -->
+> Condition-specific private tracking example: [pain tracking for migraines](https://paintracker.ca/resources/pain-tracking-for-migraines)
+<!-- pain-tracker:target-link:end -->
 # Privacy-first, offline-capable, trauma-informed, open-source health tools should be the default
 
 (Version 5: Coercion-resilient consent + implementation science completion)

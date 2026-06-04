@@ -1,3 +1,6 @@
+<!-- pain-tracker:target-link:start -->
+> Recovery-oriented tracking guide: [pain tracking after surgery](https://paintracker.ca/resources/pain-tracking-after-surgery)
+<!-- pain-tracker:target-link:end -->
 # Testing Recovery: Verifying That Systems Actually Help People Get Better
 
 *We test crisis detection thoroughly, but how do we test that the system actually facilitates recovery?*
