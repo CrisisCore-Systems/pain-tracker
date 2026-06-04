@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Code, Heart, Shield, Mail, ArrowRight, BookOpen, Sparkles, ExternalLink, Zap, type LucideIcon } from 'lucide-react';
+import { Activity, Code, Heart, Shield, Mail, ArrowRight, BookOpen, Sparkles, ExternalLink, Zap, type LucideIcon } from 'lucide-react';
 import { Button } from '../../design-system/components/Button';
 import { BrandedLogo } from '../branding/BrandedLogo';
 
