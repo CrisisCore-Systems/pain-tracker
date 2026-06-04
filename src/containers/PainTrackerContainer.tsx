@@ -60,7 +60,7 @@ const Walkthrough = lazy(() =>
 );
 
 export function PainTrackerContainer({ initialView }: { initialView?: string } = {}) {
-  const { entries, ui, addEntry, setShowOnboarding, setShowWalkthrough, setError, loadSampleData } =
+  const { entries, ui, addEntry, setShowOnboarding, setShowWalkthrough, setError } =
     usePainTrackerStore();
   const updateEntry = usePainTrackerStore(s => s.updateEntry);
   const [workflowPreferences, setWorkflowPreferences] = useState(() =>
@@ -79,6 +79,8 @@ export function PainTrackerContainer({ initialView }: { initialView?: string } =
       : 'dashboard';
   });
   const [editingEntryId, setEditingEntryId] = useState<PainEntry['id'] | null>(null);
+  const [onboardingDemoEntries, setOnboardingDemoEntries] = useState<PainEntry[] | null>(null);
+  const isOnboardingDemoActive = onboardingDemoEntries !== null && entries.length === 0;
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -93,6 +95,12 @@ export function PainTrackerContainer({ initialView }: { initialView?: string } =
       setCurrentView('dashboard');
     }
   }, [workflowPreferences.showFibromyalgiaHubNavItem, currentView]);
+
+  useEffect(() => {
+    if (entries.length > 0 && onboardingDemoEntries !== null) {
+      setOnboardingDemoEntries(null);
+    }
+  }, [entries.length, onboardingDemoEntries]);
 
   // Load walkthrough steps dynamically to avoid circular dependency
   useEffect(() => {
@@ -119,6 +127,25 @@ export function PainTrackerContainer({ initialView }: { initialView?: string } =
     }
   }, [entries.length, setShowOnboarding]);
 
+  const startOnboardingAnalyticsDemo = () => {
+    void (async () => {
+      try {
+        const { samplePainEntries } = await import('../data/sampleData');
+        setOnboardingDemoEntries(samplePainEntries);
+        setCurrentView('analytics');
+        toast.info(
+          'Mock analytics preview',
+          'These example entries are separate from your record. Start your own entry to end the preview.'
+        );
+      } catch (error) {
+        console.error('Failed to load mock analytics preview:', error);
+        setError('Unable to load the mock analytics preview.');
+        toast.error('Preview unavailable', 'Start with your own entry instead.');
+        setCurrentView('new-entry');
+      }
+    })();
+  };
+
   const handleOnboardingComplete = (setupWithSampleData: boolean) => {
     try {
       secureStorage.set('pain-tracker-onboarding-completed', 'true');
@@ -129,13 +156,11 @@ export function PainTrackerContainer({ initialView }: { initialView?: string } =
     setShowOnboarding(false);
 
     if (setupWithSampleData) {
-      loadSampleData();
-      toast.success(
-        'Sample data loaded!',
-        'Explore the features with example pain entries. You can clear this data anytime.'
-      );
+      startOnboardingAnalyticsDemo();
     } else {
-      toast.info('Welcome to Pain Tracker!', 'Start by recording your first pain entry above.');
+      setOnboardingDemoEntries(null);
+      setCurrentView('new-entry');
+      toast.info('Start your first entry', 'Your first saved entry starts your local record.');
     }
   };
 
@@ -147,11 +172,8 @@ export function PainTrackerContainer({ initialView }: { initialView?: string } =
     }
 
     setShowOnboarding(false);
+    setOnboardingDemoEntries(null);
     toast.info('Onboarding skipped', 'You can always access help from the help menu.');
-  };
-
-  const handleStartWalkthrough = () => {
-    setShowWalkthrough(true);
   };
 
   useEffect(() => {
@@ -201,6 +223,14 @@ export function PainTrackerContainer({ initialView }: { initialView?: string } =
       return;
     }
 
+    if (
+      onboardingDemoEntries !== null &&
+      (nextView === 'new-entry' || nextView === 'daily-checkin')
+    ) {
+      setOnboardingDemoEntries(null);
+      toast.info('Mock preview ended', 'Advanced analytics access is back to your current plan.');
+    }
+
     setCurrentView(nextView);
   };
 
@@ -243,6 +273,9 @@ export function PainTrackerContainer({ initialView }: { initialView?: string } =
       };
 
       const beforeCount = storeApi.getState?.()?.entries?.length ?? entries.length;
+      if (onboardingDemoEntries !== null) {
+        setOnboardingDemoEntries(null);
+      }
       addEntry(entryData);
 
       // Best-effort: enrich the just-saved entry with local weather (opt-in).
@@ -302,7 +335,10 @@ export function PainTrackerContainer({ initialView }: { initialView?: string } =
             onOpenHelp={() => setCurrentView('help')}
           />
         ) : (
-          <EmptyStatePanel onStartWalkthrough={handleStartWalkthrough} />
+          <EmptyStatePanel
+            onPreviewAnalyticsDemo={startOnboardingAnalyticsDemo}
+            onStartEntry={() => handleNavigate('new-entry')}
+          />
         );
 
       case 'new-entry':
@@ -477,6 +513,18 @@ export function PainTrackerContainer({ initialView }: { initialView?: string } =
 
       case 'analytics':
         {
+          if (isOnboardingDemoActive && onboardingDemoEntries) {
+            return (
+              <Suspense fallback={<ViewLoadingFallback />}>
+                <AnalyticsDashboard
+                  demoMode
+                  entries={onboardingDemoEntries}
+                  onCreateFirstEntry={() => handleNavigate('new-entry')}
+                />
+              </Suspense>
+            );
+          }
+
           const analyticsTier = subscriptionService.getUserTier(getLocalUserId());
           const AnalyticsView = analyticsTier === 'pro' || analyticsTier === 'enterprise'
             ? PremiumAnalyticsDashboard
@@ -551,7 +599,10 @@ export function PainTrackerContainer({ initialView }: { initialView?: string } =
             onOpenHelp={() => setCurrentView('help')}
           />
         ) : (
-          <EmptyStatePanel onStartWalkthrough={handleStartWalkthrough} />
+          <EmptyStatePanel
+            onPreviewAnalyticsDemo={startOnboardingAnalyticsDemo}
+            onStartEntry={() => handleNavigate('new-entry')}
+          />
         );
     }
   };
@@ -562,6 +613,7 @@ export function PainTrackerContainer({ initialView }: { initialView?: string } =
         currentView={currentView}
         onNavigate={handleNavigate}
         stats={stats}
+        analyticsDemoActive={isOnboardingDemoActive}
         showFibromyalgiaNavItem={workflowPreferences.showFibromyalgiaHubNavItem}
       >
         {renderView()}

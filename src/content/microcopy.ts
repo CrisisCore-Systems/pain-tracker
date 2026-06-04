@@ -309,7 +309,7 @@ export const emptyStates = {
     headline: { base: 'Two days of logs unlock patterns.' } as AdaptiveCopy,
     subtext: { base: 'Start with today—10 seconds.' } as AdaptiveCopy,
     cta: { base: 'Log first entry' } as AdaptiveCopy,
-    secondaryCta: { base: 'Learn how tracking helps' } as AdaptiveCopy,
+    secondaryCta: { base: 'Preview mock analytics' } as AdaptiveCopy,
   },
 
   /** No trends yet */

@@ -119,6 +119,7 @@ export function PainTracker() {
   const [showImporter, setShowImporter] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showWalkthrough, setShowWalkthrough] = useState(false);
+  const [isMockPreviewActive, setIsMockPreviewActive] = useState(false);
   const [walkthroughSteps, setWalkthroughSteps] = useState<WalkthroughStep[]>([]);
   const [useBodyMapForm, setUseBodyMapForm] = useState(false);
   const [reportPeriod, setReportPeriod] = useState({
@@ -251,17 +252,18 @@ export function PainTracker() {
         try {
           const { samplePainEntries } = await import('../../data/sampleData');
           setEntries(samplePainEntries);
-          await Promise.allSettled(samplePainEntries.map(entry => savePainEntry(entry)));
-          toast.success(
-            'Sample data loaded!',
-            'Explore the features with example pain entries. You can clear this data anytime.'
+          setIsMockPreviewActive(true);
+          toast.info(
+            'Mock analytics preview',
+            'These example entries are separate from your record. Add your own entry to end the preview.'
           );
         } catch (error) {
-          console.error('Failed to load sample pain entries:', error);
-          toast.error('Sample data unavailable', 'Unable to load example entries at this time.');
+          console.error('Failed to load mock pain entries:', error);
+          toast.error('Preview unavailable', 'Start with your own entry instead.');
         }
       })();
     } else {
+      setIsMockPreviewActive(false);
       toast.info('Welcome to Pain Tracker!', 'Start by recording your first pain entry above.');
     }
   };
@@ -273,6 +275,7 @@ export function PainTracker() {
       /* ignore */
     }
     setShowOnboarding(false);
+    setIsMockPreviewActive(false);
     toast.info('Onboarding skipped', 'You can always access help from the help menu.');
   };
 
@@ -314,7 +317,8 @@ export function PainTracker() {
         notes: entryData.notes || '',
       };
 
-      const updatedEntries = [...entries, newEntry];
+      const updatedEntries = isMockPreviewActive ? [newEntry] : [...entries, newEntry];
+      setIsMockPreviewActive(false);
       setEntries(updatedEntries);
 
       // Best-effort: enrich with local weather without blocking save (opt-in).
@@ -362,7 +366,8 @@ export function PainTracker() {
       }
 
       // PainAssessment already persists via savePainEntry; we only update UI state here.
-      setEntries(prev => [...prev, entry]);
+      setEntries(prev => (isMockPreviewActive ? [entry] : [...prev, entry]));
+      setIsMockPreviewActive(false);
       setError(null);
       toast.success('Entry Saved', 'Your pain entry has been recorded successfully.');
 

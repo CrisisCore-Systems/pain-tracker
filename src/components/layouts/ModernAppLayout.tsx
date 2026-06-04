@@ -40,6 +40,7 @@ interface ModernAppLayoutProps {
     avgPain: number;
     streak: number;
   };
+  analyticsDemoActive?: boolean;
   showFibromyalgiaNavItem?: boolean;
 }
 
@@ -107,7 +108,23 @@ function getBadgeTextColor(badge: string, isDark: boolean) {
     return isDark ? '#34d399' : '#065f46';
   }
 
+  if (badge === 'Demo') {
+    return isDark ? '#fbbf24' : '#92400e';
+  }
+
   return isDark ? '#a855f7' : '#6b21a8';
+}
+
+function getBadgeBackground(badge: string) {
+  if (badge === 'New') return 'rgba(52, 211, 153, 0.2)';
+  if (badge === 'Demo') return 'rgba(245, 158, 11, 0.18)';
+  return 'rgba(168, 85, 247, 0.2)';
+}
+
+function getBadgeBorder(badge: string) {
+  if (badge === 'New') return '1px solid rgba(52, 211, 153, 0.3)';
+  if (badge === 'Demo') return '1px solid rgba(245, 158, 11, 0.35)';
+  return '1px solid rgba(168, 85, 247, 0.3)';
 }
 
 function getLayoutThemeClasses(isDark: boolean) {
@@ -182,6 +199,7 @@ function QuickStats({
 function DesktopSidebar({
   currentView,
   currentTier,
+  analyticsDemoActive,
   isDark,
   onNavigate,
   bottomNavigation,
@@ -201,11 +219,18 @@ function DesktopSidebar({
   activeBottomNavClass: string;
   inactiveBottomNavClass: string;
   getBadgeTextColor: (badge: string) => string;
+  analyticsDemoActive?: boolean;
 }>) {
-  const upgradeHeading = currentTier === 'basic' ? 'Basic stays limited here' : 'Free is limited here';
-  const upgradeDescription = currentTier === 'basic'
-    ? 'You are on Basic. Predictive insights and higher-tier analytics remain clipped until you move to Pro.'
-    : 'You are on Free. Advanced analytics and predictive insights stay clipped until you upgrade.';
+  const upgradeHeading = analyticsDemoActive
+    ? 'Mock analytics preview'
+    : currentTier === 'basic'
+      ? 'Basic stays limited here'
+      : 'Free is limited here';
+  const upgradeDescription = analyticsDemoActive
+    ? 'You are viewing example entries only. Start your own entry to return analytics access to your current plan.'
+    : currentTier === 'basic'
+      ? 'You are on Basic. Predictive insights and higher-tier analytics remain clipped until you move to Pro.'
+      : 'You are on Free. Advanced analytics and predictive insights stay clipped until you upgrade.';
 
   return (
     <aside className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:block lg:w-72 lg:pt-16">
@@ -262,9 +287,9 @@ function DesktopSidebar({
                     <span
                       className="px-2 py-0.5 rounded-full text-[10px] font-semibold whitespace-nowrap"
                       style={{
-                        background: item.badge === 'New' ? 'rgba(52, 211, 153, 0.2)' : 'rgba(168, 85, 247, 0.2)',
+                        background: getBadgeBackground(item.badge),
                         color: getBadgeTextColor(item.badge),
-                        border: item.badge === 'New' ? '1px solid rgba(52, 211, 153, 0.3)' : '1px solid rgba(168, 85, 247, 0.3)',
+                        border: getBadgeBorder(item.badge),
                       }}
                     >
                       {item.badge}
@@ -329,13 +354,13 @@ function DesktopSidebar({
             {upgradeDescription}
           </p>
           <button
-            onClick={() => onNavigate?.('pricing')}
+            onClick={() => onNavigate?.(analyticsDemoActive ? 'new-entry' : 'pricing')}
             className={cn(
               'w-full py-2 rounded-lg text-xs font-medium transition-colors border',
               isDark ? 'text-purple-200 border-purple-400/40 hover:bg-purple-500/20' : 'bg-white text-purple-900 border-purple-300 hover:bg-purple-100',
             )}
           >
-            View Plans
+            {analyticsDemoActive ? 'Start my entry' : 'View Plans'}
           </button>
         </div>
       </div>
@@ -415,7 +440,7 @@ function MobileSidebar({
                     <span
                       className="px-2 py-0.5 rounded-full text-[10px] font-semibold flex-shrink-0"
                       style={{
-                        background: item.badge === 'New' ? 'rgba(52, 211, 153, 0.2)' : 'rgba(168, 85, 247, 0.2)',
+                        background: getBadgeBackground(item.badge),
                         color: getBadgeTextColor(item.badge),
                       }}
                     >
@@ -467,6 +492,7 @@ export function ModernAppLayout({
   onNavigate,
   currentView = 'dashboard',
   stats,
+  analyticsDemoActive = false,
   showFibromyalgiaNavItem = true,
 }: Readonly<ModernAppLayoutProps>) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -478,9 +504,12 @@ export function ModernAppLayout({
   const themeClasses = getLayoutThemeClasses(isDark);
   const themeToggle = getThemeToggleProps(mode);
   const ThemeToggleIcon = themeToggle.icon;
+  const navigationWithDemoState = NAVIGATION_ITEMS.map(item =>
+    item.id === 'analytics' && analyticsDemoActive ? { ...item, badge: 'Demo' } : item
+  );
   const effectiveNavigation = showFibromyalgiaNavItem
-    ? NAVIGATION_ITEMS
-    : NAVIGATION_ITEMS.filter(item => item.id !== 'fibromyalgia');
+    ? navigationWithDemoState
+    : navigationWithDemoState.filter(item => item.id !== 'fibromyalgia');
 
   useEffect(() => {
     if (typeof document === 'undefined') return;
@@ -630,6 +659,7 @@ export function ModernAppLayout({
       <DesktopSidebar
         currentView={currentView}
         currentTier={currentTier}
+        analyticsDemoActive={analyticsDemoActive}
         isDark={isDark}
         onNavigate={onNavigate}
         bottomNavigation={BOTTOM_NAVIGATION_ITEMS}

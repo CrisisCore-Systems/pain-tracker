@@ -20,6 +20,7 @@ import { UpgradeCard } from '../UpgradeCard';
 import { UpgradePrompt } from '../subscription/FeatureGates';
 import { useFeatureAccess, useSubscription } from '../../contexts/SubscriptionContext';
 import { getPlanRestrictionReason } from '../subscription/planRestrictionCopy';
+import type { PainEntry } from '../../types';
 
 // Lazy load UsageAnalyticsDashboard to avoid circular dependencies
 const UsageAnalyticsDashboard = lazy(() =>
@@ -27,7 +28,9 @@ const UsageAnalyticsDashboard = lazy(() =>
 );
 
 interface AnalyticsDashboardProps {
+  entries?: PainEntry[];
   className?: string;
+  demoMode?: boolean;
   onCreateFirstEntry?: () => void;
 }
 
@@ -39,10 +42,13 @@ interface AnalyticsDashboardProps {
  */
 export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
   className = '',
+  demoMode = false,
+  entries,
   onCreateFirstEntry,
 }) => {
-  const { entries, moodEntries } = usePainTrackerStore();
-  const hasAdvancedAnalytics = entitlementService.hasEntitlement('analytics_advanced');
+  const { entries: storedEntries, moodEntries } = usePainTrackerStore();
+  const sourceEntries = entries ?? storedEntries;
+  const hasAdvancedAnalytics = demoMode || entitlementService.hasEntitlement('analytics_advanced');
   const predictiveAccess = useFeatureAccess('predictiveInsights');
   const { currentTier } = useSubscription();
   const [analytics, setAnalytics] = useState<{
@@ -93,7 +99,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
           return;
         }
 
-        if (entries.length === 0) {
+        if (sourceEntries.length === 0) {
           setAnalytics({
             correlations: [],
             interventions: [],
@@ -111,11 +117,11 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
         // Run analytics (simulated async for UI responsiveness)
         await new Promise(resolve => setTimeout(resolve, 100));
 
-        const correlations = engine.calculateCorrelationMatrix(entries, moodEntries);
-        const interventions = engine.scoreInterventions(entries);
-        const triggers = engine.detectTriggerPatterns(entries);
-        const indicators = engine.identifyPredictiveIndicators(entries);
-        const brief = engine.generateWeeklyClinicalBrief(entries, moodEntries);
+        const correlations = engine.calculateCorrelationMatrix(sourceEntries, moodEntries);
+        const interventions = engine.scoreInterventions(sourceEntries);
+        const triggers = engine.detectTriggerPatterns(sourceEntries);
+        const indicators = engine.identifyPredictiveIndicators(sourceEntries);
+        const brief = engine.generateWeeklyClinicalBrief(sourceEntries, moodEntries);
 
         setAnalytics({
           correlations,
@@ -137,7 +143,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
     };
 
     void processAnalytics();
-  }, [entries, moodEntries, hasAdvancedAnalytics]);
+  }, [sourceEntries, moodEntries, hasAdvancedAnalytics]);
 
   if (!hasAdvancedAnalytics) {
     return <UpgradeCard moduleId="analytics_advanced" className={className} />;
@@ -177,7 +183,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
     );
   }
 
-  if (entries.length === 0) {
+  if (sourceEntries.length === 0) {
     return (
       <div className={`bg-white dark:bg-gray-800 rounded-lg shadow-md p-12 ${className}`}>
         <div className="text-center">
@@ -201,6 +207,33 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
 
   return (
     <div className={className}>
+      {demoMode && (
+        <div
+          className="mb-6 rounded-lg border border-amber-300 bg-amber-50 p-4 text-amber-950 dark:border-amber-700 dark:bg-amber-950/30 dark:text-amber-100"
+          role="status"
+          aria-live="polite"
+        >
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <p className="text-sm font-semibold">Mock analytics preview</p>
+              <p className="mt-1 text-sm">
+                These example entries are not part of your record. Starting your own entry ends the
+                preview, and advanced analytics returns to your current plan.
+              </p>
+            </div>
+            {onCreateFirstEntry && (
+              <button
+                type="button"
+                onClick={onCreateFirstEntry}
+                className="shrink-0 rounded-md border border-amber-500/60 bg-white px-3 py-2 text-sm font-medium text-amber-950 transition-colors hover:bg-amber-100 dark:bg-amber-950/40 dark:text-amber-100 dark:hover:bg-amber-900/60"
+              >
+                Start my entry
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Tab Navigation */}
       <div className="bg-white dark:bg-gray-800 rounded-t-lg shadow-md">
         <div
@@ -326,7 +359,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
       {/* Data Summary Footer */}
       <div className="mt-6 bg-gray-50 dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
         <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
-          Analytics based on <strong>{entries.length}</strong> pain entries
+          Analytics based on <strong>{sourceEntries.length}</strong> pain entries
           {moodEntries && moodEntries.length > 0 && (
             <>
               {' '}

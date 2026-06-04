@@ -27,7 +27,7 @@ export function WelcomeScreen({ onNext, onSkip }: WelcomeScreenProps) {
         <h3 className="text-3xl font-bold text-foreground mb-4">Welcome to Pain Tracker</h3>
 
         <p className="text-lg text-muted-foreground mb-6 max-w-md mx-auto">
-          Take control of your pain management journey with comprehensive tracking and insights.
+          Build a local pain record at your own pace, with clear entries and optional pattern views.
         </p>
       </div>
 
@@ -46,9 +46,9 @@ export function WelcomeScreen({ onNext, onSkip }: WelcomeScreenProps) {
           <div className="bg-primary/10 rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-3">
             <TrendingUp className="h-6 w-6 text-primary" />
           </div>
-          <h4 className="font-semibold text-foreground mb-2">Analyze Trends</h4>
+          <h4 className="font-semibold text-foreground mb-2">Review Patterns</h4>
           <p className="text-sm text-muted-foreground">
-            Visualize patterns and improvements over time
+            Use local charts to notice changes over time
           </p>
         </div>
 
@@ -56,9 +56,9 @@ export function WelcomeScreen({ onNext, onSkip }: WelcomeScreenProps) {
           <div className="bg-primary/10 rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-3">
             <Heart className="h-6 w-6 text-primary" />
           </div>
-          <h4 className="font-semibold text-foreground mb-2">Improve Life</h4>
+          <h4 className="font-semibold text-foreground mb-2">Prepare Notes</h4>
           <p className="text-sm text-muted-foreground">
-            Make informed decisions with your healthcare team
+            Keep useful context ready for appointments or reports
           </p>
         </div>
       </div>

@@ -17,10 +17,10 @@ export function FeatureHighlights({ onNext, onPrevious }: FeatureHighlightsProps
   const features = [
     {
       icon: BarChart,
-      title: 'Visual Analytics',
+      title: 'Local Analytics',
       description:
-        'Interactive charts and graphs to visualize your pain patterns, trends, and progress over time.',
-      highlight: 'See your progress at a glance',
+        'Charts and pattern views use the entries on your device so you can inspect trends without uploading pain records.',
+      highlight: 'Preview before you track',
     },
     {
       icon: FileText,
@@ -49,10 +49,10 @@ export function FeatureHighlights({ onNext, onPrevious }: FeatureHighlightsProps
     <div className="space-y-6">
       <div className="text-center mb-8">
         <h3 className="text-2xl font-bold text-foreground mb-3">
-          Powerful Features for Better Health
+          What you can use here
         </h3>
         <p className="text-muted-foreground">
-          Discover what makes Pain Tracker the complete solution for pain management
+          Core tracking works locally. Optional analytics and exports stay separate from the entry path.
         </p>
       </div>
 

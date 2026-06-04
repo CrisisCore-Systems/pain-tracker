@@ -1,6 +1,6 @@
 /**
  * SampleDataSetup - Final step of onboarding
- * Offers to set up sample data for exploration
+ * Offers a temporary mock-data analytics preview or a fresh local start.
  */
 
 import { useState } from 'react';
@@ -26,7 +26,7 @@ export function SampleDataSetup({ onComplete, onPrevious }: SampleDataSetupProps
       <div className="text-center mb-8">
         <h3 className="text-2xl font-bold text-foreground mb-3">How would you like to start?</h3>
         <p className="text-muted-foreground">
-          Choose your preferred way to begin your pain tracking journey
+          Preview the workflow with mock data, or begin with your own first entry.
         </p>
       </div>
 
@@ -44,17 +44,17 @@ export function SampleDataSetup({ onComplete, onPrevious }: SampleDataSetupProps
               <Sparkles className="h-6 w-6 text-primary-foreground" />
             </div>
             <div className="text-left flex-1">
-              <h4 className="font-semibold text-foreground mb-2">Start with Sample Data</h4>
+              <h4 className="font-semibold text-foreground mb-2">Preview with Mock Data</h4>
               <p className="text-sm text-muted-foreground mb-3">
-                Explore Pain Tracker with pre-filled sample entries to see how features work.
-                Perfect for understanding the app before adding your own data.
+                Browse example analytics before adding your own record. The preview is separate
+                from your entries and ends when you start your own log.
               </p>
               <div className="flex flex-wrap gap-2">
                 <span className="text-xs bg-primary/10 text-primary-foreground px-2 py-1 rounded">
-                  Try before you track
+                  Mock entries only
                 </span>
                 <span className="text-xs bg-primary/10 text-primary-foreground px-2 py-1 rounded">
-                  See example reports
+                  Temporary analytics preview
                 </span>
               </div>
             </div>
@@ -74,17 +74,17 @@ export function SampleDataSetup({ onComplete, onPrevious }: SampleDataSetupProps
               <User className="h-6 w-6 text-destructive-foreground" />
             </div>
             <div className="text-left flex-1">
-              <h4 className="font-semibold text-foreground mb-2">Start Fresh</h4>
+              <h4 className="font-semibold text-foreground mb-2">Start with My Own Entry</h4>
               <p className="text-sm text-muted-foreground mb-3">
-                Begin with a clean slate and add your first real pain entry. Best for users ready to
-                start tracking immediately.
+                Go directly to the quick entry screen. Your first saved entry starts your local
+                record.
               </p>
               <div className="flex flex-wrap gap-2">
                 <span className="text-xs bg-destructive/10 text-destructive-foreground px-2 py-1 rounded">
-                  Clean start
+                  No mock data
                 </span>
                 <span className="text-xs bg-destructive/10 text-destructive-foreground px-2 py-1 rounded">
-                  Real data only
+                  Local record
                 </span>
               </div>
             </div>
@@ -98,8 +98,8 @@ export function SampleDataSetup({ onComplete, onPrevious }: SampleDataSetupProps
           <span className="text-sm font-medium text-foreground">Privacy Note</span>
         </div>
         <p className="text-xs text-muted-foreground">
-          All data is stored locally on your device. You can clear sample data anytime, and no
-          information is sent to external servers.
+          The preview uses local example data only. It does not grant a subscription, upload health
+          data, or become part of your record.
         </p>
       </div>
 
@@ -110,9 +110,9 @@ export function SampleDataSetup({ onComplete, onPrevious }: SampleDataSetupProps
 
         <Button onClick={handleComplete} disabled={!selectedOption} className="min-w-24">
           {selectedOption === 'sample'
-            ? 'Setup with Samples'
+            ? 'Preview Mock Analytics'
             : selectedOption === 'fresh'
-              ? 'Start Fresh'
+              ? 'Start My Entry'
               : 'Continue'}
         </Button>
       </div>
