@@ -27,7 +27,7 @@ const DRY_RUN = process.argv.includes('--dry-run');
 const TARGETS = [
   {
     slug: 'paintracker-privacy-first-trauma-informed-pain-app',
-    sourcePath: 'cmlk6l1ir000102lc9zbefrwd.md',
+    sourcePath: 'docs/notes/cmlk6l1ir000102lc9zbefrwd.md',
   },
   {
     slug: 'building-a-healthcare-pwa-that-actually-works-when-it-matters',

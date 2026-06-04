@@ -162,7 +162,7 @@ If homepage share rises:
 ### 2026-05-12 UTC - Hashnode API path adapted, workspace still network-blocked
 
 - Updated source-backed Hashnode bodies for the 3 live P0 post slugs:
-  - `cmlk6l1ir000102lc9zbefrwd.md`
+  - `docs/notes/cmlk6l1ir000102lc9zbefrwd.md`
   - `docs/notes/cmhy7nymw000202ic4ecv4d7k.md`
   - `docs/notes/cmjlc4plw000402lde3202avk.md`
 - Added shared request helper: `scripts/publishing/hashnode/graphql-request.cjs`

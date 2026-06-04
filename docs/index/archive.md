@@ -18,6 +18,12 @@ Repo artifacts (in repo-root `archive/`):
 
 Moved from repo root (formerly repo root `cm*.md`):
 - ../archive/root-drafts/cmkbgy2is000002jpc12d6x2u.md
+- ../archive/root-drafts/root-cleanup-2026-06-04/
+
+Moved from repo root into active publishing notes:
+- ../notes/cmldiup8y000402jr1s4c15sv.md
+- ../notes/cmlj9u86d000r02lb5blngcvm.md
+- ../notes/cmlk6l1ir000102lc9zbefrwd.md
 
 Historic draft snapshots (mixed origins; kept for traceability):
 - ../archive/blog-drafts/cmhy7nymw000202ic4ecv4d7k.md

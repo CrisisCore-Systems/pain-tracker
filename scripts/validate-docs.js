@@ -3,14 +3,14 @@
  * Documentation Validation Script
  * Checks:
  * 1. Local file links in README exist.
- * 2. Test count drift (README claimed vs actual test files).
+ * 2. Source test-file count drift (README claimed vs actual src test files).
  * 3. Feature Matrix status values are constrained.
  *
  * Exit codes:
  * 0 = success
  * 1 = failures detected
  */
-import { readFileSync, existsSync, readdirSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 const ALLOWED_STATUSES = new Set(['Implemented', 'Partial', 'Planned']);
@@ -30,9 +30,8 @@ function readFile(path) {
   return readFileSync(join(ROOT, path), 'utf8');
 }
 
-// 1. Validate README local file links
 function validateLocalLinks() {
-  log('🔍 Validating local file links in README...');
+  log('Validating local file links in README...');
   const readme = readFile('README.md');
 
   const linkRegex = /\[[^\]]+\]\((?!https?:\/\/)([^)]+)\)/g;
@@ -49,7 +48,7 @@ function validateLocalLinks() {
     if (!existsSync(resolved)) {
       fail(`Missing linked file: ${target}`);
     } else {
-      log(`  ✅ ${target}`);
+      log(`  OK ${target}`);
     }
   }
   if (seen.size === 0) {
@@ -57,13 +56,12 @@ function validateLocalLinks() {
   }
 }
 
-// 2. Test count drift
 function validateTestCount() {
-  log('🧪 Validating test count drift...');
+  log('Validating source test-file count drift...');
   const readme = readFile('README.md');
-  const countMatch = readme.match(/(\d+)\s+tests/i);
+  const countMatch = readme.match(/(\d+)\s+source test files/i);
   if (!countMatch) {
-    fail('Could not find declared test count pattern in README (e.g., "128 tests").');
+    fail('Could not find declared source test-file count in README (e.g., "128 source test files").');
     return;
   }
   const declared = parseInt(countMatch[1], 10);
@@ -83,18 +81,17 @@ function validateTestCount() {
   const actual = testFiles.length;
   const threshold = parseInt(process.env.ALLOWED_TEST_DELTA || '5', 10);
 
-  log(`  Declared: ${declared}, Actual: ${actual}, Threshold: ±${threshold}`);
+  log(`  Declared: ${declared}, Actual: ${actual}, Threshold: +/-${threshold}`);
 
   if (Math.abs(declared - actual) > threshold) {
-    fail(`Test count drift exceeds threshold: declared=${declared} actual=${actual}`);
+    fail(`Source test-file count drift exceeds threshold: declared=${declared} actual=${actual}`);
   } else {
-    log('  ✅ Test count within acceptable drift.');
+    log('  OK source test-file count within acceptable drift.');
   }
 }
 
-// 3. Feature Matrix validation
 function validateFeatureMatrix() {
-  log('🗂  Validating Feature Matrix status values...');
+  log('Validating Feature Matrix status values...');
   const matrixPath = 'docs/FEATURE_MATRIX.md';
   if (!existsSync(join(ROOT, matrixPath))) {
     fail('Feature matrix file missing (docs/FEATURE_MATRIX.md).');
@@ -103,8 +100,7 @@ function validateFeatureMatrix() {
   const content = readFile(matrixPath);
   const lines = content.split(/\r?\n/);
 
-  // Find the header row for the first markdown table and locate the Status column.
-  const headerIdx = lines.findIndex(l => l.trim().startsWith('|') && /\bStatus\b/i.test(l));
+  const headerIdx = lines.findIndex((line) => line.trim().startsWith('|') && /\bStatus\b/i.test(line));
   if (headerIdx === -1) {
     fail('No feature matrix table header found (missing a "Status" column).');
     return;
@@ -112,9 +108,9 @@ function validateFeatureMatrix() {
 
   const headerCells = lines[headerIdx]
     .split('|')
-    .map(c => c.trim())
+    .map((cell) => cell.trim())
     .filter(Boolean);
-  const statusCol = headerCells.findIndex(c => c.toLowerCase() === 'status');
+  const statusCol = headerCells.findIndex((cell) => cell.toLowerCase() === 'status');
   if (statusCol === -1) {
     fail('Feature matrix header does not include a Status column.');
     return;
@@ -124,17 +120,15 @@ function validateFeatureMatrix() {
   for (let i = headerIdx + 1; i < lines.length; i++) {
     const line = lines[i].trim();
     if (!line.startsWith('|')) {
-      // Stop after the first table once we hit a non-table line.
       if (checked > 0) break;
       continue;
     }
 
-    // Skip the separator row (---) and any malformed rows.
     if (/^\|\s*-{2,}\s*\|/.test(line)) continue;
 
     const cells = line
       .split('|')
-      .map(c => c.trim())
+      .map((cell) => cell.trim())
       .filter(Boolean);
 
     const status = cells[statusCol];
@@ -150,7 +144,7 @@ function validateFeatureMatrix() {
   if (checked === 0) {
     fail('No feature matrix rows validated (pattern mismatch).');
   } else {
-    log(`  ✅ Validated ${checked} status entries.`);
+    log(`  OK validated ${checked} status entries.`);
   }
 }
 
@@ -163,8 +157,8 @@ try {
 }
 
 if (failures > 0) {
-  console.error(`❌ Documentation validation failed with ${failures} issue(s).`);
+  console.error(`Documentation validation failed with ${failures} issue(s).`);
   process.exit(1);
 } else {
-  console.log('✅ Documentation validation passed.');
+  console.log('Documentation validation passed.');
 }

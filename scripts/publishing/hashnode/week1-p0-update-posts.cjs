@@ -26,7 +26,7 @@ const DRY_RUN = process.argv.includes('--dry-run');
 const TARGETS = [
   {
     slug: 'paintracker-privacy-first-trauma-informed-pain-app',
-    sourcePath: 'cmlk6l1ir000102lc9zbefrwd.md',
+    sourcePath: 'docs/notes/cmlk6l1ir000102lc9zbefrwd.md',
     expectedTitle: 'Pain Tracker: Privacy-First, Trauma-Informed Pain App',
   },
   {
