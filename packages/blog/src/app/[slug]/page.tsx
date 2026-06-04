@@ -10,10 +10,8 @@ import {
   breadcrumbJsonLd,
 } from '@/lib/schema';
 import { HighIntentResourceLinks } from '@/components/HighIntentResourceLinks';
-import { articles, getArticleBySlug } from '@/data/articles';
+import { APP_CTA_URL, articles, getArticleBySlug } from '@/data/articles';
 import type { ArticleData } from '@/data/articles';
-
-const HOMEPAGE_URL = 'https://www.paintracker.ca/';
 
 const PRINTABLE_RECOMMENDATIONS: Record<string, { label: string; href: string }> = {
   'offline-pain-diary': {
@@ -94,11 +92,25 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       url: `${siteConfig.url}/${slug}`,
       type: 'article',
       siteName: siteConfig.name,
+      images: [
+        {
+          url: siteConfig.socialImageUrl,
+          width: siteConfig.socialImageWidth,
+          height: siteConfig.socialImageHeight,
+          alt: siteConfig.socialImageAlt,
+        },
+      ],
     },
     twitter: {
       card: 'summary_large_image',
       title: article.title,
       description: article.description,
+      images: [
+        {
+          url: siteConfig.socialImageUrl,
+          alt: siteConfig.socialImageAlt,
+        },
+      ],
     },
     alternates: {
       canonical: `${siteConfig.url}/${slug}`,
@@ -417,7 +429,7 @@ export default async function ArticlePage({ params }: Readonly<Props>) {
           </p>
           <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
             <a
-              href={HOMEPAGE_URL}
+              href={APP_CTA_URL}
               className="inline-block rounded-lg bg-blue-600 px-6 py-3 font-medium text-white transition hover:bg-blue-700"
             >
               Use the free private pain tracker app

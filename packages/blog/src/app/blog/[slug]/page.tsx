@@ -33,7 +33,8 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
     };
   }
 
-  const ogImage = post.ogMetaData?.image || post.coverImage?.url;
+  const ogImage = post.ogMetaData?.image || post.coverImage?.url || siteConfig.socialImageUrl;
+  const ogImageAlt = ogImage === siteConfig.socialImageUrl ? siteConfig.socialImageAlt : post.title;
 
   return {
     title: post.seo?.title || post.title,
@@ -45,13 +46,13 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
       publishedTime: post.publishedAt,
       modifiedTime: post.updatedAt,
       authors: [post.author.name],
-      images: ogImage ? [{ url: ogImage }] : [],
+      images: [{ url: ogImage, alt: ogImageAlt }],
     },
     twitter: {
       card: 'summary_large_image',
       title: post.seo?.title || post.title,
       description: post.seo?.description || post.brief,
-      images: ogImage ? [ogImage] : [],
+      images: [{ url: ogImage, alt: ogImageAlt }],
     },
   };
 }

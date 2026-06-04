@@ -1,4 +1,5 @@
 const SITE_URL = 'https://www.paintracker.ca';
+const CANONICAL_LOGO_IMAGE = `${SITE_URL}/logos/pain-tracker-logo.png`;
 const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.png`;
 const SOFTWARE_OFFERS = [
   {
@@ -301,7 +302,7 @@ function makeOrganizationSchema() {
       name: 'Pain Tracker',
     },
     url: SITE_URL,
-    logo: `${SITE_URL}/logos/pain-tracker-logo.svg`,
+    logo: CANONICAL_LOGO_IMAGE,
     description:
       'Private offline-first pain tracking application for daily symptom logging, clinician-friendly records, and local-first privacy controls.',
     sameAs: [

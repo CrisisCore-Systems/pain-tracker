@@ -15,6 +15,26 @@ export const metadata: Metadata = {
     url: `${siteConfig.url}/pain-tracking-guides`,
     type: 'website',
     siteName: siteConfig.name,
+    images: [
+      {
+        url: siteConfig.socialImageUrl,
+        width: siteConfig.socialImageWidth,
+        height: siteConfig.socialImageHeight,
+        alt: siteConfig.socialImageAlt,
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Pain Tracking Guides - Complete Resource Library',
+    description:
+      'Browse all pain tracking guides: offline diaries, privacy-first tracking, clinical documentation, chronic pain management, and more.',
+    images: [
+      {
+        url: siteConfig.socialImageUrl,
+        alt: siteConfig.socialImageAlt,
+      },
+    ],
   },
   alternates: {
     canonical: `${siteConfig.url}/pain-tracking-guides`,

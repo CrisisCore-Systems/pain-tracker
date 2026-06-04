@@ -61,12 +61,30 @@ export const metadata: Metadata = {
     title: siteConfig.name,
     description: siteConfig.description,
     siteName: siteConfig.name,
+    images: [
+      {
+        url: siteConfig.socialImageUrl,
+        width: siteConfig.socialImageWidth,
+        height: siteConfig.socialImageHeight,
+        alt: siteConfig.socialImageAlt,
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: siteConfig.name,
     description: siteConfig.description,
     creator: siteConfig.author.twitter,
+    images: [
+      {
+        url: siteConfig.socialImageUrl,
+        alt: siteConfig.socialImageAlt,
+      },
+    ],
+  },
+  icons: {
+    icon: [{ url: siteConfig.iconUrl, type: 'image/png' }],
+    apple: [{ url: 'https://www.paintracker.ca/apple-touch-icon.png', type: 'image/png' }],
   },
   robots: {
     index: true,

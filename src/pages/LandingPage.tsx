@@ -178,12 +178,12 @@ export const LandingPage: React.FC = () => {
     updateMeta('meta[property="og:title"]', meta.title);
     updateMeta('meta[property="og:description"]', meta.description);
     updateMeta('meta[property="og:site_name"]', defaultSEOConfig.siteName);
-    updateMeta('meta[property="og:image"]', `${defaultSEOConfig.siteUrl}/assets/paintracker-no-account-no-cloud-og.svg`);
-    updateMeta('meta[property="og:image:alt"]', 'No account and no cloud-default pain database architecture visual');
+    updateMeta('meta[property="og:image"]', defaultSEOConfig.defaultImage);
+    updateMeta('meta[property="og:image:alt"]', defaultSEOConfig.defaultImageAlt);
     updateMeta('meta[name="twitter:title"]', meta.title);
     updateMeta('meta[name="twitter:description"]', meta.description);
-    updateMeta('meta[name="twitter:image"]', `${defaultSEOConfig.siteUrl}/assets/paintracker-no-account-no-cloud-og.svg`);
-    updateMeta('meta[name="twitter:image:alt"]', 'No account and no cloud-default pain database architecture visual');
+    updateMeta('meta[name="twitter:image"]', defaultSEOConfig.defaultImage);
+    updateMeta('meta[name="twitter:image:alt"]', defaultSEOConfig.defaultImageAlt);
 
     const canonicalLink = document.querySelector('link[rel="canonical"]');
     if (canonicalLink) canonicalLink.setAttribute('href', `${defaultSEOConfig.siteUrl}/`);

@@ -37,7 +37,10 @@ const seoIdentity = {
   organizationName: 'CrisisCore Systems',
   siteUrl: 'https://www.paintracker.ca',
   appUrl: 'https://www.paintracker.ca/start',
-  logoUrl: 'https://www.paintracker.ca/logos/pain-tracker-logo.svg',
+  logoUrl: 'https://www.paintracker.ca/logos/pain-tracker-logo.png',
+  iconUrl: 'https://www.paintracker.ca/logos/pain-tracker-icon.png',
+  socialImageUrl: 'https://www.paintracker.ca/og-image.png',
+  socialImageAlt: 'PainTracker.ca logo for private offline pain tracking by CrisisCore Systems',
   githubUrl: 'https://github.com/CrisisCore-Systems/pain-tracker',
 } as const;
 
@@ -412,10 +415,14 @@ export const defaultSEOConfig = {
   siteUrl: seoIdentity.siteUrl,
   appUrl: seoIdentity.appUrl,
   logoUrl: seoIdentity.logoUrl,
+  iconUrl: seoIdentity.iconUrl,
   githubUrl: seoIdentity.githubUrl,
   defaultTitle: 'Free Pain Tracker App That Works Offline and Keeps Data Private | PainTracker',
   defaultDescription: 'Track pain, symptoms, medications, and triggers with a free pain tracker app that works offline and keeps your records private. No account required.',
-  defaultImage: 'https://www.paintracker.ca/og-image.png',
+  defaultImage: seoIdentity.socialImageUrl,
+  defaultImageAlt: seoIdentity.socialImageAlt,
+  defaultImageWidth: 1200,
+  defaultImageHeight: 630,
   twitterHandle: '@paintrackerpro',
   locale: 'en_CA'
 };

@@ -921,9 +921,9 @@
       ],
       "description": "Fast is not always safe. In vulnerable-state software, some delays, confirmations, and extra steps are not UX debt. They are protective controls.",
       "canonical_url": null,
-      "published": false,
+      "published": true,
       "articleId": 3623050,
-      "devtoUrl": "https://dev.to/crisiscoresystems/the-friction-prerequisite-why-we-intentionally-slowed-down-the-ui-e8j-temp-slug-5879740"
+      "devtoUrl": "https://dev.to/crisiscoresystems/the-friction-prerequisite-why-we-intentionally-slowed-down-the-ui-410h"
     },
     {
       "key": "service-worker-failure-modes",

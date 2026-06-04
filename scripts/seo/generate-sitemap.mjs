@@ -58,8 +58,8 @@ const imageOverrides = new Map([
   ['/', [
     {
       loc: `${SITE_URL}/og-image.png`,
-      title: 'Pain Tracker - Private Offline-First Pain Tracking App',
-      caption: 'Comprehensive pain tracking application for medical documentation and disability claims',
+      title: 'PainTracker.ca - Private Offline Pain Tracking',
+      caption: 'PainTracker.ca logo card for private offline pain tracking with no account required',
     },
     {
       loc: `${SITE_URL}/main-dashboard.png`,

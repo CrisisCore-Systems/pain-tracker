@@ -113,6 +113,11 @@ export const siteConfig = {
   url: normalizeBlogSiteUrl(process.env.NEXT_PUBLIC_SITE_URL),
   organizationName: 'CrisisCore Systems',
   logoUrl: 'https://www.paintracker.ca/logos/pain-tracker-logo.png',
+  iconUrl: 'https://www.paintracker.ca/logos/pain-tracker-icon.png',
+  socialImageUrl: 'https://www.paintracker.ca/og-image.png',
+  socialImageAlt: 'PainTracker.ca logo for private offline pain tracking by CrisisCore Systems',
+  socialImageWidth: 1200,
+  socialImageHeight: 630,
   author: {
     name: 'CrisisCore Systems',
     twitter: '@crisiscore',
