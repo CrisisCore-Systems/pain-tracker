@@ -304,7 +304,7 @@ function makeOrganizationSchema() {
     url: SITE_URL,
     logo: CANONICAL_LOGO_IMAGE,
     description:
-      'Private offline-first pain tracking application for daily symptom logging, clinician-friendly records, and local-first privacy controls.',
+      'Private offline-first pain tracking application for daily symptom logging, worker-controlled exports, and local-first privacy controls.',
     sameAs: [
       'https://github.com/CrisisCore-Systems/pain-tracker',
       'https://blog.paintracker.ca/',
@@ -349,7 +349,7 @@ function makeSoftwareApplicationSchema() {
     featureList: [
       'Offline-first pain tracking',
       'Local-only by default',
-      'Clinician-friendly exports',
+      'Worker-controlled exports',
       'Pain and symptom logging',
       'Trigger and flare tracking',
       'Medication tracking',
@@ -453,7 +453,7 @@ export const publicRouteMetadata = [
   {
     path: '/pricing',
     title: 'PainTracker Pricing | Track, Explain, Document | PainTracker.ca',
-    description: 'Compare Free, Basic, Pro, and Enterprise plans for private, offline-capable pain tracking, clinician-friendly reports, and structured documentation workflows.',
+    description: 'Compare Free, Basic, Pro, and Enterprise plans for private, offline-capable pain tracking, worker-controlled reports, and structured documentation workflows.',
     canonicalUrl: `${SITE_URL}/pricing`,
     ogImage: DEFAULT_OG_IMAGE,
     breadcrumbName: 'Pricing',
@@ -511,9 +511,18 @@ export const publicRouteMetadata = [
     prerenderHeading: 'Privacy Architecture',
   },
   {
+    path: '/providers/pmmp',
+    title: 'PainTracker for PMMP Provider Review | Worker-Controlled Pain Tracking',
+    description: 'PMMP provider overview for PainTracker.ca: worker-controlled pain tracking, no clinic login, no EMR integration, no monitoring, and privacy-first appointment preparation.',
+    canonicalUrl: `${SITE_URL}/providers/pmmp`,
+    ogImage: DEFAULT_OG_IMAGE,
+    breadcrumbName: 'PMMP Provider Review',
+    prerenderHeading: 'Pain tracking for PMMP appointment preparation',
+  },
+  {
     path: '/pain-tracker-app',
     title: 'PainTracker.ca App | Private Offline Pain Journal for Daily Records',
-    description: 'PainTracker.ca is a private offline pain journal for daily symptom logging, trigger tracking, flare patterns, and clinician-friendly exports when you choose.',
+    description: 'PainTracker.ca is a private offline pain journal for daily symptom logging, trigger tracking, flare patterns, and worker-controlled exports when you choose.',
     canonicalUrl: `${SITE_URL}/pain-tracker-app`,
     ogImage: DEFAULT_OG_IMAGE,
   },
@@ -570,7 +579,7 @@ export const publicRouteMetadata = [
   {
     path: '/privacy-offline-first-pain-tracker',
     title: 'Private Offline-First Pain Tracker with Trauma-Informed Design | Pain Tracker',
-    description: 'Learn how Pain Tracker approaches local-first use, privacy, offline pain tracking, and trauma-informed design for daily symptom logging and clinician-friendly records.',
+    description: 'Learn how Pain Tracker approaches local-first use, privacy, offline pain tracking, and trauma-informed design for daily symptom logging and worker-controlled records.',
     canonicalUrl: `${SITE_URL}/privacy-offline-first-pain-tracker`,
     ogImage: DEFAULT_OG_IMAGE,
   },
@@ -655,7 +664,7 @@ export const publicRouteMetadata = [
   resource('weather-and-pain-tracker', 'Weather and Pain Tracker: Track How Weather Affects Your Chronic Pain', 'Discover how to track the connection between weather and chronic pain — barometric pressure, temperature, humidity, and precipitation — to identify your personal weather triggers.'),
   resource('exercise-and-pain-log', 'Exercise and Pain Log: Track Activity and Pain Together to Find What Helps', 'Use a free exercise and pain log to track movement, activity type, duration, and next-day pain levels — to find what physical activity helps versus worsens your chronic pain.'),
   resource('free-pain-tracker-app', 'Free Pain Tracker App: No Account, No Cloud, Private Pain Tracking', 'PainTracker.ca is a free pain tracker app that works without an account or cloud storage. Track pain, symptoms, medications, and triggers privately on your device.'),
-  resource('best-pain-tracking-app', 'Best Pain Tracking App for Chronic Pain: What to Look For in 2026', 'What makes the best pain tracking app for chronic pain? Key features to look for — offline access, data ownership, clinical exports, and privacy — and how PainTracker.ca compares.'),
+  resource('best-pain-tracking-app', 'Best Pain Tracking App for Chronic Pain: What to Look For in 2026', 'What makes the best pain tracking app for chronic pain? Key features to look for — offline access, data ownership, user-controlled exports, and privacy — and how PainTracker.ca compares.'),
   resource('pain-tracker-for-iphone', 'Pain Tracker for iPhone: Free App That Works Offline Without an Account', 'PainTracker.ca works as a free pain tracker on iPhone — install it to your home screen for offline access, daily tracking, and clean exports without an Apple account or App Store download.'),
   resource('pain-journal-for-kids-and-teens', 'Pain Journal for Kids and Teens: Free Simple Tracking for Young People', 'A free pain journal guide for children and teenagers — simple daily tracking of pain location, severity, triggers, and school impact to support paediatric appointments and school accommodations.'),
   resource('pain-diary-template-free-download', 'Pain Diary Template Free Download: Daily, Weekly, and Monthly Formats', 'Download free pain diary templates in daily, weekly, and monthly formats. Printable PDF pain trackers for doctor visits, disability claims, and personal chronic pain management.'),
@@ -663,7 +672,7 @@ export const publicRouteMetadata = [
   resource('pain-tracking-for-back-pain', 'Pain Tracking for Back Pain: What to Record for Lower and Upper Back Pain', 'Learn how to track back pain effectively — location, severity, posture triggers, activity impact, and treatment response — to get better care for chronic lower and upper back pain.'),
   resource('pain-tracking-for-nerve-pain', 'Pain Tracking for Nerve Pain: How to Log Neuropathic Symptoms and Triggers', 'Learn how to track neuropathic pain — burning, shooting, numbness, and tingling — alongside triggers, medication response, and functional impact for neurology and pain clinic appointments.'),
   resource('pain-tracker-for-android', 'Pain Tracker for Android: Free App That Works Offline Without an Account', 'PainTracker.ca works as a free pain tracker on Android — add it to your home screen from Chrome for offline access, daily tracking, and clean exports without a Google account or Play Store download.'),
-  resource('pain-diary-for-workers-compensation', "Pain Diary for Workers' Compensation: How to Document a Workplace Injury Claim", "Learn how to keep a pain diary for a workers' compensation claim — daily pain records, functional limits, and work impact documentation that supports WSBC, WSIB, and other board reviews."),
+  resource('pain-diary-for-workers-compensation', "Pain Diary for Workers' Compensation: Worker-Controlled Work Injury Notes", "Learn how to keep a worker-controlled pain diary for workers' compensation discussions: daily pain records, functional limits, and work impact notes for appointments and review conversations."),
   resource('pain-diary-for-rheumatologist', 'Pain Diary for Rheumatologist: What to Track Before Your Appointment', 'Learn what to record in a pain diary for a rheumatologist — morning stiffness, joint involvement, fatigue, flares, and medication response — to get the most from your appointment.'),
   resource('pain-log-for-physical-therapy', 'Pain Log for Physical Therapy: Track Progress and Response During Rehab', 'Use a free pain log for physical therapy to track exercise response, functional progress, and pain during rehabilitation — so your physiotherapist can adjust your program with data.'),
   resource('chronic-pain-medication-log', 'Chronic Pain Medication Log: Track Medications, Doses, and Effectiveness', 'Use a free chronic pain medication log to track medications, doses, timing, side effects, and pain relief effectiveness — for safe management and better prescriber conversations.'),
@@ -762,9 +771,17 @@ export const privateRouteMetadata = [
     noindex: true,
   },
   {
+    path: '/clinic',
+    title: 'Clinic Portal Boundary | PainTracker.ca',
+    description: 'PainTracker.ca does not offer a public clinic portal, staff dashboard, patient monitoring, or automatic access to worker records.',
+    canonicalUrl: `${SITE_URL}/clinic`,
+    ogImage: DEFAULT_OG_IMAGE,
+    noindex: true,
+  },
+  {
     path: '/clinic/login',
-    title: 'Clinic Login | PainTracker.ca',
-    description: 'Clinic portal sign-in for Pain Tracker.',
+    title: 'Clinic Portal Boundary | PainTracker.ca',
+    description: 'PainTracker.ca does not offer a public clinic portal, staff dashboard, patient monitoring, or automatic access to worker records.',
     canonicalUrl: `${SITE_URL}/clinic/login`,
     ogImage: DEFAULT_OG_IMAGE,
     noindex: true,
@@ -773,7 +790,7 @@ export const privateRouteMetadata = [
 
 export const publicTopLevelPrerenderSlugs = publicRouteMetadata
   .map((route) => route.path)
-  .filter((path) => path !== '/' && !path.startsWith('/resources/'))
+  .filter((path) => path !== '/' && !path.startsWith('/resources/') && !path.slice(1).includes('/'))
   .map((path) => path.slice(1));
 
 export const publicResourcePrerenderSlugs = publicRouteMetadata

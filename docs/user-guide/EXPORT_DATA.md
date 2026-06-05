@@ -8,7 +8,7 @@ Pain Tracker gives you full control over your data. You can export your pain ent
 
 | Format | Best For | Contents |
 |--------|----------|----------|
-| **PDF** | Sharing with doctors, printing | Formatted clinical report with charts and summaries |
+| **PDF** | Sharing with doctors, printing | Formatted self-reported summary with charts and notes |
 | **CSV** | Spreadsheets, further analysis | Raw data in comma-separated format |
 | **JSON** | Backup, data portability | Complete structured data export |
 
@@ -25,21 +25,21 @@ Pain Tracker gives you full control over your data. You can export your pain ent
 5. Click **Export** / **Download**
 6. The file downloads to your device
 
-### WorkSafeBC Clinical Report (PDF)
+### WorkSafeBC-Related Worker Summary (PDF)
 
-For WorkSafeBC claims documentation:
+For worker-controlled WorkSafeBC-related discussions:
 
 1. Navigate to the **Export** section
-2. Select **WorkSafeBC PDF Report**
+2. Select **WorkSafeBC-related summary**
 3. Enter claimant information (name, claim number) if desired
 4. Select the date range relevant to your claim
 5. Click **Generate Report**
 6. Review the generated PDF, which includes:
-   - Executive summary with key pain metrics
+   - Worker-provided summary with key pain metrics
    - Pain trend analysis
    - Functional impact assessment
    - Work impact documentation
-   - Clinical recommendations based on patterns
+   - Treatment and function notes for review before sharing
 
 ### Quick CSV Export
 
@@ -54,7 +54,7 @@ For a quick data dump for spreadsheet analysis:
 
 ## What's Included in Exports
 
-### PDF Clinical Report
+### PDF Summary
 
 - Patient/claimant information (if entered)
 - Date range and entry count
@@ -63,7 +63,7 @@ For a quick data dump for spreadsheet analysis:
 - Symptom patterns
 - Medication records
 - Functional impact summary
-- Professional formatting suitable for clinical use
+- Appointment-ready formatting suitable for review before sharing
 
 ### CSV Export
 
@@ -92,7 +92,7 @@ For a quick data dump for spreadsheet analysis:
 
 - **Regular backups:** Export a JSON backup periodically to safeguard against device loss
 - **Before appointments:** Generate a PDF report covering the period since your last visit
-- **WorkSafeBC claims:** Use the dedicated WorkSafeBC template for consistent documentation
+- **WorkSafeBC-related discussions:** Use the dedicated WorkSafeBC template for consistent worker-controlled notes
 - **Date ranges:** Use focused date ranges to keep reports concise and relevant
 
 ---

@@ -4,6 +4,7 @@ import {
   parsePainLevel,
   parseLocations,
   parseSymptoms,
+  type VoiceCommandHandler,
   voiceCommandService,
 } from '../VoiceCommandService';
 
@@ -96,11 +97,11 @@ describe('VoiceCommandService', () => {
 
   describe('VoiceCommandService class', () => {
     let service: VoiceCommandService;
-    let mockHandler: ReturnType<typeof vi.fn>;
+    let mockHandler: VoiceCommandHandler;
 
     beforeEach(() => {
       service = new VoiceCommandService();
-      mockHandler = vi.fn();
+      mockHandler = vi.fn<VoiceCommandHandler>();
       service.setHandler(mockHandler);
       service.setVoiceFeedbackEnabled(false); // Disable audio feedback for tests
     });

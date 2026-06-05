@@ -14,9 +14,9 @@ const tierIcons = {
 } as const;
 
 const HIGHLIGHTS: Record<SubscriptionTier, string[]> = {
-  free: ['Unlimited private tracking', 'Basic pattern review', 'PDF + WorkSafeBC reports (5/mo)'],
+  free: ['Unlimited private tracking', 'Basic pattern review', 'PDF + WorkSafeBC-related summaries (5/mo)'],
   basic: ['Cleaner summaries', 'Higher export limit (50/mo)', 'Custom reports for appointment prep'],
-  pro: ['Documentation-ready exports', 'Pattern-based alerts', 'Structured clinical formats'],
+  pro: ['Documentation-ready exports', 'Pattern-based alerts', 'Structured appointment formats'],
   enterprise: ['Organization-level customization', 'Dedicated support', 'Custom training'],
 };
 
@@ -46,16 +46,16 @@ const QUICK_COMPARISON: Array<{ category: string; items: ComparisonItem[] }> = [
   {
     category: 'Reports & Export',
     items: [
-      getComparisonItem('export', 'PDF Reports'),
-      getComparisonItem('export', 'WorkSafe BC Reports'),
-      getComparisonItem('export', 'Clinical PDF Export'),
+      getComparisonItem('export', 'PDF summaries'),
+      getComparisonItem('export', 'WorkSafeBC-related summaries'),
+      getComparisonItem('export', 'Appointment-ready PDF export'),
     ].filter(Boolean) as ComparisonItem[],
   },
   {
     category: 'Sharing & Collaboration',
     items: [
       getComparisonItem('collaboration', 'Family Sharing'),
-      getComparisonItem('collaboration', 'Shared Users'),
+      getComparisonItem('collaboration', 'Shared access seats'),
     ].filter(Boolean) as ComparisonItem[],
   },
   {

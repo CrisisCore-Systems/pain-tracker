@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi, type Mock } from 'vitest';
 import {
   trackGA4Event,
   GA4Events,
@@ -31,7 +31,7 @@ import {
 const CONSENT_KEY = 'pain-tracker:analytics-consent';
 
 describe('GA4 Events Service', () => {
-  let mockGtag: ReturnType<typeof vi.fn>;
+  let mockGtag: Mock<(...args: unknown[]) => void>;
   let originalGtag: typeof window.gtag;
   let originalEnableAnalytics: string | undefined;
 
@@ -47,8 +47,8 @@ describe('GA4 Events Service', () => {
     originalGtag = window.gtag;
     
     // Create mock gtag function
-    mockGtag = vi.fn();
-    window.gtag = mockGtag;
+    mockGtag = vi.fn<(...args: unknown[]) => void>();
+    window.gtag = mockGtag as (...args: unknown[]) => void;
   });
 
   afterEach(() => {

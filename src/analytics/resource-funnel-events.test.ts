@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi, type Mock } from 'vitest';
 import {
   getResourcePageSlugFromPath,
   inferResourcePageType,
@@ -13,7 +13,7 @@ const CONSENT_KEY = 'pain-tracker:analytics-consent';
 describe('resource funnel analytics helpers', () => {
   let originalGtag: typeof window.gtag;
   let originalEnableAnalytics: string | undefined;
-  let mockGtag: ReturnType<typeof vi.fn>;
+  let mockGtag: Mock<(...args: unknown[]) => void>;
 
   beforeEach(() => {
     originalEnableAnalytics = process.env.VITE_ENABLE_ANALYTICS;
@@ -21,8 +21,8 @@ describe('resource funnel analytics helpers', () => {
     localStorage.setItem(CONSENT_KEY, 'granted');
 
     originalGtag = window.gtag;
-    mockGtag = vi.fn();
-    window.gtag = mockGtag;
+    mockGtag = vi.fn<(...args: unknown[]) => void>();
+    window.gtag = mockGtag as (...args: unknown[]) => void;
   });
 
   afterEach(() => {

@@ -36,7 +36,7 @@ export function HeroBanner() {
             {/* Badge */}
             <div className="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-blue-100 to-green-100 text-sm font-semibold text-slate-800 dark:text-slate-200">
               <Award className="w-4 h-4 mr-2" />
-              AI-Powered Pain Management Platform
+              Private Pain Tracking
             </div>
 
             {/* Headline */}
@@ -48,24 +48,24 @@ export function HeroBanner() {
                 </span>
               </h1>
               <p className="text-xl text-slate-600 dark:text-slate-400 max-w-xl">
-                Advanced pain management with predictive AI analytics, clinical integration,
-                and evidence-based insights for better health outcomes.
+                Private pain tracking with local pattern review, user-controlled exports,
+                and appointment-ready summaries.
               </p>
             </div>
 
             {/* Key Stats */}
             <div className="flex items-center space-x-8">
               <div className="text-center">
-                <div className="text-2xl font-bold text-blue-600">95%</div>
-                <div className="text-sm text-slate-600 dark:text-slate-400">Accuracy</div>
+                <div className="text-2xl font-bold text-blue-600">Local</div>
+                <div className="text-sm text-slate-600 dark:text-slate-400">Records</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-green-600">FHIR</div>
-                <div className="text-sm text-slate-600 dark:text-slate-400">Compliant</div>
+                <div className="text-2xl font-bold text-green-600">No</div>
+                <div className="text-sm text-slate-600 dark:text-slate-400">Account</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-purple-600">AI</div>
-                <div className="text-sm text-slate-600 dark:text-slate-400">Powered</div>
+                <div className="text-2xl font-bold text-purple-600">User</div>
+                <div className="text-sm text-slate-600 dark:text-slate-400">Controlled</div>
               </div>
             </div>
 
@@ -94,7 +94,7 @@ export function HeroBanner() {
                         PainTracker
                       </div>
                       <div className="text-xs text-slate-500 dark:text-slate-400">
-                        AI-Powered Analytics
+                        Local Pattern Review
                       </div>
                     </div>
                   </div>
@@ -119,7 +119,7 @@ export function HeroBanner() {
                 <div className="grid grid-cols-2 gap-3">
                   <div className="bg-purple-50 p-3 rounded-lg text-center">
                     <Brain className="w-6 h-6 text-purple-600 mx-auto mb-1" />
-                    <div className="text-xs font-medium">AI Insights</div>
+                    <div className="text-xs font-medium">Local Review</div>
                   </div>
                   <div className="bg-blue-50 p-3 rounded-lg text-center">
                     <BarChart3 className="w-6 h-6 text-blue-600 mx-auto mb-1" />
@@ -144,15 +144,15 @@ export function FeaturesSection() {
   const features: FeatureItem[] = [
     {
       icon: Brain,
-      title: 'AI-Powered Predictions',
+      title: 'Local Pattern Review',
       description:
-        'Machine learning algorithms predict pain patterns and provide personalized insights.',
+        'On-device tools help you review pain patterns, triggers, and context without remote model processing.',
       color: 'purple',
     },
     {
       icon: Stethoscope,
-      title: 'FHIR Compliance',
-      description: 'Full HL7 FHIR R4 compliance for easy healthcare system integration.',
+      title: 'User-Controlled Export',
+      description: 'Structured summaries can be exported by the user when they choose to share them.',
       color: 'blue',
     },
     {
@@ -175,8 +175,8 @@ export function FeaturesSection() {
     },
     {
       icon: Globe,
-      title: 'Clinical Integration',
-      description: 'Provider dashboards and patient management tools for healthcare teams.',
+      title: 'No Clinic Portal',
+      description: 'No public staff dashboard, patient monitoring, or automatic provider access.',
       color: 'indigo',
     },
   ];
@@ -198,12 +198,12 @@ export function FeaturesSection() {
           <h2 className="text-4xl font-bold text-slate-900 dark:text-slate-100 mb-4">
             <span>Everything You Need for</span>
             <span className="ml-2 text-transparent bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text">
-              Pain Management
+              Pain Tracking
             </span>
           </h2>
           <p className="text-xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto">
-            Comprehensive tools designed by healthcare professionals for evidence-based pain
-            tracking and analysis.
+            Practical tools for private tracking, appointment preparation, and worker-controlled
+            summaries.
           </p>
         </div>
 

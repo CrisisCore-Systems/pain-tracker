@@ -240,7 +240,7 @@ const painDiaryForWorkersCompensationContent: SEOPageContent = {
   title: "Pain Diary for Workers' Compensation",
   metaTitle: "Pain Diary for Workers' Compensation: How to Document a Workplace Injury Claim",
   metaDescription:
-    "Learn how to keep a pain diary for a workers' compensation claim — daily pain records, functional limits, and work impact documentation that supports WSBC, WSIB, and other board reviews.",
+    "Learn how to keep a worker-controlled pain diary for workers' compensation discussions: daily pain records, functional limits, and work impact notes for appointments and review conversations.",
   keywords: [
     "pain diary for workers' compensation",
     'workplace injury pain log',
@@ -250,32 +250,32 @@ const painDiaryForWorkersCompensationContent: SEOPageContent = {
   ],
   badge: 'Guide',
   headline: "Pain Diary for Workers' Compensation",
-  subheadline: "Document daily pain, functional limits, and work impact consistently — the records a compensation board adjudicator or appeal panel will rely on.",
+  subheadline: "Document daily pain, functional limits, and work impact consistently so your appointment and review discussions do not depend on memory alone.",
   primaryCTA: { text: 'Start your workers\' compensation pain diary', href: '/start' },
   secondaryCTA: { text: 'Get the WorkSafeBC pain journal template', href: '/resources/worksafebc-pain-journal-template' },
   whatIsThis:
-    "A documentation approach for workers' compensation pain diaries — structured for WSBC, WSIB, WCB, and other provincial and federal compensation board claims.",
+    "A worker-controlled documentation approach for workers' compensation pain diaries, with structured notes for WSBC, WSIB, WCB, and other provincial or federal compensation contexts.",
   whoShouldUse: [
     "Anyone with an active workers' compensation claim involving pain",
     'People appealing a compensation board decision involving pain and function',
     'Workers documenting the functional impact of a workplace injury'
   ],
   howToUse: [
-    { step: 1, title: 'Log pain daily — not only on bad days', description: 'Compensation reviewers look for consistent, dated records. Gaps in a diary raise questions. Even low-pain days deserve a brief entry.' },
+    { step: 1, title: 'Log pain daily - not only on bad days', description: 'Consistent, dated records are easier to review than reconstructed summaries. Even low-pain days deserve a brief entry.' },
     { step: 2, title: 'Document functional limits and work tasks affected', description: 'What can you no longer do, for how long, and what pain results? Specificity — "cannot sit longer than 20 minutes without pain rising to 7/10" — is more useful than general statements.' },
     { step: 3, title: 'Record how the injury affects daily life outside work', description: 'Personal care, household tasks, sleep, recreation, and family responsibilities affected by the injury build the full functional picture.' }
   ],
   whyItMatters:
-    "Workers' compensation decisions turn on functional capacity evidence. A consistent, detailed pain diary is among the strongest personal evidence a claimant can produce. Without it, claims rest on clinical records that may underrepresent day-to-day impact.",
+    "Workers' compensation discussions often involve functional capacity. A consistent, detailed pain diary can make your self-reported day-to-day impact easier to explain alongside medical, workplace, and claim records.",
   trustSignals: {
-    medicalNote: 'Compensation board adjudicators are trained to evaluate the consistency and detail of claimant-reported functional records.',
+    medicalNote: 'Use these records as worker-provided context for appointments, advocate conversations, and review preparation.',
     privacyNote: 'Your diary records stay on your device unless you choose to export and share them.',
-    legalNote: 'PainTracker.ca exports are timestamped and formatted for clinical and legal documentation. Consult your advocate or legal representative for claim-specific guidance.'
+    legalNote: 'PainTracker.ca exports are self-reported summaries, not legal advice or official board forms. Consult your advocate or legal representative for claim-specific guidance.'
   },
   faqs: [
     { question: "What should a workers' compensation pain diary include?", answer: 'Date, time, pain location and severity (0-10), what activity caused or worsened pain, how long the pain lasted, what it prevented you from doing, medications taken, and any treatment received.' },
     { question: 'How far back should I start my diary?', answer: 'Start now if you have not already. Document the date of injury and initial symptoms from memory as a starting entry, then continue daily from today forward.' },
-    { question: 'Can my pain diary be used as evidence in an appeal?', answer: 'Yes. A consistent, detailed, timestamped pain diary is a recognized form of claimant evidence in compensation board appeals. Work with your advocate or legal representative on how to present it.' }
+    { question: 'Can my pain diary be used in an appeal?', answer: 'It may be useful as worker-provided context, but appeal strategy depends on the jurisdiction, record, policy, and legal advice. Work with your advocate or legal representative on how to present it.' }
   ],
   relatedLinks: [
     { title: 'WorkSafeBC Pain Journal Template', description: 'BC-specific workplace injury documentation', href: '/resources/worksafebc-pain-journal-template' },
@@ -294,7 +294,7 @@ export function PainDiaryForWorkersCompensationPage() {
   return (
     <ResourcePageTemplate
       content={painDiaryForWorkersCompensationContent}
-      opening="Workers' compensation claims involving chronic pain live or die on functional evidence. A pain diary that documents daily pain levels, specific functional limits, and work tasks affected — consistently, from the date of injury — is among the most important things you can do for your claim."
+      opening="Workers' compensation matters involving chronic pain often require concrete functional details. A pain diary can help you document daily pain levels, specific functional limits, and affected work tasks consistently, without relying on memory alone."
       ctaHref="/start"
       ctaText="Start your workers' compensation pain diary"
     />

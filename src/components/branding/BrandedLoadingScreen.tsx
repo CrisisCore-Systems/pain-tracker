@@ -96,7 +96,7 @@ export function BrandedLoadingScreen({
                 <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
-            <span>FHIR Compliant</span>
+            <span>Local-first</span>
           </div>
           <div className="text-center space-y-1">
             <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mx-auto">
@@ -104,7 +104,7 @@ export function BrandedLoadingScreen({
                 <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z" />
               </svg>
             </div>
-            <span>AI Analytics</span>
+            <span>Private exports</span>
           </div>
           <div className="text-center space-y-1">
             <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center mx-auto">

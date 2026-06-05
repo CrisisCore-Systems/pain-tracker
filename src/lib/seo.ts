@@ -178,11 +178,11 @@ export function generateSoftwareApplicationSchema(): object {
     featureList: [
       'Offline-first pain tracking',
       'Local-only by default',
-      'Clinician-friendly exports',
+      'Worker-controlled exports',
       'Pain and symptom logging',
       'Trigger and flare tracking',
       'Medication tracking',
-      'WorkSafeBC-oriented documentation workflows',
+      'WorkSafeBC-related summary workflows',
       'Trauma-informed design'
     ],
     screenshot: 'https://www.paintracker.ca/main-dashboard.png',
@@ -357,7 +357,7 @@ export function generateOrganizationSchema(): object {
     alternateName: defaultSEOConfig.siteName,
     url: defaultSEOConfig.siteUrl,
     logo: defaultSEOConfig.logoUrl,
-    description: 'Private offline-first pain tracking application for daily symptom logging, clinician-friendly records, and local-first privacy controls.',
+    description: 'Private offline-first pain tracking application for daily symptom logging, worker-controlled exports, and local-first privacy controls.',
     foundingDate: '2024',
     brand: {
       '@type': 'Brand',

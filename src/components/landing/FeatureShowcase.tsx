@@ -18,8 +18,8 @@ const features = [
   },
   {
     icon: FileBarChart,
-    title: 'WorkSafe BC Export',
-    description: 'Generate clinical reports for claims, healthcare providers, and legal documentation.',
+    title: 'WorkSafeBC-Related Summary',
+    description: 'Generate worker-controlled summaries for appointments and claim-related discussions.',
     colorClass: 'icon-emerald',
     glowColor: 'rgba(16, 185, 129, 0.3)',
   },
@@ -73,11 +73,11 @@ export const FeatureShowcase: React.FC = () => {
           </div>
           
           <h2 className="landing-headline landing-headline-lg mb-6">
-            <span className="text-white">Comprehensive Pain Management </span>
+            <span className="text-white">Private Pain Tracking </span>
             <span className="gradient-text-animated">Tools</span>
           </h2>
           <p className="landing-subhead text-lg lg:text-xl">
-            Everything you need to understand, track, and communicate your pain effectively.
+            Tools to record pain, notice patterns, and prepare clearer appointment notes.
           </p>
         </div>
 

@@ -61,10 +61,10 @@ export const LandingFooter: React.FC = () => {
             
             {/* Headline */}
             <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-[1.1] tracking-tight">
-              Ready to Transform Your{' '}
+              Ready to Track Your{' '}
               <span className="relative inline-block">
                 <span className="bg-gradient-to-r from-sky-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">
-                  Pain Management?
+                  Pain Privately?
                 </span>
                 <svg className="absolute -bottom-2 left-0 w-full h-3 text-sky-500/30" viewBox="0 0 200 8" preserveAspectRatio="none">
                   <path d="M0 7 Q50 0 100 4 Q150 8 200 1" stroke="currentColor" strokeWidth="2" fill="none" />
@@ -74,7 +74,7 @@ export const LandingFooter: React.FC = () => {
             
             {/* Subheadline */}
             <p className="text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed">
-              Used by patients and healthcare professionals to document, understand, and communicate chronic pain clearly.
+              Private local tracking and worker-controlled exports for appointments, claim-related discussions, and personal records.
             </p>
             
             {/* CTAs */}
@@ -146,7 +146,7 @@ export const LandingFooter: React.FC = () => {
                 </span>
               </div>
               <p className="text-slate-300 max-w-md leading-relaxed">
-                Privacy-first pain tracking with local insights, reporting tools, and trauma-informed design—built with empathy for those who need it most.
+                Privacy-first pain tracking with local insights, reporting tools, and trauma-informed design for people who need useful records under real-world constraints.
               </p>
               
               {/* Social links with premium styling */}
@@ -200,6 +200,7 @@ export const LandingFooter: React.FC = () => {
                   { label: 'Privacy Policy', to: '/privacy', icon: Shield },
                   { label: 'Terms of Service', to: '/terms', icon: Shield },
                   { label: 'Tracking & Data Policy', to: '/tracking-data-policy', icon: Shield },
+                  { label: 'PMMP Provider Review', to: '/providers/pmmp', icon: Shield },
                   { label: 'Source Code', href: 'https://github.com/CrisisCore-Systems/pain-tracker', icon: Code },
                   { label: 'Documentation', href: 'https://github.com/CrisisCore-Systems/pain-tracker/blob/main/README.md' },
                   { label: 'Security Policy', href: 'https://github.com/CrisisCore-Systems/pain-tracker/blob/main/SECURITY.md', icon: Shield },
@@ -258,7 +259,7 @@ export const LandingFooter: React.FC = () => {
               <ul className="space-y-3 text-sm">
                 {[
                   '10+ Pattern Tools',
-                  'WorkSafe BC Reports',
+                  'WorkSafeBC-related summaries',
                   'On-device alerts',
                   'Installable PWA',
                   'AES-256 Encryption',

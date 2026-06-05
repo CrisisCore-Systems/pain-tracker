@@ -26,14 +26,14 @@ import {
 import { getLocalUserId } from './utils/user-identity';
 
 // Lazy-loaded route components for code splitting
-const PainTrackerContainer = lazy(() => import('./containers/PainTrackerContainer').then(m => ({ default: m.PainTrackerContainer })));
 const LandingPage = lazy(() => import('./pages/LandingPage').then(m => ({ default: m.LandingPage })));
 const PricingPage = lazy(() => import('./pages/PricingPage').then(m => ({ default: m.PricingPage })));
 const CnetDownloadPage = lazy(() => import('./pages/CnetDownloadPage').then(m => ({ default: m.CnetDownloadPage })));
 const WhitepaperPage = lazy(() => import('./pages/WhitepaperPage').then(m => ({ default: m.WhitepaperPage })));
 const OvertonFrameworkPage = lazy(() => import('./pages/OvertonFrameworkPage').then(m => ({ default: m.OvertonFrameworkPage })));
 const ScreenshotShowcase = lazy(() => import('./pages/ScreenshotShowcase').then(m => ({ default: m.ScreenshotShowcase })));
-const ClinicPortal = lazy(() => import('./pages/clinic/ClinicPortal').then(m => ({ default: m.ClinicPortal })));
+const ClinicRouteBoundaryPage = lazy(() => import('./pages/ClinicRouteBoundaryPage').then(m => ({ default: m.ClinicRouteBoundaryPage })));
+const PMMPProviderPage = lazy(() => import('./pages/providers/PMMPProviderPage').then(m => ({ default: m.PMMPProviderPage })));
 const SubscriptionManagementPage = lazy(() => import('./pages/SubscriptionManagementPage').then(m => ({ default: m.SubscriptionManagementPage })));
 const SubmitStoryPage = lazy(() => import('./pages/SubmitStoryPage').then(m => ({ default: m.SubmitStoryPage })));
 const DownloadPage = lazy(() => import('./pages/DownloadPage').then(m => ({ default: m.DownloadPage })));
@@ -317,8 +317,13 @@ function App() {
                       {/* Screenshot Showcase - Public */}
                       <Route path="/demo/*" element={<ScreenshotShowcase />} />
 
-                      {/* Clinic Portal - Protected (separate UI/UX) */}
-                      <Route path="/clinic/*" element={<ClinicPortal />} />
+                      {/* Provider review page - Public */}
+                      <Route path="/providers/pmmp" element={<PMMPProviderPage />} />
+                      <Route path="/clinics/pain-and-medication-management" element={<Navigate to="/providers/pmmp" replace />} />
+
+                      {/* Clinic boundary - no public portal or monitoring product */}
+                      <Route path="/clinic" element={<ClinicRouteBoundaryPage />} />
+                      <Route path="/clinic/*" element={<ClinicRouteBoundaryPage />} />
 
                       {/* Subscription Management - Protected */}
                       <Route

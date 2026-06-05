@@ -176,9 +176,30 @@ describe('SEO prerendered entrypoints', () => {
     expect(sitemapPaths).toContain('/');
     expect(sitemapPaths).toContain('/pricing');
     expect(sitemapPaths).toContain('/proof');
+    expect(sitemapPaths).toContain('/providers/pmmp');
     expect(sitemapPaths).toContain('/resources');
+    expect(sitemapPaths).not.toContain('/clinic');
     expect(sitemapPaths).not.toContain('/app');
     expect(sitemapPaths).not.toContain('/start');
+  });
+
+  it('ships the PMMP provider route as a crawlable nested prerendered page', () => {
+    const { rewrites } = JSON.parse(readUtf8('vercel.json')) as { rewrites: RewriteEntry[] };
+    const providerRoute = publicRouteMetadata.find(route => route.path === '/providers/pmmp');
+
+    expect(providerRoute).toBeDefined();
+    expect(providerRoute?.title).toContain('PMMP Provider Review');
+    expect(providerRoute?.description).toContain('no clinic login');
+    expect(providerRoute?.description).toContain('no EMR integration');
+    expect(providerRoute?.canonicalUrl).toBe('https://www.paintracker.ca/providers/pmmp');
+    expect(publicTopLevelPrerenderSlugs).not.toContain('providers/pmmp');
+    expect(
+      rewrites.some(
+        (entry: RewriteEntry) =>
+          entry.source === '/providers/pmmp' &&
+          entry.destination === '/providers/pmmp/index.html'
+      )
+    ).toBe(true);
   });
 
   it('keeps top resource metadata crawlable with canonical and prerendered heading shell', () => {

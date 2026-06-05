@@ -34,20 +34,19 @@ const OCCUPATIONAL_LIMITATION_LABELS = {
 } as const;
 
 /**
- * Enhanced WorkSafe BC PDF Export
+ * Enhanced WorkSafeBC-related PDF Export
  * 
- * Generates professional, comprehensive PDF reports aligned with
- * WorkSafe BC Form 8 requirements for claims documentation.
+ * Generates worker-controlled PDF summaries for appointment and
+ * WorkSafeBC-related discussions.
  * 
  * Features:
- * - Professional header with patient information (optional)
- * - Executive summary with key metrics
+ * - Header with optional worker information
+ * - Worker-provided summary with key metrics
  * - Pain trend analysis with visual indicators
  * - Functional impact assessment
  * - Work impact documentation
  * - Treatment history and effectiveness
- * - Clinical recommendations
- * - Legal disclaimer
+ * - Protective disclaimer
  */
 
 interface WCBExportOptions {
@@ -321,7 +320,7 @@ function collectProvenanceRows(entries: PainEntry[]) {
 }
 
 /**
- * Export enhanced WorkSafe BC PDF report
+ * Export enhanced WorkSafeBC-related PDF summary
  */
 export async function exportWorkSafeBCPDF(
   entries: PainEntry[],
@@ -419,7 +418,7 @@ export async function exportWorkSafeBCPDF(
     doc.setTextColor(...palette.soft);
     doc.setFontSize(8);
     doc.setFont(headingFont, 'bold');
-    doc.text('WorkSafe BC Clinical Documentation Report', leftMargin, 10.5);
+    doc.text('WorkSafeBC Worker-Provided Pain Summary', leftMargin, 10.5);
     doc.setFont(bodyFont, 'normal');
     doc.text(`Report ID: ${reportId}`, rightMargin, 10.5, { align: 'right' });
     yPosition = 24;
@@ -504,7 +503,7 @@ export async function exportWorkSafeBCPDF(
     doc.setFontSize(11);
     doc.setFont(bodyFont, 'normal');
     doc.text(
-      isHostileBureaucracy ? 'Hostile Bureaucracy Export' : 'WorkSafe BC Clinical Documentation Report',
+      isHostileBureaucracy ? 'Plain Worker Record' : 'WorkSafeBC Worker-Provided Pain Summary',
       leftMargin,
       23
     );
@@ -513,7 +512,7 @@ export async function exportWorkSafeBCPDF(
     doc.text(
       isHostileBureaucracy
         ? 'Monochrome device-generated record with amendment and capture metadata'
-        : 'Confidential clinical summary for case review',
+        : 'Self-reported summary for review before sharing',
       leftMargin,
       29
     );
@@ -540,7 +539,7 @@ export async function exportWorkSafeBCPDF(
     doc.setTextColor(...palette.ink);
     doc.setFontSize(10);
     doc.setFont(headingFont, 'bold');
-    doc.text('Patient & Claim Information', leftMargin + 5, yPosition + 8.5);
+    doc.text('Worker & Claim Information', leftMargin + 5, yPosition + 8.5);
 
     doc.setFont(bodyFont, 'normal');
     doc.setFontSize(9);
@@ -548,7 +547,7 @@ export async function exportWorkSafeBCPDF(
     const col1 = leftMargin + 5;
     const col2 = leftMargin + contentWidth / 2;
     doc.setTextColor(...palette.soft);
-    doc.text('Patient', col1, yPosition + 15);
+    doc.text('Worker', col1, yPosition + 15);
     doc.text('Claim #', col2, yPosition + 15);
     doc.text('Report Period', col1, yPosition + 27);
     doc.text('Provider', col2, yPosition + 27);
@@ -568,7 +567,7 @@ export async function exportWorkSafeBCPDF(
   };
 
   const renderExecutiveSummary = () => {
-    drawSectionHeading('Executive Summary', 'Core metrics and period-level interpretation for WorkSafe BC review.');
+    drawSectionHeading('Worker-Provided Summary', 'Selected date range and self-reported entries. Not a medical record or official WorkSafeBC form.');
 
     const cardGap = 4;
     const cardWidth = (contentWidth - cardGap) / 2;
@@ -621,7 +620,7 @@ export async function exportWorkSafeBCPDF(
     doc.setFontSize(9.5);
     doc.setFont(bodyFont, 'normal');
 
-    const summaryText = `During this ${Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24))}-day reporting period, the patient recorded ${metrics.totalEntries} pain entries. Pain levels ranged from ${metrics.minPain} to ${metrics.maxPain} (${getPainSeverity(metrics.maxPain)}), with an average intensity of ${formatNumber(metrics.averagePain, 1)}/10 (${getPainSeverity(metrics.averagePain)}). The overall pain trend is assessed as ${painTrend.toLowerCase()}.`;
+    const summaryText = `During this ${Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24))}-day reporting period, the worker recorded ${metrics.totalEntries} pain entries. Pain levels ranged from ${metrics.minPain} to ${metrics.maxPain} (${getPainSeverity(metrics.maxPain)}), with an average intensity of ${formatNumber(metrics.averagePain, 1)}/10 (${getPainSeverity(metrics.averagePain)}). The device-generated trend summary is ${painTrend.toLowerCase()} and should be reviewed in context.`;
 
     const summaryLines = doc.splitTextToSize(summaryText, contentWidth);
     doc.text(summaryLines, leftMargin, yPosition);
@@ -960,7 +959,7 @@ export async function exportWorkSafeBCPDF(
   const renderDetailedEntries = () => {
     if (!(includeDetailedEntries && filteredEntries.length > 0)) return;
 
-    drawSectionHeading('Daily Pain Log Summary', 'Structured daily entry breakdown for clinical review and case documentation.');
+    drawSectionHeading('Daily Pain Log Summary', 'Structured self-reported entry breakdown for review before sharing.');
 
     doc.setFontSize(8.5);
     doc.setFont('helvetica', 'normal');
@@ -1074,7 +1073,7 @@ export async function exportWorkSafeBCPDF(
     doc.setFont(bodyFont, 'normal');
     doc.setFontSize(8);
     const disclaimerText =
-      'This report is a structured summary of self-reported pain data for WorkSafe BC reference only. Device metadata and amendment logs describe local record state but do not constitute notarization, geolocation proof, or medical advice. This document should be reviewed with a qualified healthcare provider. Pain Tracker is not affiliated with WorkSafe BC.';
+      'This report is a worker-controlled summary of self-reported pain data for review before sharing. Device metadata and amendment logs describe local record state but do not constitute notarization, geolocation proof, medical advice, legal advice, or an official WorkSafeBC form. Pain Tracker is not affiliated with WorkSafeBC.';
     const disclaimerLines = doc.splitTextToSize(disclaimerText, contentWidth - 10);
     doc.text(disclaimerLines, leftMargin + 5, yPosition + 15);
   };
@@ -1088,7 +1087,7 @@ export async function exportWorkSafeBCPDF(
 
       doc.setTextColor(148, 163, 184);
       doc.setFontSize(8);
-      doc.text(`Pain Tracker | WorkSafe BC Clinical Report | ${reportId}`, leftMargin, pageHeight - 8);
+      doc.text(`Pain Tracker | WorkSafeBC Worker Summary | ${reportId}`, leftMargin, pageHeight - 8);
       doc.text(`Page ${i} of ${pageCount}`, rightMargin, pageHeight - 8, { align: 'right' });
     }
   };
@@ -1123,7 +1122,7 @@ export async function exportWorkSafeBCPDF(
 }
 
 /**
- * Download the WorkSafe BC PDF report
+ * Download the WorkSafeBC-related PDF summary
  */
 export async function downloadWorkSafeBCPDF(
   entries: PainEntry[],

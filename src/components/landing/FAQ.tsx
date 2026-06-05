@@ -20,7 +20,7 @@ export const landingFaqs = [
   {
     question: 'Can I share a pain tracker report with my doctor?',
     answer:
-      'Yes. Pain Tracker supports user-initiated exports so you can bring structured records to appointments or share them with a clinician when you decide to. Daily tracking remains local-first by default.',
+      'Yes. Pain Tracker supports user-initiated exports so you can bring structured records to appointments or share them with a clinician when you decide to. Daily tracking remains local-first by default and no clinic receives records automatically.',
   },
   {
     question: 'Is an offline pain tracker more private?',
@@ -49,7 +49,7 @@ export const FAQ: React.FC = () => {
             <span className="text-white">Common questions, </span>
             <span className="gradient-text-animated">answered plainly</span>
           </h2>
-          <p className="landing-subhead text-lg lg:text-xl">Quick clarity on privacy, pricing, exports, and clinician workflow.</p>
+          <p className="landing-subhead text-lg lg:text-xl">Quick clarity on privacy, pricing, exports, and appointment preparation.</p>
         </div>
 
         <div className="max-w-4xl mx-auto space-y-4 stagger-fade-up">

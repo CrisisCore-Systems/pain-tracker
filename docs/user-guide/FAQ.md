@@ -83,21 +83,21 @@ Yes. After your first visit, Pain Tracker works entirely offline. You can log en
 
 ---
 
-## WorkSafeBC & Clinical Use
+## WorkSafeBC & Appointment Use
 
 ### Can I use Pain Tracker for WorkSafeBC claims?
 
-Pain Tracker includes WorkSafeBC-oriented export templates designed to support claims documentation. You can generate formatted PDF reports with:
+Pain Tracker includes WorkSafeBC-related export templates designed for worker-controlled notes and review conversations. You can generate formatted PDF summaries with:
 - Pain trend summaries
 - Functional impact documentation
 - Work impact records
 - Date-range filtered data
 
-**Note:** Pain Tracker is a documentation tool. It does not make medical or legal claims. Always work with your healthcare provider and claims advisor.
+**Note:** Pain Tracker is a documentation tool. It does not make medical, legal, or claim outcome promises. Always work with your healthcare provider and claims advisor.
 
 ### Can I share reports with my doctor?
 
-Yes. Export your data as a PDF clinical report and share it with your healthcare provider. The reports are designed to be clear and useful for clinical discussions.
+Yes. Export your data as a PDF summary and share it with your healthcare provider when you choose. The reports are designed to be clear and useful for appointment discussions.
 
 ---
 

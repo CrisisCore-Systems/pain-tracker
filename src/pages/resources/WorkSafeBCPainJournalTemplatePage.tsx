@@ -56,7 +56,7 @@ const ClaimProcessTimeline: React.FC = () => {
         'Follow prescribed physio/rehab',
         'Track pain daily — link to work duties',
         'Document functional limitations',
-        'Log all treatments and compliance',
+        'Keep dated treatment notes',
       ],
     },
     {
@@ -66,11 +66,11 @@ const ClaimProcessTimeline: React.FC = () => {
       border: 'border-amber-500/30',
       icon: <ClipboardCheck className="w-5 h-5 text-amber-400" />,
       actions: [
-        'Case manager reviews documentation',
-        'Medical advisor evaluates records',
-        'Functional capacity assessment',
-        'Vocational rehabilitation review',
-        'Share pain journal summaries',
+        'Reviewers may compare available records',
+        'Medical notes remain the primary record',
+        'Functional limits may need explanation',
+        'Work status discussions may continue',
+        'Share selected summaries only when useful',
       ],
     },
     {
@@ -80,11 +80,11 @@ const ClaimProcessTimeline: React.FC = () => {
       border: 'border-emerald-500/30',
       icon: <Scale className="w-5 h-5 text-emerald-400" />,
       actions: [
-        'Return-to-work plan (full or modified)',
-        'Permanent partial disability rating',
-        'Ongoing treatment coverage',
-        'Appeal if denied (Review Division)',
-        'WCAT tribunal if appeal denied',
+        'Return-to-work or modified-duty discussions',
+        'Treatment planning may change over time',
+        'Review or appeal options may have deadlines',
+        'Keep copies of anything you share',
+        'Ask qualified help for disputed decisions',
       ],
     },
   ];
@@ -122,15 +122,15 @@ const ClaimProcessTimeline: React.FC = () => {
   );
 };
 
-/* ─── What WCB Evaluators Look For ─────────────────────────────────────── */
+/* ─── Worker Note Review Details ─────────────────────────────────────── */
 
 const WCBEvaluationCriteria: React.FC = () => {
   const criteria = [
     {
-      title: 'Work Connection',
+      title: 'Work Context',
       icon: <Briefcase className="w-5 h-5 text-sky-400" />,
       color: 'border-sky-500/30 bg-sky-500/10',
-      description: 'Every symptom must be linked to your workplace injury and job duties.',
+      description: 'Connect symptoms to the workplace injury context and affected job duties when that detail is relevant.',
       doItems: ['"Pain increased to 7/10 after 2 hrs at workstation, preventing completion of data entry tasks"', '"Lifting boxes at warehouse aggravated lower back — had to stop after 15 min"'],
       dontItems: ['"Pain was bad today"', '"Back hurts"'],
     },
@@ -143,10 +143,10 @@ const WCBEvaluationCriteria: React.FC = () => {
       dontItems: ['"Can\'t do much"', '"Pain limits my activities"'],
     },
     {
-      title: 'Treatment Compliance',
+      title: 'Treatment and Rehabilitation Notes',
       icon: <Stethoscope className="w-5 h-5 text-purple-400" />,
       color: 'border-purple-500/30 bg-purple-500/10',
-      description: 'Show you\'re actively engaging with prescribed treatment and rehabilitation.',
+      description: 'Record appointments, home exercises, medications, and what changed after each step.',
       doItems: ['"Physio session #12 — prescribed exercises plus 15 min heat therapy. Pain reduced from 6 to 4."', '"Took ibuprofen 400mg at 8am and 2pm as prescribed. Moderate relief for ~3 hours."'],
       dontItems: ['"Went to physio"', '"Took meds"'],
     },
@@ -154,7 +154,7 @@ const WCBEvaluationCriteria: React.FC = () => {
       title: 'Consistent Daily Tracking',
       icon: <Calendar className="w-5 h-5 text-amber-400" />,
       color: 'border-amber-500/30 bg-amber-500/10',
-      description: 'Daily entries — including good days — show credibility and the true pattern of your condition.',
+      description: 'Daily entries - including better days - make the pattern easier to understand later.',
       doItems: ['"Pain 3/10 today — better after rest day. Managed light household tasks. Still unable to sit >30 min."', '"Good day (2/10). Walked 20 min. Best it\'s been since injury on Oct 15."'],
       dontItems: ['Only tracking bad days', 'Every day rated 10/10 with no variation'],
     },
@@ -219,19 +219,19 @@ const PdfContentsPreview: React.FC = () => {
       items: ['Sitting, standing, walking tolerances (minutes)', 'Lifting capacity (lbs)', 'Driving tolerance', 'Concentration and cognitive function', 'Self-care and daily living activities'],
     },
     {
-      title: 'Treatment & Rehab Compliance',
+      title: 'Treatment & Rehab Notes',
       icon: <Stethoscope className="w-4 h-4 text-purple-400" />,
-      items: ['Medical appointments attended', 'Physiotherapy sessions and exercises', 'Medication log with effectiveness', 'Home exercise compliance', 'Non-drug treatments used'],
+      items: ['Medical appointments attended', 'Physiotherapy sessions and exercises', 'Medication log with perceived effect', 'Home exercises completed', 'Non-drug treatments used'],
     },
     {
       title: 'Weekly Work Impact Summary',
       icon: <Building2 className="w-4 h-4 text-red-400" />,
-      items: ['Work days missed vs. attended', 'Modified duties required', 'Accommodations needed', 'Return-to-work progress', 'Supervisor / case manager notes'],
+      items: ['Work days missed vs. attended', 'Modified duties used', 'Accommodations discussed', 'Return-to-work progress', 'Questions for appointments'],
     },
     {
-      title: 'Monthly Summary for WCB',
+      title: 'Monthly Summary for Review',
       icon: <TrendingUp className="w-4 h-4 text-pink-400" />,
-      items: ['Total work days missed this month', 'Average pain level and trend', 'Treatment attendance rate', 'Functional capacity changes', 'Return-to-work readiness assessment', 'Questions for case manager'],
+      items: ['Total work days missed this month', 'Average pain level and trend', 'Treatment appointment record', 'Functional capacity changes', 'Return-to-work notes', 'Questions for appointments'],
     },
   ];
 
@@ -262,9 +262,9 @@ const PdfContentsPreview: React.FC = () => {
 const WCBStatsBanner: React.FC = () => {
   const stats = [
     { value: '200K+', label: 'WorkSafeBC claims processed annually in BC' },
-    { value: '3 weeks', label: 'Faster claim resolution with structured docs' },
+    { value: '30 days', label: 'A focused range for appointment-ready summaries' },
     { value: '90 days', label: 'Typical window to file a WCB claim in BC' },
-    { value: 'Form 8', label: 'Physician\'s report — your diary supports this' },
+    { value: 'Form 8', label: 'Physician report context your notes may help explain' },
   ];
 
   return (
@@ -287,18 +287,18 @@ const CommonMistakes: React.FC = () => {
   const mistakes = [
     {
       mistake: 'Only tracking on bad days',
-      why: 'Makes it look like you\'re fine most of the time. Case managers compare entry frequency to claim duration.',
-      fix: 'Track every day, even when pain is low. "Pain 2/10 today — still cannot lift >10 lbs or sit >30 min" is powerful evidence.',
+      why: 'Creates a thin record that can be harder to interpret later.',
+      fix: 'Track every day when possible, even when pain is low. "Pain 2/10 today - still cannot lift >10 lbs or sit >30 min" is clearer than memory alone.',
     },
     {
       mistake: 'Constant 10/10 pain ratings',
-      why: 'Appears exaggerated and undermines credibility. Real chronic pain fluctuates.',
+      why: 'Can make the record less useful because it hides variation and context.',
       fix: 'Be honest about good and bad days. Show the range. Variation demonstrates authenticity.',
     },
     {
       mistake: 'No connection to work duties',
-      why: 'WCB only covers work-related injuries. Undocumented non-work pain weakens your claim.',
-      fix: 'Always mention which job tasks are affected. "Standing at register aggravated L4-L5 injury" beats "back hurts."',
+      why: 'A note that omits affected job tasks can be harder to connect to the workplace injury context.',
+      fix: 'Mention which job tasks are affected. "Standing at register increased L4-L5 pain" is clearer than "back hurts."',
     },
     {
       mistake: 'Starting documentation late',
@@ -307,13 +307,13 @@ const CommonMistakes: React.FC = () => {
     },
     {
       mistake: 'Skipping treatment appointments',
-      why: 'Non-compliance is the #1 reason WCB denies or reduces benefits for chronic pain claims.',
+      why: 'Missed appointments can leave confusing gaps in the record if the reason is not written down.',
       fix: 'Attend every appointment. If you miss one, document why. Track home exercises too.',
     },
     {
       mistake: 'Contradicting medical records',
-      why: 'If your diary says 9/10 pain but your doctor says "improving," your credibility suffers.',
-      fix: 'Be consistent with what you tell your doctor. Bring your diary to appointments so records align.',
+      why: 'If your notes and appointment discussion use different wording, the pattern can be harder to understand later.',
+      fix: 'Use the same plain details in your notes and appointments. Bring a summary so the discussion is easier to follow.',
     },
   ];
 
@@ -359,7 +359,7 @@ const pageContent: SEOPageContent = {
     'worksafebc injury log',
     'worksafebc form 8 documentation',
     'wcb return to work diary',
-    'worksafe bc claim evidence',
+    'worksafe bc claim notes',
     'bc work injury pain journal',
     'wcb functional capacity diary',
     'worksafebc appeal documentation',
@@ -368,7 +368,7 @@ const pageContent: SEOPageContent = {
   // Above-the-fold
   badge: 'Free 6-Page PDF',
   headline: 'WorkSafeBC pain journal template for 2026 workplace injury documentation.',
-  subheadline: 'PainTracker.ca can help you keep structured notes about pain, functional limits, medication changes, triggers, and recovery patterns. Use the printable if you need something today. Use the free app when you need cleaner summaries and a longer-running private record for appointments, case review, or claim discussions.',
+  subheadline: 'PainTracker.ca can help you keep structured notes about pain, functional limits, medication changes, triggers, and recovery patterns. Use the printable if you need something today. Use the free app when you need cleaner summaries and a longer-running private record for appointments, review conversations, or claim discussions.',
   primaryCTA: {
     text: 'Download Free PDF (6 Pages)',
     href: '/assets/worksafebc-pain-journal.pdf',
@@ -391,9 +391,9 @@ const pageContent: SEOPageContent = {
   
   whoShouldUse: [
     'BC workers with workplace injuries resulting in chronic or ongoing pain',
-    'Anyone with an active WorkSafeBC claim who needs to strengthen their documentation',
-    'Workers preparing to file a WCB claim who need evidence from Day 1',
-    'People appealing a denied WorkSafeBC decision through the Review Division or WCAT',
+    'Anyone with an active WorkSafeBC claim who wants clearer personal notes for appointments or claim-related discussions',
+    'Workers preparing to file a WCB claim who want dated notes close to when symptoms and work limits occur',
+    'People preparing for Review Division or WCAT discussions with an advocate or legal representative',
     'Workers on graduated return-to-work programs tracking ongoing symptoms and limitations',
     'Workers receiving vocational rehabilitation who need to document residual functional limitations',
     'Anyone facing a WCB Independent Medical Exam (IME) who needs organized records',
@@ -414,7 +414,7 @@ const pageContent: SEOPageContent = {
     {
       step: 3,
       title: 'Measure functional capacity in concrete terms',
-      description: 'Use the functional capacity page to document specific tolerances: "Can sit for 20 minutes before pain reaches 6/10," "Can lift up to 5 lbs with right arm — position requires lifting 20 lbs," "Walking limited to 10 minutes before left knee swells." These measurable limitations directly support modified duty and accommodation requests.',
+      description: 'Use the functional capacity page to document specific tolerances: "Can sit for 20 minutes before pain reaches 6/10," "Can lift up to 5 lbs with right arm — position requires lifting 20 lbs," "Walking limited to 10 minutes before left knee swells." Concrete examples make appointment, work-duty, and accommodation conversations easier to follow.',
     },
     {
       step: 4,
@@ -423,12 +423,12 @@ const pageContent: SEOPageContent = {
     },
     {
       step: 5,
-      title: 'Complete the monthly summary and share with your case manager',
-      description: 'At month-end, fill in the summary page: total work days missed, average pain level, treatment attendance rate, functional capacity changes, and return-to-work readiness. Bring this page to WorkSafeBC-related appointments, medical exams, and vocational assessments. One organized summary page is easier to review than a stack of unstructured notes.',
+      title: 'Complete the monthly summary and decide what to share',
+      description: 'At month-end, fill in the summary page: total work days missed, average pain level, treatment attendance rate, functional capacity changes, and return-to-work readiness. Bring this page to WorkSafeBC-related appointments, medical exams, or vocational assessments when it is relevant. One organized summary page is easier to review than a stack of unstructured notes.',
     },
   ],
   
-  whyItMatters: 'WorkSafeBC claims often depend on whether the record clearly shows how symptoms, work demands, treatment history, and functional limits fit together over time. A structured diary helps you preserve those details while they are fresh instead of reconstructing them later from memory. For chronic pain claims and appeals especially, organized daily records can make conversations with clinicians, advocates, and adjudicators more concrete. Approval depends on the reviewer, medical evidence, policy, and case context, but good records make the discussion easier to follow.',
+  whyItMatters: 'WorkSafeBC-related discussions often depend on whether the record clearly shows how symptoms, work demands, treatment history, and functional limits fit together over time. A structured diary helps you preserve those details while they are fresh instead of reconstructing them later from memory. For chronic pain matters especially, organized daily records can make conversations with clinicians, advocates, and reviewers more concrete. Outcomes depend on the reviewer, medical records, policy, and case context, but clear records make the discussion easier to follow.',
   
   // Trust signals
   trustSignals: {
@@ -445,27 +445,27 @@ const pageContent: SEOPageContent = {
     },
     {
       question: 'What is Form 8 and how does my diary relate to it?',
-      answer: 'Form 8 is the physician\'s report to WorkSafeBC — your doctor fills it out after their examination. It includes diagnosis, treatment plan, and functional capacity assessment. Your pain diary does not replace Form 8. Use it alongside clinical records so your doctor can reference your daily patterns when completing related documentation.',
+      answer: 'Form 8 is the physician\'s report to WorkSafeBC — your doctor fills it out after their examination. It includes diagnosis, treatment plan, and functional capacity assessment. Your pain diary does not replace Form 8. Use it alongside appointment records so your doctor can reference your daily patterns when completing related documentation.',
     },
     {
       question: 'What if my claim has already been denied?',
-      answer: 'Start documenting now. Pain diaries can still be useful for Review Division reconsiderations and WCAT appeals because they help organize ongoing symptoms, treatment history, and functional limitations. Use them as part of the evidence record, not instead of medical or legal guidance.',
+      answer: 'Start documenting now. Pain diaries can still be useful for Review Division reconsiderations and WCAT appeals because they help organize ongoing symptoms, treatment history, and functional limitations. Use them as part of your supporting record, not instead of medical or legal guidance.',
     },
     {
       question: 'How does this differ from a regular pain diary?',
-      answer: 'Three critical differences: (1) Every section emphasizes the work connection — linking symptoms to job duties and workplace activities. Regular pain diaries don\'t do this, and WCB needs it. (2) Functional capacity is measured in work-relevant terms — sitting, standing, lifting tolerances that map to your job requirements. (3) Treatment compliance tracking is prominent, because WCB can reduce or deny benefits for non-compliance.',
+      answer: 'Three practical differences: (1) Every section helps connect symptoms to job duties and workplace activities. (2) Functional capacity is measured in work-relevant terms such as sitting, standing, and lifting tolerances. (3) Treatment and appointment notes are kept in the same place, so you can explain what happened without reconstructing it from memory.',
     },
     {
-      question: 'Should I share my diary with my WCB case manager?',
-      answer: 'You can share summaries strategically when they are relevant to medical examinations, vocational rehabilitation assessments, benefit reviews, or treatment discussions. You do not need to submit every daily entry. The monthly summary page is designed to make the record easier to review.',
+      question: 'Should I share my diary with WorkSafeBC?',
+      answer: 'You can choose to share summaries when they are relevant to appointments, review discussions, or treatment conversations. You do not need to submit every daily entry. The monthly summary page is designed to make the record easier to review before you decide what to share.',
     },
     {
       question: 'What if I\'m back at work but still have pain?',
-      answer: 'Continue documenting — this is critical. Modified duties, reduced hours, or pain while working are all relevant to your claim. Entries like "Completed 6-hour shift (normally 8) with two extra rest breaks. Pain peaked at 6/10 during afternoon lifting. Could not complete stock rotation tasks." This documents that you\'re making effort while showing legitimate ongoing limitations, which supports permanent partial disability ratings or ongoing treatment coverage.',
+      answer: 'Continue documenting if the record is still useful. Modified duties, reduced hours, or pain while working may be relevant to later discussions. Entries like "Completed 6-hour shift (normally 8) with two extra rest breaks. Pain peaked at 6/10 during afternoon lifting. Could not complete stock rotation tasks." keep the discussion concrete if work status, accommodations, or treatment needs are reviewed.',
     },
     {
       question: 'How long should I keep the journal?',
-      answer: 'For the duration of your claim — and ideally beyond. If your claim is active, track daily. If you\'re on graduated return-to-work, track until fully back to pre-injury duties. If you have a permanent partial disability, periodic entries (weekly) create a long-term record. For appeals, maintain the journal through the entire process. WorkSafeBC has a 3-year window for claim reviews, so your records may be relevant for years.',
+      answer: 'Keep the journal while the record remains useful for appointments, return-to-work planning, review discussions, or your own backup. If your claim is active, daily notes are usually easier to interpret than reconstructed summaries. For appeals or long-running matters, ask your advocate or legal representative how long to keep copies. WorkSafeBC has a 3-year window for claim reviews, so your records may be relevant for years.',
     },
     {
       question: 'Can I use the digital version in Pain Tracker for my WCB claim?',
@@ -473,11 +473,11 @@ const pageContent: SEOPageContent = {
     },
     {
       question: 'What about the Workers\' Compensation Appeal Tribunal (WCAT)?',
-      answer: 'WCAT is the final level of appeal for denied WorkSafeBC claims. If you\'re heading to WCAT, organize your diary entries into a chronological summary with the monthly overview pages so your documentation is easier to follow alongside the rest of the evidence record.',
+      answer: 'WCAT is the final level of appeal for denied WorkSafeBC claims. If you\'re heading to WCAT, organize your diary entries into a chronological summary with the monthly overview pages so your documentation is easier to follow alongside the rest of the record.',
     },
     {
       question: 'I work in construction / trades — is this relevant for physical jobs?',
-      answer: 'Absolutely. The functional capacity section is especially important for physical jobs. Document specific tolerances: "Can lift 10 lbs but position requires lifting 50 lbs," "Can stand for 30 min but shift requires 8 hours standing," "Cannot operate jackhammer due to right shoulder injury." The gap between your capacity and your job requirements justifies modified duties, retraining, or disability benefits.',
+      answer: 'Yes. The functional capacity section can be useful for physical jobs. Document specific tolerances: "Can lift 10 lbs but position requires lifting 50 lbs," "Can stand for 30 min but shift requires 8 hours standing," "Cannot operate jackhammer due to right shoulder injury." The gap between your capacity and your job requirements can make work-duty, accommodation, or treatment discussions more concrete.',
     },
   ],
   
@@ -485,7 +485,7 @@ const pageContent: SEOPageContent = {
   relatedLinks: [
     {
       title: 'Documenting Pain for Disability Claims',
-      description: 'General guide to disability documentation evidence',
+      description: 'General guide to disability documentation notes',
       href: '/resources/documenting-pain-for-disability-claim',
     },
     {
@@ -540,7 +540,7 @@ const WorkSafeBCCustomSections: React.FC = () => (
         <div className="text-center mb-8">
           <h2 className="text-2xl font-bold text-white mb-3">The WCB Claim Journey</h2>
           <p className="text-slate-400 max-w-2xl mx-auto">
-            Your pain journal supports every phase — from initial injury report through return-to-work or appeal.
+            Your pain journal can be referenced across phases - from initial injury report through return-to-work or appeal.
           </p>
         </div>
         <ClaimProcessTimeline />
@@ -553,20 +553,20 @@ const WorkSafeBCCustomSections: React.FC = () => (
         <div className="text-center mb-8">
           <h2 className="text-2xl font-bold text-white mb-3">What's Inside the PDF</h2>
           <p className="text-slate-400 max-w-2xl mx-auto">
-            6 professionally designed pages covering every aspect of WCB pain documentation — structured for case manager review.
+            6 pages for worker-controlled pain, function, treatment, and work-impact notes.
           </p>
         </div>
         <PdfContentsPreview />
       </div>
     </section>
 
-    {/* What WCB Evaluators Look For */}
+    {/* WorkSafeBC-Related Review Details */}
     <section className="py-14 bg-slate-900 border-b border-slate-800">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8">
-          <h2 className="text-2xl font-bold text-white mb-3">What WCB Evaluators Actually Look For</h2>
+          <h2 className="text-2xl font-bold text-white mb-3">Details That Make Worker Notes Easier to Review</h2>
           <p className="text-slate-400 max-w-2xl mx-auto">
-            Your diary needs to answer four questions. Here's how to write entries that meet WCB standards — with real examples.
+            Your diary is easier to interpret when it answers four practical questions with plain, dated examples.
           </p>
         </div>
         <WCBEvaluationCriteria />
@@ -577,9 +577,9 @@ const WorkSafeBCCustomSections: React.FC = () => (
     <section className="py-14 bg-slate-900/80 border-b border-slate-800">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8">
-          <h2 className="text-2xl font-bold text-white mb-3">6 Documentation Mistakes That Hurt WCB Claims</h2>
+          <h2 className="text-2xl font-bold text-white mb-3">6 Documentation Habits That Can Make Notes Harder to Review</h2>
           <p className="text-slate-400 max-w-2xl mx-auto">
-            Avoid these common errors that case managers see every day — and weaken otherwise valid claims.
+            Avoid common habits that make a personal record harder to understand later.
           </p>
         </div>
         <CommonMistakes />
@@ -618,7 +618,7 @@ const WorkSafeBCCustomSections: React.FC = () => (
         <div className="rounded-xl border border-slate-700 bg-slate-800/50 p-5 text-center">
           <p className="text-xs text-slate-500 leading-relaxed">
             <strong className="text-slate-400">Disclaimer:</strong> Pain Tracker is not affiliated with, endorsed by, or connected to WorkSafeBC. 
-            This template provides a documentation framework based on publicly available WCB evaluation criteria. 
+            This template provides a worker-controlled note framework informed by common documentation needs. 
             It is not legal advice. For claim-specific guidance, consult a workers&apos; compensation lawyer or workers&apos; advocate.
           </p>
         </div>

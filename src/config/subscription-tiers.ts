@@ -554,14 +554,14 @@ export const FEATURE_COMPARISON = {
         enterprise: true,
       },
       {
-        name: 'WorkSafeBC reports',
+        name: 'WorkSafeBC-related summaries',
         free: true,
         basic: true,
         pro: true,
         enterprise: true,
       },
       {
-        name: 'Clinician-friendly PDF export',
+        name: 'Appointment-ready PDF export',
         free: false,
         basic: false,
         pro: true,

@@ -171,10 +171,10 @@ export function ReportsPage({ entries }: Readonly<ReportsPageProps>) {
         includeDetailedEntries: true,
         templateStyle: wcbTemplateStyle,
       });
-      toast.success('Export Complete', buildExportDownloadedMessage('WorkSafe BC report'));
+      toast.success('Export Complete', buildExportDownloadedMessage('WorkSafeBC-related summary'));
     } catch (error) {
       console.error('WCB export error:', error);
-      toast.error('Export Failed', buildExportFailedMessage('WorkSafe BC report'));
+      toast.error('Export Failed', buildExportFailedMessage('WorkSafeBC-related summary'));
     } finally {
       setIsExporting(null);
     }
@@ -236,10 +236,10 @@ export function ReportsPage({ entries }: Readonly<ReportsPageProps>) {
   const specializedReports = [
     {
       id: 'worksafe-bc',
-      name: 'WorkSafe BC Report',
+      name: 'WorkSafeBC-Related Summary',
       description: hasWcbReports
-        ? 'For WorkSafeBC claims in British Columbia (Canada). Includes a structured clinical summary and pain trends (not affiliated with WorkSafeBC).'
-        : `This report is clipped on ${currentTier}. Upgrade to Basic or higher for WorkSafeBC export workflows.`,
+        ? 'Worker-provided summary for WorkSafeBC-related discussions in British Columbia (Canada). Review before sharing; not affiliated with WorkSafeBC.'
+        : `This report is clipped on ${currentTier}. Upgrade to Basic or higher for WorkSafeBC-related summaries.`,
       icon: Shield,
       badge: hasWcbReports ? 'WCB' : 'Basic+',
       available: hasWcbReports,
@@ -254,8 +254,8 @@ export function ReportsPage({ entries }: Readonly<ReportsPageProps>) {
     },
     {
       id: 'clinical',
-      name: 'Clinical Summary',
-      description: buildNotOpenYetMessage('Clinical Summary'),
+      name: 'Appointment Summary',
+      description: buildNotOpenYetMessage('Appointment Summary'),
       icon: TrendingUp,
       badge: 'Not open yet',
       available: false,
@@ -371,10 +371,10 @@ export function ReportsPage({ entries }: Readonly<ReportsPageProps>) {
               <div className="rounded-xl border border-sky-200/70 dark:border-sky-800 bg-white/70 dark:bg-gray-900/30 p-4">
                 <div className="flex items-center gap-2 mb-1">
                   <Shield className="h-4 w-4 text-sky-700 dark:text-sky-300" />
-                  <div className="font-medium text-sm">WorkSafeBC (WCB)</div>
+                <div className="font-medium text-sm">WorkSafeBC-related summary</div>
                 </div>
                 <div className="text-xs text-gray-600 dark:text-gray-400">
-                  Built for WorkSafeBC documentation workflows (BC, Canada). Review the PDF before sharing.
+                  Worker-controlled summary for WorkSafeBC-related discussions (BC, Canada). Review before sharing.
                 </div>
               </div>
             </div>
@@ -498,15 +498,15 @@ export function ReportsPage({ entries }: Readonly<ReportsPageProps>) {
           <div className="mb-5 rounded-xl border border-border/60 bg-muted/20 p-4">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <div className="text-sm font-medium text-foreground">WorkSafeBC export style</div>
+                <div className="text-sm font-medium text-foreground">WorkSafeBC-related summary style</div>
                 <div className="text-xs text-muted-foreground mt-1">
-                  Choose the export presentation you want before generating the report.
+                  Choose the worker-provided summary presentation before generating the report.
                 </div>
               </div>
               <div className="inline-flex items-center gap-1 rounded-xl bg-muted/50 p-1">
                 {([
                   { value: 'standard', label: 'Standard' },
-                  { value: 'hostile-bureaucracy', label: 'Hostile bureaucracy' },
+                  { value: 'hostile-bureaucracy', label: 'Plain record' },
                 ] as const).map(option => (
                   <button
                     key={option.value}

@@ -11,7 +11,7 @@
 
 > Privacy-first, offline-capable pain documentation for people living with chronic pain.
 
-Pain Tracker helps people record pain, symptoms, treatments, and work impact, then export structured reports for clinicians, claims, and personal records. The core app is local-first by default. Optional network, clinic, weather, publishing, and payment paths are treated as explicit trust boundaries rather than baseline requirements.
+Pain Tracker helps people record pain, symptoms, treatments, and work impact, then export structured summaries for appointments, claim-related discussions, and personal records. The core app is local-first by default. Optional network, clinic, weather, publishing, and payment paths are treated as explicit trust boundaries rather than baseline requirements.
 
 Current source coverage includes 242 source test files under `src/`. Additional Playwright and publishing tests live under `e2e/` and `test/`.
 
@@ -51,7 +51,7 @@ That posture shapes the architecture: local-first storage, user-controlled expor
 | Area | Current capability |
 | --- | --- |
 | Pain tracking | Multi-step assessment, body-location capture, symptom severity tracking |
-| Reporting | WorkSafeBC-oriented CSV, JSON, and PDF exports; clinician-ready summaries |
+| Reporting | WorkSafeBC-related CSV, JSON, and PDF exports; appointment-ready summaries |
 | Analytics | Local trend analysis, correlations, and pattern-aware heuristics |
 | Accessibility | Keyboard support, focus management, configurable display options, gentle language |
 | Security posture | Local-first storage, selective AES-GCM helpers, CSP, redacted audit/event logging patterns |
@@ -176,7 +176,7 @@ Start with [SECURITY.md](SECURITY.md), [SECURITY_INVARIANTS.md](SECURITY_INVARIA
 Current 2026 priorities:
 
 1. Strengthen local-only analytics and visualizations without adding surveillance surfaces.
-2. Expand export and reporting defensibility for clinician and WorkSafeBC workflows.
+2. Expand export and reporting defensibility for appointment and WorkSafeBC-related workflows.
 3. Improve degraded-mode resilience, especially around persistence, recovery, and PWA behavior.
 4. Tighten trust-boundary documentation for optional integrations and deployment-specific backend paths.
 5. Continue accessibility and trauma-informed UX hardening against the WCAG 2.2 AA target.
