@@ -34,13 +34,16 @@ type QuickLogOneScreenData = {
 
 vi.mock('../../design-system/fused-v2/QuickLogOneScreen', () => ({
   default: function QuickLogOneScreenMock({
+    firstEntryMode,
     onComplete,
   }: {
+    firstEntryMode?: boolean;
     onComplete: (data: QuickLogOneScreenData) => void;
   }) {
     const [checked, setChecked] = React.useState(false);
     return (
       <div>
+        <h2>{firstEntryMode ? 'First Pain Entry' : 'Quick Log'}</h2>
         <label>
           <input
             type="checkbox"
@@ -78,6 +81,12 @@ vi.mock('../../services/weatherAutoCapture', () => ({
 
 vi.mock('../../pages/SettingsPage', () => ({
   default: () => <h2>Settings Surface</h2>,
+}));
+
+vi.mock('../../components/reports', () => ({
+  ReportsPage: ({ entries }: { entries: unknown[] }) => (
+    <div>Reports surface entries: {entries.length}</div>
+  ),
 }));
 
 // Mock secureStorage to avoid real storage access
@@ -118,14 +127,14 @@ describe('PainTrackerContainer - entry success toast', () => {
       loadSampleData: vi.fn(),
     };
 
-    (usePainTrackerStore as unknown as { mockImplementation: (fn: unknown) => void }).mockImplementation(
-      (selector: unknown) => {
-        if (typeof selector === 'function') {
-          return (selector as (s: typeof storeState) => unknown)(storeState);
-        }
-        return storeState;
+    (
+      usePainTrackerStore as unknown as { mockImplementation: (fn: unknown) => void }
+    ).mockImplementation((selector: unknown) => {
+      if (typeof selector === 'function') {
+        return (selector as (s: typeof storeState) => unknown)(storeState);
       }
-    );
+      return storeState;
+    });
 
     render(<PainTrackerContainer />);
 
@@ -162,14 +171,14 @@ describe('PainTrackerContainer - entry success toast', () => {
       loadSampleData: vi.fn(),
     };
 
-    (usePainTrackerStore as unknown as { mockImplementation: (fn: unknown) => void }).mockImplementation(
-      (selector: unknown) => {
-        if (typeof selector === 'function') {
-          return (selector as (s: typeof storeState) => unknown)(storeState);
-        }
-        return storeState;
+    (
+      usePainTrackerStore as unknown as { mockImplementation: (fn: unknown) => void }
+    ).mockImplementation((selector: unknown) => {
+      if (typeof selector === 'function') {
+        return (selector as (s: typeof storeState) => unknown)(storeState);
       }
-    );
+      return storeState;
+    });
 
     render(<PainTrackerContainer />);
 
@@ -194,14 +203,14 @@ describe('PainTrackerContainer - entry success toast', () => {
       loadSampleData: vi.fn(),
     };
 
-    (usePainTrackerStore as unknown as { mockImplementation: (fn: unknown) => void }).mockImplementation(
-      (selector: unknown) => {
-        if (typeof selector === 'function') {
-          return (selector as (s: typeof storeState) => unknown)(storeState);
-        }
-        return storeState;
+    (
+      usePainTrackerStore as unknown as { mockImplementation: (fn: unknown) => void }
+    ).mockImplementation((selector: unknown) => {
+      if (typeof selector === 'function') {
+        return (selector as (s: typeof storeState) => unknown)(storeState);
       }
-    );
+      return storeState;
+    });
 
     render(<PainTrackerContainer />);
 
@@ -241,23 +250,31 @@ describe('PainTrackerContainer - entry success toast', () => {
       loadSampleData,
     };
 
-    (usePainTrackerStore as unknown as { mockImplementation: (fn: unknown) => void }).mockImplementation(
-      (selector: unknown) => {
-        if (typeof selector === 'function') {
-          return (selector as (s: typeof storeState) => unknown)(storeState);
-        }
-        return storeState;
+    (
+      usePainTrackerStore as unknown as { mockImplementation: (fn: unknown) => void }
+    ).mockImplementation((selector: unknown) => {
+      if (typeof selector === 'function') {
+        return (selector as (s: typeof storeState) => unknown)(storeState);
       }
-    );
+      return storeState;
+    });
     render(<PainTrackerContainer />);
 
     // Simulate the user logging a quick entry via the primary action -> quick log -> save
     // 1) Click the primary "Quick log pain" action
-    const logNow = await screen.findByRole('button', { name: /Quick log pain/i }, { timeout: 5000 });
+    const logNow = await screen.findByRole(
+      'button',
+      { name: /Quick log pain/i },
+      { timeout: 5000 }
+    );
     await user.click(logNow);
 
     // At least one location is required to save
-    const lowerBack = await screen.findByRole('checkbox', { name: /lower back location/i }, { timeout: 5000 });
+    const lowerBack = await screen.findByRole(
+      'checkbox',
+      { name: /lower back location/i },
+      { timeout: 5000 }
+    );
     await user.click(lowerBack);
 
     // 2) Quick Log is a single screen in the fused-v2 design; Save completes the entry.
@@ -270,8 +287,63 @@ describe('PainTrackerContainer - entry success toast', () => {
     await user.click(saveBtn);
 
     // After saving, the container shows a gentle success toast with this copy
-    await waitFor(() => {
-      expect(screen.queryByText(/safely stored/i)).not.toBeNull();
-    }, { timeout: 5000 });
+    await waitFor(
+      () => {
+        expect(screen.queryByText(/safely stored/i)).not.toBeNull();
+      },
+      { timeout: 5000 }
+    );
+  }, 30000);
+
+  it('routes the first saved entry into export and feedback prompts', async () => {
+    vi.mocked(readWorkflowPreferences).mockReturnValue({
+      defaultWcbTemplateStyle: 'hostile-bureaucracy',
+      industrialFieldMode: false,
+      showFibromyalgiaHubNavItem: true,
+    });
+
+    const user = userEvent.setup();
+    const addEntry = vi.fn();
+    const storeState = {
+      entries: [],
+      ui: { showOnboarding: false, showWalkthrough: false },
+      addEntry,
+      updateEntry: vi.fn(),
+      setShowOnboarding: vi.fn(),
+      setShowWalkthrough: vi.fn(),
+      setError: vi.fn(),
+      loadSampleData: vi.fn(),
+    };
+
+    (
+      usePainTrackerStore as unknown as { mockImplementation: (fn: unknown) => void }
+    ).mockImplementation((selector: unknown) => {
+      if (typeof selector === 'function') {
+        return (selector as (s: typeof storeState) => unknown)(storeState);
+      }
+      return storeState;
+    });
+
+    render(<PainTrackerContainer />);
+
+    expect(await screen.findByRole('heading', { name: /first pain entry/i })).toBeInTheDocument();
+
+    await user.click(await screen.findByRole('checkbox', { name: /lower back location/i }));
+    await user.click(await screen.findByRole('button', { name: /log pain now/i }));
+
+    expect(addEntry).toHaveBeenCalledTimes(1);
+    expect(
+      await screen.findByRole('heading', {
+        level: 1,
+        name: /entry saved locally\. want to build a 7-day pattern\?/i,
+      })
+    ).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /add another entry/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /export printable report/i })).toBeInTheDocument();
+    expect(screen.getByText(/email is optional and may reveal your address/i)).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: /export printable report/i }));
+
+    expect(await screen.findByText(/reports surface entries/i)).toBeInTheDocument();
   }, 30000);
 });

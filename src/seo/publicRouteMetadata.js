@@ -201,7 +201,7 @@ const RESOURCES_PRERENDER_BODY = `
         <tr><td style="padding: 0.75rem 0.5rem; border-bottom: 1px solid rgba(51, 65, 85, 0.6);">Track medication effects</td><td style="padding: 0.75rem 0.5rem; border-bottom: 1px solid rgba(51, 65, 85, 0.6);"><a href="/resources/medication-and-pain-log" style="color: #7dd3fc;">Medication Response Tracker</a></td></tr>
         <tr><td style="padding: 0.75rem 0.5rem; border-bottom: 1px solid rgba(51, 65, 85, 0.6);">Track work injury pain</td><td style="padding: 0.75rem 0.5rem; border-bottom: 1px solid rgba(51, 65, 85, 0.6);"><a href="/resources/worksafebc-pain-journal-template" style="color: #7dd3fc;">WorkSafeBC Pain Journal Template</a></td></tr>
         <tr><td style="padding: 0.75rem 0.5rem; border-bottom: 1px solid rgba(51, 65, 85, 0.6);">Track a specific condition</td><td style="padding: 0.75rem 0.5rem; border-bottom: 1px solid rgba(51, 65, 85, 0.6);"><a href="/resources/endometriosis-pain-log" style="color: #7dd3fc;">Migraine, Fibromyalgia, Arthritis, CRPS, Back Pain, and Endometriosis logs</a></td></tr>
-        <tr><td style="padding: 0.75rem 0.5rem;">Keep records privately on your device</td><td style="padding: 0.75rem 0.5rem;"><a href="/start" style="color: #7dd3fc;">PainTracker Offline App</a></td></tr>
+        <tr><td style="padding: 0.75rem 0.5rem;">Keep records privately on your device</td><td style="padding: 0.75rem 0.5rem;"><a href="/start" style="color: #7dd3fc;">Log first entry in the app</a></td></tr>
       </tbody>
     </table>
   </section>
@@ -223,7 +223,7 @@ const RESOURCES_PRERENDER_BODY = `
   </section>
   <section style="margin-top: 2rem;">
     <h2 style="font-size: 1.5rem; margin-bottom: 0.75rem;">Private Offline App Guides</h2>
-    <p style="line-height: 1.7; color: #cbd5e1;">When paper stops being enough, move into the product lane through <a href="/resources/free-pain-tracker-app" style="color: #7dd3fc;">How to use PainTracker offline</a>, <a href="/privacy-architecture" style="color: #7dd3fc;">how private local tracking works</a>, <a href="/privacy" style="color: #7dd3fc;">why no account matters</a>, <a href="/pain-tracker-app" style="color: #7dd3fc;">how to export pain records</a>, <a href="/download" style="color: #7dd3fc;">how to install the app</a>, and the <a href="https://blog.paintracker.ca/best-pain-tracking-apps" style="color: #7dd3fc;">best pain tracking apps</a> comparison. The intended flow is printable to habit to doctor usefulness to private app.</p>
+    <p style="line-height: 1.7; color: #cbd5e1;">When paper stops being enough, move into the product lane through <a href="/resources/free-pain-tracker-app" style="color: #7dd3fc;">How to use PainTracker offline</a>, <a href="/privacy-architecture" style="color: #7dd3fc;">how private local tracking works</a>, <a href="/privacy" style="color: #7dd3fc;">why no account matters</a>, <a href="/pain-tracker-app" style="color: #7dd3fc;">how to export pain records</a>, <a href="/download" style="color: #7dd3fc;">how to install the app</a>, and the <a href="https://blog.paintracker.ca/best-pain-tracking-apps" style="color: #7dd3fc;">best pain tracking apps</a> comparison. The intended flow is printable if paper is safer, or app if you want searchable records and exportable summaries.</p>
   </section>
   <section style="margin-top: 2rem;">
     <h2 style="font-size: 1.5rem; margin-bottom: 0.75rem;">How to start tracking pain without overthinking it</h2>
@@ -232,12 +232,12 @@ const RESOURCES_PRERENDER_BODY = `
       <li>Track once per day for 7 days.</li>
       <li>Record pain level, location, medication response, sleep, and functional limits.</li>
       <li>Bring the pattern, not just the memory, to your next appointment.</li>
-      <li>Move to the offline app when you want faster entries and cleaner exports.</li>
+      <li>Move to the offline app when you want a searchable first record and cleaner exports.</li>
     </ol>
   </section>
   <section style="margin-top: 2rem;">
     <h2 style="font-size: 1.5rem; margin-bottom: 0.75rem;">When paper stops being enough</h2>
-    <p style="line-height: 1.7; color: #cbd5e1;">Printables are the easiest way to start. PainTracker is for when you need the habit to survive real life.</p>
+    <p style="line-height: 1.7; color: #cbd5e1;">Printables are the easiest way to start when paper is safer. PainTracker is for when you need one local record, then a habit that can survive real life.</p>
     <ul style="margin: 1rem 0 0; padding-left: 1.25rem; color: #e2e8f0; line-height: 1.8;">
       <li>Offline tracking</li>
       <li>No account</li>
@@ -509,10 +509,10 @@ export const publicRouteMetadata = [
     path: '/',
     title: 'PainTracker.ca | Free Private Pain Tracker App That Works Offline',
     description:
-      'PainTracker.ca helps you log pain, symptoms, medications, triggers, and daily function without creating an account. Private, offline capable, and built for user controlled export.',
+      'PainTracker.ca helps you log a first pain entry, keep records on your device, and export when ready. No account, offline capable, and built for user controlled sharing.',
     canonicalUrl: `${SITE_URL}/`,
     ogImage: DEFAULT_OG_IMAGE,
-    prerenderHeading: 'Track Chronic Pain Privately, Even Offline',
+    prerenderHeading: 'Log Your First Pain Entry Privately, Even Offline',
   },
   {
     path: '/pricing',
@@ -732,7 +732,7 @@ export const publicRouteMetadata = [
   resource(
     'daily-pain-tracker-printable',
     'Free Daily Pain Tracker Printable PDF | PainTracker.ca',
-    'Download the free PainTracker.ca daily pain tracker printable PDF to record pain levels, medications, flare ups, triggers, daily limits, mood, and notes for doctor visits.'
+    'Download the free daily pain tracker printable PDF, or use the app for searchable local records and exportable reports. No email required.'
   ),
   resource(
     'weekly-pain-tracker-printable',
@@ -862,7 +862,7 @@ export const publicRouteMetadata = [
   resource(
     'free-pain-tracker-app',
     'Free Pain Tracker App: No Account, No Cloud, Private Pain Tracking',
-    'PainTracker.ca is a free pain tracker app that works without an account or cloud storage. Track pain, symptoms, medications, and triggers privately on your device.'
+    'PainTracker.ca is a free pain tracker app that lets you log a first pain entry without an account, keep records on your device, and export when ready.'
   ),
   resource(
     'best-pain-tracking-app',
@@ -1077,7 +1077,7 @@ export const publicRouteMetadata = [
   resource(
     'what-to-include-in-pain-journal',
     'What to Include in a Pain Journal: 12 Things to Track + Free Template',
-    'Learn what to record in a pain journal, including pain level, location, triggers, medication, sleep, mood, function, and notes for appointments.'
+    'Learn what to record in a pain journal, then choose paper if safer or the app for searchable local records and exportable reports.'
   ),
   resource(
     'how-doctors-use-pain-diaries',

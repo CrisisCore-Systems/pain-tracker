@@ -62,7 +62,7 @@ const SEO = {
   title: 'Daily Pain Tracker Printable in 2026',
   metaTitle: 'Daily Pain Tracker Printable (2026) | Free PDF, No Email Required',
   metaDescription:
-    'Download the free daily pain tracker printable PDF for 2026. No email required. Record pain levels, medications, flare ups, triggers, daily limits, mood, and notes for doctor visits.',
+    'Download the free daily pain tracker printable PDF for 2026, or use the app for searchable local records and exportable reports. No email required.',
   keywords: [
     'daily pain tracker printable',
     'daily pain log',
@@ -469,7 +469,7 @@ export const DailyPainTrackerPrintablePage: React.FC = () => {
                 to="/start"
                 className="btn-cta-primary px-4 py-2 text-sm font-medium rounded-lg"
               >
-                Use the app free
+                Log first entry
               </Link>
             </div>
           </div>
@@ -532,7 +532,7 @@ export const DailyPainTrackerPrintablePage: React.FC = () => {
             </p>
             <p className="text-slate-300 text-base sm:text-lg max-w-2xl mx-auto mb-4">
               Start on paper if that is the easiest move today. Use the free app instead when you
-              want less manual summarizing and a record that stays searchable on your device.
+              want a searchable local record, faster exports, and less manual summarizing.
             </p>
             <p className="text-slate-500 text-sm mb-8">
               100% free &bull; No email required &bull; No tracking &bull; Prints on standard letter
@@ -554,7 +554,7 @@ export const DailyPainTrackerPrintablePage: React.FC = () => {
                 className="px-8 py-4 text-lg font-medium text-slate-300 hover:text-white border border-slate-600 hover:border-slate-500 rounded-xl transition-all flex items-center gap-2"
               >
                 <Sparkles className="w-5 h-5" />
-                Use the free app instead
+                Log first entry in the app
               </Link>
             </div>
 
@@ -609,6 +609,7 @@ export const DailyPainTrackerPrintablePage: React.FC = () => {
         <ResourceOutcomeBridge
           downloadUrl="/assets/daily-pain-tracker.pdf"
           downloadFileName="daily-pain-tracker.pdf"
+          appLabel="Log first entry in the app"
         />
 
         <ResourceWorkflowSteps intent="printable" />

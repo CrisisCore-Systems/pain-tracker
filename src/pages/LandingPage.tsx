@@ -83,9 +83,9 @@ const trackingCards = [
 const pathCards = [
   {
     title: 'Start tracking privately',
-    text: 'Use the offline capable app with no account required.',
+    text: 'Open the app, log one pain entry, and keep the record on this device.',
     href: '/start',
-    cta: 'Start Tracking Free',
+    cta: 'Log Your First Entry',
   },
   {
     title: 'Use paper first',
@@ -181,7 +181,7 @@ export const LandingPage: React.FC = () => {
     const meta = {
       title: 'PainTracker.ca | Free Private Pain Tracker App That Works Offline',
       description:
-        'PainTracker.ca helps you log pain, symptoms, medications, triggers, and daily function without creating an account. Private, offline capable, and built for user controlled export.',
+        'PainTracker.ca helps you log a first pain entry, keep records on your device, and export when ready. No account, offline capable, and built for user controlled sharing.',
       keywords:
         'private pain tracker, offline pain tracker, pain documentation app, no account pain tracker, pain tracker printable, worksafebc pain journal template',
     };
@@ -232,12 +232,12 @@ export const LandingPage: React.FC = () => {
         <section className="border-b border-white/10">
           <div className="container mx-auto px-4 py-16 lg:py-20 text-center max-w-4xl">
             <h1 className="landing-headline landing-headline-xl mb-5 text-white">
-              Track chronic pain privately, even offline.
+              Log your first pain entry privately, even offline.
             </h1>
             <p className="landing-subhead text-lg lg:text-xl mx-auto max-w-3xl mb-7">
-              PainTracker.ca helps you log pain levels, symptoms, medications, triggers, body
-              locations, and daily function without creating an account. Your core records stay on
-              your device unless you choose to export or share them.
+              PainTracker.ca helps you log today's pain in under 90 seconds, keep the record on your
+              device, and export a printable report when you choose. No account, no cloud pain
+              database, no forced sharing.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4 mb-5">
               <Link
@@ -246,7 +246,7 @@ export const LandingPage: React.FC = () => {
                 onClick={() => trackFunnelEvent('app_open_intent', 'landing_hero')}
                 className="btn-cta-primary inline-flex items-center justify-center gap-2 px-7 py-3"
               >
-                Start Tracking Free
+                Log Your First Entry
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
@@ -259,8 +259,8 @@ export const LandingPage: React.FC = () => {
               </Link>
             </div>
             <p className="text-sm text-slate-300">
-              No account. No cloud-default pain database. Designed to work offline after first load
-              on supported browsers.
+              Use the printable if paper is safer today. Use the app if you want searchable,
+              exportable records on this device.
             </p>
             <div className="mt-5 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-slate-200">
               <Link
@@ -301,8 +301,8 @@ export const LandingPage: React.FC = () => {
               Private by architecture, not by promise.
             </h2>
             <p className="landing-subhead text-center max-w-3xl mx-auto mb-8">
-              PainTracker.ca is built around local control. You can begin without an account, log
-              pain records on your device, and export only when you choose.
+              PainTracker.ca is built around local control. You can begin without an account, log a
+              first pain record on your device, and export only when you choose.
             </p>
             <div className="mb-8">
               <img
@@ -570,7 +570,7 @@ export const LandingPage: React.FC = () => {
                 to="/start"
                 className="btn-cta-primary inline-flex items-center justify-center gap-2 px-7 py-3"
               >
-                Start Tracking Free
+                Log Your First Entry
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link

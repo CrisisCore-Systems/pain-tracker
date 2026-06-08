@@ -42,7 +42,7 @@ export const ResourceOutcomeBridge: React.FC<ResourceOutcomeBridgeProps> = ({
   downloadFileName,
   appHref = '/start',
   printableLabel = 'Download printable',
-  appLabel = 'Start tracking free',
+  appLabel = 'Log first entry in the app',
   resourcePageSlug,
   resourcePageType,
 }) => {
@@ -76,7 +76,10 @@ export const ResourceOutcomeBridge: React.FC<ResourceOutcomeBridgeProps> = ({
   };
 
   return (
-    <section className="py-12 bg-slate-900 border-b border-slate-800" aria-labelledby="resource-outcome-bridge-heading">
+    <section
+      className="py-12 bg-slate-900 border-b border-slate-800"
+      aria-labelledby="resource-outcome-bridge-heading"
+    >
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="rounded-3xl border border-slate-700 bg-slate-800/70 p-6 sm:p-8 shadow-2xl shadow-black/20">
           <div className="grid gap-8 lg:grid-cols-[1.25fr,0.75fr] lg:items-start">
@@ -84,11 +87,16 @@ export const ResourceOutcomeBridge: React.FC<ResourceOutcomeBridgeProps> = ({
               <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary mb-3">
                 Start with the least effort that works today
               </p>
-              <h2 id="resource-outcome-bridge-heading" className="text-2xl sm:text-3xl font-bold text-white leading-tight mb-4">
+              <h2
+                id="resource-outcome-bridge-heading"
+                className="text-2xl sm:text-3xl font-bold text-white leading-tight mb-4"
+              >
                 Paper helps you start. The app helps you stay organized.
               </h2>
               <p className="text-slate-300 text-base sm:text-lg leading-relaxed mb-5">
-                Use the printable if you need something right now. Open the app when paper becomes too hard to keep up with, you want cleaner summaries before an appointment, or you need private records that do not depend on an account.
+                Use the printable if paper is safer or easier right now. Open the app when you want
+                a searchable local record, cleaner exports before an appointment, or private records
+                that do not depend on an account.
               </p>
 
               <div className="flex flex-wrap gap-3 mb-6">
@@ -118,7 +126,10 @@ export const ResourceOutcomeBridge: React.FC<ResourceOutcomeBridgeProps> = ({
                 {trustBullets.map((bullet, index) => {
                   const Icon = index === 0 ? FileText : index === 1 ? Lock : Shield;
                   return (
-                    <div key={bullet} className="rounded-2xl border border-slate-700 bg-slate-900/60 p-4">
+                    <div
+                      key={bullet}
+                      className="rounded-2xl border border-slate-700 bg-slate-900/60 p-4"
+                    >
                       <Icon className="w-4 h-4 text-primary mb-2" />
                       <p className="text-sm text-slate-300">{bullet}</p>
                     </div>
@@ -131,7 +142,7 @@ export const ResourceOutcomeBridge: React.FC<ResourceOutcomeBridgeProps> = ({
               <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-5">
                 <h3 className="text-white font-semibold mb-3">Free</h3>
                 <ul className="space-y-2">
-                  {freeBullets.map((bullet) => (
+                  {freeBullets.map(bullet => (
                     <li key={bullet} className="flex items-start gap-2 text-sm text-slate-200">
                       <CheckCircle2 className="w-4 h-4 text-emerald-300 flex-shrink-0 mt-0.5" />
                       <span>{bullet}</span>
@@ -143,7 +154,7 @@ export const ResourceOutcomeBridge: React.FC<ResourceOutcomeBridgeProps> = ({
               <div className="rounded-2xl border border-sky-500/20 bg-sky-500/10 p-5">
                 <h3 className="text-white font-semibold mb-3">When upgrading makes sense</h3>
                 <ul className="space-y-2">
-                  {upgradeBullets.map((bullet) => (
+                  {upgradeBullets.map(bullet => (
                     <li key={bullet} className="flex items-start gap-2 text-sm text-slate-200">
                       <ArrowRight className="w-4 h-4 text-sky-300 flex-shrink-0 mt-0.5" />
                       <span>{bullet}</span>
