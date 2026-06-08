@@ -20,12 +20,15 @@ ogImage: https://cdn.hashnode.com/res/hashnode/image/upload/v1763006218887/07a02
 
 This guide explains how to produce WorkSafeBC-ready documentation from structured pain records while keeping health data local on your device.
 
-If you want to build the record first, start with the [Daily Pain Tracker
+If you want to build the record first, start with the [Pain Tracking Resources
+hub](https://www.paintracker.ca/resources), the [Daily Pain Tracker
 Printable](https://www.paintracker.ca/resources/daily-pain-tracker-printable),
-the [What to Include in a Pain
-Journal](https://www.paintracker.ca/resources/what-to-include-in-pain-journal),
-or the [Doctor Visit Pain Summary
-Template](https://www.paintracker.ca/resources/doctor-visit-pain-summary-template).
+the [Chronic Pain Diary
+Template](https://www.paintracker.ca/resources/chronic-pain-diary-template),
+and [What to Include in a Pain
+Journal](https://www.paintracker.ca/resources/what-to-include-in-pain-journal).
+When you are ready to keep a private digital record, use the [PainTracker
+download page](https://www.paintracker.ca/download).
 
 ## The Paperwork Problem Every Claimant Faces
 

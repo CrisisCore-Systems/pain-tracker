@@ -75,11 +75,10 @@ interface ResourceSectionNavItem {
 }
 
 const RESOURCES_HUB_TITLE =
-  'Free Pain Tracker Templates & Pain Journal Printables | PainTracker.ca';
+  'Free Pain Tracking Resources, Templates, Charts and Journals | PainTracker.ca';
 const RESOURCES_HUB_DESCRIPTION =
-  'Download free pain tracker templates, printable pain journals, condition-specific pain logs, and private tracking guides for chronic pain, doctor visits, disability documentation, and daily symptom tracking.';
-const RESOURCES_HUB_HEADING =
-  'Free Pain Tracker Templates, Printable Pain Journals, and Private Tracking Guides';
+  'Free pain tracking resources including printable pain tracker templates, chronic pain diary tools, pain scale charts, pain journal guidance, and a private offline pain tracker app.';
+const RESOURCES_HUB_HEADING = 'Free Pain Tracking Resources';
 const STARTER_PACK_ASSET_PATH = '/assets/free-pain-tracking-starter-pack.zip';
 const STARTER_PACK_DOWNLOAD_NAME = 'free-pain-tracking-starter-pack.zip';
 
@@ -290,6 +289,69 @@ const resourceSectionNavItems: ResourceSectionNavItem[] = [
     icon: <FileText className="h-4 w-4" />,
   },
 ];
+
+const coreResourceClusterSections = [
+  {
+    title: 'Printable tools',
+    description:
+      'Use a paper-first path when you need something immediate, visible, or easy to bring to an appointment.',
+    links: [
+      {
+        title: 'Daily pain tracker printable',
+        href: '/resources/daily-pain-tracker-printable',
+      },
+      {
+        title: 'Pain scale chart printable',
+        href: '/resources/pain-scale-chart-printable',
+      },
+    ],
+  },
+  {
+    title: 'Long term tracking',
+    description:
+      'Use these when you need patterns across flares, medication changes, function, sleep, and baseline pain.',
+    links: [
+      {
+        title: 'Chronic pain diary template',
+        href: '/resources/chronic-pain-diary-template',
+      },
+      {
+        title: 'What to include in a pain journal',
+        href: '/resources/what-to-include-in-pain-journal',
+      },
+    ],
+  },
+  {
+    title: 'Private digital tracking',
+    description:
+      'Move into the app when you want private local records, offline-capable use, and user-controlled exports.',
+    links: [
+      { title: 'Free private offline pain tracker app', href: '/' },
+      { title: 'Download PainTracker', href: '/download' },
+      { title: 'Tracking data policy', href: '/tracking-data-policy' },
+    ],
+  },
+  {
+    title: 'For appointments, claims, and reports',
+    description:
+      'Keep records practical and factual before short visits, disability paperwork, or workplace injury discussions.',
+    links: [
+      { title: 'Download PainTracker', href: '/download' },
+      {
+        title: 'WorkSafeBC pain journal template',
+        href: '/resources/worksafebc-pain-journal-template',
+      },
+      {
+        title: 'Daily pain tracker printable',
+        href: '/resources/daily-pain-tracker-printable',
+      },
+      {
+        title: 'Chronic pain diary template',
+        href: '/resources/chronic-pain-diary-template',
+      },
+    ],
+  },
+] as const;
 
 const featuredSections: FeaturedSection[] = [
   {
@@ -1727,10 +1789,9 @@ export const ResourcesIndexPage: React.FC = () => {
             </h1>
 
             <p className="landing-subhead text-lg sm:text-xl max-w-3xl mx-auto">
-              PainTracker resources help you document chronic pain clearly, privately, and
-              consistently. Download free printable pain tracker templates, build a daily pain
-              journal, prepare better notes for doctor appointments, or use the private offline app
-              when paper stops being enough.
+              PainTracker provides free, privacy first tools for recording pain, symptoms, flares,
+              medication patterns, daily function, and long term health notes without forcing users
+              into cloud accounts or unnecessary data collection.
             </p>
 
             <p className="mt-5 text-base sm:text-lg text-slate-200 max-w-2xl mx-auto">
@@ -1781,6 +1842,57 @@ export const ResourcesIndexPage: React.FC = () => {
               decoding="async"
               className="w-full rounded-2xl border border-slate-700 bg-slate-900/80"
             />
+          </div>
+        </section>
+
+        <section className="border-b border-slate-800 bg-slate-900 py-14 sm:py-16">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-3xl">
+              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary mb-3">
+                Resource hub
+              </p>
+              <h2 className="text-2xl sm:text-3xl font-bold text-white">
+                Free pain tracking resources by task
+              </h2>
+              <p className="mt-4 text-sm sm:text-base leading-relaxed text-slate-300">
+                Pick the format that protects your energy today: print a simple tracker, use a
+                chronic pain diary for longer patterns, check the pain scale chart before scoring,
+                or move into private offline tracking when paper becomes hard to review.
+              </p>
+            </div>
+
+            <div className="mt-8 grid gap-5 md:grid-cols-2">
+              {coreResourceClusterSections.map(section => (
+                <section
+                  key={section.title}
+                  className="rounded-2xl border border-slate-700 bg-slate-800/70 p-5"
+                  aria-labelledby={`resource-cluster-${section.title.toLowerCase().replaceAll(/\W+/g, '-')}`}
+                >
+                  <h3
+                    id={`resource-cluster-${section.title.toLowerCase().replaceAll(/\W+/g, '-')}`}
+                    className="text-lg font-semibold text-white"
+                  >
+                    {section.title}
+                  </h3>
+                  <p className="mt-2 text-sm leading-relaxed text-slate-400">
+                    {section.description}
+                  </p>
+                  <ul className="mt-5 space-y-3">
+                    {section.links.map(link => (
+                      <li key={`${section.title}-${link.href}`}>
+                        <Link
+                          to={link.href}
+                          className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:text-sky-300 transition-colors"
+                        >
+                          {link.title}
+                          <ArrowRight className="h-3.5 w-3.5" />
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -2155,7 +2267,7 @@ export const ResourcesIndexPage: React.FC = () => {
 
         <RelatedPainResourceLinks
           heading="Core pain tracking paths"
-          intro="These are the highest-intent paths to keep close to every resource: the app, the hub, the strongest printables, the pain-journal guide, and the app comparison page."
+          intro="These are the core paths to keep close to every resource: the hub, daily printable, chronic pain diary, pain scale chart, pain-journal guide, download path, and tracking data policy."
           className="py-16 bg-slate-900 border-t border-slate-700"
         />
 

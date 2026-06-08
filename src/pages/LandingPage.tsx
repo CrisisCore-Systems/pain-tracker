@@ -1,6 +1,14 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Download, Lock, Smartphone, FileText, ShieldCheck, ClipboardList } from 'lucide-react';
+import {
+  ArrowRight,
+  Download,
+  Lock,
+  Smartphone,
+  FileText,
+  ShieldCheck,
+  ClipboardList,
+} from 'lucide-react';
 import '../styles/pages/landing.css';
 import { LandingFooter } from '../components/landing';
 import {
@@ -81,9 +89,9 @@ const pathCards = [
   },
   {
     title: 'Use paper first',
-    text: 'Download a printable pain journal.',
-    href: '/resources/pain-diary-template-pdf',
-    cta: 'Download Printable Pain Journal',
+    text: 'Print a simple daily pain tracker before you commit to a longer workflow.',
+    href: '/resources/daily-pain-tracker-printable',
+    cta: 'Open Daily Pain Tracker Printable',
   },
   {
     title: 'Compare free templates first',
@@ -107,41 +115,53 @@ const pathCards = [
   {
     title: 'Review the privacy model',
     text: 'See how PainTracker.ca is built around local control.',
-    href: '/privacy-architecture',
-    cta: 'Read Privacy Architecture',
+    href: '/tracking-data-policy',
+    cta: 'Read Tracking Data Policy',
   },
 ] as const;
 
-const essentialGuides = [
+const freePainResourceLinks = [
   {
-    title: 'What to Include in a Pain Journal',
-    text: 'Use the highest-signal checklist before your next appointment so each entry is easier to review later.',
+    title: 'Pain tracking resources',
+    text: 'Use the resource hub as the central starting point for printables, guides, app paths, and privacy details.',
+    href: '/resources',
+    cta: 'Open resources hub',
+  },
+  {
+    title: 'Daily pain tracker printable',
+    text: 'Print a simple daily tracker for pain, flares, medication patterns, function, and notes.',
+    href: '/resources/daily-pain-tracker-printable',
+    cta: 'Open daily printable',
+  },
+  {
+    title: 'Chronic pain diary template',
+    text: 'Track longer term pain patterns across baseline days, flares, sleep, medication, and daily function.',
+    href: '/resources/chronic-pain-diary-template',
+    cta: 'Open chronic pain diary',
+  },
+  {
+    title: 'Pain scale chart printable',
+    text: 'Use a printable 0-10 reference so pain scores are easier to compare across entries and appointments.',
+    href: '/resources/pain-scale-chart-printable',
+    cta: 'Open pain scale chart',
+  },
+  {
+    title: 'What to include in a pain journal',
+    text: 'Use the checklist before appointments so entries stay useful without becoming too much to maintain.',
     href: '/resources/what-to-include-in-pain-journal',
-    cta: 'Open the guide',
+    cta: 'Open pain journal guide',
   },
   {
-    title: 'Pain Diary Template PDF',
-    text: 'Start with the free printable PDF when you need a no-email, paper-first tracking lane today.',
-    href: '/resources/pain-diary-template-pdf',
-    cta: 'Download the template',
+    title: 'Download PainTracker',
+    text: 'Install or open the private offline pain tracker when paper becomes hard to review or carry forward.',
+    href: '/download',
+    cta: 'Download PainTracker',
   },
   {
-    title: 'Best Pain Tracking Apps in 2026',
-    text: 'Compare paper, local-first apps, and no-account options before you commit your records to one workflow.',
-    href: '/pain-tracking-apps-comparison',
-    cta: 'See the comparison',
-  },
-  {
-    title: 'WorkSafeBC Pain Journal Template',
-    text: 'Use the local utility lane for injury documentation, work impact notes, and claim-facing symptom records.',
-    href: '/resources/worksafebc-pain-journal-template',
-    cta: 'Open WorkSafeBC template',
-  },
-  {
-    title: 'Zero-Knowledge Health Tracking FAQ',
-    text: 'Read the technical privacy FAQ if you want the no-cloud, local-first, and zero-knowledge boundary explained plainly.',
-    href: '/zero-knowledge-health-tracking-faq',
-    cta: 'Read the FAQ',
+    title: 'Tracking data policy',
+    text: 'Review what PainTracker stores locally, what it does not collect by default, and how exports are handled.',
+    href: '/tracking-data-policy',
+    cta: 'Read data policy',
   },
 ] as const;
 
@@ -153,7 +173,7 @@ export const LandingPage: React.FC = () => {
   const organizationSchema = generateOrganizationSchema();
   const webSiteSchema = generateWebSiteSchema();
   const faqSchema = generateFAQSchema(
-    homepageFaqs.map((faq) => ({ question: faq.question, answer: faq.answer }))
+    homepageFaqs.map(faq => ({ question: faq.question, answer: faq.answer }))
   );
   const combinedSchema = combineSchemas(organizationSchema, webSiteSchema, faqSchema);
 
@@ -204,14 +224,20 @@ export const LandingPage: React.FC = () => {
         Skip to main content
       </a>
 
-      <main id="main-content" role="main" className="landing-always-dark bg-slate-950 text-slate-100">
+      <main
+        id="main-content"
+        role="main"
+        className="landing-always-dark bg-slate-950 text-slate-100"
+      >
         <section className="border-b border-white/10">
           <div className="container mx-auto px-4 py-16 lg:py-20 text-center max-w-4xl">
             <h1 className="landing-headline landing-headline-xl mb-5 text-white">
               Track chronic pain privately, even offline.
             </h1>
             <p className="landing-subhead text-lg lg:text-xl mx-auto max-w-3xl mb-7">
-              PainTracker.ca helps you log pain levels, symptoms, medications, triggers, body locations, and daily function without creating an account. Your core records stay on your device unless you choose to export or share them.
+              PainTracker.ca helps you log pain levels, symptoms, medications, triggers, body
+              locations, and daily function without creating an account. Your core records stay on
+              your device unless you choose to export or share them.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4 mb-5">
               <Link
@@ -233,7 +259,8 @@ export const LandingPage: React.FC = () => {
               </Link>
             </div>
             <p className="text-sm text-slate-300">
-              No account. No cloud-default pain database. Designed to work offline after first load on supported browsers.
+              No account. No cloud-default pain database. Designed to work offline after first load
+              on supported browsers.
             </p>
             <div className="mt-5 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-slate-200">
               <Link
@@ -244,7 +271,11 @@ export const LandingPage: React.FC = () => {
                 Browse free pain tracker templates
                 <ArrowRight className="h-3.5 w-3.5" />
               </Link>
-              <a href="/assets/free-pain-tracking-starter-pack.zip" download="free-pain-tracking-starter-pack.zip" className="inline-flex items-center gap-2 hover:text-sky-300 transition-colors">
+              <a
+                href="/assets/free-pain-tracking-starter-pack.zip"
+                download="free-pain-tracking-starter-pack.zip"
+                className="inline-flex items-center gap-2 hover:text-sky-300 transition-colors"
+              >
                 Download the printable starter pack
                 <ArrowRight className="h-3.5 w-3.5" />
               </a>
@@ -270,7 +301,8 @@ export const LandingPage: React.FC = () => {
               Private by architecture, not by promise.
             </h2>
             <p className="landing-subhead text-center max-w-3xl mx-auto mb-8">
-              PainTracker.ca is built around local control. You can begin without an account, log pain records on your device, and export only when you choose.
+              PainTracker.ca is built around local control. You can begin without an account, log
+              pain records on your device, and export only when you choose.
             </p>
             <div className="mb-8">
               <img
@@ -284,29 +316,53 @@ export const LandingPage: React.FC = () => {
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 mb-6">
               <div className="rounded-xl border border-white/10 bg-slate-900/70 p-4">
                 <h3 className="font-semibold text-white mb-1">No account required</h3>
-                <p className="text-sm text-slate-300">Start tracking without creating a profile, email login, or cloud identity.</p>
+                <p className="text-sm text-slate-300">
+                  Start tracking without creating a profile, email login, or cloud identity.
+                </p>
               </div>
               <div className="rounded-xl border border-white/10 bg-slate-900/70 p-4">
                 <h3 className="font-semibold text-white mb-1">Local records</h3>
-                <p className="text-sm text-slate-300">Your core pain entries are stored on your device.</p>
+                <p className="text-sm text-slate-300">
+                  Your core pain entries are stored on your device.
+                </p>
               </div>
               <div className="rounded-xl border border-white/10 bg-slate-900/70 p-4">
                 <h3 className="font-semibold text-white mb-1">Offline capable</h3>
-                <p className="text-sm text-slate-300">The app is designed to keep working after first load when your connection is unreliable.</p>
+                <p className="text-sm text-slate-300">
+                  The app is designed to keep working after first load when your connection is
+                  unreliable.
+                </p>
               </div>
               <div className="rounded-xl border border-white/10 bg-slate-900/70 p-4">
                 <h3 className="font-semibold text-white mb-1">Export by choice</h3>
-                <p className="text-sm text-slate-300">Create a report only when you decide to share records with someone else.</p>
+                <p className="text-sm text-slate-300">
+                  Create a report only when you decide to share records with someone else.
+                </p>
               </div>
             </div>
             <ul className="grid gap-2 sm:grid-cols-2 text-sm text-slate-200">
-              <li className="inline-flex items-center gap-2"><Lock className="h-4 w-4 text-emerald-300" />No account gate.</li>
-              <li className="inline-flex items-center gap-2"><ShieldCheck className="h-4 w-4 text-emerald-300" />No central pain entry database.</li>
-              <li className="inline-flex items-center gap-2"><Smartphone className="h-4 w-4 text-emerald-300" />No required cloud login.</li>
-              <li className="inline-flex items-center gap-2"><FileText className="h-4 w-4 text-emerald-300" />No forced sharing.</li>
+              <li className="inline-flex items-center gap-2">
+                <Lock className="h-4 w-4 text-emerald-300" />
+                No account gate.
+              </li>
+              <li className="inline-flex items-center gap-2">
+                <ShieldCheck className="h-4 w-4 text-emerald-300" />
+                No central pain entry database.
+              </li>
+              <li className="inline-flex items-center gap-2">
+                <Smartphone className="h-4 w-4 text-emerald-300" />
+                No required cloud login.
+              </li>
+              <li className="inline-flex items-center gap-2">
+                <FileText className="h-4 w-4 text-emerald-300" />
+                No forced sharing.
+              </li>
             </ul>
             <div className="mt-8 flex flex-col sm:flex-row sm:flex-wrap items-center justify-center gap-3">
-              <Link to="/case-study" className="inline-flex items-center gap-2 rounded-xl bg-sky-500 px-4 py-2 text-sm font-medium text-slate-950 hover:bg-sky-400 transition-colors">
+              <Link
+                to="/case-study"
+                className="inline-flex items-center gap-2 rounded-xl bg-sky-500 px-4 py-2 text-sm font-medium text-slate-950 hover:bg-sky-400 transition-colors"
+              >
                 Read the case study
                 <ArrowRight className="h-4 w-4" />
               </Link>
@@ -337,8 +393,11 @@ export const LandingPage: React.FC = () => {
               Track the details that matter.
             </h2>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-              {trackingCards.map((card) => (
-                <article key={card.title} className="rounded-xl border border-white/10 bg-slate-900/70 p-4">
+              {trackingCards.map(card => (
+                <article
+                  key={card.title}
+                  className="rounded-xl border border-white/10 bg-slate-900/70 p-4"
+                >
                   <h3 className="font-semibold text-white mb-1.5">{card.title}</h3>
                   <p className="text-sm text-slate-300">{card.text}</p>
                 </article>
@@ -358,36 +417,47 @@ export const LandingPage: React.FC = () => {
 
         <section className="border-b border-white/10 bg-slate-900/45">
           <div className="container mx-auto px-4 py-14 lg:py-16 max-w-4xl text-center">
-            <h2 className="landing-headline landing-headline-md mb-4 text-white">Make pain easier to explain.</h2>
+            <h2 className="landing-headline landing-headline-md mb-4 text-white">
+              Make pain easier to explain.
+            </h2>
             <p className="landing-subhead text-lg">
-              Pain is hard to explain after the fact. Appointments are short. Memory is unreliable. Flares blur together. Important details disappear when you need them most.
+              Pain is hard to explain after the fact. Appointments are short. Memory is unreliable.
+              Flares blur together. Important details disappear when you need them most.
             </p>
             <p className="text-base text-slate-300 mt-5">
-              PainTracker.ca helps turn scattered pain experiences into structured records you can review, export, and explain.
+              PainTracker.ca helps turn scattered pain experiences into structured records you can
+              review, export, and explain.
             </p>
           </div>
         </section>
 
         <section className="border-b border-white/10">
           <div className="container mx-auto px-4 py-14 lg:py-16 max-w-4xl">
-            <h2 className="landing-headline landing-headline-md mb-4 text-white text-center">Share records only when you choose.</h2>
+            <h2 className="landing-headline landing-headline-md mb-4 text-white text-center">
+              Share records only when you choose.
+            </h2>
             <p className="landing-subhead text-center mb-5">
-              Create reports for appointments, physiotherapy, recovery tracking, workplace injury discussions, disability documentation, or personal review.
+              Create reports for appointments, physiotherapy, recovery tracking, workplace injury
+              discussions, disability documentation, or personal review.
             </p>
             <p className="text-center text-slate-200 mb-5">
-              PainTracker.ca helps organize your information. It does not decide what your records prove.
+              PainTracker.ca helps organize your information. It does not decide what your records
+              prove.
             </p>
             <div className="rounded-xl border border-amber-300/40 bg-amber-900/60 p-4 text-sm text-amber-100">
-              PainTracker.ca does not provide medical advice, diagnosis, treatment, legal advice, or guaranteed claim outcomes. Always review exports before sharing them.
+              PainTracker.ca does not provide medical advice, diagnosis, treatment, legal advice, or
+              guaranteed claim outcomes. Always review exports before sharing them.
             </div>
           </div>
         </section>
 
         <section className="border-b border-white/10 bg-slate-900/45">
           <div className="container mx-auto px-4 py-14 lg:py-16 max-w-5xl">
-            <h2 className="landing-headline landing-headline-md mb-7 text-white text-center">Choose your path</h2>
+            <h2 className="landing-headline landing-headline-md mb-7 text-white text-center">
+              Choose your path
+            </h2>
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {pathCards.map((path) => {
+              {pathCards.map(path => {
                 const cardContent = (
                   <>
                     <h3 className="text-white font-semibold mb-1.5">{path.title}</h3>
@@ -409,7 +479,11 @@ export const LandingPage: React.FC = () => {
                     {cardContent}
                   </a>
                 ) : (
-                  <Link key={path.href} to={path.href} className="rounded-xl border border-white/10 bg-slate-900/70 p-5 hover:border-sky-400/40 transition-colors">
+                  <Link
+                    key={path.href}
+                    to={path.href}
+                    className="rounded-xl border border-white/10 bg-slate-900/70 p-5 hover:border-sky-400/40 transition-colors"
+                  >
                     {cardContent}
                   </Link>
                 );
@@ -420,12 +494,16 @@ export const LandingPage: React.FC = () => {
 
         <section className="border-b border-white/10">
           <div className="container mx-auto px-4 py-14 lg:py-16 max-w-5xl">
-            <h2 className="landing-headline landing-headline-md mb-4 text-white text-center">Essential resources</h2>
+            <h2 className="landing-headline landing-headline-md mb-4 text-white text-center">
+              Free Pain Tracking Resources
+            </h2>
             <p className="landing-subhead text-center max-w-3xl mx-auto mb-8">
-              Start with the highest-signal guides if you want the shortest path from a printable sheet into private, appointment-ready records.
+              Use PainTracker digitally, print a simple daily tracker, or prepare better notes
+              before an appointment. These free resources help you record pain, flares, function,
+              medication patterns, and symptom changes without giving up unnecessary personal data.
             </p>
             <div className="grid gap-4 md:grid-cols-2">
-              {essentialGuides.map((guide) => (
+              {freePainResourceLinks.map(guide => (
                 <Link
                   key={guide.href}
                   to={guide.href}
@@ -445,20 +523,31 @@ export const LandingPage: React.FC = () => {
 
         <section className="border-b border-white/10">
           <div className="container mx-auto px-4 py-14 lg:py-16 max-w-4xl text-center">
-            <h2 className="landing-headline landing-headline-md mb-4 text-white">Built by CrisisCore Systems.</h2>
+            <h2 className="landing-headline landing-headline-md mb-4 text-white">
+              Built by CrisisCore Systems.
+            </h2>
             <p className="landing-subhead mb-0">
-              PainTracker.ca is built using Protective Computing principles: local control, data minimization, offline resilience, user controlled export, and privacy as architecture instead of decoration.
+              PainTracker.ca is built using Protective Computing principles: local control, data
+              minimization, offline resilience, user controlled export, and privacy as architecture
+              instead of decoration.
             </p>
           </div>
         </section>
 
         <section className="border-b border-white/10 bg-slate-900/45">
           <div className="container mx-auto px-4 py-14 lg:py-16 max-w-4xl">
-            <h2 className="landing-headline landing-headline-md mb-8 text-white text-center">FAQ</h2>
+            <h2 className="landing-headline landing-headline-md mb-8 text-white text-center">
+              FAQ
+            </h2>
             <div className="space-y-3">
-              {homepageFaqs.map((faq) => (
-                <details key={faq.question} className="rounded-xl border border-white/10 bg-slate-900/70 p-4">
-                  <summary className="cursor-pointer font-semibold text-white">{faq.question}</summary>
+              {homepageFaqs.map(faq => (
+                <details
+                  key={faq.question}
+                  className="rounded-xl border border-white/10 bg-slate-900/70 p-4"
+                >
+                  <summary className="cursor-pointer font-semibold text-white">
+                    {faq.question}
+                  </summary>
                   <p className="text-sm text-slate-300 mt-3">{faq.answer}</p>
                 </details>
               ))}
@@ -473,14 +562,21 @@ export const LandingPage: React.FC = () => {
               Documentation under pressure, without surrendering control.
             </h2>
             <p className="landing-subhead mb-7">
-              Log what you can. Partial records are still useful. Your record does not need to be perfect to be helpful.
+              Log what you can. Partial records are still useful. Your record does not need to be
+              perfect to be helpful.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <Link to="/start" className="btn-cta-primary inline-flex items-center justify-center gap-2 px-7 py-3">
+              <Link
+                to="/start"
+                className="btn-cta-primary inline-flex items-center justify-center gap-2 px-7 py-3"
+              >
                 Start Tracking Free
                 <ArrowRight className="h-4 w-4" />
               </Link>
-              <Link to="/download" className="btn-cta-outline inline-flex items-center justify-center gap-2 px-7 py-3">
+              <Link
+                to="/download"
+                className="btn-cta-outline inline-flex items-center justify-center gap-2 px-7 py-3"
+              >
                 Download PainTracker Free
               </Link>
             </div>

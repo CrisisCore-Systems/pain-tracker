@@ -18,11 +18,12 @@ ogImage: https://cdn.hashnode.com/res/hashnode/image/upload/v1767292787211/c615c
 
 Choose the path that matches your goal: track pain privately, explore the technical architecture, or follow WorkSafeBC documentation workflows.
 
-If you want the fastest practical entry point, start with the [Daily Pain Tracker
+If you want the fastest practical entry point, start with the [Pain Tracking
+Resources hub](https://www.paintracker.ca/resources), the [Daily Pain Tracker
 Printable](https://www.paintracker.ca/resources/daily-pain-tracker-printable),
-the [Doctor Visit Pain Summary
-Template](https://www.paintracker.ca/resources/doctor-visit-pain-summary-template),
-or the [Pain Tracker download page](https://www.paintracker.ca/download).
+the [Chronic Pain Diary
+Template](https://www.paintracker.ca/resources/chronic-pain-diary-template),
+or the [PainTracker download page](https://www.paintracker.ca/download).
 
 ---
 
@@ -32,9 +33,10 @@ Start here if your goal is day-to-day symptom tracking, appointment prep, and pr
 
 - [Pain Tracker: Privacy-First, Trauma-Informed Pain App](https://blog.paintracker.ca/paintracker-privacy-first-trauma-informed-pain-app)
 - [Getting Started with PainTracker: Your First Week of Symptom Tracking](https://blog.paintracker.ca/getting-started)
-- [Open the App](https://paintracker.ca/app)
+- [Download PainTracker](https://www.paintracker.ca/download)
 - [Daily Pain Tracker Printable](https://www.paintracker.ca/resources/daily-pain-tracker-printable)
 - [What to Include in a Pain Journal](https://www.paintracker.ca/resources/what-to-include-in-pain-journal)
+- [Tracking Data Policy](https://www.paintracker.ca/tracking-data-policy)
 
 ---
 
@@ -55,5 +57,6 @@ Start here if your goal is WorkSafeBC-ready documentation using structured pain 
 - [Generate WorkSafeBC-Ready Documentation with Pain Tracker](https://blog.paintracker.ca/stop-filling-worksafebc-forms-manually-this-auto-generates-them-for-free)
 - [How Pain Tracker Pro Streamlines WorkSafeBC Claims: A Composite Case Study](https://blog.paintracker.ca/how-pain-tracker-pro-streamlines-worksafebc-claims-a-composite-case-study)
 - [WorkSafeBC Documentation Workflows: Start Here](https://blog.paintracker.ca/worksafebc-documentation-workflows-start-here)
-- [Doctor Visit Pain Summary Template](https://www.paintracker.ca/resources/doctor-visit-pain-summary-template)
+- [Chronic Pain Diary Template](https://www.paintracker.ca/resources/chronic-pain-diary-template)
+- [What to Include in a Pain Journal](https://www.paintracker.ca/resources/what-to-include-in-pain-journal)
 - [Daily Pain Tracker Printable](https://www.paintracker.ca/resources/daily-pain-tracker-printable)

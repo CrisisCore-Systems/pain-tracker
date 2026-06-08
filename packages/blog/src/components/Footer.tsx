@@ -14,16 +14,29 @@ export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="relative border-t border-border/50 bg-gradient-to-b from-background via-background to-muted/20 overflow-hidden" role="contentinfo">
+    <footer
+      className="relative border-t border-border/50 bg-gradient-to-b from-background via-background to-muted/20 overflow-hidden"
+      role="contentinfo"
+    >
       {/* Background decoration */}
-      <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl pointer-events-none" aria-hidden="true" />
-      <div className="absolute top-0 right-1/4 w-64 h-64 bg-accent/5 rounded-full blur-3xl pointer-events-none" aria-hidden="true" />
-      
+      <div
+        className="absolute bottom-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl pointer-events-none"
+        aria-hidden="true"
+      />
+      <div
+        className="absolute top-0 right-1/4 w-64 h-64 bg-accent/5 rounded-full blur-3xl pointer-events-none"
+        aria-hidden="true"
+      />
+
       <div className="container-blog-wide relative py-16 md:py-20 lg:py-24">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-8">
           {/* Brand Section */}
           <div className="lg:col-span-5 lg:pr-8">
-            <Link href="/" className="inline-flex items-center gap-3 mb-6 group" aria-label={`${siteConfig.name} - Go to homepage`}>
+            <Link
+              href="/"
+              className="inline-flex items-center gap-3 mb-6 group"
+              aria-label={`${siteConfig.name} - Go to homepage`}
+            >
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary via-primary to-accent flex items-center justify-center shadow-lg shadow-primary/20 group-hover:scale-110 group-hover:shadow-xl group-hover:shadow-primary/30 transition-all duration-300">
                 <svg
                   className="h-6 w-6 text-white drop-shadow-sm"
@@ -38,13 +51,15 @@ export function Footer() {
               </div>
               <div>
                 <span className="text-xl font-bold tracking-tight block">{siteConfig.name}</span>
-                <span className="text-[11px] text-muted-foreground font-semibold uppercase tracking-wider">Blog</span>
+                <span className="text-[11px] text-muted-foreground font-semibold uppercase tracking-wider">
+                  Blog
+                </span>
               </div>
             </Link>
             <p className="text-muted-foreground max-w-md leading-relaxed mb-8">
               {siteConfig.description}
             </p>
-            
+
             {/* Social Links */}
             <div className="flex items-center gap-3">
               <Link
@@ -80,8 +95,17 @@ export function Footer() {
                 rel="noopener noreferrer"
                 aria-label="Follow us on Hashnode"
               >
-                <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 337 337" aria-hidden="true">
-                  <path fillRule="evenodd" clipRule="evenodd" d="M23.155 112.598c-30.873 30.874-30.873 80.93 0 111.804l89.443 89.443c30.874 30.873 80.93 30.873 111.804 0l89.443-89.443c30.873-30.874 30.873-80.93 0-111.804l-89.443-89.443c-30.874-30.873-80.93-30.873-111.804 0l-89.443 89.443zm184.476 95.033c21.612-21.611 21.612-56.651 0-78.262-21.611-21.612-56.651-21.612-78.262 0-21.612 21.611-21.612 56.651 0 78.262 21.611 21.612 56.651 21.612 78.262 0z" />
+                <svg
+                  className="h-5 w-5"
+                  fill="currentColor"
+                  viewBox="0 0 337 337"
+                  aria-hidden="true"
+                >
+                  <path
+                    fillRule="evenodd"
+                    clipRule="evenodd"
+                    d="M23.155 112.598c-30.873 30.874-30.873 80.93 0 111.804l89.443 89.443c30.874 30.873 80.93 30.873 111.804 0l89.443-89.443c30.873-30.874 30.873-80.93 0-111.804l-89.443-89.443c-30.874-30.873-80.93-30.873-111.804 0l-89.443 89.443zm184.476 95.033c21.612-21.611 21.612-56.651 0-78.262-21.611-21.612-56.651-21.612-78.262 0-21.612 21.611-21.612 56.651 0 78.262 21.611 21.612 56.651 21.612 78.262 0z"
+                  />
                 </svg>
               </Link>
             </div>
@@ -135,43 +159,43 @@ export function Footer() {
           {/* Root-Domain Pillar Pages — cross-domain authority transfer */}
           <div className="lg:col-span-2">
             <h3 className="text-xs font-bold uppercase tracking-widest text-foreground/70 mb-5">
-              Pillar Guides
+              Resource Guides
             </h3>
             <ul className="space-y-4">
               <li>
                 <a
-                  href="https://www.paintracker.ca/offline-pain-diary"
+                  href="https://www.paintracker.ca/resources"
                   className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium inline-flex items-center group"
                 >
                   <FooterLinkAccent />
-                  <span>Offline Pain Diary</span>
+                  <span>Pain Tracking Resources</span>
                 </a>
               </li>
               <li>
                 <a
-                  href="https://www.paintracker.ca/private-pain-tracker"
+                  href="https://www.paintracker.ca/resources/daily-pain-tracker-printable"
                   className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium inline-flex items-center group"
                 >
                   <FooterLinkAccent />
-                  <span>Private Pain Tracker</span>
+                  <span>Daily Pain Tracker Printable</span>
                 </a>
               </li>
               <li>
                 <a
-                  href="https://www.paintracker.ca/pain-log-for-doctors"
+                  href="https://www.paintracker.ca/resources/what-to-include-in-pain-journal"
                   className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium inline-flex items-center group"
                 >
                   <FooterLinkAccent />
-                  <span>Pain Log for Doctors</span>
+                  <span>What to Include in a Pain Journal</span>
                 </a>
               </li>
               <li>
                 <a
-                  href="https://www.paintracker.ca/track-chronic-pain-symptoms"
+                  href="https://www.paintracker.ca/resources/chronic-pain-diary-template"
                   className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium inline-flex items-center group"
                 >
                   <FooterLinkAccent />
-                  <span>Track Chronic Pain</span>
+                  <span>Chronic Pain Diary Template</span>
                 </a>
               </li>
             </ul>
@@ -185,11 +209,11 @@ export function Footer() {
             <ul className="space-y-4">
               <li>
                 <a
-                  href="https://www.paintracker.ca"
+                  href="https://www.paintracker.ca/"
                   className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium inline-flex items-center group"
                 >
                   <FooterLinkAccent />
-                  <span>Homepage</span>
+                  <span>Free Private Offline Pain Tracker</span>
                 </a>
               </li>
               <li>
@@ -222,30 +246,74 @@ export function Footer() {
                     className="w-0 shrink-0 group-hover:w-2 h-0.5 bg-primary mr-0 group-hover:mr-0 transition-all duration-200"
                   />
                   <span>Open Source on GitHub</span>
-                  <svg className="w-4 h-4 opacity-50 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  <svg
+                    className="w-4 h-4 opacity-50 group-hover:opacity-100 transition-opacity"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                    />
                   </svg>
                 </Link>
               </li>
             </ul>
-            
+
             {/* Trust badges */}
             <div className="mt-8 flex flex-wrap gap-3">
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted/60 text-xs font-medium text-muted-foreground">
-                <svg className="w-4 h-4 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                <svg
+                  className="w-4 h-4 text-success"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                  />
                 </svg>
                 Privacy-first
               </div>
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted/60 text-xs font-medium text-muted-foreground">
-                <svg className="w-4 h-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0" />
+                <svg
+                  className="w-4 h-4 text-accent"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"
+                  />
                 </svg>
                 Offline-capable
               </div>
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted/60 text-xs font-medium text-muted-foreground">
-                <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                <svg
+                  className="w-4 h-4 text-primary"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                  />
                 </svg>
                 Empathy-driven
               </div>
@@ -260,8 +328,13 @@ export function Footer() {
           </p>
           <p className="text-sm text-muted-foreground flex items-center gap-2">
             <span>Built with</span>
-            <span className="inline-flex items-center justify-center w-6 h-6 rounded-lg bg-gradient-to-br from-red-500 to-pink-500 shadow-lg shadow-pink-500/20 animate-pulse" style={{ animationDuration: '2s' }}>
-              <span className="text-white text-xs" aria-hidden="true">❤️</span>
+            <span
+              className="inline-flex items-center justify-center w-6 h-6 rounded-lg bg-gradient-to-br from-red-500 to-pink-500 shadow-lg shadow-pink-500/20 animate-pulse"
+              style={{ animationDuration: '2s' }}
+            >
+              <span className="text-white text-xs" aria-hidden="true">
+                ❤️
+              </span>
             </span>
             <span className="sr-only">love</span>
             <span>for the chronic pain community</span>

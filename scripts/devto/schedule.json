@@ -95,153 +95,153 @@
     "target_link_map": {
       "devto-series-start-here": {
         "path": "/resources",
-        "anchorText": "chronic pain tracking resources",
-        "cue": "If you are starting from implementation evidence"
+        "anchorText": "pain tracking resources",
+        "cue": "Start from the resource hub"
       },
       "devto-sync-conflict-handling-offline-first-pwas": {
         "path": "/download",
-        "anchorText": "download a private pain tracker",
-        "cue": "See the production app behavior"
+        "anchorText": "download PainTracker",
+        "cue": "Install the private offline-capable app"
       },
       "devto-openclaw-boundary-problem": {
         "path": "/resources/what-to-include-in-pain-journal",
         "anchorText": "what to include in a pain journal",
-        "cue": "Use this practical checklist"
+        "cue": "Keep records useful without overloading them"
       },
       "privacy-first-default-standard": {
-        "path": "/resources/pain-tracking-for-migraines",
-        "anchorText": "pain tracking for migraines",
-        "cue": "Condition-specific private tracking example"
+        "path": "/tracking-data-policy",
+        "anchorText": "tracking data policy",
+        "cue": "Check the data boundary"
       },
       "privacy-preserving-analytics": {
-        "path": "/resources/pain-tracking-for-fibromyalgia",
-        "anchorText": "pain tracking for fibromyalgia",
-        "cue": "Multi-symptom tracking without surveillance"
+        "path": "/resources/chronic-pain-diary-template",
+        "anchorText": "chronic pain diary template",
+        "cue": "Track longer patterns"
       },
       "performance-under-pressure": {
-        "path": "/resources/chronic-pain-flare-tracker",
-        "anchorText": "chronic pain flare tracker",
-        "cue": "Patient-facing flare logging path"
+        "path": "/resources/pain-scale-chart-printable",
+        "anchorText": "pain scale chart printable",
+        "cue": "Use a consistent pain scale"
       },
       "testing-across-the-stack": {
-        "path": "/resources/free-pain-tracker-app",
-        "anchorText": "free private pain tracker app",
-        "cue": "Validate the local-first app path"
+        "path": "/tracking-data-policy",
+        "anchorText": "tracking data policy",
+        "cue": "Check the data boundary"
       },
       "testing-co-occurrence": {
-        "path": "/resources/pain-tracking-for-lupus",
-        "anchorText": "pain tracking for lupus flares",
-        "cue": "Multi-system flare tracking example"
+        "path": "/resources/chronic-pain-diary-template",
+        "anchorText": "chronic pain diary template",
+        "cue": "Track longer patterns"
       },
       "testing-recovery": {
-        "path": "/resources/pain-tracking-after-surgery",
-        "anchorText": "pain tracking after surgery",
-        "cue": "Recovery-oriented tracking guide"
+        "path": "/resources/daily-pain-tracker-printable",
+        "anchorText": "daily pain tracker printable",
+        "cue": "Use a paper-first fallback"
       },
       "cross-crisis-calibration": {
-        "path": "/resources/pain-tracking-for-migraines",
-        "anchorText": "pain tracking for migraines",
-        "cue": "Sensory-load tracking example"
+        "path": "/resources/pain-scale-chart-printable",
+        "anchorText": "pain scale chart printable",
+        "cue": "Use a consistent pain scale"
       },
       "testing-the-testing": {
-        "path": "/resources/pain-tracking-for-back-pain",
-        "anchorText": "pain tracking for back pain",
-        "cue": "Concrete pattern-validation guide"
+        "path": "/resources/pain-scale-chart-printable",
+        "anchorText": "pain scale chart printable",
+        "cue": "Use a consistent pain scale"
       },
       "internationalization-of-trauma": {
-        "path": "/resources/doctor-visit-pain-summary-template",
-        "anchorText": "pain journal for appointments",
-        "cue": "Appointment-ready structure"
+        "path": "/resources/what-to-include-in-pain-journal",
+        "anchorText": "what to include in a pain journal",
+        "cue": "Keep records useful without overloading them"
       },
       "whitepaper-v1-3-0": {
-        "path": "/pricing",
-        "anchorText": "PainTracker pricing and upgrades",
-        "cue": "Support sustainability without surveillance"
+        "path": "/resources",
+        "anchorText": "pain tracking resources",
+        "cue": "Start from the resource hub"
       },
       "overton-framework-doi-backed": {
-        "path": "/pricing",
-        "anchorText": "PainTracker pricing and upgrades",
-        "cue": "Support ongoing protocol work"
+        "path": "/tracking-data-policy",
+        "anchorText": "tracking data policy",
+        "cue": "Check the data boundary"
       },
       "devto-architecting-vulnerability": {
         "path": "/resources",
-        "anchorText": "private offline pain tracker resources",
-        "cue": "Human-state-first implementation references"
+        "anchorText": "pain tracking resources",
+        "cue": "Start from the resource hub"
       },
       "anchor-preview-mode-first-agent-plans-as-prs": {
         "path": "/download",
-        "anchorText": "download a private pain tracker",
-        "cue": "Reference implementation download"
+        "anchorText": "download PainTracker",
+        "cue": "Install the private offline-capable app"
       },
       "micro-coercion-of-speed": {
         "path": "/resources/what-to-include-in-pain-journal",
         "anchorText": "what to include in a pain journal",
-        "cue": "Reduce cognitive load with this template"
+        "cue": "Keep records useful without overloading them"
       },
       "coercion-resistant-ux": {
-        "path": "/resources/pain-tracking-for-arthritis",
-        "anchorText": "pain tracking for arthritis",
-        "cue": "Appointment-oriented condition guide"
+        "path": "/resources/daily-pain-tracker-printable",
+        "anchorText": "daily pain tracker printable",
+        "cue": "Use a paper-first fallback"
       },
       "friction-prerequisite-ui": {
         "path": "/resources/daily-pain-tracker-printable",
-        "anchorText": "free pain journal templates",
-        "cue": "Printable flow with intentional friction"
+        "anchorText": "daily pain tracker printable",
+        "cue": "Use a paper-first fallback"
       },
       "service-worker-failure-modes": {
-        "path": "/resources/free-pain-tracker-app",
-        "anchorText": "free private pain tracker app",
-        "cue": "Offline app guide for users"
+        "path": "/download",
+        "anchorText": "download PainTracker",
+        "cue": "Install the private offline-capable app"
       },
       "rollback-patterns-offline-first-pwas": {
-        "path": "/resources/pain-tracking-for-nerve-pain",
-        "anchorText": "pain tracking for nerve pain",
-        "cue": "Long-running local-record example"
+        "path": "/download",
+        "anchorText": "download PainTracker",
+        "cue": "Install the private offline-capable app"
       },
       "testing-indexeddb-schema-migrations": {
-        "path": "/resources/pain-tracking-for-ms",
-        "anchorText": "pain tracking for multiple sclerosis",
-        "cue": "Long-horizon symptom tracking example"
+        "path": "/resources/chronic-pain-diary-template",
+        "anchorText": "chronic pain diary template",
+        "cue": "Track longer patterns"
       },
       "trust-boundaries-client-side-health-apps": {
-        "path": "/resources/pain-tracking-for-endometriosis",
-        "anchorText": "pain tracking for endometriosis",
-        "cue": "Sensitive-condition tracking guide"
+        "path": "/tracking-data-policy",
+        "anchorText": "tracking data policy",
+        "cue": "Check the data boundary"
       },
       "offline-queue-replay-idempotency": {
-        "path": "/resources/pain-management-journal",
-        "anchorText": "private pain management journal",
-        "cue": "Local journaling path"
+        "path": "/download",
+        "anchorText": "download PainTracker",
+        "cue": "Install the private offline-capable app"
       },
       "proofvault-trust-case-release-artifact": {
-        "path": "/pricing",
-        "anchorText": "PainTracker pricing and upgrades",
-        "cue": "Funding trust evidence upkeep"
+        "path": "/resources",
+        "anchorText": "pain tracking resources",
+        "cue": "Start from the resource hub"
       },
       "worksafebc-ready-audit": {
-        "path": "/resources/pain-diary-for-workers-compensation",
-        "anchorText": "pain diary for workers' compensation",
-        "cue": "Workers' compensation documentation guide"
+        "path": "/resources/what-to-include-in-pain-journal",
+        "anchorText": "what to include in a pain journal",
+        "cue": "Keep records useful without overloading them"
       },
       "protective-computing-not-privacy-theater": {
-        "path": "/resources/pain-tracking-for-crps",
-        "anchorText": "pain tracking for CRPS",
-        "cue": "Condition guide backed by structure"
+        "path": "/tracking-data-policy",
+        "anchorText": "tracking data policy",
+        "cue": "Check the data boundary"
       },
       "subpoena-proofing-zero-knowledge": {
-        "path": "/resources/pain-diary-for-long-term-disability",
-        "anchorText": "pain diary for long-term disability",
-        "cue": "User-controlled documentation boundary"
+        "path": "/tracking-data-policy",
+        "anchorText": "tracking data policy",
+        "cue": "Check the data boundary"
       },
       "stability-assumption-hidden-defect-source": {
-        "path": "/resources/pain-tracking-for-sciatica",
-        "anchorText": "pain tracking for sciatica",
-        "cue": "Degraded-condition tracking example"
+        "path": "/resources/chronic-pain-diary-template",
+        "anchorText": "chronic pain diary template",
+        "cue": "Track longer patterns"
       },
       "protective-legitimacy-score-how-it-works": {
-        "path": "/resources/best-pain-tracking-app",
-        "anchorText": "best pain tracking app criteria",
-        "cue": "Structural evaluation checklist"
+        "path": "/resources",
+        "anchorText": "pain tracking resources",
+        "cue": "Start from the resource hub"
       }
     }
   },

@@ -5,7 +5,7 @@ tags: protectivecomputing, architecture, privacy, webdev
 cover_image:
 ---
 <!-- pain-tracker:target-link:start -->
-> Condition guide backed by structure: [pain tracking for CRPS](https://paintracker.ca/resources/pain-tracking-for-crps)
+> Check the data boundary: [tracking data policy](https://paintracker.ca/tracking-data-policy)
 <!-- pain-tracker:target-link:end -->
 > Companion reading: if you want the fuller Core v1.0 pattern definitions,
 > conformance framing, and PLS links, read

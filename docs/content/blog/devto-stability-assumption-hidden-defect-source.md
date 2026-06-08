@@ -6,7 +6,7 @@ tags: architecture, privacy, offlinefirst, security
 cover_image:
 ---
 <!-- pain-tracker:target-link:start -->
-> Degraded-condition tracking example: [pain tracking for sciatica](https://paintracker.ca/resources/pain-tracking-for-sciatica)
+> Track longer patterns: [chronic pain diary template](https://paintracker.ca/resources/chronic-pain-diary-template)
 <!-- pain-tracker:target-link:end -->
 If you have already read
 [Architecting for Vulnerability: Introducing Protective Computing Core v1.0](https://dev.to/crisiscoresystems/architecting-for-vulnerability-introducing-protective-computing-core-v10-91g)

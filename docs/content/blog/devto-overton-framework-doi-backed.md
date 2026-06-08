@@ -10,7 +10,7 @@ canonical_url: "https://github.com/CrisisCore-Systems/pain-tracker"
 published: true
 ---
 <!-- pain-tracker:target-link:start -->
-> Support ongoing protocol work: [PainTracker pricing and upgrades](https://paintracker.ca/pricing)
+> Check the data boundary: [tracking data policy](https://paintracker.ca/tracking-data-policy)
 <!-- pain-tracker:target-link:end -->
 If you want the trust and release path instead of a single announcement, read this sequence:
 

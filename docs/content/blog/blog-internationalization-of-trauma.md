@@ -1,5 +1,5 @@
 <!-- pain-tracker:target-link:start -->
-> Appointment-ready structure: [pain journal for appointments](https://paintracker.ca/resources/doctor-visit-pain-summary-template)
+> Keep records useful without overloading them: [what to include in a pain journal](https://paintracker.ca/resources/what-to-include-in-pain-journal)
 <!-- pain-tracker:target-link:end -->
 # Internationalization of Trauma: Testing Across Cultural Contexts
 

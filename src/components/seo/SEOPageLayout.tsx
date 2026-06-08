@@ -30,7 +30,10 @@ import {
 } from '../../lib/seo';
 import { ResourceCtaStack } from './ResourceCtaStack';
 import { ResourceOutcomeBridge } from './ResourceOutcomeBridge';
-import { RelatedPainResourceLinks } from './RelatedPainResourceLinks';
+import {
+  RelatedPainResourceLinks,
+  inferRelatedPainResourceTopic,
+} from './RelatedPainResourceLinks';
 import { ResourceWorkflowSteps, type ResourcePageIntent } from './ResourceWorkflowSteps';
 import {
   trackResourcePrintableDownloadClick,
@@ -121,6 +124,7 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
   const resourcePath = content.canonicalPath ?? '/resources/' + content.slug;
   const canonicalUrl = `${defaultSEOConfig.siteUrl}${resourcePath}`;
   const resourceIntent = inferResourceIntent(content.slug);
+  const relatedResourceTopic = inferRelatedPainResourceTopic(content.slug);
 
   const trackStartClick = (resourceCtaLocation: string, routeTarget = '/start') => {
     trackResourceStartTrackingFreeClick({
@@ -538,6 +542,7 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
 
         {/* ===== SECTION 5: Internal Authority Links ===== */}
         <RelatedPainResourceLinks
+          topic={relatedResourceTopic}
           links={content.relatedLinks}
           className="py-16 bg-slate-900"
           maxWidthClassName="max-w-4xl"

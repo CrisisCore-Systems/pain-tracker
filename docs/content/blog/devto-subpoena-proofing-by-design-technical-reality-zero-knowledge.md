@@ -9,7 +9,7 @@ tags:
 published: false
 ---
 <!-- pain-tracker:target-link:start -->
-> User-controlled documentation boundary: [pain diary for long-term disability](https://paintracker.ca/resources/pain-diary-for-long-term-disability)
+> Check the data boundary: [tracking data policy](https://paintracker.ca/tracking-data-policy)
 <!-- pain-tracker:target-link:end -->
 If you want the short Layer 1 path into this argument, read these first:
 

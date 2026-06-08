@@ -1,5 +1,5 @@
 <!-- pain-tracker:target-link:start -->
-> Concrete pattern-validation guide: [pain tracking for back pain](https://paintracker.ca/resources/pain-tracking-for-back-pain)
+> Use a consistent pain scale: [pain scale chart printable](https://paintracker.ca/resources/pain-scale-chart-printable)
 <!-- pain-tracker:target-link:end -->
 # Testing the Testing: Validating That Your Crisis Simulation Actually Matches Reality
 

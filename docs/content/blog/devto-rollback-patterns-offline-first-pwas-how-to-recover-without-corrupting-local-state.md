@@ -10,7 +10,7 @@ published: false
 canonical_url: "https://github.com/CrisisCore-Systems/pain-tracker"
 ---
 <!-- pain-tracker:target-link:start -->
-> Long-running local-record example: [pain tracking for nerve pain](https://paintracker.ca/resources/pain-tracking-for-nerve-pain)
+> Install the private offline-capable app: [download PainTracker](https://paintracker.ca/download)
 <!-- pain-tracker:target-link:end -->
 This is the second stop in the failure-mode and testing path.
 

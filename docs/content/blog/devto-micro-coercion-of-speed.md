@@ -9,7 +9,7 @@ tags:
 published: true
 ---
 <!-- pain-tracker:target-link:start -->
-> Reduce cognitive load with this template: [what to include in a pain journal](https://paintracker.ca/resources/what-to-include-in-pain-journal)
+> Keep records useful without overloading them: [what to include in a pain journal](https://paintracker.ca/resources/what-to-include-in-pain-journal)
 <!-- pain-tracker:target-link:end -->
 Modern software tools promise a simple future: remove friction, increase velocity, ship faster.
 

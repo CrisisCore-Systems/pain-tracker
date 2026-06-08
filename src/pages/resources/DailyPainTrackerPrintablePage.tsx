@@ -51,7 +51,6 @@ import {
   ResourceOutcomeBridge,
   ResourceWorkflowSteps,
   RelatedPainResourceLinks,
-  mergeRelatedPainResourceLinks,
 } from '../../components/seo';
 import '../../styles/pages/landing.css';
 
@@ -310,38 +309,36 @@ const FAQS = [
   },
 ];
 
-const RELATED_LINKS = mergeRelatedPainResourceLinks([
+const RELATED_LINKS = [
   {
-    title: 'Pain Diary Template PDF',
-    description: 'Comprehensive multi-day format with weekly summaries for detailed tracking',
-    href: '/resources/pain-diary-template-pdf',
+    title: 'chronic pain diary template',
+    description:
+      'Use a longer diary when one-day sheets are not enough to show baseline and flare patterns.',
+    href: '/resources/chronic-pain-diary-template',
   },
   {
-    title: 'Weekly Pain Log PDF',
-    description: '7-day spread format to see your weekly patterns at a glance',
-    href: '/resources/weekly-pain-log-pdf',
+    title: 'what to include in a pain journal',
+    description: 'Check which details are useful before you add more fields to each daily entry.',
+    href: '/resources/what-to-include-in-pain-journal',
   },
   {
-    title: 'Symptom Tracker Printable',
-    description: 'Track beyond pain: fatigue, sleep quality, mood, and functioning',
-    href: '/resources/symptom-tracker-printable',
-  },
-  {
-    title: 'Pain Scale Chart',
-    description: 'Visual 0-10 NRS reference for consistent pain ratings',
+    title: 'pain scale chart printable',
+    description: 'Pair the daily sheet with a 0-10 reference for more consistent pain scores.',
     href: '/resources/pain-scale-chart-printable',
   },
   {
-    title: 'How to Track Pain for Doctors',
-    description: 'What information your doctor actually uses from pain logs',
-    href: '/resources/how-to-track-pain-for-doctors',
+    title: 'download PainTracker',
+    description:
+      'Move into the offline-capable app when paper becomes hard to carry, review, or summarize.',
+    href: '/download',
   },
   {
-    title: 'Documenting Pain for Disability',
-    description: 'Build documentation that supports your claim',
-    href: '/resources/documenting-pain-for-disability-claim',
+    title: 'pain tracking resources',
+    description:
+      'Return to the hub for more printable, appointment, privacy, and app-focused resources.',
+    href: '/resources',
   },
-]);
+];
 
 // ---------------------------------------------------------------------------
 // Reusable sub-components
@@ -989,7 +986,7 @@ export const DailyPainTrackerPrintablePage: React.FC = () => {
         </section>
 
         {/* ═══ RELATED RESOURCES ═══ */}
-        <RelatedPainResourceLinks links={RELATED_LINKS} />
+        <RelatedPainResourceLinks topic="printable" links={RELATED_LINKS} />
 
         <ResourceCtaStack
           intent="printable"

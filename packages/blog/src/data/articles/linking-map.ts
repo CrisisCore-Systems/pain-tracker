@@ -5,37 +5,41 @@
  *
  * Every blog article gets a baseline authority path plus a standardized
  * high-intent resource block:
- *   1. Contextual pillar link -> root domain (authority transfer)
+ *   1. Contextual resource link -> root domain (authority transfer)
  *   2. Related article link -> blog subdomain (topical clustering)
  *   3. App CTA -> root app entrypoint (rendered by page component)
- *   4. Core resource links -> printables, pain-journal guide, comparison page
+ *   4. Core resource links -> printables, pain-journal guide, policy, download, app
  *
  * @see docs/seo/SUBDOMAIN_LINKING_ARCHITECTURE.md
  */
 
 import type { InternalLinks } from './types';
 
+// Current targets are resource-cluster URLs. PILLAR_* names remain for API stability.
+
 // ── Root-domain pillar URLs ──────────────────────────────────────────
 
 export const PILLAR_URLS = {
-  offline: 'https://www.paintracker.ca/offline-pain-diary',
-  privacy: 'https://www.paintracker.ca/private-pain-tracker',
-  clinical: 'https://www.paintracker.ca/pain-log-for-doctors',
-  chronic: 'https://www.paintracker.ca/track-chronic-pain-symptoms',
+  offline: 'https://www.paintracker.ca/',
+  privacy: 'https://www.paintracker.ca/tracking-data-policy',
+  clinical: 'https://www.paintracker.ca/resources/what-to-include-in-pain-journal',
+  chronic: 'https://www.paintracker.ca/resources/chronic-pain-diary-template',
 } as const;
 
 export const PILLAR_LABELS = {
-  offline: 'Offline Pain Diary',
-  privacy: 'Private Pain Tracker',
-  clinical: 'Pain Log for Doctors',
-  chronic: 'Track Chronic Pain Symptoms',
+  offline: 'Free Private Offline Pain Tracker',
+  privacy: 'Tracking Data Policy',
+  clinical: 'What to Include in a Pain Journal',
+  chronic: 'Chronic Pain Diary Template',
 } as const;
 
-export const APP_CTA_URL = 'https://www.paintracker.ca/start';
+export const APP_CTA_URL = 'https://www.paintracker.ca/';
 
 // ── Per-article linking directives ───────────────────────────────────
 
 export const linkingMap: Record<string, InternalLinks> = {
+  // Legacy article slugs below link to current resource-cluster targets.
+
   // ── Pillar articles (link to their root-domain counterpart) ────────
   'offline-pain-diary': {
     pillarUrl: PILLAR_URLS.offline,

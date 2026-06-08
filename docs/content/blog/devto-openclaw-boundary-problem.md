@@ -10,7 +10,7 @@ description: Personal AI is not mainly a feature problem. It is a boundary probl
 canonical_url: "https://github.com/CrisisCore-Systems/pain-tracker"
 ---
 <!-- pain-tracker:target-link:start -->
-> Use this practical checklist: [what to include in a pain journal](https://paintracker.ca/resources/what-to-include-in-pain-journal)
+> Keep records useful without overloading them: [what to include in a pain journal](https://paintracker.ca/resources/what-to-include-in-pain-journal)
 <!-- pain-tracker:target-link:end -->
 *This is a submission for the [OpenClaw Writing Challenge](https://dev.to/challenges/openclaw-2026-04-16).*
 

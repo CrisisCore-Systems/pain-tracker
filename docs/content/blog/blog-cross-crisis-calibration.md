@@ -1,5 +1,5 @@
 <!-- pain-tracker:target-link:start -->
-> Sensory-load tracking example: [pain tracking for migraines](https://paintracker.ca/resources/pain-tracking-for-migraines)
+> Use a consistent pain scale: [pain scale chart printable](https://paintracker.ca/resources/pain-scale-chart-printable)
 <!-- pain-tracker:target-link:end -->
 # Cross-Crisis Calibration: Testing for Panic Attacks, Dissociation, and Sensory Overload
 

@@ -1,5 +1,5 @@
 <!-- pain-tracker:target-link:start -->
-> Multi-system flare tracking example: [pain tracking for lupus flares](https://paintracker.ca/resources/pain-tracking-for-lupus)
+> Track longer patterns: [chronic pain diary template](https://paintracker.ca/resources/chronic-pain-diary-template)
 <!-- pain-tracker:target-link:end -->
 # Testing for Co-Occurrence: When Multiple Crises Happen Simultaneously
 

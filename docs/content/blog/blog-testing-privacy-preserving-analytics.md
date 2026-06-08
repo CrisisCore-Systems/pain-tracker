@@ -1,5 +1,5 @@
 <!-- pain-tracker:target-link:start -->
-> Multi-symptom tracking without surveillance: [pain tracking for fibromyalgia](https://paintracker.ca/resources/pain-tracking-for-fibromyalgia)
+> Track longer patterns: [chronic pain diary template](https://paintracker.ca/resources/chronic-pain-diary-template)
 <!-- pain-tracker:target-link:end -->
 # Testing Privacy-Preserving Analytics: Verifying That Insights Don't Leak Identity
 

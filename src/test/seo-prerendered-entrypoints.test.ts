@@ -49,7 +49,7 @@ describe('SEO prerendered entrypoints', () => {
 
     expect(resourcesRoute).toBeDefined();
     expect(resourcesRoute?.title).toBe(
-      'Free Pain Tracker Templates & Pain Journal Printables | PainTracker.ca'
+      'Free Pain Tracking Resources, Templates, Charts and Journals | PainTracker.ca'
     );
     expect(
       resourcesRoute?.structuredData.some(
@@ -57,14 +57,16 @@ describe('SEO prerendered entrypoints', () => {
       )
     ).toBe(true);
     expect(typeof resourcesRoute?.prerenderBodyHtml).toBe('string');
-    expect(resourcesRoute?.prerenderBodyHtml).toContain('Printable Pain Tracker Templates');
+    expect(resourcesRoute?.prerenderBodyHtml).toContain('Free Pain Tracking Resources');
+    expect(resourcesRoute?.prerenderBodyHtml).toContain('Free pain tracking resources by task');
+    expect(resourcesRoute?.prerenderBodyHtml).toContain('/resources/daily-pain-tracker-printable');
+    expect(resourcesRoute?.prerenderBodyHtml).toContain('/resources/chronic-pain-diary-template');
+    expect(resourcesRoute?.prerenderBodyHtml).toContain('/resources/pain-scale-chart-printable');
     expect(resourcesRoute?.prerenderBodyHtml).toContain(
-      '/resources/monthly-pain-tracker-printable'
+      '/resources/what-to-include-in-pain-journal'
     );
-    expect(resourcesRoute?.prerenderBodyHtml).toContain('/resources/pain-tracking-for-migraines');
-    expect(resourcesRoute?.prerenderBodyHtml).toContain(
-      'https://blog.paintracker.ca/best-pain-tracking-apps'
-    );
+    expect(resourcesRoute?.prerenderBodyHtml).toContain('/tracking-data-policy');
+    expect(resourcesRoute?.prerenderBodyHtml).toContain('/download');
     expect(resourcesRoute?.prerenderBodyHtml).toContain(
       'Download the Free Pain Tracking Starter Pack ZIP'
     );
@@ -196,8 +198,7 @@ describe('SEO prerendered entrypoints', () => {
     expect(
       rewrites.some(
         (entry: RewriteEntry) =>
-          entry.source === '/providers/pmmp' &&
-          entry.destination === '/providers/pmmp/index.html'
+          entry.source === '/providers/pmmp' && entry.destination === '/providers/pmmp/index.html'
       )
     ).toBe(true);
   });

@@ -1,5 +1,5 @@
 <!-- pain-tracker:target-link:start -->
-> Recovery-oriented tracking guide: [pain tracking after surgery](https://paintracker.ca/resources/pain-tracking-after-surgery)
+> Use a paper-first fallback: [daily pain tracker printable](https://paintracker.ca/resources/daily-pain-tracker-printable)
 <!-- pain-tracker:target-link:end -->
 # Testing Recovery: Verifying That Systems Actually Help People Get Better
 

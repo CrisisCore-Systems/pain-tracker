@@ -9,7 +9,7 @@ tags:
 published: true
 ---
 <!-- pain-tracker:target-link:start -->
-> Reference implementation download: [download a private pain tracker](https://paintracker.ca/download)
+> Install the private offline-capable app: [download PainTracker](https://paintracker.ca/download)
 <!-- pain-tracker:target-link:end -->
 If you’re using AI agents in delivery workflows, the safest default is not “let it run.”
 It’s **Preview Mode First**.

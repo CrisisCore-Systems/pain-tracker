@@ -12,6 +12,10 @@ export { ResourceWorkflowSteps, type ResourcePageIntent } from './ResourceWorkfl
 export {
   CORE_RELATED_PAIN_RESOURCE_LINKS,
   RelatedPainResourceLinks,
+  TOPIC_RELATED_PAIN_RESOURCE_LINKS,
+  getRelatedPainResourceLinks,
+  inferRelatedPainResourceTopic,
   mergeRelatedPainResourceLinks,
   type RelatedPainResourceLink,
+  type RelatedPainResourceTopic,
 } from './RelatedPainResourceLinks';

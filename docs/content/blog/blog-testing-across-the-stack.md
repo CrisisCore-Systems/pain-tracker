@@ -1,5 +1,5 @@
 <!-- pain-tracker:target-link:start -->
-> Validate the local-first app path: [free private pain tracker app](https://paintracker.ca/resources/free-pain-tracker-app)
+> Check the data boundary: [tracking data policy](https://paintracker.ca/tracking-data-policy)
 <!-- pain-tracker:target-link:end -->
 # Testing Across the Stack: From Frontend UI to Local Database Resilience
 

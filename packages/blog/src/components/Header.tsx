@@ -59,25 +59,27 @@ export function Header() {
   }, []);
 
   return (
-    <header 
+    <header
       className={`sticky top-0 z-50 w-full transition-all duration-500 ${
-        isScrolled 
-          ? 'bg-background/80 backdrop-blur-xl border-b border-border/50 shadow-lg shadow-black/5 py-3' 
+        isScrolled
+          ? 'bg-background/80 backdrop-blur-xl border-b border-border/50 shadow-lg shadow-black/5 py-3'
           : 'bg-transparent py-5'
       }`}
       role="banner"
     >
       <div className="container-blog-wide flex items-center justify-between">
         {/* Logo */}
-        <Link 
-          href="/" 
+        <Link
+          href="/"
           className="flex items-center gap-3 group relative"
           aria-label={`${siteConfig.name} - Go to homepage`}
         >
           <div className="relative">
             {/* Animated glow effect */}
-            <div className={`absolute inset-0 bg-gradient-to-r from-primary/40 to-accent/40 blur-xl transition-all duration-700 ${isScrolled ? 'opacity-0 scale-90' : 'opacity-0 group-hover:opacity-100 group-hover:scale-125'}`} />
-            
+            <div
+              className={`absolute inset-0 bg-gradient-to-r from-primary/40 to-accent/40 blur-xl transition-all duration-700 ${isScrolled ? 'opacity-0 scale-90' : 'opacity-0 group-hover:opacity-100 group-hover:scale-125'}`}
+            />
+
             {/* Heart icon with enhanced pulse */}
             <div className="relative w-11 h-11 rounded-xl bg-gradient-to-br from-primary via-primary to-accent flex items-center justify-center shadow-lg shadow-primary/25 group-hover:scale-110 group-hover:shadow-xl group-hover:shadow-primary/30 transition-all duration-300">
               <svg
@@ -93,18 +95,26 @@ export function Header() {
             </div>
           </div>
           <div className="flex flex-col">
-            <span className="text-lg font-bold tracking-tight leading-none bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text">{siteConfig.name}</span>
-            <span className="text-[11px] text-muted-foreground font-semibold uppercase tracking-wider">Blog</span>
+            <span className="text-lg font-bold tracking-tight leading-none bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text">
+              {siteConfig.name}
+            </span>
+            <span className="text-[11px] text-muted-foreground font-semibold uppercase tracking-wider">
+              Blog
+            </span>
           </div>
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-1" role="navigation" aria-label="Main navigation">
+        <nav
+          className="hidden md:flex items-center gap-1"
+          role="navigation"
+          aria-label="Main navigation"
+        >
           <Link
             href="/"
             className={`px-5 py-2.5 text-sm font-semibold rounded-xl transition-all duration-300 relative group ${
-              activeSection === 'articles' 
-                ? 'text-primary bg-primary/10' 
+              activeSection === 'articles'
+                ? 'text-primary bg-primary/10'
                 : 'text-muted-foreground hover:text-foreground hover:bg-muted'
             }`}
           >
@@ -116,8 +126,8 @@ export function Header() {
           <Link
             href="/pain-tracking-guides"
             className={`px-5 py-2.5 text-sm font-semibold rounded-xl transition-all duration-300 relative group ${
-              activeSection === 'guides' 
-                ? 'text-primary bg-primary/10' 
+              activeSection === 'guides'
+                ? 'text-primary bg-primary/10'
                 : 'text-muted-foreground hover:text-foreground hover:bg-muted'
             }`}
           >
@@ -129,8 +139,8 @@ export function Header() {
           <Link
             href="/features"
             className={`px-5 py-2.5 text-sm font-semibold rounded-xl transition-all duration-300 relative group ${
-              activeSection === 'features' 
-                ? 'text-primary bg-primary/10' 
+              activeSection === 'features'
+                ? 'text-primary bg-primary/10'
                 : 'text-muted-foreground hover:text-foreground hover:bg-muted'
             }`}
           >
@@ -139,21 +149,18 @@ export function Header() {
               <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary" />
             )}
           </Link>
-          
-          {/* Root-domain pillar links — cross-domain authority transfer */}
+
+          {/* Root-domain resource links — cross-domain authority transfer */}
           <a
-            href="https://www.paintracker.ca/pain-log-for-doctors"
+            href="https://www.paintracker.ca/resources"
             className="px-5 py-2.5 text-sm font-semibold rounded-xl transition-all duration-300 relative group text-muted-foreground hover:text-foreground hover:bg-muted"
           >
-            <span className="relative z-10">For Doctors</span>
+            <span className="relative z-10">Resources</span>
           </a>
-          
+
           <div className="w-px h-8 bg-border/60 mx-4" aria-hidden="true" />
-          
-          <a
-            href={siteConfig.links.app}
-            className="btn-primary group/btn relative overflow-hidden"
-          >
+
+          <a href={siteConfig.links.app} className="btn-primary group/btn relative overflow-hidden">
             {/* Shimmer effect */}
             <span className="absolute inset-0 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
             <span className="relative">Try the App</span>
@@ -212,16 +219,16 @@ export function Header() {
         aria-label="Mobile navigation menu"
       >
         {/* Backdrop with blur */}
-        <div 
+        <div
           className={`absolute inset-0 bg-background/98 backdrop-blur-2xl transition-all duration-500 ${
             isMenuOpen ? 'opacity-100' : 'opacity-0'
           }`}
           onClick={() => setIsMenuOpen(false)}
           aria-hidden="true"
         />
-        
+
         {/* Menu Content */}
-        <nav 
+        <nav
           className={`relative h-full flex flex-col items-center justify-center gap-6 transition-all duration-500 ${
             isMenuOpen ? 'translate-y-0 opacity-100' : '-translate-y-8 opacity-0'
           }`}
@@ -229,9 +236,16 @@ export function Header() {
           aria-label="Mobile navigation"
         >
           {/* Decorative gradient orbs */}
-          <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-primary/10 rounded-full blur-3xl animate-pulse" aria-hidden="true" />
-          <div className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-accent/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} aria-hidden="true" />
-          
+          <div
+            className="absolute top-1/4 left-1/4 w-64 h-64 bg-primary/10 rounded-full blur-3xl animate-pulse"
+            aria-hidden="true"
+          />
+          <div
+            className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-accent/10 rounded-full blur-3xl animate-pulse"
+            style={{ animationDelay: '1s' }}
+            aria-hidden="true"
+          />
+
           <Link
             href="/"
             className={`text-4xl font-bold transition-all duration-300 hover:scale-105 ${
@@ -260,15 +274,18 @@ export function Header() {
             Features
           </Link>
           <a
-            href="https://www.paintracker.ca/pain-log-for-doctors"
+            href="https://www.paintracker.ca/resources"
             className="text-4xl font-bold transition-all duration-300 hover:scale-105 text-foreground hover:text-primary"
             onClick={() => setIsMenuOpen(false)}
           >
-            For Doctors
+            Resources
           </a>
-          
-          <div className="w-32 h-1 bg-gradient-to-r from-primary via-accent to-primary rounded-full my-6" aria-hidden="true" />
-          
+
+          <div
+            className="w-32 h-1 bg-gradient-to-r from-primary via-accent to-primary rounded-full my-6"
+            aria-hidden="true"
+          />
+
           <a
             href={siteConfig.links.app}
             className="btn-primary text-lg px-10 py-4 shadow-xl shadow-primary/20"
@@ -292,7 +309,11 @@ export function Header() {
 
           {/* Close hint */}
           <p className="absolute bottom-16 text-sm text-muted-foreground flex items-center gap-2">
-            Press <kbd className="px-2.5 py-1.5 rounded-lg bg-muted border border-border font-mono text-xs font-semibold shadow-sm">ESC</kbd> to close
+            Press{' '}
+            <kbd className="px-2.5 py-1.5 rounded-lg bg-muted border border-border font-mono text-xs font-semibold shadow-sm">
+              ESC
+            </kbd>{' '}
+            to close
           </p>
         </nav>
       </dialog>

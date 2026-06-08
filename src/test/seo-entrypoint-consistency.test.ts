@@ -10,10 +10,11 @@ const readUtf8 = (relativePath: string) =>
   fs.readFileSync(path.join(projectRoot, relativePath), 'utf8');
 
 describe('SEO entrypoint consistency', () => {
-  it('keeps shared blog CTAs pointed at the chosen /start app entrypoint', () => {
+  it('keeps shared blog SEO CTAs pointed at the public homepage authority target', () => {
     const linkingMap = readUtf8('packages/blog/src/data/articles/linking-map.ts');
 
-    expect(linkingMap).toContain("APP_CTA_URL = 'https://www.paintracker.ca/start'");
+    expect(linkingMap).toContain("APP_CTA_URL = 'https://www.paintracker.ca/'");
+    expect(linkingMap).not.toContain("APP_CTA_URL = 'https://www.paintracker.ca/start'");
     expect(linkingMap).not.toContain("APP_CTA_URL = 'https://www.paintracker.ca/download'");
   });
 

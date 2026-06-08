@@ -9,7 +9,7 @@ tags:
 published: false
 ---
 <!-- pain-tracker:target-link:start -->
-> Workers' compensation documentation guide: [pain diary for workers' compensation](https://paintracker.ca/resources/pain-diary-for-workers-compensation)
+> Keep records useful without overloading them: [what to include in a pain journal](https://paintracker.ca/resources/what-to-include-in-pain-journal)
 <!-- pain-tracker:target-link:end -->
 If you want the short route into this workflow cluster, read these first:
 

@@ -1,5 +1,5 @@
 <!-- pain-tracker:target-link:start -->
-> Patient-facing flare logging path: [chronic pain flare tracker](https://paintracker.ca/resources/chronic-pain-flare-tracker)
+> Use a consistent pain scale: [pain scale chart printable](https://paintracker.ca/resources/pain-scale-chart-printable)
 <!-- pain-tracker:target-link:end -->
 # Performance Under Pressure: Ensuring Crisis Detection Doesn't Degrade User Experience
 

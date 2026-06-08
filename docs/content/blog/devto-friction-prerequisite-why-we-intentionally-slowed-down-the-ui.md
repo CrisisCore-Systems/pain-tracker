@@ -9,7 +9,7 @@ tags:
 published: false
 ---
 <!-- pain-tracker:target-link:start -->
-> Printable flow with intentional friction: [free pain journal templates](https://paintracker.ca/resources/daily-pain-tracker-printable)
+> Use a paper-first fallback: [daily pain tracker printable](https://paintracker.ca/resources/daily-pain-tracker-printable)
 <!-- pain-tracker:target-link:end -->
 If you want the short route into this argument, read these first:
 

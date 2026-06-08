@@ -5,7 +5,7 @@ tags: architecture, security, privacy, showdev
 description: Trust is not real until it survives contact with evidence. ProofVault turns release trust into something you can inspect instead of something you have to believe.
 ---
 <!-- pain-tracker:target-link:start -->
-> Funding trust evidence upkeep: [PainTracker pricing and upgrades](https://paintracker.ca/pricing)
+> Start from the resource hub: [pain tracking resources](https://paintracker.ca/resources)
 <!-- pain-tracker:target-link:end -->
 If you want the trust and release path instead of a single artifact essay, use this route:
 

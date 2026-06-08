@@ -39,7 +39,7 @@ export interface ComparisonTable {
  *   3. App CTA link to the root homepage (rendered in the CTA block)
  *
  * Article templates may also render the standardized high-intent resource block
- * for printables, pain-journal guidance, and the app comparison page.
+ * for printables, chronic pain diaries, pain-scale charts, data policy, and download paths.
  *
  * See docs/seo/SUBDOMAIN_LINKING_ARCHITECTURE.md for the full specification.
  */

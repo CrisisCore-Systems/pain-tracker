@@ -16,18 +16,18 @@ const article: ArticleData = {
       description: 'Use a one-page daily tracker if you want a fast, low-friction option before committing to an app.'
     },
     {
-      href: 'https://www.paintracker.ca/resources/symptom-tracker-printable',
-      label: 'Symptom Tracker Printable',
-      description: 'Capture fatigue, sleep, mood, medication response, and symptom clusters alongside pain.'
+      href: 'https://www.paintracker.ca/resources/chronic-pain-diary-template',
+      label: 'Chronic Pain Diary Template',
+      description: 'Track longer-term flare patterns, treatment changes, sleep, medication response, and daily function.'
     },
     {
-      href: 'https://www.paintracker.ca/resources/monthly-pain-tracker-printable',
-      label: 'Monthly Pain Tracker Printable',
-      description: 'See longer trends across flare cycles, treatment changes, and functional impact.'
+      href: 'https://www.paintracker.ca/resources/pain-scale-chart-printable',
+      label: 'Pain Scale Chart Printable',
+      description: 'Use a consistent 0-10 reference so pain scores mean the same thing across paper and app records.'
     },
     {
-      href: 'https://www.paintracker.ca/resources/pain-diary-for-doctor-visits',
-      label: 'Pain Diary for Doctor Visits',
+      href: 'https://www.paintracker.ca/resources/what-to-include-in-pain-journal',
+      label: 'What to Include in a Pain Journal',
       description: 'See the fastest route from daily tracking into an appointment-ready record.'
     },
     {

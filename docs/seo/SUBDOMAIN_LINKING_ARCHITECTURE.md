@@ -1,170 +1,205 @@
 # Subdomain Internal Linking Architecture
 
-> **Version 1.0** | Created: **2026-02-06**
-> Architecture for `paintracker.ca` (root) ↔ `blog.paintracker.ca` (subdomain)
+> Version 2.0 | Updated: 2026-06-05
+> Architecture for `www.paintracker.ca` (root) and `blog.paintracker.ca` (subdomain)
 
 ---
 
 ## Domain Topology
 
-| Domain | Purpose | Tech |
-|--------|---------|------|
-| `paintracker.ca` | App + 4 pillar landing pages | Vite SPA (React) |
-| `blog.paintracker.ca` | 30-page topical authority cluster + Hashnode blog | Next.js (App Router) |
+| Domain                | Purpose                                                                 | Tech                 |
+| --------------------- | ----------------------------------------------------------------------- | -------------------- |
+| `www.paintracker.ca`  | App entry points, resource hub, printables, data policy, download route | Vite SPA (React)     |
+| `blog.paintracker.ca` | Topical authority cluster and long-form articles                        | Next.js (App Router) |
 
-Google treats subdomains as **related but separate sites**. Without deliberate cross-domain linking, SEO authority gets trapped on the subdomain and the root domain (where conversions happen) stays weak.
+Google treats subdomains as related but separate sites. Without deliberate cross-domain linking, SEO authority can stay concentrated on the blog while the root-domain resources and app entry points stay underfed.
+
+The root domain is the authority destination because it contains the user actions and durable resource pages. Blog links must therefore be useful to readers and must point to current crawlable root-domain routes, not retired placeholder URLs.
 
 ---
 
-## Root Domain Pillar Pages (Conversion Targets)
+## Root-Domain Resource Cluster Targets
 
-All authority must flow toward these 4 URLs:
+Authority should flow toward the current public resource cluster:
 
-| Pillar | URL | Cluster |
-|--------|-----|---------|
-| Offline | `https://paintracker.ca/offline-pain-diary` | Privacy / Offline |
-| Privacy | `https://paintracker.ca/private-pain-tracker` | Privacy / Security |
-| Clinical | `https://paintracker.ca/pain-log-for-doctors` | Clinical / Documentation |
-| Chronic | `https://paintracker.ca/track-chronic-pain-symptoms` | Chronic Conditions |
+| Target                            | URL                                                                    | Primary intent                                      |
+| --------------------------------- | ---------------------------------------------------------------------- | --------------------------------------------------- |
+| Resource hub                      | `https://www.paintracker.ca/resources`                                 | General pain tracking resources and route discovery |
+| Daily Pain Tracker Printable      | `https://www.paintracker.ca/resources/daily-pain-tracker-printable`    | Printable one-day pain tracking worksheet           |
+| Chronic Pain Diary Template       | `https://www.paintracker.ca/resources/chronic-pain-diary-template`     | Longer-term chronic pain and flare tracking         |
+| Pain Scale Chart Printable        | `https://www.paintracker.ca/resources/pain-scale-chart-printable`      | 0-10 pain scale reference                           |
+| What to Include in a Pain Journal | `https://www.paintracker.ca/resources/what-to-include-in-pain-journal` | Appointment and journal guidance                    |
+| Download PainTracker              | `https://www.paintracker.ca/download`                                  | Install/open path for the app                       |
+| Tracking Data Policy              | `https://www.paintracker.ca/tracking-data-policy`                      | Data storage, collection, and export explanation    |
+| App homepage                      | `https://www.paintracker.ca/`                                          | Free private offline pain tracker app entry point   |
 
-**Primary app discovery entry point:** `https://www.paintracker.ca/`
+Do not reintroduce the retired root-domain targets:
+
+- `/offline-pain-diary`
+- `/private-pain-tracker`
+- `/pain-log-for-doctors`
+- `/track-chronic-pain-symptoms`
+
+Those phrases may remain as blog article slugs, but they are not the canonical root-domain authority targets.
 
 ---
 
 ## Linking Rules
 
-### Rule A — Every Blog Article → Root Domain (Cross-Domain Authority Transfer)
+### Rule A - Every Blog Article Links to a Current Root-Domain Target
 
-Each of the 30 SEO articles on `blog.paintracker.ca` MUST include:
+Each SEO article on `blog.paintracker.ca` should include:
 
-1. **1 contextual link to its assigned root-domain pillar** (mid-article, not footer)
-2. **1 CTA link to `https://www.paintracker.ca/`** (bottom of article, using the anchor "free private pain tracker app")
+1. One contextual link to a current root-domain resource, policy, or app target.
+2. One CTA link to `https://www.paintracker.ca/` using a truthful app-entry anchor.
+3. A high-intent resource block that points to the most relevant resource cluster for that article.
 
-This ensures PageRank flows **blog → root**.
+This keeps cross-domain authority transfer useful to readers and avoids dead or misleading URLs.
 
-### Rule B — Blog Articles Interlink Locally (Topical Clustering)
+### Rule B - Blog Articles Interlink Locally
 
-Each blog article MUST also link to:
+Each blog article should also link to one related blog article on `blog.paintracker.ca`.
 
-- **1 related blog article** on `blog.paintracker.ca`
+This preserves topical clustering, crawl efficiency, and long-tail discovery without making every link point away from the blog.
 
-This preserves topical clustering, crawl efficiency, and long-tail rankings.
+### Rule C - High-Intent Blocks Are Topic-Aware
 
-### Rule C - Baseline Links Plus High-Intent Resource Block
+The article templates render `HighIntentResourceLinks`. The block should stay topic-aware rather than keyword-stuffed:
 
-Every blog article keeps the baseline authority path:
+| Topic                       | Main root-domain links                                                               |
+| --------------------------- | ------------------------------------------------------------------------------------ |
+| General                     | Homepage, `/resources`, daily printable, chronic diary, tracking data policy         |
+| Printable / paper           | Daily printable, pain scale chart, pain journal guide, chronic diary, `/download`    |
+| Chronic pain                | Chronic diary, pain journal guide, daily printable, pain scale chart, homepage       |
+| Pain journal / appointments | Pain journal guide, daily printable, chronic diary, pain scale chart, `/download`    |
+| Pain scale                  | Pain scale chart, daily printable, pain journal guide, chronic diary, homepage       |
+| Privacy / offline           | Homepage, tracking data policy, resource hub, `/download`                            |
+| Workplace injury / claims   | `/download`, daily printable, chronic diary, pain journal guide, WorkSafeBC template |
 
-| # | Link Type | Target Domain | Placement |
-|---|-----------|---------------|-----------|
-| 1 | Pillar link | `paintracker.ca` | Mid-article contextual |
-| 2 | Related article | `blog.paintracker.ca` | Mid-article or end |
-| 3 | App CTA | `www.paintracker.ca` | Bottom CTA block |
-
-The article templates also render a standardized high-intent resource block. This is intentional: recent link data showed homepage and blog-homepage authority were over-concentrated while resource pages and the comparison page were underfed. The standardized block links to:
-
-- `https://www.paintracker.ca/` with the anchor "free private pain tracker app"
-- `https://www.paintracker.ca/resources/daily-pain-tracker-printable`
-- `https://www.paintracker.ca/resources/what-to-include-in-pain-journal`
-- `https://www.paintracker.ca/resources/7-day-pain-diary-template`
-- `https://www.paintracker.ca/resources/monthly-pain-tracker-printable`
-- `/best-pain-tracking-apps` on the blog subdomain, except on that page itself
+The block is meant to help the reader move from learning to a useful record. It must not imply medical, legal, privacy, or offline guarantees that are not structurally supported.
 
 ---
 
-## Complete Article → Pillar Mapping
+## Article to Resource-Target Mapping
 
-### Privacy / Offline Cluster → `paintracker.ca/offline-pain-diary`
+The historical article-slug groups are still useful for routing authority, but their root targets now map to current resource-cluster pages.
 
-| Article Slug | Related Blog Article |
-|---|---|
-| `cloud-vs-local-pain-tracking` | `why-offline-health-apps-matter` |
-| `why-offline-health-apps-matter` | `cloud-vs-local-pain-tracking` |
-| `zero-cloud-medical-privacy` | `encrypted-health-data-safety` |
-| `paper-vs-app-pain-diary` | `why-offline-health-apps-matter` |
+### Privacy / Offline Cluster -> Homepage and Tracking Data Policy
 
-### Privacy / Security Cluster → `paintracker.ca/private-pain-tracker`
+| Article slug                                                    | Root target                                       | Related blog article             |
+| --------------------------------------------------------------- | ------------------------------------------------- | -------------------------------- |
+| `offline-pain-diary`                                            | `https://www.paintracker.ca/`                     | `cloud-vs-local-pain-tracking`   |
+| `cloud-vs-local-pain-tracking`                                  | `https://www.paintracker.ca/tracking-data-policy` | `why-offline-health-apps-matter` |
+| `why-offline-health-apps-matter`                                | `https://www.paintracker.ca/`                     | `best-pain-tracking-apps`        |
+| `zero-cloud-medical-privacy`                                    | `https://www.paintracker.ca/`                     | `best-pain-tracking-apps`        |
+| `paper-vs-app-pain-diary`                                       | `https://www.paintracker.ca/`                     | `why-offline-health-apps-matter` |
+| `building-a-healthcare-pwa-that-actually-works-when-it-matters` | `https://www.paintracker.ca/`                     | `best-pain-tracking-apps`        |
+| `getting-started`                                               | `https://www.paintracker.ca/`                     | `how-detailed-pain-diary`        |
 
-| Article Slug | Related Blog Article |
-|---|---|
-| `encrypted-health-data-safety` | `local-only-encryption-explained` |
-| `local-only-encryption-explained` | `encrypted-health-data-safety` |
-| `health-data-threat-model` | `security-architecture` |
-| `security-architecture` | `health-data-threat-model` |
-| `why-paintracker-is-open-source` | `security-architecture` |
+### Privacy / Security Cluster -> Tracking Data Policy
 
-### Clinical / Documentation Cluster → `paintracker.ca/pain-log-for-doctors`
+| Article slug                      | Root target                                       | Related blog article      |
+| --------------------------------- | ------------------------------------------------- | ------------------------- |
+| `private-pain-tracker`            | `https://www.paintracker.ca/tracking-data-policy` | `best-pain-tracking-apps` |
+| `encrypted-health-data-safety`    | `https://www.paintracker.ca/tracking-data-policy` | `best-pain-tracking-apps` |
+| `local-only-encryption-explained` | `https://www.paintracker.ca/tracking-data-policy` | `best-pain-tracking-apps` |
+| `health-data-threat-model`        | `https://www.paintracker.ca/tracking-data-policy` | `best-pain-tracking-apps` |
+| `security-architecture`           | `https://www.paintracker.ca/tracking-data-policy` | `best-pain-tracking-apps` |
+| `why-paintracker-is-open-source`  | `https://www.paintracker.ca/tracking-data-policy` | `best-pain-tracking-apps` |
+| `best-pain-tracking-apps`         | `https://www.paintracker.ca/tracking-data-policy` | `paper-vs-app-pain-diary` |
 
-| Article Slug | Related Blog Article |
-|---|---|
-| `can-doctors-trust-offline-diaries` | `what-doctors-look-for-symptom-journals` |
-| `what-doctors-look-for-symptom-journals` | `can-doctors-trust-offline-diaries` |
-| `export-pain-logs-pdf` | `pain-diary-template` |
-| `pain-diary-template` | `export-pain-logs-pdf` |
-| `pain-tracking-insurance-evidence` | `paintracker-worksafebc-claims` |
-| `paintracker-worksafebc-claims` | `pain-tracking-insurance-evidence` |
-| `how-detailed-pain-diary` | `what-doctors-look-for-symptom-journals` |
-| `preparing-physiotherapy-pain-logs` | `export-pain-logs-pdf` |
-| `sharing-symptom-data-safely` | `can-doctors-trust-offline-diaries` |
+### Clinical / Documentation Cluster -> Pain Journal Guide
 
-### Chronic Conditions Cluster → `paintracker.ca/track-chronic-pain-symptoms`
+| Article slug                             | Root target                                                            | Related blog article                     |
+| ---------------------------------------- | ---------------------------------------------------------------------- | ---------------------------------------- |
+| `pain-log-for-doctors`                   | `https://www.paintracker.ca/resources/what-to-include-in-pain-journal` | `what-doctors-look-for-symptom-journals` |
+| `can-doctors-trust-offline-diaries`      | `https://www.paintracker.ca/resources/what-to-include-in-pain-journal` | `what-doctors-look-for-symptom-journals` |
+| `what-doctors-look-for-symptom-journals` | `https://www.paintracker.ca/resources/what-to-include-in-pain-journal` | `can-doctors-trust-offline-diaries`      |
+| `export-pain-logs-pdf`                   | `https://www.paintracker.ca/resources/what-to-include-in-pain-journal` | `pain-diary-template`                    |
+| `pain-diary-template`                    | `https://www.paintracker.ca/resources/what-to-include-in-pain-journal` | `export-pain-logs-pdf`                   |
+| `pain-tracking-insurance-evidence`       | `https://www.paintracker.ca/resources/what-to-include-in-pain-journal` | `paintracker-worksafebc-claims`          |
+| `paintracker-worksafebc-claims`          | `https://www.paintracker.ca/resources/what-to-include-in-pain-journal` | `pain-tracking-insurance-evidence`       |
+| `how-detailed-pain-diary`                | `https://www.paintracker.ca/resources/what-to-include-in-pain-journal` | `what-doctors-look-for-symptom-journals` |
+| `preparing-physiotherapy-pain-logs`      | `https://www.paintracker.ca/resources/what-to-include-in-pain-journal` | `export-pain-logs-pdf`                   |
+| `sharing-symptom-data-safely`            | `https://www.paintracker.ca/resources/what-to-include-in-pain-journal` | `paintracker-worksafebc-claims`          |
 
-| Article Slug | Related Blog Article |
-|---|---|
-| `pain-tracking-fibromyalgia` | `migraine-symptom-diary` |
-| `migraine-symptom-diary` | `pain-tracking-fibromyalgia` |
-| `tracking-flare-ups-chronic-illness` | `identifying-pain-triggers` |
-| `identifying-pain-triggers` | `tracking-flare-ups-chronic-illness` |
-| `tracking-recovery-after-injury` | `tracking-flare-ups-chronic-illness` |
+### Chronic Conditions Cluster -> Chronic Pain Diary Template
 
-### Cross-Cluster / Comparison Articles
-
-| Article Slug | Assigned Pillar | Related Blog Article |
-|---|---|---|
-| `best-pain-tracking-apps` | `private-pain-tracker` | `paper-vs-app-pain-diary` |
-| `accessibility-in-pain-tracking` | `track-chronic-pain-symptoms` | `best-pain-tracking-apps` |
-| `getting-started` | `offline-pain-diary` | `how-detailed-pain-diary` |
-
-### Pillar Self-Links (Pillar articles on subdomain link to their root counterpart)
-
-| Subdomain Pillar Slug | Root Pillar URL | Related Blog Article |
-|---|---|---|
-| `offline-pain-diary` | `paintracker.ca/offline-pain-diary` | `cloud-vs-local-pain-tracking` |
-| `private-pain-tracker` | `paintracker.ca/private-pain-tracker` | `encrypted-health-data-safety` |
-| `pain-log-for-doctors` | `paintracker.ca/pain-log-for-doctors` | `what-doctors-look-for-symptom-journals` |
-| `track-chronic-pain-symptoms` | `paintracker.ca/track-chronic-pain-symptoms` | `pain-tracking-fibromyalgia` |
+| Article slug                         | Root target                                                        | Related blog article                 |
+| ------------------------------------ | ------------------------------------------------------------------ | ------------------------------------ |
+| `track-chronic-pain-symptoms`        | `https://www.paintracker.ca/resources/chronic-pain-diary-template` | `pain-tracking-fibromyalgia`         |
+| `pain-tracking-fibromyalgia`         | `https://www.paintracker.ca/resources/chronic-pain-diary-template` | `migraine-symptom-diary`             |
+| `migraine-symptom-diary`             | `https://www.paintracker.ca/resources/chronic-pain-diary-template` | `pain-tracking-fibromyalgia`         |
+| `tracking-flare-ups-chronic-illness` | `https://www.paintracker.ca/resources/chronic-pain-diary-template` | `identifying-pain-triggers`          |
+| `identifying-pain-triggers`          | `https://www.paintracker.ca/resources/chronic-pain-diary-template` | `tracking-flare-ups-chronic-illness` |
+| `tracking-recovery-after-injury`     | `https://www.paintracker.ca/resources/chronic-pain-diary-template` | `paintracker-worksafebc-claims`      |
+| `accessibility-in-pain-tracking`     | `https://www.paintracker.ca/resources/chronic-pain-diary-template` | `best-pain-tracking-apps`            |
 
 ---
 
 ## Navigation Architecture
 
-### Blog Header (site-wide authority flow → root)
+### Blog Header
 
-| Label | URL | Domain |
-|---|---|---|
-| Articles | `/` | blog.paintracker.ca |
-| Pain Tracking Guides | `/pain-tracking-guides` | blog.paintracker.ca |
-| Features | `/features` | blog.paintracker.ca |
-| Offline Pain Diary | `https://paintracker.ca/offline-pain-diary` | paintracker.ca |
-| For Doctors | `https://paintracker.ca/pain-log-for-doctors` | paintracker.ca |
-| Try the App | `https://www.paintracker.ca/` | paintracker.ca |
+| Label       | URL                                                           | Domain                |
+| ----------- | ------------------------------------------------------------- | --------------------- |
+| Articles    | `/`                                                           | `blog.paintracker.ca` |
+| Guides      | `/pain-tracking-guides`                                       | `blog.paintracker.ca` |
+| Features    | `/features`                                                   | `blog.paintracker.ca` |
+| Resources   | `https://www.paintracker.ca/resources`                        | `www.paintracker.ca`  |
+| Try the App | `https://www.paintracker.ca/start` via `siteConfig.links.app` | `www.paintracker.ca`  |
 
-### Blog Footer (mass PageRank transfer)
+The header should keep one clear root-domain resource link plus the app CTA. It should not use retired root URLs as navigation targets.
 
-**Pillar Pages section:**
-- Offline Pain Diary → `https://paintracker.ca/offline-pain-diary`
-- Private Pain Tracker → `https://paintracker.ca/private-pain-tracker`
-- Pain Log for Doctors → `https://paintracker.ca/pain-log-for-doctors`
-- Track Chronic Pain → `https://paintracker.ca/track-chronic-pain-symptoms`
+### Blog Footer
+
+**Resource Guides section:**
+
+- Pain Tracking Resources -> `https://www.paintracker.ca/resources`
+- Daily Pain Tracker Printable -> `https://www.paintracker.ca/resources/daily-pain-tracker-printable`
+- What to Include in a Pain Journal -> `https://www.paintracker.ca/resources/what-to-include-in-pain-journal`
+- Chronic Pain Diary Template -> `https://www.paintracker.ca/resources/chronic-pain-diary-template`
 
 **Resources section:**
-- Pain Tracking Guides → `/pain-tracking-guides`
-- Privacy → `/privacy`
-- Security → `/security`
-- Open Source on GitHub → external
 
-**Main site:**
-- Homepage → `https://www.paintracker.ca/`
-- Open the App → `https://www.paintracker.ca/`
+- Free Private Offline Pain Tracker -> `https://www.paintracker.ca/`
+- Privacy -> `/privacy`
+- Security -> `/security`
+- Open Source on GitHub -> external
+
+**Main-site app actions:**
+
+- Open App -> `https://www.paintracker.ca/start` via `siteConfig.links.app`
+- Article app CTA -> `https://www.paintracker.ca/` via `APP_CTA_URL`
+
+The split is intentional: SEO reading paths can point to the homepage authority target, while explicit app-opening controls can still use the installed/open route.
+
+---
+
+## Root Resource Hub Architecture
+
+**URL:** `https://www.paintracker.ca/resources`
+
+### Purpose
+
+- Expose the crawlable hub for pain tracking resources.
+- Link prominently to the four primary resource pages.
+- Preserve pathways to the app homepage, download route, and tracking data policy.
+- Avoid forcing a digital workflow before a user has a useful printable or planning record.
+
+### Required Crawlable Links
+
+The resource hub should include plain crawlable links to:
+
+- `/resources/daily-pain-tracker-printable`
+- `/resources/chronic-pain-diary-template`
+- `/resources/pain-scale-chart-printable`
+- `/resources/what-to-include-in-pain-journal`
+- `/download`
+- `/tracking-data-policy`
+- `/`
+
+The prerendered route metadata must include the same high-priority resource paths so crawlers can see them before client-side hydration.
 
 ---
 
@@ -173,16 +208,13 @@ The article templates also render a standardized high-intent resource block. Thi
 **URL:** `https://blog.paintracker.ca/pain-tracking-guides`
 
 ### Purpose
-- Lists **all 30 articles** grouped by cluster
-- Links to **all 4 root pillars** prominently
-- Sits in **blog header navigation**
-- Acts as the **authority bridge** between subdomain → root domain
 
-### Structure
-1. Hero: "Complete Pain Tracking Guides"
-2. Pillar highlight cards (4, linking to root domain)
-3. Article listings by cluster (Privacy, Clinical, Chronic, Comparison, Transparency, Utility)
-4. Bottom CTA → app
+- List the blog article cluster.
+- Bridge topical authority from the blog to current root-domain resource targets.
+- Keep local blog interlinks available for topical clustering.
+- Avoid over-concentrating all authority on the homepage.
+
+The hub should prefer current root-domain resource cluster targets over retired pillar URLs.
 
 ---
 
@@ -191,65 +223,47 @@ The article templates also render a standardized high-intent resource block. Thi
 ### Current Setup: Subdomain (`blog.paintracker.ca`)
 
 **Advantages:**
-- Clean separation of concerns (Next.js blog vs Vite SPA)
-- Independent deployments
-- Separate Vercel projects
-- Can use different frameworks
+
+- Clean separation of concerns between the Next.js blog and Vite SPA.
+- Independent deployments.
+- Different frameworks can be maintained without a proxy layer.
 
 **Disadvantages:**
-- Google treats as separate site → authority split
-- Requires deliberate cross-domain linking (this document)
-- Slower authority consolidation
-- More complex analytics setup
 
-### Alternative: Subfolder (`paintracker.ca/blog/`)
+- Search engines may treat the blog and root as separate properties.
+- Cross-domain authority transfer must be intentional and maintained.
+- Internal link drift is easier when root routes change.
+
+### Alternative: Subfolder (`www.paintracker.ca/blog/`)
 
 **Advantages:**
-- Google treats as same site → automatic authority consolidation
-- 30-70% SEO performance improvement (industry data)
-- Simpler internal linking
-- Unified analytics
+
+- Stronger same-site consolidation.
+- Simpler internal-link semantics.
+- Unified route and analytics ownership.
 
 **Disadvantages:**
-- Requires reverse proxy or Next.js rewrite to serve blog at `/blog/`
-- More complex deployment (must proxy Vite SPA + Next.js)
-- Potential build/routing conflicts
 
-### Verdict for PainTracker
+- Requires reverse proxying or framework consolidation.
+- Requires redirect planning from all indexed subdomain URLs.
+- Adds deployment and routing complexity.
 
-**Stay on subdomain for now** — but with the linking architecture in this document strictly enforced.
+### Current Verdict
 
-Reasons:
-1. The existing infrastructure (separate Vercel deployments) works well
-2. The blog is already deployed and indexed at `blog.paintracker.ca`
-3. Migration to subfolder would require DNS changes, Vercel rewrites, and redirect chains
-4. With proper cross-domain linking, the authority split can be significantly mitigated
-5. The 4 pillar pages on the root domain will pull authority from 30 blog articles
+Stay on the subdomain for now, but enforce current cross-domain links and keep the resource cluster updated.
 
-**Revisit in 3-6 months** if:
-- Pillar pages are not ranking despite strong blog traffic
-- Google Search Console shows poor authority signals on root domain
-- Competitor analysis shows subfolder sites outperforming
-
-### If/When You Migrate to Subfolder
-
-1. Set up Next.js rewrite: `paintracker.ca/blog/*` → blog Next.js app
-2. 301 redirect ALL `blog.paintracker.ca/*` URLs → `paintracker.ca/blog/*`
-3. Update all internal links
-4. Update sitemap
-5. Monitor Search Console for 8 weeks
+Revisit a subfolder migration if Search Console evidence shows that the root resource cluster is not benefiting from blog traffic despite current linking, or if the operational burden of two deploy targets starts to create user-facing route drift.
 
 ---
 
-## Implementation Checklist
+## Enforcement Checklist
 
-- [x] Document linking architecture
-- [ ] Add `internalLinks` field to `ArticleData` type
-- [ ] Populate linking data for all 30 articles
-- [ ] Render contextual pillar links mid-article
-- [ ] Render related article links
-- [ ] Update blog Header with pillar nav items
-- [ ] Update blog Footer with root-domain pillar links
-- [ ] Create `/pain-tracking-guides` hub page
-- [ ] Verify all cross-domain links use absolute URLs
-- [ ] Add `rel="noopener"` to external (cross-domain) links
+- [x] Blog article baseline links map legacy article topics to current root-domain targets.
+- [x] Blog high-intent resource block is topic-aware.
+- [x] Blog header links to the root resource hub.
+- [x] Blog footer links to the resource hub and primary resource pages.
+- [x] Root resource hub links to the four primary resource pages, `/download`, `/tracking-data-policy`, and homepage.
+- [x] Prerender metadata for `/resources` exposes the same high-priority resource links.
+- [x] Retired root-domain URLs are documented as prohibited targets.
+- [ ] Periodically scan for retired root-domain URL reintroduction in `src`, `packages/blog/src`, `docs/content`, and `scripts/devto`.
+- [ ] Recheck Search Console after enough crawl time before changing route architecture again.

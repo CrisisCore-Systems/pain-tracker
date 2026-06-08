@@ -7,7 +7,7 @@ canonical_url: https://github.com/CrisisCore-Systems/pain-tracker
 description: Offline first sync is not just a data problem. It is a trust problem. Here is how to handle conflicts without silently erasing user intent.
 ---
 <!-- pain-tracker:target-link:start -->
-> See the production app behavior: [download a private pain tracker](https://paintracker.ca/download)
+> Install the private offline-capable app: [download PainTracker](https://paintracker.ca/download)
 <!-- pain-tracker:target-link:end -->
 Offline-first apps make a promise that sounds simple until you actually have to keep it:
 

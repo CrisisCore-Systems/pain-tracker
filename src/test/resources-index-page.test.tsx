@@ -13,11 +13,9 @@ describe('ResourcesIndexPage SEO guards', () => {
       </MemoryRouter>
     );
 
-    expect(getByRole('heading', { level: 1 })).toHaveTextContent(
-      'Free Pain Tracker Templates, Printable Pain Journals, and Private Tracking Guides'
-    );
+    expect(getByRole('heading', { level: 1 })).toHaveTextContent('Free Pain Tracking Resources');
     expect(document.title).toBe(
-      'Free Pain Tracker Templates & Pain Journal Printables | PainTracker.ca'
+      'Free Pain Tracking Resources, Templates, Charts and Journals | PainTracker.ca'
     );
     expect(
       getAllByRole('link', { name: 'Download the Free Pain Tracking Starter Pack ZIP' }).every(
@@ -27,29 +25,37 @@ describe('ResourcesIndexPage SEO guards', () => {
     expect(getByText('Choose the right pain tracker')).toBeInTheDocument();
     expect(getByText('How to start tracking pain without overthinking it')).toBeInTheDocument();
     expect(getByText('What is a pain tracker template?')).toBeInTheDocument();
-    expect(getAllByText('free private pain tracker app')[0].closest('a')).toHaveAttribute(
+    expect(getAllByText('free private offline pain tracker app')[0].closest('a')).toHaveAttribute(
       'href',
       '/'
+    );
+    expect(getAllByText('pain tracking resources')[0].closest('a')).toHaveAttribute(
+      'href',
+      '/resources'
     );
     expect(getAllByText('daily pain tracker printable')[0].closest('a')).toHaveAttribute(
       'href',
       '/resources/daily-pain-tracker-printable'
     );
+    expect(getAllByText('chronic pain diary template')[0].closest('a')).toHaveAttribute(
+      'href',
+      '/resources/chronic-pain-diary-template'
+    );
+    expect(getAllByText('pain scale chart printable')[0].closest('a')).toHaveAttribute(
+      'href',
+      '/resources/pain-scale-chart-printable'
+    );
     expect(getAllByText('what to include in a pain journal')[0].closest('a')).toHaveAttribute(
       'href',
       '/resources/what-to-include-in-pain-journal'
     );
-    expect(getAllByText('7-day pain diary template')[0].closest('a')).toHaveAttribute(
+    expect(getAllByText('Download PainTracker')[0].closest('a')).toHaveAttribute(
       'href',
-      '/resources/7-day-pain-diary-template'
+      '/download'
     );
-    expect(getAllByText('monthly pain tracker printable')[0].closest('a')).toHaveAttribute(
+    expect(getAllByText('Tracking data policy')[0].closest('a')).toHaveAttribute(
       'href',
-      '/resources/monthly-pain-tracker-printable'
-    );
-    expect(getByText('best pain tracking apps').closest('a')).toHaveAttribute(
-      'href',
-      'https://blog.paintracker.ca/best-pain-tracking-apps'
+      '/tracking-data-policy'
     );
   });
 

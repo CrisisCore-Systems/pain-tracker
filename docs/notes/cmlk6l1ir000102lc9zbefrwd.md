@@ -23,19 +23,18 @@ This page explains what the app helps with, how offline use and local-first
 storage work, and why those defaults matter when pain tracking has to survive
 real life instead of ideal conditions.
 
-If you want the most practical next step, start with the [Daily Pain Tracker
+If you want practical next steps, start with the [Pain Tracking Resources
+hub](https://www.paintracker.ca/resources), the [Daily Pain Tracker
 Printable](https://www.paintracker.ca/resources/daily-pain-tracker-printable),
-the [Doctor Visit Pain Summary
-Template](https://www.paintracker.ca/resources/doctor-visit-pain-summary-template),
-or the [Pain Tracker download page](https://www.paintracker.ca/download).
-
-If you want something immediately practical, start with the [Daily Pain Tracker
-Printable](https://www.paintracker.ca/resources/daily-pain-tracker-printable),
-the [Monthly Pain Tracker
-Printable](https://www.paintracker.ca/resources/monthly-pain-tracker-printable),
-[What to Include in a Pain
-Journal](https://www.paintracker.ca/resources/what-to-include-in-pain-journal),
-or open the [Pain Tracker download page](https://www.paintracker.ca/download).
+the [Chronic Pain Diary
+Template](https://www.paintracker.ca/resources/chronic-pain-diary-template),
+or the [Pain Scale Chart
+Printable](https://www.paintracker.ca/resources/pain-scale-chart-printable).
+For appointment prep, use [What to Include in a Pain
+Journal](https://www.paintracker.ca/resources/what-to-include-in-pain-journal);
+before moving into the app, check the [Tracking Data
+Policy](https://www.paintracker.ca/tracking-data-policy) or the [PainTracker
+download page](https://www.paintracker.ca/download).
 
 It is built for people who want practical pain tracking first: daily entries,
 local-first privacy, offline-capable use, and clinician-friendly exports when
@@ -576,35 +575,6 @@ choose them.
 
 ## Works Cited
 
-<<<<<<< Updated upstream
-* CareClinic. “Pain Tracker – CareClinic.” Google Play Store. Accessed 1 Dec. 2025.
-    
-* CrisisCore-Systems. *pain-tracker* (GitHub repository). Accessed 1 Dec. 2025.
-    
-* CrisisCore Systems. “Building a Healthcare PWA That Actually Works When It Matters.” DEV Community. Accessed 1 Dec. 2025.
-    
-* CrisisCore Systems. “Building a Pain Tracker That Actually Gets It — No Market Research Required.” DEV Community. Accessed 1 Dec. 2025.
-    
-* CrisisCore Systems. “Trauma-Informed Design Left Everyone Asking: ‘How Does It Actually Know I’m Struggling without Spying?’” DEV Community. Accessed 1 Dec. 2025.
-    
-* Danquah, Ama, and Kobi Addae. “Why Trauma-Informed Digital Design Is Relevant in 2022.” Centric Community Research. Accessed 1 Dec. 2025.
-    
-* Health Canada. *Chronic Pain in Canada: Laying a Foundation for Action (Canadian Pain Task Force, June 2019–May 2020).* Government of Canada, Sept. 2020. Accessed 1 Dec. 2025.
-    
-* Jamison, Robert N., et al. “In-Clinic Use of Electronic Pain Diaries: Barriers of Implementation among Pain Physicians.” *Journal of Pain and Palliative Care Pharmacotherapy*, 2010. Accessed 1 Dec. 2025.
-    
-* Luong, Thanh-Tam, et al. “Unaddressed Privacy Risks in Accredited Health and Wellness Apps: A Cross-Sectional Systematic Assessment.” *BMC Medicine*, 2015. Accessed 1 Dec. 2025.
-    
-* News-Medical Life Sciences. “Using a Pain Diary.” 2019. Accessed 1 Dec. 2025.
-    
-* University of Washington. “PainTracker Patient Questionnaire.” UW Medicine Center for Pain Relief. Accessed 1 Dec. 2025.
-    
-* University of Washington. “PainTracker.” CoMotion. Accessed 1 Dec. 2025.
-    
-* Wiggers, Alex. “A Major Obstacle to Tech Companies Developing Health Apps: About 2 in 3 Adults Worry About Their Privacy.” *Morning Consult Pro*, 2021. Accessed 1 Dec. 2025.
-    
-* [PainTracker.ca](http://PainTracker.ca). [PainTracker.ca](http://PainTracker.ca). Accessed 1 Dec. 2025.
-=======
 - CareClinic. “Pain Tracker – CareClinic.” Google Play Store. Accessed 1 Dec.
   2025.
 - CrisisCore-Systems. *pain-tracker* (GitHub repository). Accessed 1 Dec. 2025.
@@ -635,4 +605,3 @@ choose them.
   Accessed 1 Dec. 2025.
 - [PainTracker.ca](http://PainTracker.ca). [PainTracker.ca](http://PainTracker.ca).
   Accessed 1 Dec. 2025.
->>>>>>> Stashed changes

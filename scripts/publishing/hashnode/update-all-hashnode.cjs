@@ -14,6 +14,7 @@
 const fs = require('fs');
 const path = require('path');
 const https = require('https');
+const { buildHashnodeMarkdown } = require('./article-markdown.cjs');
 
 // ── Config ────────────────────────────────────────────────────────────
 const TOKEN = process.env.HASHNODE_TOKEN || '';
@@ -131,54 +132,7 @@ function parseArticleTS(content, fileName) {
 
 // ── Markdown conversion (with HTML CTA) ───────────────────────────────
 function articleToMarkdown(article) {
-  const lines = [];
-
-  for (const section of article.sections) {
-    lines.push(`## ${section.h2}`);
-    lines.push('');
-    for (const para of section.paragraphs) {
-      lines.push(para);
-      lines.push('');
-    }
-  }
-
-  if (article.howToSteps && article.howToSteps.length > 0) {
-    lines.push('## Steps');
-    lines.push('');
-    for (let i = 0; i < article.howToSteps.length; i++) {
-      const step = article.howToSteps[i];
-      lines.push(`**Step ${i + 1}: ${step.name}**`);
-      lines.push('');
-      lines.push(step.text);
-      lines.push('');
-    }
-  }
-
-  if (article.faqs && article.faqs.length > 0) {
-    lines.push('## Frequently Asked Questions');
-    lines.push('');
-    for (const faq of article.faqs) {
-      lines.push(`### ${faq.question}`);
-      lines.push('');
-      lines.push(faq.answer);
-      lines.push('');
-    }
-  }
-
-  // HTML CTA footer
-  lines.push('---');
-  lines.push('');
-  lines.push('<p class="cta">');
-  lines.push(
-    '  <a href="https://paintracker.ca" target="_blank" rel="noopener noreferrer">'
-  );
-  lines.push(
-    '    Try PainTracker free — offline, encrypted, clinician-ready pain tracking.'
-  );
-  lines.push('  </a>');
-  lines.push('</p>');
-
-  return lines.join('\n').trim();
+  return buildHashnodeMarkdown(article);
 }
 
 // ── GraphQL helpers ───────────────────────────────────────────────────
