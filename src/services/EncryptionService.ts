@@ -242,6 +242,24 @@ export class EndToEndEncryptionService {
     return key;
   }
 
+  async exportRawKeyBytes(keyId: string): Promise<ArrayBuffer> {
+    const key = await this.getOrCreateEncryptionKey(keyId);
+    try {
+      const parsed = JSON.parse(key) as { enc?: string };
+      if (parsed?.enc) return base64ToArrayBuffer(parsed.enc);
+    } catch {}
+    return base64ToArrayBuffer(key);
+  }
+
+  async exportRawKeyBytes(keyId: string): Promise<ArrayBuffer> {
+    const key = await this.getOrCreateEncryptionKey(keyId);
+    try {
+      const parsed = JSON.parse(key) as { enc?: string };
+      if (parsed?.enc) return base64ToArrayBuffer(parsed.enc);
+    } catch {}
+    return base64ToArrayBuffer(key);
+  }
+
   private async requireEncryptionKey(keyId: string): Promise<string> {
     const key = await this.keyManager.retrieveKey(keyId);
     if (!key) {
