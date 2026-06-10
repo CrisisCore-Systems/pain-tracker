@@ -1135,6 +1135,166 @@
       "articleId": 3635757,
       "devtoUrl": "https://dev.to/crisiscoresystems/the-protective-legitimacy-score-how-to-tell-whether-a-trust-claim-is-structural-1lgm",
       "published": true
+    },
+    {
+      "key": "devto-learned-free-tool",
+      "enabled": true,
+      "title": "What I Learned Building a Free Tool Before Anyone Asked for It",
+      "articleId": 3845442,
+      "published": true,
+      "publishAt": "2026-06-17T16:00:00Z",
+      "tags": [
+        "privacy",
+        "opensource",
+        "pwa"
+      ],
+      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
+      "description": "What I Learned Building a Free Tool Before Anyone Asked for It",
+      "devtoUrl": null
+    },
+    {
+      "key": "devto-patient-reports-provider",
+      "enabled": true,
+      "title": "Patient-Generated Reports Without Provider Integration",
+      "articleId": 3845441,
+      "published": true,
+      "publishAt": "2026-06-18T16:00:00Z",
+      "tags": [
+        "privacy",
+        "healthtech",
+        "pwa"
+      ],
+      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
+      "description": "Patient-Generated Reports Without Provider Integration",
+      "devtoUrl": null
+    },
+    {
+      "key": "devto-health-software-overclaiming",
+      "enabled": true,
+      "title": "Building Health-Adjacent Software Without Overclaiming",
+      "articleId": 3845440,
+      "published": true,
+      "publishAt": "2026-06-19T16:00:00Z",
+      "tags": [
+        "healthtech",
+        "privacy",
+        "webdev"
+      ],
+      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
+      "description": "Building Health-Adjacent Software Without Overclaiming",
+      "devtoUrl": null
+    },
+    {
+      "key": "devto-vulnerable-data-checklist",
+      "enabled": true,
+      "title": "A Small Checklist for Apps That Handle Vulnerable User Data",
+      "articleId": 3845439,
+      "published": true,
+      "publishAt": "2026-06-20T16:00:00Z",
+      "tags": [
+        "security",
+        "privacy",
+        "webdev"
+      ],
+      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
+      "description": "A Small Checklist for Apps That Handle Vulnerable User Data",
+      "devtoUrl": null
+    },
+    {
+      "key": "devto-export-consent-boundary",
+      "enabled": true,
+      "title": "The Export Button Is a Consent Boundary",
+      "articleId": 3845438,
+      "published": true,
+      "publishAt": "2026-06-21T16:00:00Z",
+      "tags": [
+        "privacy",
+        "security",
+        "pwa"
+      ],
+      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
+      "description": "The Export Button Is a Consent Boundary",
+      "devtoUrl": null
+    },
+    {
+      "key": "devto-accountless-core-use",
+      "enabled": true,
+      "title": "Why Accountless Core Use Matters in Sensitive Apps",
+      "articleId": 3845437,
+      "published": true,
+      "publishAt": "2026-06-22T16:00:00Z",
+      "tags": [
+        "privacy",
+        "security",
+        "webdev"
+      ],
+      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
+      "description": "Why Accountless Core Use Matters in Sensitive Apps",
+      "devtoUrl": null
+    },
+    {
+      "key": "devto-offline-first-failure-policy",
+      "enabled": true,
+      "title": "Offline-First Is Not a Feature. It Is a Failure Policy.",
+      "articleId": 3845436,
+      "published": true,
+      "publishAt": "2026-06-23T16:00:00Z",
+      "tags": [
+        "offlinefirst",
+        "pwa",
+        "architecture"
+      ],
+      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
+      "description": "Offline-First Is Not a Feature. It Is a Failure Policy.",
+      "devtoUrl": null
+    },
+    {
+      "key": "devto-protective-computing-fail-safe",
+      "enabled": true,
+      "title": "Protective Computing: Software Should Fail Safely Under Stress",
+      "articleId": 3845375,
+      "published": true,
+      "publishAt": "2026-06-24T16:00:00Z",
+      "tags": [
+        "architecture",
+        "privacy",
+        "offlinefirst"
+      ],
+      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
+      "description": "Protective Computing: Software Should Fail Safely Under Stress",
+      "devtoUrl": null
+    },
+    {
+      "key": "devto-local-first-pain-tracker",
+      "enabled": true,
+      "title": "The Architecture of a Local-First Pain Tracker",
+      "articleId": 3845374,
+      "published": true,
+      "publishAt": "2026-06-25T16:00:00Z",
+      "tags": [
+        "architecture",
+        "privacy",
+        "pwa"
+      ],
+      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
+      "description": "The Architecture of a Local-First Pain Tracker",
+      "devtoUrl": null
+    },
+    {
+      "key": "devto-paintracker-works-not-okay",
+      "enabled": true,
+      "title": "I Built a Pain Tracker That Works When the User Is Not Okay",
+      "articleId": 3845373,
+      "published": true,
+      "publishAt": "2026-06-26T16:00:00Z",
+      "tags": [
+        "privacy",
+        "accessibility",
+        "pwa"
+      ],
+      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
+      "description": "I Built a Pain Tracker That Works When the User Is Not Okay",
+      "devtoUrl": null
     }
   ]
 }
