@@ -34,26 +34,26 @@ Pain Tracker helps people record pain, symptoms, treatments, and work impact, th
 </p>
 
 <p align="center">
-  <a href="https://paintracker.ca"><strong>Private Offline Pain Tracker</strong></a> | <a href="https://paintracker.ca/case-study"><strong>Case Study</strong></a> | <a href="https://paintracker.ca/proof"><strong>Proof</strong></a> | <a href="docs/user-guide/INSTALL.md"><strong>Install</strong></a> | <a href="PRIVACY.md"><strong>Privacy</strong></a> | <a href="docs/user-guide/EXPORT_DATA.md"><strong>Export Guide</strong></a> | <a href="docs/README.md"><strong>Docs</strong></a>
+  <a href="https://www.paintracker.ca"><strong>Private Offline Pain Tracker</strong></a> | <a href="https://www.paintracker.ca/case-study"><strong>Case Study</strong></a> | <a href="https://www.paintracker.ca/proof"><strong>Proof</strong></a> | <a href="docs/user-guide/INSTALL.md"><strong>Install</strong></a> | <a href="PRIVACY.md"><strong>Privacy</strong></a> | <a href="docs/user-guide/EXPORT_DATA.md"><strong>Export Guide</strong></a> | <a href="docs/README.md"><strong>Docs</strong></a>
 </p>
 
 ## Key Resource Paths
 
 These are the primary product and resource paths used in external references.
 
-- [Private offline pain tracking app](https://paintracker.ca)
-- [Download a private pain tracker](https://paintracker.ca/download)
-- [Chronic pain tracking resources](https://paintracker.ca/resources)
-- [PainTracker pricing and upgrades](https://paintracker.ca/pricing)
-- [Free pain journal templates](https://paintracker.ca/resources/daily-pain-tracker-printable)
-- [What to include in a pain journal](https://paintracker.ca/resources/what-to-include-in-pain-journal)
-- [Pain journal for appointments](https://paintracker.ca/resources/doctor-visit-pain-summary-template)
-- [WorkSafeBC pain documentation tool](https://paintracker.ca/resources/worksafebc-pain-journal-template)
-- [Tracking and data policy](https://paintracker.ca/tracking-data-policy)
-- [Privacy architecture](https://paintracker.ca/privacy-architecture)
-- [Pain Tracker whitepaper](https://paintracker.ca/whitepaper)
-- [PMMP provider review](https://paintracker.ca/providers/pmmp)
-- [Private offline pain tracker app guide](https://paintracker.ca/pain-tracker-app)
+- [Private offline pain tracking app](https://www.paintracker.ca)
+- [Download a private pain tracker](https://www.paintracker.ca/download)
+- [Chronic pain tracking resources](https://www.paintracker.ca/resources)
+- [PainTracker pricing and upgrades](https://www.paintracker.ca/pricing)
+- [Free pain journal templates](https://www.paintracker.ca/resources/daily-pain-tracker-printable)
+- [What to include in a pain journal](https://www.paintracker.ca/resources/what-to-include-in-pain-journal)
+- [Pain journal for appointments](https://www.paintracker.ca/resources/doctor-visit-pain-summary-template)
+- [WorkSafeBC pain documentation tool](https://www.paintracker.ca/resources/worksafebc-pain-journal-template)
+- [Tracking and data policy](https://www.paintracker.ca/tracking-data-policy)
+- [Privacy architecture](https://www.paintracker.ca/privacy-architecture)
+- [Pain Tracker whitepaper](https://www.paintracker.ca/whitepaper)
+- [PMMP provider review](https://www.paintracker.ca/providers/pmmp)
+- [Private offline pain tracker app guide](https://www.paintracker.ca/pain-tracker-app)
 
 The public site includes a resource acquisition layer under `/resources/*`, including printable pain trackers, appointment-prep sheets, disability/workers-compensation documentation pages, condition-specific tracking pages, and device-specific offline tracking pages. These pages are part of the product funnel. Resource funnel measurement is intentionally constrained: health content, symptom text, medications, notes, attachments, export contents, claim details, identity, and persistent profiling are not measured.
 
@@ -77,8 +77,9 @@ That posture shapes the architecture: local-first storage, user-controlled expor
 | Specialized workflows | Fibromyalgia hub, body-location capture, occupational/work-impact fields, treatment/medication notes |
 | PWA behavior | Offline banner, install prompt, PWA status indicator, service-worker management |
 | Onboarding | First-run onboarding, mock analytics preview, walkthrough/tutorial flow |
-| Accessibility | Keyboard shortcuts, focus-aware UI, trauma-informed provider, display/workflow preferences |
+| Accessibility | Keyboard shortcuts, focus-aware UI, trauma-informed provider, display/workflow preferences + navigation visibility controls |
 | Monetization boundary | Free/Basic/Pro/Enterprise surfaces, with local tracking preserved outside payment dependency |
+| Workflow preferences | Local settings for industrial field mode, WCB template style, and Fibromyalgia Hub navigation visibility without reload |
 
 Deeper product detail lives in [docs/product](docs/product) and the broader docs index at [docs/README.md](docs/README.md).
 
@@ -96,8 +97,9 @@ Protective Computing Specification v1.0 is a founder-authored normative design s
 | Analytics | Local-first | No surveillance analytics required for core use |
 | Weather correlation | Optional network call | Must be explicitly configured and treated as an external dependency |
 | Clinic workflows | Deployment-specific | Optional backend paths are not required for core tracking |
-| Payments | Optional upgrade path | Stripe endpoints and pricing routes exist; core local tracking must not depend on payment service availability |
+| Payments / upgrades | Optional and non-core | Pricing/upgrades surfaces may exist, but core local tracking must not depend on Stripe, accounts, subscriptions, or payment-service availability |
 | Publishing and SEO automation | Maintainer-only tooling | Scripts read markdown from `docs/notes` and may call third-party publishing APIs when explicitly run |
+| Search Console dashboard | Maintainer-only optional client-side tool | OAuth token is user-provided, tab-local, not persisted, readonly scope, no server-side storage |
 | Compliance posture | No compliance claim | Privacy-aligned architecture and controls only |
 
 For trust and reversibility framing, see [docs/trust/paintracker-protective-computing-reference-packet-v1.0.md](docs/trust/paintracker-protective-computing-reference-packet-v1.0.md), [docs/trust/README.md](docs/trust/README.md), and [SECURITY_INVARIANTS.md](SECURITY_INVARIANTS.md).
@@ -173,7 +175,10 @@ For a fuller setup path, see [docs/user-guide/INSTALL.md](docs/user-guide/INSTAL
 - Analytics subsystem: `VITE_ENABLE_ANALYTICS` defaults to disabled unless explicitly set to `true`
 - Local API server: `npm run dev:api` runs optional Vercel-style API functions for local testing
 - Full Vercel build: `npm run build:vercel` builds packages, the PWA app, copies the app bundle, then builds `packages/blog`
+- Search Console dashboard: `/seo/search-console-dashboard` uses a manually supplied OAuth token with `webmasters.readonly`; token is not stored by the app
 - Optional clinic, weather, payment, and publishing paths require explicit environment configuration
+
+Some older deployment/Stripe/subscription docs are historical or experimental. Treat local-first tracking as the canonical supported path unless a backend feature is explicitly documented as current.
 
 Use [.env.example](.env.example) for non-secret configuration shape. Do not commit `.env`, `.env.local`, tokens, webhooks, API keys, or user data.
 
@@ -202,6 +207,25 @@ npm run security-full
 
 Focused commands and workflows live in [docs/engineering/DEVELOPER_COMMANDS.md](docs/engineering/DEVELOPER_COMMANDS.md). Current automated metrics are published through the badges at the top of this README.
 
+### Focused Commands
+
+| Need | Command |
+| --- | --- |
+| Fast local confidence | `npm run check:quick` |
+| Full CI-style verification | `npm run check` |
+| Privacy/telemetry boundary checks | `npm run test:privacy-gates` |
+| SEO route/schema/sitemap checks | `npm run test:seo && npm run seo:check-sitemap-sync` |
+| Browser smoke coverage | `npm run e2e:smoke` |
+| PWA verification | `npm run e2e:pwa` |
+| Vercel/public web build | `npm run build:vercel` |
+| Badge refresh | `npm run badge:all` |
+
+## Known Security / Audit Status
+
+- No high/critical production vulnerabilities in the latest lockfile remediation branch.
+- Known remaining issue: moderate production vulnerabilities remain in the `brace-expansion -> minimatch -> glob` dependency chain.
+- Do not market the app as certified, compliant, or clinically validated.
+
 ## Security
 
 - Local-first storage and selective encryption helpers for sensitive data
@@ -218,6 +242,12 @@ Known trust gaps remain explicit:
 - Degraded-functionality accessibility evidence is partial;
 - External review/certification has not been completed.
 
+## In Flight
+
+| Work | Status | Trust boundary |
+| --- | --- | --- |
+| First Entry Loop | Draft PR #173 | Local save confirmation, no telemetry, no backend intake, no hidden feedback submission |
+
 ## Roadmap
 
 ### Draft / Pending
@@ -231,6 +261,9 @@ Current 2026 priorities:
 3. Improve degraded-mode resilience, especially around persistence, recovery, and PWA behavior.
 4. Tighten trust-boundary documentation for optional integrations and deployment-specific backend paths.
 5. Continue accessibility and trauma-informed UX hardening against the WCAG 2.2 AA target.
+6. Ship first-entry onboarding without adding telemetry or backend intake.
+7. Maintain SEO/resource pages, sitemap generation, and Search Console review tooling.
+8. Replace stale backend/subscription quickstart language with local-first-first setup docs.
 
 Longer-form planning lives under [docs/planning](docs/planning) and [docs/index](docs/index). Some planning files are historical and may reference older release numbers. Treat the README, `package.json`, the trust reference packet, and badge files as the current top-level status anchors.
 
