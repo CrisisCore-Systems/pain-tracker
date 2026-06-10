@@ -721,34 +721,3 @@ function createMemoryWal(): any {
   };
 }
 
-let walReadyPromise: Promise<void> | null = null;
-
-export async function waitUntilWALInit(): Promise<void> {
-  if (!walReadyPromise) {
-    walReadyPromise = import('./wal').then(m => m.createWalEngine({ offlineStorageService: OfflineStorageService.getInstance(), walStore: createMemoryWal() })).then(engine => engine.init()).catch(() => {});
-  }
-  return walReadyPromise;
-}
-
-function createMemoryWal(): any {
-  const records = new Map<string, any>();
-  return {
-    append: async (intent: any) => { records.set(intent.id, intent); },
-    markStage: async (id: string, stage: string) => {
-      const record = records.get(id);
-      if (record) record.stage = stage;
-    },
-    getPending: async () => {
-      const pending: any[] = [];
-      for (const record of records.values()) {
-        if (record.stage === 'STAGE_PENDING' || record.stage === 'STAGE_PROCESSING') {
-          pending.push(record);
-        }
-      }
-      return pending;
-    },
-    getById: async (id: string) => records.get(id) ?? null,
-    remove: async (id: string) => records.delete(id),
-    clear: async () => records.clear(),
-  };
-}

@@ -4,44 +4,40 @@ import { privacyAnalytics } from '../../services/PrivacyAnalyticsService';
 import { analyticsLogger } from '../../lib/debug-logger';
 
 // Mock jsPDF
-const { mockDoc: mockJsPDF, MockJsPDF } = vi.hoisted(() => {
-  const mockDoc = {
-    internal: {
-      pageSize: { getWidth: vi.fn(() => 210), getHeight: vi.fn(() => 297) },
-    },
-    setFontSize: vi.fn().mockReturnThis(),
-    setFont: vi.fn().mockReturnThis(),
-    setTextColor: vi.fn().mockReturnThis(),
-    setDrawColor: vi.fn().mockReturnThis(),
-    setFillColor: vi.fn().mockReturnThis(),
-    text: vi.fn().mockReturnThis(),
-    line: vi.fn().mockReturnThis(),
-    rect: vi.fn().mockReturnThis(),
-    roundedRect: vi.fn().mockReturnThis(),
-    setLineWidth: vi.fn().mockReturnThis(),
-    addPage: vi.fn().mockReturnThis(),
-    getStringUnitWidth: vi.fn().mockReturnValue(50),
-    save: vi.fn(),
-    output: vi.fn().mockImplementation((type?: string) => {
-      if (type === 'arraybuffer') {
-        // deterministic 8 bytes for hashing
-        return new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8]).buffer;
-      }
-      return 'data:application/pdf;base64,test';
-    }),
-    splitTextToSize: vi.fn().mockImplementation((text: string) => [text]),
-    getNumberOfPages: vi.fn().mockReturnValue(1),
-    setPage: vi.fn().mockReturnThis(),
-  };
-
-  function MockJsPDF() {
-    return mockDoc;
-  }
-
-  return { mockDoc, MockJsPDF };
-});
+const mockJsPDF = {
+  internal: {
+    pageSize: { getWidth: () => 210, getHeight: () => 297 },
+  },
+  setFontSize: vi.fn().mockReturnThis(),
+  setFont: vi.fn().mockReturnThis(),
+  setTextColor: vi.fn().mockReturnThis(),
+  setDrawColor: vi.fn().mockReturnThis(),
+  setFillColor: vi.fn().mockReturnThis(),
+  text: vi.fn().mockReturnThis(),
+  line: vi.fn().mockReturnThis(),
+  rect: vi.fn().mockReturnThis(),
+  roundedRect: vi.fn().mockReturnThis(),
+  setLineWidth: vi.fn().mockReturnThis(),
+  addPage: vi.fn().mockReturnThis(),
+  getStringUnitWidth: vi.fn().mockReturnValue(50),
+  save: vi.fn(),
+  output: vi.fn().mockImplementation((type?: string) => {
+    if (type === 'arraybuffer') {
+      // deterministic 8 bytes for hashing
+      return new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8]).buffer;
+    }
+    return 'data:application/pdf;base64,test';
+  }),
+  splitTextToSize: vi.fn().mockImplementation((text: string) => [text]),
+  getNumberOfPages: vi.fn().mockReturnValue(1),
+  setPage: vi.fn().mockReturnThis(),
+};
 
 const swallowed = vi.hoisted(() => vi.fn());
+
+const MockJsPDF = vi.fn(function MockJsPDF() {
+  return mockJsPDF;
+});
 
 vi.mock('jspdf', () => ({
   default: MockJsPDF,
