@@ -2,6 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useVault } from '../../hooks/useVault';
 import { readPrivacySettings } from '../../utils/privacySettings';
 import { MAX_FAILED_UNLOCK_ATTEMPTS } from '../../services/vaultConstants';
+import { isDecoyMode } from '../../services/DuressVaultService';
+import { usePainTrackerStore } from '../../stores/pain-tracker-store';
+import { useGatekeeperRouter } from './useGatekeeperRouter';
 
 const MIN_PASSPHRASE_LENGTH = 12;
 
@@ -10,7 +13,7 @@ export interface VaultGateProps {
 }
 
 export const VaultGate: React.FC<VaultGateProps> = ({ children }) => {
-  const { status, setupPassphrase, unlock, lock, clearAll } = useVault();
+  const { status, setupPassphrase, lock, clearAll } = useVault();
   const [passphrase, setPassphrase] = useState('');
   const [confirmPassphrase, setConfirmPassphrase] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -21,6 +24,17 @@ export const VaultGate: React.FC<VaultGateProps> = ({ children }) => {
     () => readPrivacySettings().vaultKillSwitchEnabled
   );
   const [pendingSeconds, setPendingSeconds] = useState<number | null>(null);
+
+  // Gatekeeper router for timing-safe duress unlock
+  const gatekeeperRouter = useGatekeeperRouter({
+    fixedExecutionWindowMs: 1500,
+    onDecoyMounted: () => {
+      // Decoy mode entered - ensure store has decoy entries
+    },
+    onVaultMounted: () => {
+      // Vault mode entered - ensure store is ready
+    },
+  });
 
   useEffect(() => {
     if (status.state === 'uninitialized' || status.state === 'locked') {
@@ -104,11 +118,15 @@ export const VaultGate: React.FC<VaultGateProps> = ({ children }) => {
 
     setIsProcessing(true);
     setError(null);
+    
     try {
-      await unlock(passphrase);
+      // Use the gatekeeper router for timing-safe unlock
+      await gatekeeperRouter.executeUnlock(passphrase);
       resetForm();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unable to unlock vault.');
+    } catch {
+      // Errors absorbed by gatekeeper router; uniform error message
+      setError('Initialization configuration exception.');
+      resetForm();
     } finally {
       setIsProcessing(false);
     }
@@ -307,7 +325,7 @@ export const VaultGate: React.FC<VaultGateProps> = ({ children }) => {
     </form>
   );
 
-  const renderContent = () => {
+const renderContent = () => {
     if (!status.sodiumReady) {
       return (
         <div className="text-center">
@@ -321,7 +339,8 @@ export const VaultGate: React.FC<VaultGateProps> = ({ children }) => {
       );
     }
 
-    if (status.state === 'unlocked') {
+    // Check duress state - if decoy mode is active, we show the app with decoy data
+    if (isDecoyMode() || status.state === 'unlocked') {
       return <>{children}</>;
     }
 
@@ -354,13 +373,14 @@ export const VaultGate: React.FC<VaultGateProps> = ({ children }) => {
           </div>
           <div>{status.state === 'uninitialized' ? renderSetup() : renderUnlock()}</div>
           <p className="mt-6 text-xs text-gray-500 dark:text-gray-400">
-            Tip: If you ever need to safely reset the vault, choose “Reset vault”. This keeps your
-            account secure but removes local data from this device.
+            Tip: If you ever need to safely reset the vault, choose "Reset vault". This keeps your
+account secure but removes local data from this device.
           </p>
         </div>
       </div>
     );
   };
+
   // Allow tests to bypass the vault in DEV only when both the test-mode bootstrap
   // flag and a persistent test-mode localStorage key are present. This guards
   // against accidental bypass in interactive dev sessions.
@@ -374,5 +394,12 @@ export const VaultGate: React.FC<VaultGateProps> = ({ children }) => {
     // ignore storage errors in unusual environments
   }
 
-  return <>{status.state === 'unlocked' ? children : renderContent()}</>;
+  return (
+    <>
+      {gatekeeperRouter.isProcessing ? gatekeeperRouter.error ?? null : null}
+      {status.state === 'unlocked' || isDecoyMode() || gatekeeperRouter.isVaultMode || gatekeeperRouter.isDecoyMode 
+        ? children 
+        : renderContent()}
+    </>
+  );
 };

@@ -12,9 +12,9 @@ import { hipaaComplianceService } from '../services/HIPAACompliance';
 import { migratePainTrackerState } from './pain-tracker-migrations';
 import { trackMoodEntryLogged } from '../analytics/ga4-events';
 import { createEncryptedOfflinePersistStorage } from './encrypted-idb-persist';
-import { 
-  retentionLoopService, 
-  dailyRitualService, 
+import {
+  retentionLoopService,
+  dailyRitualService,
   identityLockInService,
   predictiveInsightsService,
   multiVariateAnalysisService,
@@ -24,6 +24,7 @@ import {
   type RitualState,
   type UserIdentity,
 } from '@pain-tracker/services';
+import { generateDecoySandbox } from '../services/DecoySandboxGenerator';
 
 // Error counters for silent failures (prevents data loss blindspots)
 let analyticsErrorCount = 0;
@@ -231,8 +232,9 @@ export interface PainTrackerState {
   // Utility Actions
   setError: (error: string | null) => void;
   setLoading: (loading: boolean) => void;
-  clearAllData: () => void;
-  loadSampleData: () => void;
+clearAllData: () => void;
+   loadDecoyEntries: () => void;
+   loadSampleData: () => void;
   loadChronicPainTestData: () => void;
   loadComprehensive365DayTestData: () => void;
   
@@ -560,17 +562,31 @@ export const usePainTrackerStore = create<PainTrackerState>()(
             });
           },
 
-          clearAllData: () => {
-            set(state => {
-              state.entries = [];
-              state.moodEntries = [];
-              state.fibromyalgiaEntries = [];
-              state.activityLogs = [];
-              state.emergencyData = null;
-              state.scheduledReports = [];
-              state.error = null;
-            });
-          },
+clearAllData: () => {
+             set(state => {
+               state.entries = [];
+               state.moodEntries = [];
+               state.fibromyalgiaEntries = [];
+               state.activityLogs = [];
+               state.emergencyData = null;
+               state.scheduledReports = [];
+               state.error = null;
+             });
+           },
+
+// Load decoy entries for duress mode
+            loadDecoyEntries: () => {
+              // Generate plausible deniability sandbox with randomized entries
+              const { entries, moodEntries } = generateDecoySandbox({
+                minDays: 30,
+                maxDays: 90,
+              });
+              set(state => {
+                state.entries = entries;
+                state.moodEntries = moodEntries;
+                state.error = null;
+              });
+            },
 
           loadSampleData: () => {
             const state = get();
