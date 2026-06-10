@@ -13,7 +13,14 @@
 
 Pain Tracker helps people record pain, symptoms, treatments, and work impact, then export structured summaries for appointments, claim-related discussions, and personal records. The core app is local-first by default. Optional network, clinic, weather, publishing, and payment paths are treated as explicit trust boundaries rather than baseline requirements.
 
-Current source coverage includes 242 source test files under `src/`. Additional Playwright and publishing tests live under `e2e/` and `test/`.
+## Current Status
+
+- Production app: https://www.paintracker.ca
+- Current package version: `1.2.0`
+- Latest publication artifact: Pain Tracker whitepaper v1.3.0
+- Core posture: local-first, offline-capable, no account required for core tracking
+- Evidence posture: self-attested / repo-backed candidate reference implementation; not certified
+- Active draft work: First Entry Loop PR #173 is open and not merged
 
 <p align="center">
   <img src="docs/screenshots/main-dashboard.png" alt="Pain Tracker dashboard" style="max-height: 420px; width: auto; max-width: 100%; object-fit: contain; display: block; margin: 0 auto;" />
@@ -35,6 +42,11 @@ These are the primary product and resource paths used in external references.
 - [What to include in a pain journal](https://paintracker.ca/resources/what-to-include-in-pain-journal)
 - [Pain journal for appointments](https://paintracker.ca/resources/doctor-visit-pain-summary-template)
 - [WorkSafeBC pain documentation tool](https://paintracker.ca/resources/worksafebc-pain-journal-template)
+- [Tracking and data policy](https://paintracker.ca/tracking-data-policy)
+- [Privacy architecture](https://paintracker.ca/privacy-architecture)
+- [Pain Tracker whitepaper](https://paintracker.ca/whitepaper)
+- [PMMP provider review](https://paintracker.ca/providers/pmmp)
+- [Private offline pain tracker app guide](https://paintracker.ca/pain-tracker-app)
 
 ## Why This Exists
 
@@ -84,7 +96,10 @@ For trust and reversibility framing, see [docs/trust/paintracker-protective-comp
 | Path | Purpose |
 | --- | --- |
 | `src/` | Main React/Vite PWA, components, stores, services, tests, and local app routes |
-| `packages/blog/` | Next.js public site/blog build used by the Vercel web build |
+| `packages/` | Internal packages and public web/blog build surfaces, including `design-system`, `services`, `utils`, and `blog` |
+| `pages/` | Static/page-source content used for public-facing routes and copy surfaces |
+| `research/` | Research, study, and evaluation planning artifacts |
+| `security/` and `security-reports/` | SBOM, audit, and security report artifacts |
 | `api/` and `api-lib/` | Optional Vercel-style endpoints and shared server helpers |
 | `docs/` | User, engineering, trust, product, accessibility, SEO, and planning docs |
 | `docs/notes/` | Active publishing markdown sources used by Hashnode and related scripts |
@@ -172,6 +187,10 @@ Focused commands and workflows live in [docs/engineering/DEVELOPER_COMMANDS.md](
 Start with [SECURITY.md](SECURITY.md), [SECURITY_INVARIANTS.md](SECURITY_INVARIANTS.md), and [docs/trust/threat-model.md](docs/trust/threat-model.md).
 
 ## Roadmap
+
+### Draft / Pending
+
+- First Entry Loop: open draft PR #173. Not shipped on `main` yet. Includes additional security/storage primitives (duress, camouflage, WAL) that are currently experimental and inactive in production paths.
 
 Current 2026 priorities:
 

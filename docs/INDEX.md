@@ -50,24 +50,11 @@ PainTracker is a candidate reference implementation with a public reference pack
 
 ---
 
-## 📝 Blog Post Planning (NEW)
+## 📢 Publishing and Resource Funnel
 
 **For content creators, marketers, and community advocates:**
 
-Complete documentation for a 5-part blog post series about Pain Tracker PWA for Hashnode publication:
-
-- **[Blog Post Planning README](marketing/BLOG_POST_PLANNING_README.md)** - Start here: Central hub and navigation guide
-- **[Hashnode Blog Post Ideas](marketing/HASHNODE_BLOG_POST_IDEAS.md)** - Detailed outlines for all 5 posts (31,250 chars)
-- **[Blog Post Quick Reference](marketing/BLOG_POST_QUICK_REFERENCE.md)** - Condensed summaries and checklists (13,600 chars)
-- **[Blog Post Visual Summary](marketing/BLOG_POST_VISUAL_SUMMARY.txt)** - ASCII art overview of entire series (15,700 chars)
-- **[Blog Writing Guide](marketing/BLOG_WRITING_GUIDE.md)** - Step-by-step guide to write Post #1 (15,000 chars)
-
-**The 5 Blog Posts** (60-70 minutes total reading time):
-1. 🌐 **Building a Healthcare PWA with Offline-First Architecture** (12-15 min) - Full-stack developers
-2. 💜 **Trauma-Informed Design: Software That Heals, Not Harms** (10-12 min) - UX/UI designers
-3. 🧠 **Pattern-aware insights: Heuristic Algorithms** (15-18 min) - Data scientists
-4. 🩺 **Building for Fibromyalgia: Clinically Useful Tracking** (10-12 min) - Healthcare developers
-5. 🔒 **Zero-Trust Security in Healthcare: Privacy-aligned security controls** (14-16 min) - Security engineers
+Documentation for the publishing and resource funnel that powers the public site and external references. See [marketing/PUBLISHING_README.md](marketing/PUBLISHING_README.md) for details.
 
 ---
 
