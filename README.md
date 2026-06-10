@@ -15,9 +15,16 @@ Pain Tracker helps people record pain, symptoms, treatments, and work impact, th
 
 ## Current Status
 
+- App package version: `1.2.0`
+- Runtime target: Node `>=22.12.0 <23`, npm `>=9`
+- Tests badge: 440
+- Coverage badge: 89%
+- Security badge: 0 known vulnerability count
+- LOC badge: 173,234
+- Bundle badge: 6.32MB
+- Mutation badge: n/a
+- Canonical trust artifact: PainTracker Protective Computing Reference Packet v1.0, dated 2026-05-09
 - Production app: https://www.paintracker.ca
-- Current package version: `1.2.0`
-- Latest publication artifact: Pain Tracker whitepaper v1.3.0
 - Core posture: local-first, offline-capable, no account required for core tracking
 - Evidence posture: self-attested / repo-backed candidate reference implementation; not certified
 - Active draft work: First Entry Loop PR #173 is open and not merged
@@ -48,6 +55,8 @@ These are the primary product and resource paths used in external references.
 - [PMMP provider review](https://paintracker.ca/providers/pmmp)
 - [Private offline pain tracker app guide](https://paintracker.ca/pain-tracker-app)
 
+The public site includes a resource acquisition layer under `/resources/*`, including printable pain trackers, appointment-prep sheets, disability/workers-compensation documentation pages, condition-specific tracking pages, and device-specific offline tracking pages. These pages are part of the product funnel. Resource funnel measurement is intentionally constrained: health content, symptom text, medications, notes, attachments, export contents, claim details, identity, and persistent profiling are not measured.
+
 ## Why This Exists
 
 Pain Tracker exists because standard health software often assumes stable housing, reliable internet, cognitive surplus, safe disclosure conditions, and uninterrupted sessions. This project is built around Protective Computing: a design discipline for systems that must remain legible and useful under pain, fatigue, interruption, weak infrastructure, and coercive conditions.
@@ -62,12 +71,14 @@ That posture shapes the architecture: local-first storage, user-controlled expor
 
 | Area | Current capability |
 | --- | --- |
-| Pain tracking | Multi-step assessment, body-location capture, symptom severity tracking |
-| Reporting | WorkSafeBC-related CSV, JSON, and PDF exports; appointment-ready summaries |
-| Analytics | Local trend analysis, correlations, and pattern-aware heuristics |
-| Accessibility | Keyboard support, focus management, configurable display options, gentle language |
-| Security posture | Local-first storage, selective AES-GCM helpers, CSP, redacted audit/event logging patterns |
-| Specialized workflows | Fibromyalgia-oriented scoring helpers, treatment tracking, work-impact documentation |
+| Daily tracking | One-screen quick log, daily check-in, edit/history flows, local persistence |
+| Review surfaces | Clinical dashboard, calendar view, history page, body map, analytics dashboard |
+| Reporting | Reports page with user-controlled export flows for appointment and WorkSafeBC-oriented documentation |
+| Specialized workflows | Fibromyalgia hub, body-location capture, occupational/work-impact fields, treatment/medication notes |
+| PWA behavior | Offline banner, install prompt, PWA status indicator, service-worker management |
+| Onboarding | First-run onboarding, mock analytics preview, walkthrough/tutorial flow |
+| Accessibility | Keyboard shortcuts, focus-aware UI, trauma-informed provider, display/workflow preferences |
+| Monetization boundary | Free/Basic/Pro/Enterprise surfaces, with local tracking preserved outside payment dependency |
 
 Deeper product detail lives in [docs/product](docs/product) and the broader docs index at [docs/README.md](docs/README.md).
 
@@ -96,7 +107,10 @@ For trust and reversibility framing, see [docs/trust/paintracker-protective-comp
 | Path | Purpose |
 | --- | --- |
 | `src/` | Main React/Vite PWA, components, stores, services, tests, and local app routes |
-| `packages/` | Internal packages and public web/blog build surfaces, including `design-system`, `services`, `utils`, and `blog` |
+| `packages/design-system/` | Shared UI/design-system package used by the app |
+| `packages/services/` | Shared service package compiled before app builds |
+| `packages/utils/` | Shared utility package compiled before app builds |
+| `packages/blog/` | Next.js public site/blog build surface |
 | `pages/` | Static/page-source content used for public-facing routes and copy surfaces |
 | `research/` | Research, study, and evaluation planning artifacts |
 | `security/` and `security-reports/` | SBOM, audit, and security report artifacts |
@@ -163,7 +177,18 @@ For a fuller setup path, see [docs/user-guide/INSTALL.md](docs/user-guide/INSTAL
 
 Use [.env.example](.env.example) for non-secret configuration shape. Do not commit `.env`, `.env.local`, tokens, webhooks, API keys, or user data.
 
+## Build and Deployment Surfaces
+
+PainTracker has multiple build/deployment surfaces:
+
+- `npm run build`: generates sitemap, builds the Vite app, and prerenders public routes.
+- `npm run build:vercel`: builds shared packages, builds/copies the PWA app, then builds `packages/blog`.
+- `scripts/vercel-build.mjs`: Vercel entrypoint; builds shared packages, validates environment/trust/clinic-auth guards, builds Vite, then prerenders public routes.
+- `.github/workflows/deploy.yml`: GitHub Pages deploy workflow using the built `dist/` artifact.
+
 ## Testing and Quality
+
+Automated coverage and vulnerability posture are published through the generated badges above. Source, Playwright, SEO, privacy, and publishing tests live under `src/`, `e2e/`, and `test/`.
 
 Primary quality gates:
 
@@ -186,6 +211,13 @@ Focused commands and workflows live in [docs/engineering/DEVELOPER_COMMANDS.md](
 
 Start with [SECURITY.md](SECURITY.md), [SECURITY_INVARIANTS.md](SECURITY_INVARIANTS.md), and [docs/trust/threat-model.md](docs/trust/threat-model.md).
 
+Background sync is constrained by a method/path allowlist and is local-only unless an authorized destination exists. Adding replayable endpoints must update the allowlist, tests, and human-readable justification.
+
+Known trust gaps remain explicit:
+- Active-coercion resistance is not fully implemented/reviewed;
+- Degraded-functionality accessibility evidence is partial;
+- External review/certification has not been completed.
+
 ## Roadmap
 
 ### Draft / Pending
@@ -200,7 +232,7 @@ Current 2026 priorities:
 4. Tighten trust-boundary documentation for optional integrations and deployment-specific backend paths.
 5. Continue accessibility and trauma-informed UX hardening against the WCAG 2.2 AA target.
 
-Longer-form planning lives under [docs/planning](docs/planning) and [docs/index](docs/index).
+Longer-form planning lives under [docs/planning](docs/planning) and [docs/index](docs/index). Some planning files are historical and may reference older release numbers. Treat the README, `package.json`, the trust reference packet, and badge files as the current top-level status anchors.
 
 ## Documentation
 
