@@ -11,6 +11,11 @@ import { StartupPromptsProvider } from '../contexts/StartupPromptsContext';
 import { usePatternAlerts } from '../hooks/usePatternAlerts';
 import { usePainTrackerStore, selectEntries } from '../stores/pain-tracker-store';
 import { pwaManager } from '../utils/pwa-utils';
+import { createTabShield } from '../lib/tab-shield';
+import { TemporalKeyChunker } from '../lib/crypto/chunking';
+import { useAmbientPanic } from '../services/useAmbientPanic';
+import { useVault } from '../hooks/useVault';
+import { isDecoyMode } from '../services/DuressVaultService';
 
 const PainTrackerContainer = lazy(() =>
   import('../containers/PainTrackerContainer').then((m) => ({ default: m.PainTrackerContainer }))
@@ -80,6 +85,35 @@ export function ProtectedAppShell({ initialView }: { initialView?: string } = {}
     }
   }, []);
 
+  // Protective computing: single-tenant tab shielding + temporal key chunking lifecycle.
+  useEffect(() => {
+    const shield = createTabShield();
+    const chunker = new TemporalKeyChunker();
+    let cancelled = false;
+
+    async function boot() {
+      if (cancelled) return;
+      const lease = await shield.lease();
+      if (!lease.held) {
+        console.warn('Tab shield denied, proceeding without exclusive lock:', lease.reason);
+      }
+      if (cancelled) return;
+      chunker.subscribeVisibilityScrubbing();
+    }
+
+    void boot();
+
+    return () => {
+      cancelled = true;
+      try {
+        shield.release().catch(() => {});
+      } catch {}
+      try {
+        chunker.destroy().catch(() => {});
+      } catch {}
+    };
+  }, []);
+
   // Rehydrate persisted store state after the vault has allowed the protected app to mount.
   // The encrypted persist storage is vault-gated, so hydration must occur post-unlock.
   useEffect(() => {
@@ -103,6 +137,12 @@ export function ProtectedAppShell({ initialView }: { initialView?: string } = {}
     pain: e.baselineData?.pain ?? 0,
   }));
   usePatternAlerts(patternEntries);
+
+  // Reactive ambient panic triggers: tab hidden = auto-lock, face-down = soft-panic
+  const { status } = useVault();
+  useAmbientPanic({
+    isVaultUnlocked: status.state === 'unlocked' && !isDecoyMode(),
+  });
 
   return (
     <ToneProvider>

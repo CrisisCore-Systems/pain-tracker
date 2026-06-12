@@ -69,6 +69,7 @@ function installCachesMock(initial: string[] = ['app-cache', 'asset-cache']) {
 describe('TeardownCoordinator', () => {
   beforeEach(() => {
     vi.restoreAllMocks();
+    offlineStorageMocks.clearAllData.mockReset();
     offlineStorageMocks.clearAllData.mockResolvedValue(undefined);
 
     localStorage.clear();

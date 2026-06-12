@@ -18,7 +18,7 @@ describe('combined detectors', () => {
     calls = [];
     globalShim.Notification = vi
       .fn()
-      .mockImplementation((title: string, opts?: NotificationOptions) => {
+      .mockImplementation(function (title: string, opts?: NotificationOptions) {
         calls.push([title, opts]);
         return {} as Notification;
       });

@@ -4,7 +4,7 @@ import { ReportsPage } from './ReportsPage';
 import type { PainEntry } from '../../types';
 import { entitlementService } from '../../services/EntitlementService';
 import { downloadWorkSafeBCPDF } from '../../utils/pain-tracker/wcb-export';
-import { readWorkflowPreferences, writeWorkflowPreferences } from '../../utils/workflowPreferences';
+import { writeWorkflowPreferences } from '../../utils/workflowPreferences';
 
 const toastSuccess = vi.fn();
 const toastError = vi.fn();
@@ -139,12 +139,12 @@ describe('ReportsPage', () => {
     render(<ReportsPage entries={[createMockEntry()]} />);
     
     expect(screen.getByText('Specialized Reports')).toBeInTheDocument();
-    expect(screen.getByText('WorkSafe BC Report')).toBeInTheDocument();
+    expect(screen.getByText('WorkSafeBC-Related Summary')).toBeInTheDocument();
     expect(screen.getByText('Insurance Report')).toBeInTheDocument();
-    expect(screen.getByText('Clinical Summary')).toBeInTheDocument();
+    expect(screen.getByText('Appointment Summary')).toBeInTheDocument();
     expect(screen.getAllByText('Not open yet').length).toBeGreaterThan(0);
-    expect(screen.getByText('WorkSafeBC export style')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /hostile bureaucracy/i })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByText('WorkSafeBC-related summary style')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /plain record/i })).toHaveAttribute('aria-pressed', 'true');
   });
 
   it('has date range filter', () => {
@@ -221,14 +221,14 @@ describe('ReportsPage', () => {
     render(<ReportsPage entries={[createMockEntry()]} />);
 
     await waitFor(() => {
-      expect(screen.getByText(/worksafe bc report/i)).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /worksafebc-related summary/i })).toBeInTheDocument();
     });
 
     expect(
-      screen.getByText(/this report is clipped on free\. upgrade to basic or higher/i)
+      screen.getByText(/this report is clipped on free\. upgrade to basic or higher for worksafebc-related summaries/i)
     ).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole('button', { name: /worksafe bc report/i }));
+    fireEvent.click(screen.getByRole('button', { name: /worksafebc-related summary/i }));
 
     expect(toastInfo).toHaveBeenCalledWith(
       'Upgrade Required',
@@ -241,7 +241,7 @@ describe('ReportsPage', () => {
 
     render(<ReportsPage entries={[createMockEntry()]} />);
 
-    fireEvent.click(screen.getByRole('button', { name: /worksafe bc report/i }));
+    fireEvent.click(screen.getByRole('button', { name: /worksafebc-related summary/i }));
 
     await waitFor(() => {
       expect(downloadWorkSafeBCPDF).toHaveBeenCalledWith(
@@ -260,7 +260,7 @@ describe('ReportsPage', () => {
 
     expect(writeWorkflowPreferences).toHaveBeenCalledWith({ defaultWcbTemplateStyle: 'standard' });
 
-    fireEvent.click(screen.getByRole('button', { name: /worksafe bc report/i }));
+    fireEvent.click(screen.getByRole('button', { name: /worksafebc-related summary/i }));
 
     await waitFor(() => {
       expect(downloadWorkSafeBCPDF).toHaveBeenCalledWith(

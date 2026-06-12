@@ -11,6 +11,7 @@ import { maybeCaptureWeatherForNewEntry } from '../services/weatherAutoCapture';
 import { EmptyStatePanel } from '../components/widgets/EmptyStatePanel';
 import { BrandedLoadingScreen } from '../components/branding/BrandedLoadingScreen';
 import { HistoryPage } from '../components/history/HistoryPage';
+import { FirstEntrySuccessPanel } from '../components/onboarding/FirstEntrySuccessPanel';
 import { subscriptionService } from '../services/SubscriptionService';
 import { getLocalUserId } from '../utils/user-identity';
 import {
@@ -21,10 +22,14 @@ import {
 
 // Lazy load heavy components for faster initial load (mobile optimization)
 const AnalyticsDashboard = lazy(() =>
-  import('../components/analytics/AnalyticsDashboard').then(m => ({ default: m.AnalyticsDashboard }))
+  import('../components/analytics/AnalyticsDashboard').then(m => ({
+    default: m.AnalyticsDashboard,
+  }))
 );
 const PremiumAnalyticsDashboard = lazy(() =>
-  import('../components/analytics/PremiumAnalyticsDashboard').then(m => ({ default: m.PremiumAnalyticsDashboard }))
+  import('../components/analytics/PremiumAnalyticsDashboard').then(m => ({
+    default: m.PremiumAnalyticsDashboard,
+  }))
 );
 const CalendarView = lazy(() =>
   import('../components/calendar/CalendarView').then(m => ({ default: m.CalendarView }))
@@ -33,7 +38,9 @@ const BodyMapPage = lazy(() =>
   import('../components/body-mapping/BodyMapPage').then(m => ({ default: m.BodyMapPage }))
 );
 const FibromyalgiaTracker = lazy(() =>
-  import('../components/fibromyalgia/FibromyalgiaTracker').then(m => ({ default: m.FibromyalgiaTracker }))
+  import('../components/fibromyalgia/FibromyalgiaTracker').then(m => ({
+    default: m.FibromyalgiaTracker,
+  }))
 );
 const DailyCheckin = lazy(() =>
   import('../components/checkin/DailyCheckin').then(m => ({ default: m.default }))
@@ -64,22 +71,22 @@ export function PainTrackerContainer({ initialView }: { initialView?: string } =
     usePainTrackerStore();
   const updateEntry = usePainTrackerStore(s => s.updateEntry);
   const [workflowPreferences, setWorkflowPreferences] = useState(() =>
-    typeof window === 'undefined'
-      ? DEFAULT_WORKFLOW_PREFERENCES
-      : readWorkflowPreferences()
+    typeof window === 'undefined' ? DEFAULT_WORKFLOW_PREFERENCES : readWorkflowPreferences()
   );
   const industrialFieldMode = workflowPreferences.industrialFieldMode;
 
   const toast = useToast();
   const [walkthroughSteps, setWalkthroughSteps] = useState<WalkthroughStep[]>([]);
   const [currentView, setCurrentView] = useState<string>(() => {
-    const defaultView = initialView ?? (industrialFieldMode || entries.length === 0 ? 'new-entry' : 'dashboard');
+    const defaultView =
+      initialView ?? (industrialFieldMode || entries.length === 0 ? 'new-entry' : 'dashboard');
     return workflowPreferences.showFibromyalgiaHubNavItem || defaultView !== 'fibromyalgia'
       ? defaultView
       : 'dashboard';
   });
   const [editingEntryId, setEditingEntryId] = useState<PainEntry['id'] | null>(null);
   const [onboardingDemoEntries, setOnboardingDemoEntries] = useState<PainEntry[] | null>(null);
+  const [firstEntryCompletionCount, setFirstEntryCompletionCount] = useState<number | null>(null);
   const isOnboardingDemoActive = onboardingDemoEntries !== null && entries.length === 0;
 
   useEffect(() => {
@@ -87,7 +94,8 @@ export function PainTrackerContainer({ initialView }: { initialView?: string } =
 
     const handlePreferencesUpdate = () => setWorkflowPreferences(readWorkflowPreferences());
     window.addEventListener(WORKFLOW_PREFERENCES_UPDATED_EVENT, handlePreferencesUpdate);
-    return () => window.removeEventListener(WORKFLOW_PREFERENCES_UPDATED_EVENT, handlePreferencesUpdate);
+    return () =>
+      window.removeEventListener(WORKFLOW_PREFERENCES_UPDATED_EVENT, handlePreferencesUpdate);
   }, []);
 
   useEffect(() => {
@@ -110,7 +118,9 @@ export function PainTrackerContainer({ initialView }: { initialView?: string } =
         if (isMounted) setWalkthroughSteps(steps);
       });
     }
-    return () => { isMounted = false; };
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   // Check for first-time user
@@ -218,6 +228,10 @@ export function PainTrackerContainer({ initialView }: { initialView?: string } =
   };
 
   const handleNavigate = (nextView: string) => {
+    if (nextView !== 'first-entry-success') {
+      setFirstEntryCompletionCount(null);
+    }
+
     if (nextView === 'fibromyalgia' && !workflowPreferences.showFibromyalgiaHubNavItem) {
       setCurrentView('dashboard');
       return;
@@ -289,13 +303,22 @@ export function PainTrackerContainer({ initialView }: { initialView?: string } =
         })();
       }
       setError(null);
+      const isFirstSavedEntry = beforeCount === 0;
       toast.success(
-        'Entry saved',
-        "Your update is safely stored. You can explore your dashboard or analytics whenever you're ready."
+        isFirstSavedEntry ? 'Entry saved locally' : 'Entry saved',
+        isFirstSavedEntry
+          ? 'Your first entry is stored on this device. Export or keep logging when ready.'
+          : "Your update is safely stored. You can explore your dashboard or analytics whenever you're ready."
       );
       // Navigate back to dashboard after saving unless caller requested staying on the save view
       if (!options?.stayOnSave) {
-        setCurrentView('dashboard');
+        if (isFirstSavedEntry) {
+          setFirstEntryCompletionCount(beforeCount + 1);
+          setCurrentView('first-entry-success');
+        } else {
+          setFirstEntryCompletionCount(null);
+          setCurrentView('dashboard');
+        }
       }
     } catch (err) {
       setError('Failed to add pain entry. Please try again.');
@@ -315,9 +338,7 @@ export function PainTrackerContainer({ initialView }: { initialView?: string } =
   };
 
   // Loading component for lazy-loaded views
-  const ViewLoadingFallback = () => (
-    <BrandedLoadingScreen message="Loading..." />
-  );
+  const ViewLoadingFallback = () => <BrandedLoadingScreen message="Loading..." />;
 
   const renderView = () => {
     switch (currentView) {
@@ -344,6 +365,7 @@ export function PainTrackerContainer({ initialView }: { initialView?: string } =
       case 'new-entry':
         return (
           <QuickLogOneScreen
+            firstEntryMode={entries.length === 0}
             interactionMode={industrialFieldMode ? 'industrial' : 'standard'}
             onComplete={data => {
               const entryToAdd: Omit<PainEntry, 'id' | 'timestamp'> = {
@@ -496,6 +518,25 @@ export function PainTrackerContainer({ initialView }: { initialView?: string } =
         );
       }
 
+      case 'first-entry-success':
+        return (
+          <FirstEntrySuccessPanel
+            entryCount={firstEntryCompletionCount ?? entries.length}
+            onAddAnother={() => {
+              setFirstEntryCompletionCount(null);
+              setCurrentView('new-entry');
+            }}
+            onDone={() => {
+              setFirstEntryCompletionCount(null);
+              setCurrentView('dashboard');
+            }}
+            onExportReport={() => {
+              setFirstEntryCompletionCount(null);
+              setCurrentView('reports');
+            }}
+          />
+        );
+
       case 'daily-checkin':
         return (
           <Suspense fallback={<ViewLoadingFallback />}>
@@ -511,22 +552,22 @@ export function PainTrackerContainer({ initialView }: { initialView?: string } =
           </Suspense>
         );
 
-      case 'analytics':
-        {
-          if (isOnboardingDemoActive && onboardingDemoEntries) {
-            return (
-              <Suspense fallback={<ViewLoadingFallback />}>
-                <AnalyticsDashboard
-                  demoMode
-                  entries={onboardingDemoEntries}
-                  onCreateFirstEntry={() => handleNavigate('new-entry')}
-                />
-              </Suspense>
-            );
-          }
+      case 'analytics': {
+        if (isOnboardingDemoActive && onboardingDemoEntries) {
+          return (
+            <Suspense fallback={<ViewLoadingFallback />}>
+              <AnalyticsDashboard
+                demoMode
+                entries={onboardingDemoEntries}
+                onCreateFirstEntry={() => handleNavigate('new-entry')}
+              />
+            </Suspense>
+          );
+        }
 
-          const analyticsTier = subscriptionService.getUserTier(getLocalUserId());
-          const AnalyticsView = analyticsTier === 'pro' || analyticsTier === 'enterprise'
+        const analyticsTier = subscriptionService.getUserTier(getLocalUserId());
+        const AnalyticsView =
+          analyticsTier === 'pro' || analyticsTier === 'enterprise'
             ? PremiumAnalyticsDashboard
             : AnalyticsDashboard;
 
@@ -535,7 +576,7 @@ export function PainTrackerContainer({ initialView }: { initialView?: string } =
             <AnalyticsView entries={entries} />
           </Suspense>
         );
-        }
+      }
 
       case 'body-map':
         return (

@@ -34,6 +34,7 @@ export type QuickLogOneScreenData = {
 
 interface QuickLogOneScreenProps {
   mode?: 'new' | 'edit';
+  firstEntryMode?: boolean;
   interactionMode?: 'standard' | 'industrial';
   initialData?: Partial<QuickLogOneScreenData>;
   onComplete: (data: QuickLogOneScreenData) => void;
@@ -41,19 +42,6 @@ interface QuickLogOneScreenProps {
 }
 
 type SelectionKind = 'location' | 'symptom';
-
-type VoiceNotesState = {
-  voiceSupported: boolean;
-  voiceMode: boolean;
-  isListening: boolean;
-  transcript: string;
-  connectionStatus: string;
-  voiceError: string | null;
-  startListening: () => void;
-  stopListening: () => void;
-  resetTranscript: () => void;
-  handleInsertTranscript: () => void;
-};
 
 const EMPTY_CAPTION_TRACK = 'data:text/vtt;charset=utf-8,WEBVTT%0A%0A';
 
@@ -73,12 +61,53 @@ const PAIN_LABELS = [
 
 /** Returns a Tailwind-friendly severity color set based on pain 0-10 */
 function painSeverityColors(pain: number) {
-  if (pain === 0) return { displayText: 'text-emerald-700 dark:text-emerald-400', selectedText: 'text-white', bg: 'bg-emerald-700 dark:bg-emerald-500/30', ring: 'ring-emerald-500/40', accent: '#34d399' };
-  if (pain <= 2)  return { displayText: 'text-green-700 dark:text-green-400', selectedText: 'text-white', bg: 'bg-green-700 dark:bg-green-500/30', ring: 'ring-green-500/40', accent: '#4ade80' };
-  if (pain <= 4)  return { displayText: 'text-amber-800 dark:text-amber-400', selectedText: 'text-white', bg: 'bg-amber-800 dark:bg-amber-500/30', ring: 'ring-amber-500/40', accent: '#fbbf24' };
-  if (pain <= 6)  return { displayText: 'text-orange-800 dark:text-orange-400', selectedText: 'text-white', bg: 'bg-orange-800 dark:bg-orange-500/30', ring: 'ring-orange-500/40', accent: '#fb923c' };
-  if (pain <= 8)  return { displayText: 'text-red-700 dark:text-red-400', selectedText: 'text-white', bg: 'bg-red-700 dark:bg-red-500/30', ring: 'ring-red-500/40', accent: '#f87171' };
-  return              { displayText: 'text-red-800 dark:text-red-300', selectedText: 'text-white', bg: 'bg-red-800 dark:bg-red-500/35', ring: 'ring-red-500/50', accent: '#fca5a5' };
+  if (pain === 0)
+    return {
+      displayText: 'text-emerald-700 dark:text-emerald-400',
+      selectedText: 'text-white',
+      bg: 'bg-emerald-700 dark:bg-emerald-500/30',
+      ring: 'ring-emerald-500/40',
+      accent: '#34d399',
+    };
+  if (pain <= 2)
+    return {
+      displayText: 'text-green-700 dark:text-green-400',
+      selectedText: 'text-white',
+      bg: 'bg-green-700 dark:bg-green-500/30',
+      ring: 'ring-green-500/40',
+      accent: '#4ade80',
+    };
+  if (pain <= 4)
+    return {
+      displayText: 'text-amber-800 dark:text-amber-400',
+      selectedText: 'text-white',
+      bg: 'bg-amber-800 dark:bg-amber-500/30',
+      ring: 'ring-amber-500/40',
+      accent: '#fbbf24',
+    };
+  if (pain <= 6)
+    return {
+      displayText: 'text-orange-800 dark:text-orange-400',
+      selectedText: 'text-white',
+      bg: 'bg-orange-800 dark:bg-orange-500/30',
+      ring: 'ring-orange-500/40',
+      accent: '#fb923c',
+    };
+  if (pain <= 8)
+    return {
+      displayText: 'text-red-700 dark:text-red-400',
+      selectedText: 'text-white',
+      bg: 'bg-red-700 dark:bg-red-500/30',
+      ring: 'ring-red-500/40',
+      accent: '#f87171',
+    };
+  return {
+    displayText: 'text-red-800 dark:text-red-300',
+    selectedText: 'text-white',
+    bg: 'bg-red-800 dark:bg-red-500/35',
+    ring: 'ring-red-500/50',
+    accent: '#fca5a5',
+  };
 }
 
 /** Shared styled-range slider classes */
@@ -171,8 +200,9 @@ function getVoiceToggleLabel(voiceMode: boolean) {
   return voiceMode ? 'Voice On' : 'Voice';
 }
 
-function getQuickLogHeading(mode: 'new' | 'edit') {
-  return mode === 'edit' ? 'Edit Log' : 'Quick Log';
+function getQuickLogHeading(mode: 'new' | 'edit', firstEntryMode: boolean) {
+  if (mode === 'edit') return 'Edit Log';
+  return firstEntryMode ? 'First Pain Entry' : 'Quick Log';
 }
 
 function getVoiceNoteFileName() {
@@ -194,7 +224,9 @@ function applyInitialData(
     setMedicationAdherence: (value: MedicationAdherence | null) => void;
     setActivitiesText: (value: string) => void;
     setDietTriggersText: (value: string) => void;
-    setOccupationalImpact: (value: NonNullable<QuickLogOneScreenData['occupationalImpact']>) => void;
+    setOccupationalImpact: (
+      value: NonNullable<QuickLogOneScreenData['occupationalImpact']>
+    ) => void;
   }
 ) {
   if (typeof initialData.pain === 'number') setters.setPain(initialData.pain);
@@ -206,7 +238,8 @@ function applyInitialData(
   if (typeof initialData.sleep === 'number') setters.setSleep(initialData.sleep);
 
   setters.setActivityLevelSet(typeof initialData.activityLevel === 'number');
-  if (typeof initialData.activityLevel === 'number') setters.setActivityLevel(initialData.activityLevel);
+  if (typeof initialData.activityLevel === 'number')
+    setters.setActivityLevel(initialData.activityLevel);
 
   setters.setMedicationAdherence(
     typeof initialData.medicationAdherence === 'string' ? initialData.medicationAdherence : null
@@ -248,7 +281,9 @@ function SelectionChipCard({
       <div className="flex items-center justify-between mb-3">
         <span className="text-body-medium text-ink-200">{label}</span>
         {selected.length > 0 && (
-          <span className={`text-tiny rounded-full px-2 py-0.5 tabular-nums ${selectedBadgeClassName}`}>
+          <span
+            className={`text-tiny rounded-full px-2 py-0.5 tabular-nums ${selectedBadgeClassName}`}
+          >
             {selected.length} selected
           </span>
         )}
@@ -367,7 +402,10 @@ function NotesVoiceSection({
           </span>
           <span
             id="notes-remaining"
-            className={cn('text-tiny tabular-nums', remainingCharacters < 50 ? 'text-warn-400' : 'text-ink-300')}
+            className={cn(
+              'text-tiny tabular-nums',
+              remainingCharacters < 50 ? 'text-warn-400' : 'text-ink-300'
+            )}
             aria-live="polite"
             aria-atomic="true"
           >
@@ -391,7 +429,9 @@ function NotesVoiceSection({
               className={cn(
                 'px-4 py-2 rounded-[var(--radius-md)] text-small font-medium',
                 'border border-surface-600 transition-colors duration-[var(--duration-fast)] flex items-center gap-2',
-                isListening ? 'bg-danger-500 text-ink-900 border-danger-500' : 'bg-primary-500 text-ink-900 border-primary-500'
+                isListening
+                  ? 'bg-danger-500 text-ink-900 border-danger-500'
+                  : 'bg-primary-500 text-ink-900 border-primary-500'
               )}
               aria-pressed={isListening}
               aria-label={isListening ? 'Stop voice input' : 'Start voice input'}
@@ -439,7 +479,8 @@ function NotesVoiceSection({
           <div>
             <div className="text-body-medium text-ink-100">Voice note (audio)</div>
             <p className="text-small text-ink-400">
-              Records audio on your device. This note is not saved into the entry yet — download if you want to keep it.
+              Records audio on your device. This note is not saved into the entry yet — download if
+              you want to keep it.
             </p>
             {audioRecorder.error && (
               <p className="text-small text-danger-400" role="alert">
@@ -460,13 +501,21 @@ function NotesVoiceSection({
               className={cn(
                 'px-4 py-2 rounded-[var(--radius-md)] text-small font-medium',
                 'border border-surface-600 transition-colors duration-[var(--duration-fast)] flex items-center gap-2',
-                audioRecorder.isRecording ? 'bg-danger-500 text-ink-900 border-danger-500' : 'bg-primary-500 text-ink-900 border-primary-500',
+                audioRecorder.isRecording
+                  ? 'bg-danger-500 text-ink-900 border-danger-500'
+                  : 'bg-primary-500 text-ink-900 border-primary-500',
                 !audioRecorder.isSupported && 'opacity-60 cursor-not-allowed'
               )}
               aria-pressed={audioRecorder.isRecording}
-              aria-label={audioRecorder.isRecording ? 'Stop audio recording' : 'Start audio recording'}
+              aria-label={
+                audioRecorder.isRecording ? 'Stop audio recording' : 'Start audio recording'
+              }
             >
-              {audioRecorder.isRecording ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+              {audioRecorder.isRecording ? (
+                <MicOff className="w-4 h-4" />
+              ) : (
+                <Mic className="w-4 h-4" />
+              )}
               {audioRecorder.isRecording ? 'Stop' : 'Record'}
             </button>
             {audioRecorder.audioUrl && (
@@ -486,14 +535,20 @@ function NotesVoiceSection({
 
         {!audioRecorder.isSupported && (
           <p className="mt-3 text-small text-ink-400">
-            Audio recording isn't supported in this browser. You can still use dictation or Voice Mode.
+            Audio recording isn't supported in this browser. You can still use dictation or Voice
+            Mode.
           </p>
         )}
 
         {audioRecorder.audioUrl && (
           <div className="mt-4 space-y-3">
             <audio controls src={audioRecorder.audioUrl} className="w-full">
-              <track kind="captions" src={EMPTY_CAPTION_TRACK} srcLang="en" label="No captions available" />
+              <track
+                kind="captions"
+                src={EMPTY_CAPTION_TRACK}
+                srcLang="en"
+                label="No captions available"
+              />
             </audio>
             <div className="flex gap-2 flex-wrap">
               <a
@@ -707,6 +762,7 @@ function useAudioNoteRecorder() {
 
 export function QuickLogOneScreen({
   mode = 'new',
+  firstEntryMode = false,
   interactionMode = 'standard',
   initialData,
   onComplete,
@@ -726,7 +782,9 @@ export function QuickLogOneScreen({
   const [medicationAdherence, setMedicationAdherence] = useState<MedicationAdherence | null>(null);
   const [activitiesText, setActivitiesText] = useState('');
   const [dietTriggersText, setDietTriggersText] = useState('');
-  const [occupationalImpact, setOccupationalImpact] = useState<NonNullable<QuickLogOneScreenData['occupationalImpact']>>({});
+  const [occupationalImpact, setOccupationalImpact] = useState<
+    NonNullable<QuickLogOneScreenData['occupationalImpact']>
+  >({});
 
   useEffect(() => {
     if (!initialData) return;
@@ -787,7 +845,7 @@ export function QuickLogOneScreen({
   };
 
   const handlePainChange = (value: number) => setPain(value);
-  const quickLogHeading = getQuickLogHeading(mode);
+  const quickLogHeading = getQuickLogHeading(mode, firstEntryMode);
 
   const hasNavigator = typeof navigator !== 'undefined';
   const isOffline = hasNavigator && navigator.onLine === false;
@@ -828,7 +886,21 @@ export function QuickLogOneScreen({
       triggers: triggers.length > 0 ? triggers : undefined,
       occupationalImpact,
     });
-  }, [activitiesText, activityLevel, activityLevelSet, dietTriggersText, locations, medicationAdherence, notes, occupationalImpact, onComplete, pain, sleep, sleepSet, symptoms]);
+  }, [
+    activitiesText,
+    activityLevel,
+    activityLevelSet,
+    dietTriggersText,
+    locations,
+    medicationAdherence,
+    notes,
+    occupationalImpact,
+    onComplete,
+    pain,
+    sleep,
+    sleepSet,
+    symptoms,
+  ]);
 
   return (
     <div className="min-h-screen bg-surface-900 text-ink-100 flex flex-col">
@@ -872,7 +944,9 @@ export function QuickLogOneScreen({
         {voiceError && (
           <div className="px-4 pb-3">
             <div className="max-w-2xl mx-auto bg-red-500/10 border border-red-500/30 rounded-[var(--radius-md)] px-4 py-2">
-              <p className="text-small text-red-400" role="alert">{voiceError}</p>
+              <p className="text-small text-red-400" role="alert">
+                {voiceError}
+              </p>
             </div>
           </div>
         )}
@@ -881,6 +955,19 @@ export function QuickLogOneScreen({
       {/* Content */}
       <div className="flex-1 overflow-y-auto p-6">
         <div className="max-w-2xl mx-auto space-y-10">
+          {firstEntryMode && mode === 'new' && (
+            <section className="rounded-[var(--radius-xl)] border border-primary-500/35 bg-primary-500/10 p-5">
+              <p className="mb-2 text-small font-semibold uppercase tracking-[0.14em] text-primary-300">
+                First Pain Entry
+              </p>
+              <h2 className="text-h2 text-ink-50 mb-2">Log today's pain in under 90 seconds.</h2>
+              <p className="text-small leading-relaxed text-ink-300">
+                No account. Core entry stays on this device. Export when ready. Save only the pain
+                level now, or add location, symptoms, and notes if they help.
+              </p>
+            </section>
+          )}
+
           {/* Pain */}
           <section className="space-y-5">
             <div>
@@ -901,7 +988,10 @@ export function QuickLogOneScreen({
                   {/* Severity accent bar */}
                   <div
                     className="absolute inset-x-0 top-0 h-1 transition-all duration-300"
-                    style={{ backgroundColor: sc.accent, width: `${Math.max((pain / 10) * 100, 4)}%` }}
+                    style={{
+                      backgroundColor: sc.accent,
+                      width: `${Math.max((pain / 10) * 100, 4)}%`,
+                    }}
                   />
 
                   <div className="flex items-center justify-center gap-5 px-6 py-8">
@@ -924,7 +1014,12 @@ export function QuickLogOneScreen({
                     </button>
 
                     <div className="text-center" role="status" aria-live="polite">
-                      <div className={cn('text-6xl font-bold tabular-nums mb-1 transition-colors duration-300', sc.displayText)}>
+                      <div
+                        className={cn(
+                          'text-6xl font-bold tabular-nums mb-1 transition-colors duration-300',
+                          sc.displayText
+                        )}
+                      >
                         {pain}
                       </div>
                       <div className="text-body-medium text-ink-200">{PAIN_LABELS[pain]}</div>
@@ -1036,7 +1131,7 @@ export function QuickLogOneScreen({
               selected={locations}
               selectedBadgeClassName="bg-primary-500/15 text-primary-400"
               tags={LOCATION_TAGS}
-              toggleTag={(tag) => toggleTag(tag, locations, setLocations)}
+              toggleTag={tag => toggleTag(tag, locations, setLocations)}
             />
 
             {/* Symptoms card */}
@@ -1060,7 +1155,7 @@ export function QuickLogOneScreen({
                 selected={symptoms}
                 selectedBadgeClassName="bg-warn-500/15 text-warn-400"
                 tags={SYMPTOM_TAGS}
-                toggleTag={(tag) => toggleTag(tag, symptoms, setSymptoms)}
+                toggleTag={tag => toggleTag(tag, symptoms, setSymptoms)}
               />
             </div>
           </section>
@@ -1068,7 +1163,10 @@ export function QuickLogOneScreen({
           <section className="space-y-5">
             <div>
               <h2 className="text-h2 text-ink-50 mb-1">Functional limitation translation</h2>
-              <p className="text-small text-ink-400">Mark work-relevant limits you can confirm right now. These export as explicit checkboxes instead of being inferred from pain score.</p>
+              <p className="text-small text-ink-400">
+                Mark work-relevant limits you can confirm right now. These export as explicit
+                checkboxes instead of being inferred from pain score.
+              </p>
             </div>
 
             <div className="grid gap-3 sm:grid-cols-2">
@@ -1114,7 +1212,9 @@ export function QuickLogOneScreen({
           <section className="space-y-5">
             <div>
               <h2 className="text-h2 text-ink-50 mb-1">Optional signals</h2>
-              <p className="text-small text-ink-400">Help find correlations between pain, sleep, activity &amp; food.</p>
+              <p className="text-small text-ink-400">
+                Help find correlations between pain, sleep, activity &amp; food.
+              </p>
             </div>
 
             {/* Slider pair: Sleep + Activity */}
@@ -1206,7 +1306,9 @@ export function QuickLogOneScreen({
                   <button
                     key={opt.value}
                     type="button"
-                    onClick={() => setMedicationAdherence((opt.value || null) as MedicationAdherence | null)}
+                    onClick={() =>
+                      setMedicationAdherence((opt.value || null) as MedicationAdherence | null)
+                    }
                     className={cn(
                       isIndustrialMode ? 'px-3 py-4 min-h-[64px]' : 'px-3 py-3.5 min-h-[56px]',
                       'rounded-[var(--radius-md)] text-small text-center',

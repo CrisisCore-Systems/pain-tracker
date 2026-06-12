@@ -4,9 +4,10 @@
 
 See also: `docs/planning/PAIN_TRACKER_PRO_ACTION_PLAN.md` (maps external requirements to repo reality + risk gates).
 
-_Last Updated: 2025-12-24_  
-_Current Version: v1.1.2_  
-_Target: TBD_
+_Last Updated: 2026-06-09_  
+_Current App Version: v1.2.0_  
+_Current Publication Artifact: Whitepaper v1.3.0_  
+_Current Draft Work: First Entry Loop PR #173_
 
 ---
 
@@ -38,22 +39,22 @@ Pain Tracker is a **privacy-first, local-only PWA** for chronic pain management 
 - **Clinical Integration**: FHIR R4 mapping in `src/services/clinical/FhirMapper.ts`
 - **Analytics Service**: Centralized aggregation logic in `src/services/PainAnalyticsService.ts`
 
-### 🚫 What's NOT in v1.1.2
-- Machine learning / AI predictions (Scheduled for Q1 2026)
+### 🚫 What's NOT in v1.2.0
+- Machine learning / AI predictions (In backlog - see planning/INTELLIGENCE_ROADMAP.md)
 - Multi-tenancy
 - Enterprise features
 
 ---
 
-## 🗓️ Release Timeline
+## Release Timeline
 
 ```
-v1.0.0  →  v1.1.2 (Current)
-      ↓
+v1.0.0 → v1.2.0 (Current)
+    ↓
 Phase 1: Stable Release ✅ COMPLETE
 Phase 2: Security Hardening & Testing ✅ COMPLETE
 Phase 3: Clinical Integration & Advanced Analytics ✅ COMPLETE
-Phase 4: ML Pattern Recognition (In Planning)
+Phase 4: Ecosystem & Duress Protection (Active)
 ```
 
 ---

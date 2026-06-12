@@ -5,11 +5,14 @@ const isCI = !!process.env.CI;
 const envCoverage = process.env.VITEST_COVERAGE;
 const coverageEnabled =
   process.argv.includes('--coverage') || envCoverage === 'true' || envCoverage === '1';
-const envMaxThreads = Number.parseInt(process.env.VITEST_MAX_THREADS || '', 10);
-let maxThreads = isCI ? 2 : 1;
+const envMaxWorkers = Number.parseInt(
+  process.env.VITEST_MAX_WORKERS || process.env.VITEST_MAX_THREADS || '',
+  10,
+);
+let maxWorkers = isCI ? 2 : 1;
 
-if (Number.isFinite(envMaxThreads) && envMaxThreads > 0) {
-  maxThreads = envMaxThreads;
+if (Number.isFinite(envMaxWorkers) && envMaxWorkers > 0) {
+  maxWorkers = envMaxWorkers;
 }
 
 export default defineConfig({
@@ -30,12 +33,8 @@ export default defineConfig({
     // Isolate each test file in its own environment to prevent state leakage
     isolate: true,
     pool: 'threads',
-    poolOptions: {
-      threads: {
-        minThreads: 1,
-        maxThreads,
-      },
-    },
+    minWorkers: 1,
+    maxWorkers,
     // Include tests across the repo, not just under src/test
     include: [
       'src/**/*.test.ts',

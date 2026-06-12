@@ -36,7 +36,13 @@ type TeardownOptions = {
   beforeIndexedDbTeardown?: () => Promise<void> | void;
 };
 
-const DEFAULT_DATABASES = ['pain-tracker-tone', 'pain-tracker-audit', 'pain-tracker-usage'];
+const DEFAULT_DATABASES = [
+  'pain-tracker-tone',
+  'pain-tracker-audit',
+  'pain-tracker-usage',
+  'pain-tracker-wal',
+  'pain-tracker-blind-index',
+];
 
 function safeStorageLength(storage: Storage): number {
   try {

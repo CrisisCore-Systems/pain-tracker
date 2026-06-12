@@ -64,7 +64,7 @@ if (shouldEnableDevTestMode()) {
 
 installDynamicImportRecovery();
 
-await recordLocalUsageSessionIfEnabled();
+await Promise.all([recordLocalUsageSessionIfEnabled(), import('./lib/offline-storage').then(m => m.waitUntilWALInit?.()).catch(() => {})]);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
