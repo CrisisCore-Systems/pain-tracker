@@ -47,6 +47,7 @@ These are the primary product and resource paths used in external references.
 - [PainTracker pricing and upgrades](https://www.paintracker.ca/pricing)
 - [Free pain journal templates](https://www.paintracker.ca/resources/daily-pain-tracker-printable)
 - [What to include in a pain journal](https://www.paintracker.ca/resources/what-to-include-in-pain-journal)
+- [How to track pain for doctors](https://www.paintracker.ca/resources/how-to-track-pain-for-doctors)
 - [Pain journal for appointments](https://www.paintracker.ca/resources/doctor-visit-pain-summary-template)
 - [WorkSafeBC pain documentation tool](https://www.paintracker.ca/resources/worksafebc-pain-journal-template)
 - [Tracking and data policy](https://www.paintracker.ca/tracking-data-policy)

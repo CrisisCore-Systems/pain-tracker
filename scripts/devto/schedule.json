@@ -244,14 +244,19 @@
         "cue": "Start from the resource hub"
       },
       "article-encryption-transparency": {
-        "path": "/privacy-architecture",
-        "anchorText": "privacy architecture",
+        "path": "/tracking-data-policy",
+        "anchorText": "tracking data policy",
         "cue": "How PainTracker protects data under duress"
       },
       "article-encryption-deep-dive": {
         "path": "/privacy-architecture",
         "anchorText": "privacy architecture",
         "cue": "Client-side encryption implementation details"
+      },
+      "article-trauma-informed-hooks": {
+        "path": "/resources/how-to-track-pain-for-doctors",
+        "anchorText": "how to track pain for doctors",
+        "cue": "Trauma-informed hooks for pain tracking under stress"
       }
     }
   },
