@@ -172,7 +172,7 @@ The export includes whatever data exists in the selected date range. More consis
 
 ## Getting Started
 
-- Visit https://paintracker.app (no signup required)
+- Visit https://paintracker.ca/download (no signup required)
 - Complete your first entry (about 2 minutes)
 - When needed, export a WorkSafeBC-oriented PDF from Reports
 

@@ -347,6 +347,7 @@ const howToStartPainJournalContent: SEOPageContent = {
     { question: 'Paper or digital first?', answer: 'Start where friction is lowest, then transition as needed.' }
   ],
   relatedLinks: [
+    { title: 'Privacy Architecture', description: 'How PainTracker keeps records local and user-controlled', href: '/privacy-architecture' },
     { title: 'What to Include in a Pain Journal', description: 'Detailed content checklist', href: '/resources/what-to-include-in-pain-journal' },
     { title: 'Pain Journal Examples', description: 'Copy practical entry formats', href: '/resources/pain-journal-examples' },
     { title: 'Daily Pain Tracker Printable', description: 'Fast daily format', href: '/resources/daily-pain-tracker-printable' },

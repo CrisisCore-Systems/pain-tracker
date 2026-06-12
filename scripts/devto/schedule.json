@@ -242,6 +242,16 @@
         "path": "/resources",
         "anchorText": "pain tracking resources",
         "cue": "Start from the resource hub"
+      },
+      "article-encryption-transparency": {
+        "path": "/privacy-architecture",
+        "anchorText": "privacy architecture",
+        "cue": "How PainTracker protects data under duress"
+      },
+      "article-encryption-deep-dive": {
+        "path": "/privacy-architecture",
+        "anchorText": "privacy architecture",
+        "cue": "Client-side encryption implementation details"
       }
     }
   },

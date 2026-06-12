@@ -202,6 +202,13 @@ export const PrivacyArchitecturePage: React.FC = () => {
               That matters for appointments, documentation prep, and claim-related discussions because it lets you choose when to package the record, what form it takes, and where it goes next.
             </p>
             <p>
+              Privacy matters most when pain records are prepared for appointments or shared outside the app.
+              {' '}
+              <Link to="/resources/how-to-track-pain-for-doctors" className="font-medium text-sky-300 underline decoration-sky-500/40 underline-offset-2 hover:text-sky-200">
+                See how to prepare doctor-ready records while keeping data under your control.
+              </Link>
+            </p>
+            <p>
               Once you export a file, its handling becomes your responsibility. The export can be copied, printed, emailed, or stored elsewhere depending on what you do with it afterward.
             </p>
             <p>

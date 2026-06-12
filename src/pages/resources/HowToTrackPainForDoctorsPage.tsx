@@ -168,6 +168,8 @@ const pageContent: SEOPageContent = {
     { question: 'Can tracking actually change my treatment?', answer: 'Yes. Tracked patterns reveal things neither you nor your doctor noticed. "I\'m worse on rainy days" might be inflammation. "Pain spikes every Tuesday after physical therapy" might mean the program needs adjustment. "Medication only lasts 3 hours" might warrant dosing changes. Data drives decisions.' }
   ],
   relatedLinks: [
+    { title: 'Privacy Architecture', description: 'How PainTracker keeps records local and under your control', href: '/privacy-architecture' },
+    { title: 'Tracking Data Policy', description: 'What is stored, what stays local, what you control', href: '/tracking-data-policy' },
     { title: 'Pain Diary Template PDF', description: 'Comprehensive daily tracking template', href: '/resources/pain-diary-template-pdf' },
     { title: 'How Doctors Use Pain Diaries', description: 'Understanding the clinical perspective', href: '/resources/how-doctors-use-pain-diaries' },
     { title: 'Pain Diary for Specialist', description: 'Specialist appointment preparation', href: '/resources/pain-diary-for-specialist-appointment' },

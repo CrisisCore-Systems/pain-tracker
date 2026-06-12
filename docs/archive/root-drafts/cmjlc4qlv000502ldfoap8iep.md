@@ -83,4 +83,4 @@ If you have questions, feel free to open a discussion on GitHub!
 
 ---
 
-> **Try Pain Tracker →** [Start Tracking (Free & Private)](https://paintracker.ca)
+> **Try Pain Tracker →** [Start Tracking (Free & Private)](https://paintracker.ca/download)

@@ -218,21 +218,25 @@ export const CaseStudyPage: React.FC = () => {
           <p className="text-slate-300 leading-relaxed mb-6">
             Read the full case-study article, inspect the proof materials behind the trust story, or use the product directly when you need structured records that can survive real life.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4">
-            <a
-              href={CASE_STUDY_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-sky-500 px-5 py-3 font-medium text-slate-950 hover:bg-sky-400 transition-colors"
-            >
-              Read the full case study
-              <ArrowRight className="h-4 w-4" />
-            </a>
-            <Link to="/proof" className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/15 px-5 py-3 font-medium text-white hover:border-sky-400/40 hover:text-sky-200 transition-colors">
-              Inspect proof materials
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
+<div className="flex flex-col sm:flex-row gap-4">
+             <a
+               href={CASE_STUDY_URL}
+               target="_blank"
+               rel="noopener noreferrer"
+               className="inline-flex items-center justify-center gap-2 rounded-xl bg-sky-500 px-5 py-3 font-medium text-slate-950 hover:bg-sky-400 transition-colors"
+             >
+               Read the full case study
+               <ArrowRight className="h-4 w-4" />
+             </a>
+             <Link to="/proof" className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/15 px-5 py-3 font-medium text-white hover:border-sky-400/40 hover:text-sky-200 transition-colors">
+               Inspect proof materials
+               <ArrowRight className="h-4 w-4" />
+             </Link>
+             <Link to="/privacy-architecture" className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/15 px-5 py-3 font-medium text-white hover:border-sky-400/40 hover:text-sky-200 transition-colors">
+               Privacy architecture
+               <ArrowRight className="h-4 w-4" />
+             </Link>
+           </div>
         </section>
       </main>
 
