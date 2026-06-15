@@ -56,7 +56,7 @@ const SEO = {
   title: 'Pain Diary Template PDF in 2026',
   metaTitle: 'Pain Diary Template PDF (2026) | Free PDF, No Email Required',
   metaDescription:
-    'Download a free, clinician-designed pain diary template PDF for 2026. No email required. Tracks pain intensity, location, medications, triggers, sleep, and mood for appointments, WorkSafeBC claims, and disability documentation.',
+    'Download a free pain diary template PDF for 2026 with daily, weekly, and monthly tracking pages. No email required. Record pain intensity, location, medications, triggers, sleep, and function notes for appointments and personal review.',
   keywords: [
     'pain diary template pdf',
     'printable pain diary',
@@ -148,26 +148,21 @@ const TEMPLATE_SECTIONS = [
   },
 ];
 
-const IMPACT_STATS = [
+const BENEFIT_CARDS = [
   {
-    value: '34%',
-    label: 'reported communication improvement in one study cohort',
-    source: 'Journal of Pain Research, 2019',
+    value: 'Closer to the moment',
+    label: 'Record pain, medication, triggers, and function while the day is still fresh.',
   },
   {
-    value: '2.4×',
-    label: 'claim-documentation association in one guidance context',
-    source: 'WorkSafeBC guidance context',
+    value: 'Less guesswork',
+    label: 'Keep symptom and treatment notes together so patterns are easier to compare.',
   },
   {
-    value: '89%',
-    label: 'endorsement figure reported in one APS survey dataset',
-    source: 'APS survey data',
+    value: 'Clearer conversations',
+    label:
+      'Bring a structured record that can help your provider see timing, severity, and impact.',
   },
 ];
-
-const EVIDENCE_CONTEXT_NOTE =
-  'External figures are context dependent and may not generalize to every patient or claim process. These references support documentation planning and do not guarantee medical, legal, insurance, or disability outcomes.';
 
 const WHO_SHOULD_USE = [
   {
@@ -180,7 +175,7 @@ const WHO_SHOULD_USE = [
     icon: Shield,
     title: 'Building a disability or insurance claim',
     description:
-      'WorkSafeBC, ICBC, CPP-D, and private insurers all give more weight to contemporaneous records. A consistent diary is your strongest supporting evidence.',
+      'WorkSafeBC, ICBC, CPP-D, and private insurers may give more weight to contemporaneous records. A consistent diary can be useful supporting documentation when paired with medical evidence and case context.',
   },
   {
     icon: Brain,
@@ -250,12 +245,12 @@ const FAQS = [
   {
     question: 'Do doctors actually accept pain diaries?',
     answer:
-      'Absolutely. Pain specialists, rheumatologists, neurologists, and GPs actively encourage patients to keep pain diaries. The documented information helps them understand your pain patterns between visits and make more informed treatment decisions. Many disability evaluations specifically request contemporaneous pain documentation.',
+      'Many providers find pain diaries useful because they show patterns between visits and can support treatment decisions. Some disability evaluations also request contemporaneous pain documentation, but requirements vary by reviewer and claim context.',
   },
   {
     question: 'How long should I track before seeing my doctor?',
     answer:
-      'For identifying basic patterns, aim for at least 2 weeks. For disability claims or specialist referrals, 30+ days of consistent documentation substantially strengthens your case. For ongoing pain management, many patients track continuously — even intermittently — to monitor treatment effectiveness over months.',
+      'For identifying basic patterns, aim for at least 2 weeks. For disability claims or specialist referrals, 30+ days of consistent documentation can help show timing, functional impact, and treatment response. For ongoing pain management, many patients track continuously — even intermittently — to monitor treatment effectiveness over months.',
   },
   {
     question: 'Can I use this for WorkSafeBC or insurance claims?',
@@ -510,20 +505,19 @@ export const PainDiaryTemplatePdfPage: React.FC = () => {
           <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <div className="inline-flex items-center gap-2 landing-badge mb-6">
               <Download className="w-4 h-4" />
-              <span>Free Clinician-Designed PDF</span>
+              <span>Free Pain Diary Template PDF</span>
             </div>
 
             <h1 id="hero-heading" className="landing-headline landing-headline-lg text-white mb-6">
               Free pain diary template{' '}
               <span className="bg-gradient-to-r from-sky-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">
-                PDF in 2026.
+                PDF for daily, weekly, and monthly logs.
               </span>
             </h1>
 
             <p className="landing-subhead text-lg sm:text-xl max-w-2xl mx-auto mb-4">
-              Track pain intensity, location, medications, triggers, sleep, and mood — all on one
-              page. Designed with pain management specialists so it captures exactly what clinicians
-              need.
+              Use this pain diary template PDF to record pain intensity, location, medications,
+              triggers, sleep, and function notes across daily, weekly, and monthly views.
             </p>
             <p className="text-slate-300 text-base sm:text-lg max-w-2xl mx-auto mb-4">
               Start with the printable if you need something today. Move to the offline-first app
@@ -696,42 +690,33 @@ export const PainDiaryTemplatePdfPage: React.FC = () => {
           </div>
         </section>
 
-        {/* ═══ WHY TRACKING MATTERS (Impact Stats) ═══ */}
+        {/* ═══ WHY TRACKING MATTERS ═══ */}
         <section className="py-16 sm:py-20 bg-slate-900" aria-labelledby="why-it-matters">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <SectionHeading eyebrow="Evidence-Based" center>
-              <span id="why-it-matters">Why tracking pain changes outcomes</span>
+            <SectionHeading eyebrow="Why Tracking Helps" center>
+              <span id="why-it-matters">What a pain diary template can clarify</span>
             </SectionHeading>
 
             <div className="mt-10 grid sm:grid-cols-3 gap-6">
-              {IMPACT_STATS.map(stat => (
+              {BENEFIT_CARDS.map(card => (
                 <div
-                  key={stat.label}
+                  key={card.value}
                   className="text-center p-6 rounded-2xl bg-gradient-to-b from-slate-800/80 to-slate-800/40 border border-slate-700/50"
                 >
-                  <span className="text-4xl sm:text-5xl font-extrabold bg-gradient-to-r from-sky-400 to-emerald-400 bg-clip-text text-transparent">
-                    {stat.value}
-                  </span>
-                  <p className="text-white font-medium mt-3 mb-1">{stat.label}</p>
-                  <p className="text-xs text-slate-500">{stat.source}</p>
+                  <p className="text-2xl sm:text-3xl font-extrabold bg-gradient-to-r from-sky-400 to-emerald-400 bg-clip-text text-transparent">
+                    {card.value}
+                  </p>
+                  <p className="text-white font-medium mt-3 mb-1">{card.label}</p>
                 </div>
               ))}
             </div>
 
-            <p className="mt-4 text-xs text-slate-400 leading-relaxed">{EVIDENCE_CONTEXT_NOTE}</p>
-
             <div className="mt-10 bg-slate-800/50 rounded-2xl p-6 sm:p-8 border border-slate-700/50">
               <p className="text-slate-300 leading-relaxed text-base sm:text-lg">
-                Memory is unreliable — especially when you're in pain.{' '}
-                <strong className="text-white">
-                  A structured pain diary replaces vague recall with objective evidence.
-                </strong>{' '}
-                One <em>Journal of Pain Research</em> (2019) cohort reported better provider
-                communication among patients who kept daily logs, but study design and effect size
-                can vary by setting. For disability or insurance claims, contemporaneous records —
-                filled in close to when events happened — carry substantially more weight than
-                retrospective statements. WorkSafeBC, ICBC, and CPP-D adjudicators all look for
-                consistent, dated documentation over self-reported summaries.
+                Structured daily tracking helps because it records pain closer to when it happens,
+                keeps medication and trigger notes together, and gives providers a clearer pattern
+                than memory alone. A diary is still only a documentation aid: it does not diagnose,
+                guarantee treatment changes, or prove a claim outcome by itself.
               </p>
             </div>
           </div>
@@ -814,10 +799,12 @@ export const PainDiaryTemplatePdfPage: React.FC = () => {
                   <BadgeCheck className="w-5 h-5 text-blue-400" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-white mb-1">Clinician-Designed</h3>
+                  <h3 className="font-semibold text-white mb-1">
+                    Structured for Care Conversations
+                  </h3>
                   <p className="text-sm text-slate-400">
-                    Developed with pain management specialists. Uses standard NRS scale and clinical
-                    terminology that providers immediately recognize.
+                    Uses standard pain diary fields such as NRS scale, medication timing, functional
+                    impact, and provider notes so the record is easier to review.
                   </p>
                 </div>
               </div>
@@ -1005,7 +992,7 @@ export const PainDiaryTemplatePdfPage: React.FC = () => {
             </h2>
             <p className="text-slate-400 text-lg mb-8 max-w-2xl mx-auto">
               Whether you choose paper or digital, the important thing is to start. Two weeks of
-              consistent tracking can change the way your provider understands your pain.
+              consistent tracking can make patterns easier to explain to your provider.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <a

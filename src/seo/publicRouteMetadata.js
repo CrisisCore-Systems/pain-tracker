@@ -140,7 +140,9 @@ const RESOURCES_PRERENDER_BODY = `
         <h3 style="font-size: 1.1rem; color: #f8fafc;">Printable tools</h3>
         <ul style="margin: 0.5rem 0 0; padding-left: 1.25rem; color: #e2e8f0; line-height: 1.8;">
           <li><a href="/resources/daily-pain-tracker-printable" style="color: #7dd3fc;">Daily pain tracker printable</a></li>
+          <li><a href="/resources/printable-pain-log-sheet" style="color: #7dd3fc;">Printable pain log sheet</a></li>
           <li><a href="/resources/pain-scale-chart-printable" style="color: #7dd3fc;">Pain scale chart printable</a></li>
+          <li><a href="/resources/monthly-pain-tracker-printable" style="color: #7dd3fc;">Monthly pain tracker printable</a></li>
         </ul>
       </section>
       <section>
@@ -207,7 +209,7 @@ const RESOURCES_PRERENDER_BODY = `
   </section>
   <section style="margin-top: 2rem;">
     <h2 style="font-size: 1.5rem; margin-bottom: 0.75rem;">Printable Pain Tracker Templates</h2>
-    <p style="line-height: 1.7; color: #cbd5e1;">Begin with the strongest printable intent pages: <a href="/resources/monthly-pain-tracker-printable" style="color: #7dd3fc;">Monthly Pain Tracker Printable</a>, <a href="/resources/daily-pain-tracker-printable" style="color: #7dd3fc;">Daily Pain Tracker Template</a>, <a href="/resources/weekly-pain-tracker-printable" style="color: #7dd3fc;">Weekly Pain Journal Template</a>, and <a href="/resources/doctor-visit-pain-summary-template" style="color: #7dd3fc;">Pain Journal Template for Doctor Visits</a>. For broader download intent, the hub also connects to <a href="/resources/pain-diary-template-free-download" style="color: #7dd3fc;">daily, weekly, and monthly pain diary downloads</a> and condition-specific printables.</p>
+    <p style="line-height: 1.7; color: #cbd5e1;">Begin with the strongest printable intent pages: <a href="/resources/daily-pain-tracker-printable" style="color: #7dd3fc;">Daily Pain Tracker Printable</a>, <a href="/resources/printable-pain-log-sheet" style="color: #7dd3fc;">Printable Pain Log Sheet</a>, <a href="/resources/pain-scale-chart-printable" style="color: #7dd3fc;">Pain Scale Chart Printable</a>, and <a href="/resources/monthly-pain-tracker-printable" style="color: #7dd3fc;">Monthly Pain Tracker Printable</a>. For broader download intent, the hub also connects to <a href="/resources/pain-diary-template-free-download" style="color: #7dd3fc;">daily, weekly, and monthly pain diary downloads</a> and condition-specific printables.</p>
   </section>
   <section style="margin-top: 2rem;">
     <h2 style="font-size: 1.5rem; margin-bottom: 0.75rem;">What to Track in a Pain Journal</h2>
@@ -723,17 +725,24 @@ export const publicRouteMetadata = [
     prerenderHeading: 'Free Pain Tracking Resources',
     faqItems: RESOURCES_HUB_FAQS,
     prerenderBodyHtml: RESOURCES_PRERENDER_BODY,
+    lastmod: '2026-06-15',
   },
-  resource(
-    'pain-diary-template-pdf',
-    'Free Daily Pain Tracker Printable PDF',
-    'Download a free daily pain tracker printable PDF for pain intensity, location, symptoms, medications, triggers, and daily function notes.'
-  ),
-  resource(
-    'daily-pain-tracker-printable',
-    'Free Daily Pain Tracker Printable PDF | PainTracker.ca',
-    'Download the free daily pain tracker printable PDF, or use the app for searchable local records and exportable reports. No email required.'
-  ),
+  {
+    ...resource(
+      'pain-diary-template-pdf',
+      'Free Pain Diary Template PDF: Daily, Weekly and Monthly Logs',
+      'Download a free pain diary template PDF with daily, weekly, and monthly tracking pages for pain levels, symptoms, medication response, triggers, sleep, and function notes.'
+    ),
+    lastmod: '2026-06-15',
+  },
+  {
+    ...resource(
+      'daily-pain-tracker-printable',
+      'Free Daily Pain Tracker Printable PDF | PainTracker.ca',
+      'Download the free daily pain tracker printable PDF, or use the app for searchable local records and exportable reports. No email required.'
+    ),
+    lastmod: '2026-06-15',
+  },
   resource(
     'weekly-pain-tracker-printable',
     'Weekly Pain Tracker Printable: Free Symptom and Flare-Up Log',
@@ -744,11 +753,14 @@ export const publicRouteMetadata = [
     'Weekly Pain Log PDF — Free 7-Day Pain Tracker Template | PainTracker.ca',
     'Download a free weekly pain log PDF. 8-section 7-day spread tracks daily pain, sleep, medications, activity, mood, triggers, and weekly patterns - ideal for appointments and disability claims.'
   ),
-  resource(
-    'monthly-pain-tracker-printable',
-    'Monthly Pain Tracker Printable — Free 30-Day Template | PainTracker.ca',
-    'Download a free monthly pain tracker printable. 8-section 30-day template tracks daily pain calendar, sleep, medications, functional impact, triggers, mood, and monthly summary - ideal for treatment reviews and disability claims.'
-  ),
+  {
+    ...resource(
+      'monthly-pain-tracker-printable',
+      'Monthly Pain Tracker Printable — Free 30-Day Template | PainTracker.ca',
+      'Download a free monthly pain tracker printable. 8-section 30-day template tracks daily pain calendar, sleep, medications, functional impact, triggers, mood, and monthly summary - ideal for treatment reviews and disability claims.'
+    ),
+    lastmod: '2026-06-15',
+  },
   resource(
     'flare-up-tracker-printable',
     'Flare-Up Tracker Printable: Free Pain Episode Log and Trigger Worksheet',
@@ -1039,11 +1051,14 @@ export const publicRouteMetadata = [
     'Pain Tracker for Desktop: Free Online Pain Tracking App — No Download Required',
     'PainTracker.ca works on desktop as a free, browser-based pain tracking app. No download, no account required — open it in any browser on Windows, Mac, or Linux and track pain privately offline.'
   ),
-  resource(
-    'pain-scale-chart-printable',
-    'Pain Scale Chart Printable — Free 0-10 NRS Visual Reference | PainTracker.ca',
-    'Download a free printable pain scale chart. Visual 0-10 Numeric Rating Scale with descriptors, faces, colors, and functional impact - the clinical standard for consistent pain reporting.'
-  ),
+  {
+    ...resource(
+      'pain-scale-chart-printable',
+      'Pain Scale Chart Printable — Free 0-10 NRS Visual Reference | PainTracker.ca',
+      'Download a free printable pain scale chart. Visual 0-10 Numeric Rating Scale with descriptors, faces, colors, and functional impact - the clinical standard for consistent pain reporting.'
+    ),
+    lastmod: '2026-06-15',
+  },
   resource(
     'symptom-tracker-printable',
     'Symptom Tracker Printable — Free Comprehensive Daily Symptom Log | PainTracker.ca',
@@ -1054,11 +1069,14 @@ export const publicRouteMetadata = [
     'Migraine Pain Diary Printable - Free Headache Tracker Template (2026) | PainTracker.ca',
     'Download our free 6-page migraine diary PDF. Track all 4 migraine phases, auras, 30+ common triggers, medications, and monthly patterns. Recommended by the American Headache Society tracking framework.'
   ),
-  resource(
-    'printable-pain-log-sheet',
-    'Printable Pain Log Sheet — Free Simple Daily Pain Tracker You Can Print Right Now | PainTracker.ca',
-    'Download a free printable pain log sheet with daily pain ratings, symptom tracking, medication log, and notes section. Print and start tracking in under a minute.'
-  ),
+  {
+    ...resource(
+      'printable-pain-log-sheet',
+      'Printable Pain Log Sheet — Free Simple Daily Pain Tracker You Can Print Right Now | PainTracker.ca',
+      'Download a free printable pain log sheet with daily pain ratings, symptom tracking, medication log, and notes section. Print and start tracking in under a minute.'
+    ),
+    lastmod: '2026-06-15',
+  },
   resource(
     'chronic-pain-diary-template',
     'Chronic Pain Diary Template — Free Long-Term Pain Tracker for Flares, Baseline & Trends | PainTracker.ca',
@@ -1172,6 +1190,23 @@ export const publicRouteMetadata = [
 ].map(withStructuredData);
 
 export const privateRouteMetadata = [
+  {
+    path: '/seo/search-console-dashboard',
+    title: 'Search Console Dashboard | PainTracker.ca',
+    description: 'Internal Search Console monitoring dashboard for PainTracker.ca.',
+    canonicalUrl: `${SITE_URL}/seo/search-console-dashboard`,
+    ogImage: DEFAULT_OG_IMAGE,
+    noindex: true,
+  },
+  {
+    path: '/app/settings',
+    title: 'Pain Tracker Settings | PainTracker.ca',
+    description:
+      'Open protected Pain Tracker settings for local preferences and app configuration.',
+    canonicalUrl: `${SITE_URL}/app/settings`,
+    ogImage: DEFAULT_OG_IMAGE,
+    noindex: true,
+  },
   {
     path: '/resources-query',
     title: 'Free Pain Tracking Resources, Templates, Charts and Journals | PainTracker.ca',

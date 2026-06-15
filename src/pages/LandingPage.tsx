@@ -157,12 +157,6 @@ const freePainResourceLinks = [
     href: '/download',
     cta: 'Download PainTracker',
   },
-  {
-    title: 'Tracking data policy',
-    text: 'Review what PainTracker stores locally, what it does not collect by default, and how exports are handled.',
-    href: '/tracking-data-policy',
-    cta: 'Read data policy',
-  },
 ] as const;
 
 export const LandingPage: React.FC = () => {
@@ -250,18 +244,59 @@ export const LandingPage: React.FC = () => {
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
-                to="/resources/pain-diary-template-pdf"
+                to="/resources/daily-pain-tracker-printable"
                 onClick={() => trackFunnelEvent('resource_page_opened', 'landing_hero')}
                 className="btn-cta-outline inline-flex items-center justify-center gap-2 px-7 py-3"
               >
                 <Download className="h-4 w-4" />
-                Download Printable Pain Journal
+                Download Daily Pain Tracker Printable
               </Link>
             </div>
             <p className="text-sm text-slate-300">
               Use the printable if paper is safer today. Use the app if you want searchable,
               exportable records on this device.
             </p>
+            <div className="mt-4 rounded-xl border border-white/10 bg-slate-900/45 px-4 py-3 text-sm text-slate-300">
+              <p className="font-medium text-white">Popular free printables</p>
+              <div className="mt-2 flex flex-wrap gap-x-5 gap-y-1">
+                <Link
+                  to="/resources/daily-pain-tracker-printable"
+                  onClick={() =>
+                    trackFunnelEvent('resource_page_opened', 'landing_popular_printables')
+                  }
+                  className="hover:text-sky-300 transition-colors"
+                >
+                  Daily pain tracker printable
+                </Link>
+                <Link
+                  to="/resources/printable-pain-log-sheet"
+                  onClick={() =>
+                    trackFunnelEvent('resource_page_opened', 'landing_popular_printables')
+                  }
+                  className="hover:text-sky-300 transition-colors"
+                >
+                  Printable pain log sheet
+                </Link>
+                <Link
+                  to="/resources/pain-scale-chart-printable"
+                  onClick={() =>
+                    trackFunnelEvent('resource_page_opened', 'landing_popular_printables')
+                  }
+                  className="hover:text-sky-300 transition-colors"
+                >
+                  Pain scale chart printable
+                </Link>
+                <Link
+                  to="/resources/monthly-pain-tracker-printable"
+                  onClick={() =>
+                    trackFunnelEvent('resource_page_opened', 'landing_popular_printables')
+                  }
+                  className="hover:text-sky-300 transition-colors"
+                >
+                  Monthly pain tracker printable
+                </Link>
+              </div>
+            </div>
             <div className="mt-5 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-slate-200">
               <Link
                 to="/resources"

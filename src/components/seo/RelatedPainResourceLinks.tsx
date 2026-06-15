@@ -45,6 +45,18 @@ export const CORE_RELATED_PAIN_RESOURCE_LINKS: RelatedPainResourceLink[] = [
     href: '/resources/pain-scale-chart-printable',
   },
   {
+    title: 'printable pain log sheet',
+    description:
+      'Use the simplest printable log when you need a fast daily pain sheet without a full diary workflow.',
+    href: '/resources/printable-pain-log-sheet',
+  },
+  {
+    title: 'monthly pain tracker printable',
+    description:
+      'Use a 30-day tracker when you need patterns across flares, sleep, medication, function, and treatment response.',
+    href: '/resources/monthly-pain-tracker-printable',
+  },
+  {
     title: 'what to include in a pain journal',
     description:
       'Use the checklist when you need to know which details are worth recording and which can wait.',
@@ -77,6 +89,17 @@ export const TOPIC_RELATED_PAIN_RESOURCE_LINKS: Record<
       description:
         'Use a 0-10 reference alongside printed sheets so pain ratings stay easier to compare.',
       href: '/resources/pain-scale-chart-printable',
+    },
+    {
+      title: 'printable pain log sheet',
+      description: 'Use a quick one-page log when you want the fastest printable daily record.',
+      href: '/resources/printable-pain-log-sheet',
+    },
+    {
+      title: 'monthly pain tracker printable',
+      description:
+        'Use the monthly tracker when you need a longer pattern view instead of one-day sheets.',
+      href: '/resources/monthly-pain-tracker-printable',
     },
     {
       title: 'what to include in a pain journal',
@@ -121,12 +144,6 @@ export const TOPIC_RELATED_PAIN_RESOURCE_LINKS: Record<
       description:
         'Use the app for private local tracking when repeated paper entries become hard to manage.',
       href: '/',
-    },
-    {
-      title: 'tracking data policy',
-      description:
-        'Review what PainTracker stores, what it avoids collecting, and where exports stay under your control.',
-      href: '/tracking-data-policy',
     },
   ],
   'pain-journal': [

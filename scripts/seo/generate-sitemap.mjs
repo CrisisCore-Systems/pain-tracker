@@ -55,18 +55,22 @@ const changefreqOverrides = new Map([
 ]);
 
 const imageOverrides = new Map([
-  ['/', [
-    {
-      loc: `${SITE_URL}/og-image.png`,
-      title: 'PainTracker.ca - Private Offline Pain Tracking',
-      caption: 'PainTracker.ca logo card for private offline pain tracking with no account required',
-    },
-    {
-      loc: `${SITE_URL}/main-dashboard.png`,
-      title: 'Pain Tracker Dashboard',
-      caption: 'Main dashboard showing pain trends and analytics',
-    },
-  ]],
+  [
+    '/',
+    [
+      {
+        loc: `${SITE_URL}/og-image.png`,
+        title: 'PainTracker.ca - Private Offline Pain Tracking',
+        caption:
+          'PainTracker.ca logo card for private offline pain tracking with no account required',
+      },
+      {
+        loc: `${SITE_URL}/main-dashboard.png`,
+        title: 'Pain Tracker Dashboard',
+        caption: 'Main dashboard showing pain trends and analytics',
+      },
+    ],
+  ],
 ]);
 
 export function escapeXml(value) {
@@ -84,8 +88,12 @@ export function readExistingLastmods(filePath) {
   }
 
   const xml = fs.readFileSync(filePath, 'utf8');
-  const matches = [...xml.matchAll(/<url>\s*<loc>https:\/\/www\.paintracker\.ca([^<]*)<\/loc>\s*<lastmod>([^<]+)<\/lastmod>/g)];
-  return new Map(matches.map((match) => [match[1] || '/', match[2]]));
+  const matches = [
+    ...xml.matchAll(
+      /<url>\s*<loc>https:\/\/www\.paintracker\.ca([^<]*)<\/loc>\s*<lastmod>([^<]+)<\/lastmod>/g
+    ),
+  ];
+  return new Map(matches.map(match => [match[1] || '/', match[2]]));
 }
 
 export function deriveChangefreq(routePath) {
@@ -112,8 +120,8 @@ export function derivePriority(routePath) {
   return '0.7';
 }
 
-export function deriveLastmod(routePath, existingLastmods) {
-  return existingLastmods.get(routePath) ?? today;
+export function deriveLastmod(routePath, existingLastmods, route = {}) {
+  return route.lastmod ?? existingLastmods.get(routePath) ?? today;
 }
 
 export function createUrlNode(route, existingLastmods) {
@@ -127,16 +135,20 @@ export function createUrlNode(route, existingLastmods) {
   const routePath = route.path;
   const images = imageOverrides.get(routePath) ?? [];
 
-  const imageXml = images.map((image) => `
+  const imageXml = images
+    .map(
+      image => `
     <image:image>
       <image:loc>${escapeXml(image.loc)}</image:loc>
       <image:title>${escapeXml(image.title)}</image:title>
       <image:caption>${escapeXml(image.caption)}</image:caption>
-    </image:image>`).join('');
+    </image:image>`
+    )
+    .join('');
 
   return `  <url>
     <loc>${escapeXml(canonical)}</loc>
-    <lastmod>${escapeXml(deriveLastmod(routePath, existingLastmods))}</lastmod>
+    <lastmod>${escapeXml(deriveLastmod(routePath, existingLastmods, route))}</lastmod>
     <changefreq>${escapeXml(deriveChangefreq(routePath))}</changefreq>
     <priority>${escapeXml(derivePriority(routePath))}</priority>${imageXml}
   </url>`;
@@ -145,7 +157,7 @@ export function createUrlNode(route, existingLastmods) {
 export function buildSitemapXml(routes, existingLastmods = new Map()) {
   const seenLocs = new Set();
   const seenPaths = new Set();
-  const urlNodes = routes.map((route) => {
+  const urlNodes = routes.map(route => {
     if (route.noindex) {
       throw new Error(`Public sitemap cannot include noindex route: ${route.path}`);
     }
@@ -163,7 +175,7 @@ export function buildSitemapXml(routes, existingLastmods = new Map()) {
     return createUrlNode(route, existingLastmods);
   });
 
-  const privatePaths = new Set(privateRouteMetadata.map((route) => route.path));
+  const privatePaths = new Set(privateRouteMetadata.map(route => route.path));
   for (const privatePath of privatePaths) {
     if (seenPaths.has(privatePath)) {
       throw new Error(`Private/noindex path leaked into sitemap: ${privatePath}`);

@@ -21,31 +21,45 @@ describe('SEO sitemap generator', () => {
     expect(deriveChangefreq('/some-other-page')).toBe('weekly');
   });
 
+  it('uses route-level lastmod overrides before existing sitemap lastmods', () => {
+    const existingLastmods = new Map([['/resources', '2026-02-11']]);
+
+    expect(deriveLastmod('/resources', existingLastmods, { lastmod: '2026-06-15' })).toBe(
+      '2026-06-15'
+    );
+  });
+
   it('preserves committed lastmod values instead of stamping routes with the current date', () => {
-    const existingLastmods = new Map([
-      ['/resources', '2026-02-11'],
-    ]);
+    const existingLastmods = new Map([['/resources', '2026-02-11']]);
 
     expect(deriveLastmod('/resources', existingLastmods)).toBe('2026-02-11');
   });
 
   it('allows the intentional /resources-query canonical overlap but blocks leaked private paths', () => {
-    const existingLastmods = new Map([
-      ['/resources', '2026-02-11'],
-    ]);
+    const existingLastmods = new Map([['/resources', '2026-02-11']]);
 
-    expect(() => buildSitemapXml([
-      {
-        path: '/resources',
-        canonicalUrl: 'https://www.paintracker.ca/resources',
-      },
-    ], existingLastmods)).not.toThrow();
+    expect(() =>
+      buildSitemapXml(
+        [
+          {
+            path: '/resources',
+            canonicalUrl: 'https://www.paintracker.ca/resources',
+          },
+        ],
+        existingLastmods
+      )
+    ).not.toThrow();
 
-    expect(() => buildSitemapXml([
-      {
-        path: '/resources-query',
-        canonicalUrl: 'https://www.paintracker.ca/resources',
-      },
-    ], existingLastmods)).toThrow('Private/noindex path leaked into sitemap: /resources-query');
+    expect(() =>
+      buildSitemapXml(
+        [
+          {
+            path: '/resources-query',
+            canonicalUrl: 'https://www.paintracker.ca/resources',
+          },
+        ],
+        existingLastmods
+      )
+    ).toThrow('Private/noindex path leaked into sitemap: /resources-query');
   });
 });

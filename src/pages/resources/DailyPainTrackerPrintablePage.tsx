@@ -196,7 +196,7 @@ const WHO_SHOULD_USE = [
     icon: Shield,
     title: 'Anyone building a disability claim',
     description:
-      'Daily documentation with timestamps is the gold standard for WorkSafeBC, ICBC, CPP-D, and private insurance. Regular entries beat retrospective summaries.',
+      'Daily documentation with timestamps can be useful for WorkSafeBC, ICBC, CPP-D, and private insurance workflows. Regular same-day entries are often easier to review than retrospective summaries.',
   },
   {
     icon: Brain,
@@ -280,7 +280,7 @@ const FAQS = [
   {
     question: 'Can I use this for workers compensation or disability claims?',
     answer:
-      'Yes. The structured daily format with timestamps, medication records, and functional impact data is exactly what WorkSafeBC, ICBC, CPP-D, and private insurers look for. Contemporaneous daily records — filled out the same day events occur — carry substantially more weight than after-the-fact recollections.',
+      'The structured daily format with timestamps, medication records, and functional impact data can support WorkSafeBC, ICBC, CPP-D, and private insurance workflows. Contemporaneous daily records — filled out the same day events occur — are often easier to review than after-the-fact recollections.',
   },
   {
     question: 'What should I write in the "Quality / Type" column?',
@@ -682,26 +682,24 @@ export const DailyPainTrackerPrintablePage: React.FC = () => {
         {/* ═══ WHY DAILY TRACKING MATTERS ═══ */}
         <section className="py-16 sm:py-20 bg-slate-900" aria-labelledby="why-it-matters">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <SectionHeading eyebrow="Evidence-Based" center>
-              <span id="why-it-matters">Why daily tracking changes outcomes</span>
+            <SectionHeading eyebrow="Why Daily Tracking Helps" center>
+              <span id="why-it-matters">What daily tracking can clarify</span>
             </SectionHeading>
 
             <div className="mt-10 grid sm:grid-cols-3 gap-6">
               {[
                 {
-                  value: '3\u00D7',
-                  label: 'longer tracking consistency',
-                  source: 'Pain Medicine, 2021 — structured vs. unstructured formats',
+                  value: 'Closer to the moment',
+                  label: 'Record pain, medication, and function while the day is still fresh.',
                 },
                 {
-                  value: '34%',
-                  label: 'better provider communication',
-                  source: 'Journal of Pain Research, 2019',
+                  value: 'Less guesswork',
+                  label: 'Keep symptoms, triggers, and treatment notes together for easier review.',
                 },
                 {
-                  value: '89%',
-                  label: 'of pain specialists endorse daily diaries',
-                  source: 'APS survey data',
+                  value: 'Clearer conversations',
+                  label:
+                    'Bring a structured daily record that can help your provider see patterns.',
                 },
               ].map(stat => (
                 <div
@@ -712,7 +710,6 @@ export const DailyPainTrackerPrintablePage: React.FC = () => {
                     {stat.value}
                   </span>
                   <p className="text-white font-medium mt-3 mb-1">{stat.label}</p>
-                  <p className="text-xs text-slate-500">{stat.source}</p>
                 </div>
               ))}
             </div>
@@ -721,13 +718,13 @@ export const DailyPainTrackerPrintablePage: React.FC = () => {
               <p className="text-slate-300 leading-relaxed text-base sm:text-lg">
                 Pain is invisible, and memory is unreliable — especially when you&apos;re hurting.{' '}
                 <strong className="text-white">
-                  A structured daily tracker turns subjective experience into objective data.
+                  A structured daily tracker can make pain easier to review without relying only on
+                  memory.
                 </strong>{' '}
-                When you hand your provider a stack of completed daily sheets, they can immediately
-                see patterns in timing, triggers, medication response, and functional impact.
-                Studies show this leads to faster, more accurate treatment decisions. For disability
-                claims, contemporaneous daily records — written the same day the pain occurred — are
-                among the strongest evidence you can provide.
+                When you hand your provider a stack of completed daily sheets, they can more easily
+                see patterns in timing, triggers, medication response, and functional impact. Daily
+                tracking does not guarantee treatment decisions or claim outcomes, but it can give
+                you a clearer record to bring into appointments, reviews, or personal planning.
               </p>
             </div>
           </div>

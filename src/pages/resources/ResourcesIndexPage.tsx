@@ -255,7 +255,8 @@ const resourceSectionNavItems: ResourceSectionNavItem[] = [
   {
     id: 'printable-pain-templates',
     label: 'Printables',
-    description: 'Daily, weekly, and monthly templates plus the starter pack.',
+    description:
+      'Daily, weekly, monthly, and simple one-page printable tools plus the starter pack.',
     icon: <Download className="h-4 w-4" />,
   },
   {
@@ -301,8 +302,16 @@ const coreResourceClusterSections = [
         href: '/resources/daily-pain-tracker-printable',
       },
       {
+        title: 'Printable pain log sheet',
+        href: '/resources/printable-pain-log-sheet',
+      },
+      {
         title: 'Pain scale chart printable',
         href: '/resources/pain-scale-chart-printable',
+      },
+      {
+        title: 'Monthly pain tracker printable',
+        href: '/resources/monthly-pain-tracker-printable',
       },
     ],
   },
@@ -358,7 +367,7 @@ const featuredSections: FeaturedSection[] = [
     id: 'printable-pain-templates',
     title: 'Printable Pain Tracker Templates',
     description:
-      'Start with a printable format you can use immediately, then build the habit before moving to digital tracking. These templates align the hub with pain tracker, chronic pain journal template, free printable pain tracker, and pain journal template searches.',
+      'Start with a printable format you can use immediately, then build the habit before moving to digital tracking. This cluster aligns the hub with daily pain tracker printable, printable pain log sheet, pain scale chart printable, monthly pain tracker printable, and pain diary template searches.',
     ctaText: 'Download the Free Pain Tracking Starter Pack ZIP',
     ctaHref: STARTER_PACK_ASSET_PATH,
     ctaDownload: true,
@@ -393,6 +402,23 @@ const featuredSections: FeaturedSection[] = [
           { title: 'How to Start a Pain Journal', href: '/resources/how-to-start-a-pain-journal' },
           { title: 'Pain Scale Chart Printable', href: '/resources/pain-scale-chart-printable' },
           { title: 'Medication and Pain Log', href: '/resources/medication-and-pain-log' },
+        ],
+      },
+      {
+        title: 'Printable Pain Log Sheet',
+        description:
+          'Use a quick one-page sheet when you need the fastest printable daily pain record.',
+        href: '/resources/printable-pain-log-sheet',
+        relatedLinks: [
+          {
+            title: 'Daily Pain Tracker Printable',
+            href: '/resources/daily-pain-tracker-printable',
+          },
+          {
+            title: 'Monthly Pain Tracker Printable',
+            href: '/resources/monthly-pain-tracker-printable',
+          },
+          { title: 'Pain Scale Chart Printable', href: '/resources/pain-scale-chart-printable' },
         ],
       },
       {
@@ -770,7 +796,7 @@ const resources: ResourceCard[] = [
   {
     title: 'Pain Diary Template PDF',
     description:
-      'Comprehensive daily pain tracking template. Record pain levels, symptoms, medications, and triggers.',
+      'Daily, weekly, and monthly tracking pages for pain levels, symptoms, medication response, triggers, sleep, and function notes.',
     href: '/resources/pain-diary-template-pdf',
     icon: <FileText className="w-6 h-6" />,
     badge: 'Most Popular',
