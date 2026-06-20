@@ -1,10 +1,12 @@
 import React from 'react';
-import { describe, it, expect, vi } from 'vitest';
+import { beforeEach, describe, it, expect, vi } from 'vitest';
 import userEvent from '@testing-library/user-event';
+import { within } from '@testing-library/react';
 import { render, screen, waitFor } from '../../test/test-utils';
 import { PainTrackerContainer } from '../PainTrackerContainer';
 import { usePainTrackerStore } from '../../stores/pain-tracker-store';
 import { readWorkflowPreferences } from '../../utils/workflowPreferences';
+import { maybeCaptureWeatherForNewEntry } from '../../services/weatherAutoCapture';
 
 vi.mock('../../stores/pain-tracker-store');
 vi.mock('../../utils/workflowPreferences', () => ({
@@ -34,13 +36,16 @@ type QuickLogOneScreenData = {
 
 vi.mock('../../design-system/fused-v2/QuickLogOneScreen', () => ({
   default: function QuickLogOneScreenMock({
+    firstEntryMode,
     onComplete,
   }: {
+    firstEntryMode?: boolean;
     onComplete: (data: QuickLogOneScreenData) => void;
   }) {
     const [checked, setChecked] = React.useState(false);
     return (
       <div>
+        <h2>{firstEntryMode ? 'First Pain Entry' : 'Quick Log'}</h2>
         <label>
           <input
             type="checkbox"
@@ -73,11 +78,17 @@ vi.mock('../../data/sampleData', () => ({
 }));
 
 vi.mock('../../services/weatherAutoCapture', () => ({
-  maybeCaptureWeatherForNewEntry: async () => null,
+  maybeCaptureWeatherForNewEntry: vi.fn(async () => null),
 }));
 
 vi.mock('../../pages/SettingsPage', () => ({
   default: () => <h2>Settings Surface</h2>,
+}));
+
+vi.mock('../../components/reports', () => ({
+  ReportsPage: ({ entries }: { entries: unknown[] }) => (
+    <div>Reports surface entries: {entries.length}</div>
+  ),
 }));
 
 // Mock secureStorage to avoid real storage access
@@ -92,6 +103,10 @@ vi.mock('../../lib/storage/secureStorage', () => ({
 }));
 
 describe('PainTrackerContainer - entry success toast', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   it('opens settings from the app navigation', async () => {
     vi.mocked(readWorkflowPreferences).mockReturnValue({
       defaultWcbTemplateStyle: 'hostile-bureaucracy',
@@ -205,8 +220,58 @@ describe('PainTrackerContainer - entry success toast', () => {
 
     render(<PainTrackerContainer />);
 
-    expect(await screen.findByRole('button', { name: /log pain now/i })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: /first pain entry/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /log pain now/i })).toBeInTheDocument();
   });
+
+  it('confirms the first local save, focuses it, and exposes only the three bounded next actions', async () => {
+    const user = userEvent.setup();
+    const addEntry = vi.fn();
+    const storeState = {
+      entries: [],
+      ui: { showOnboarding: false, showWalkthrough: false },
+      addEntry,
+      updateEntry: vi.fn(),
+      setShowOnboarding: vi.fn(),
+      setShowWalkthrough: vi.fn(),
+      setError: vi.fn(),
+      loadSampleData: vi.fn(),
+    };
+
+    (usePainTrackerStore as unknown as { mockImplementation: (fn: unknown) => void }).mockImplementation(
+      (selector: unknown) => {
+        if (typeof selector === 'function') {
+          return (selector as (s: typeof storeState) => unknown)(storeState);
+        }
+        return storeState;
+      }
+    );
+
+    render(<PainTrackerContainer />);
+
+    await user.click(await screen.findByRole('checkbox', { name: /lower back location/i }));
+    await user.click(screen.getByRole('button', { name: /log pain now/i }));
+
+    expect(addEntry).toHaveBeenCalledTimes(1);
+    expect(maybeCaptureWeatherForNewEntry).not.toHaveBeenCalled();
+
+    const confirmation = await screen.findByRole('region', { name: /saved on this device/i });
+    expect(confirmation).toHaveFocus();
+    expect(screen.getByText(/available locally without an account/i)).toBeInTheDocument();
+
+    const nextActions = screen.getByRole('group', { name: /next actions/i });
+    expect(within(nextActions).getAllByRole('button')).toHaveLength(3);
+    expect(within(nextActions).getByRole('button', { name: /add another entry/i })).toBeInTheDocument();
+    expect(within(nextActions).getByRole('button', { name: /export printable report/i })).toBeInTheDocument();
+    expect(within(nextActions).getByRole('button', { name: /draft feedback manually/i })).toBeInTheDocument();
+
+    await user.click(within(nextActions).getByRole('button', { name: /draft feedback manually/i }));
+    expect(screen.getByText(/email may reveal your address/i)).toBeInTheDocument();
+    expect(screen.getByText(/stays on your device until you copy it/i)).toBeInTheDocument();
+
+    await user.click(within(nextActions).getByRole('button', { name: /export printable report/i }));
+    expect(await screen.findByText(/reports surface entries/i)).toBeInTheDocument();
+  }, 30000);
 
   it('shows gentle success toast after a valid entry is added', async () => {
     vi.mocked(readWorkflowPreferences).mockReturnValue({

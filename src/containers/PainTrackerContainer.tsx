@@ -11,6 +11,7 @@ import { maybeCaptureWeatherForNewEntry } from '../services/weatherAutoCapture';
 import { EmptyStatePanel } from '../components/widgets/EmptyStatePanel';
 import { BrandedLoadingScreen } from '../components/branding/BrandedLoadingScreen';
 import { HistoryPage } from '../components/history/HistoryPage';
+import { FirstEntrySuccessPanel } from '../components/onboarding/FirstEntrySuccessPanel';
 import { subscriptionService } from '../services/SubscriptionService';
 import { getLocalUserId } from '../utils/user-identity';
 import {
@@ -80,6 +81,7 @@ export function PainTrackerContainer({ initialView }: { initialView?: string } =
   });
   const [editingEntryId, setEditingEntryId] = useState<PainEntry['id'] | null>(null);
   const [onboardingDemoEntries, setOnboardingDemoEntries] = useState<PainEntry[] | null>(null);
+  const [firstEntryCompletionCount, setFirstEntryCompletionCount] = useState<number | null>(null);
   const isOnboardingDemoActive = onboardingDemoEntries !== null && entries.length === 0;
 
   useEffect(() => {
@@ -218,6 +220,10 @@ export function PainTrackerContainer({ initialView }: { initialView?: string } =
   };
 
   const handleNavigate = (nextView: string) => {
+    if (nextView !== 'first-entry-success') {
+      setFirstEntryCompletionCount(null);
+    }
+
     if (nextView === 'fibromyalgia' && !workflowPreferences.showFibromyalgiaHubNavItem) {
       setCurrentView('dashboard');
       return;
@@ -273,6 +279,7 @@ export function PainTrackerContainer({ initialView }: { initialView?: string } =
       };
 
       const beforeCount = storeApi.getState?.()?.entries?.length ?? entries.length;
+      const isFirstSavedEntry = beforeCount === 0;
       if (onboardingDemoEntries !== null) {
         setOnboardingDemoEntries(null);
       }
@@ -281,7 +288,7 @@ export function PainTrackerContainer({ initialView }: { initialView?: string } =
       // Best-effort: enrich the just-saved entry with local weather (opt-in).
       // This must never block saving the entry.
       const created = storeApi.getState?.()?.entries?.[beforeCount];
-      if (created) {
+      if (created && !isFirstSavedEntry) {
         void (async () => {
           const captured = await maybeCaptureWeatherForNewEntry();
           if (!captured) return;
@@ -290,12 +297,20 @@ export function PainTrackerContainer({ initialView }: { initialView?: string } =
       }
       setError(null);
       toast.success(
-        'Entry saved',
-        "Your update is safely stored. You can explore your dashboard or analytics whenever you're ready."
+        isFirstSavedEntry ? 'Saved on this device' : 'Entry saved',
+        isFirstSavedEntry
+          ? 'Your first entry is stored locally. Nothing was submitted to a feedback service.'
+          : "Your update is safely stored. You can explore your dashboard or analytics whenever you're ready."
       );
       // Navigate back to dashboard after saving unless caller requested staying on the save view
       if (!options?.stayOnSave) {
-        setCurrentView('dashboard');
+        if (isFirstSavedEntry) {
+          setFirstEntryCompletionCount(beforeCount + 1);
+          setCurrentView('first-entry-success');
+        } else {
+          setFirstEntryCompletionCount(null);
+          setCurrentView('dashboard');
+        }
       }
     } catch (err) {
       setError('Failed to add pain entry. Please try again.');
@@ -344,6 +359,7 @@ export function PainTrackerContainer({ initialView }: { initialView?: string } =
       case 'new-entry':
         return (
           <QuickLogOneScreen
+            firstEntryMode={entries.length === 0}
             interactionMode={industrialFieldMode ? 'industrial' : 'standard'}
             onComplete={data => {
               const entryToAdd: Omit<PainEntry, 'id' | 'timestamp'> = {
@@ -397,6 +413,21 @@ export function PainTrackerContainer({ initialView }: { initialView?: string } =
               handleAddEntry(entryToAdd);
             }}
             onCancel={() => setCurrentView('dashboard')}
+          />
+        );
+
+      case 'first-entry-success':
+        return (
+          <FirstEntrySuccessPanel
+            entryCount={firstEntryCompletionCount ?? entries.length}
+            onAddAnother={() => {
+              setFirstEntryCompletionCount(null);
+              setCurrentView('new-entry');
+            }}
+            onExportReport={() => {
+              setFirstEntryCompletionCount(null);
+              setCurrentView('reports');
+            }}
           />
         );
 

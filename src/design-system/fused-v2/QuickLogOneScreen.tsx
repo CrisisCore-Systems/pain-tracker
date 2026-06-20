@@ -34,6 +34,7 @@ export type QuickLogOneScreenData = {
 
 interface QuickLogOneScreenProps {
   mode?: 'new' | 'edit';
+  firstEntryMode?: boolean;
   interactionMode?: 'standard' | 'industrial';
   initialData?: Partial<QuickLogOneScreenData>;
   onComplete: (data: QuickLogOneScreenData) => void;
@@ -171,8 +172,9 @@ function getVoiceToggleLabel(voiceMode: boolean) {
   return voiceMode ? 'Voice On' : 'Voice';
 }
 
-function getQuickLogHeading(mode: 'new' | 'edit') {
-  return mode === 'edit' ? 'Edit Log' : 'Quick Log';
+function getQuickLogHeading(mode: 'new' | 'edit', firstEntryMode: boolean) {
+  if (mode === 'edit') return 'Edit Log';
+  return firstEntryMode ? 'First Pain Entry' : 'Quick Log';
 }
 
 function getVoiceNoteFileName() {
@@ -707,6 +709,7 @@ function useAudioNoteRecorder() {
 
 export function QuickLogOneScreen({
   mode = 'new',
+  firstEntryMode = false,
   interactionMode = 'standard',
   initialData,
   onComplete,
@@ -787,7 +790,7 @@ export function QuickLogOneScreen({
   };
 
   const handlePainChange = (value: number) => setPain(value);
-  const quickLogHeading = getQuickLogHeading(mode);
+  const quickLogHeading = getQuickLogHeading(mode, firstEntryMode);
 
   const hasNavigator = typeof navigator !== 'undefined';
   const isOffline = hasNavigator && navigator.onLine === false;
@@ -881,6 +884,16 @@ export function QuickLogOneScreen({
       {/* Content */}
       <div className="flex-1 overflow-y-auto p-6">
         <div className="max-w-2xl mx-auto space-y-10">
+          {firstEntryMode && mode === 'new' && (
+            <section className="rounded-[var(--radius-xl)] border border-primary-500/35 bg-primary-500/10 p-5">
+              <h2 className="text-h2 text-ink-50 mb-2">One local record is enough to start.</h2>
+              <p className="text-small leading-relaxed text-ink-300">
+                No account is required. Choose a pain level and save now; location, symptoms, and
+                notes are optional.
+              </p>
+            </section>
+          )}
+
           {/* Pain */}
           <section className="space-y-5">
             <div>

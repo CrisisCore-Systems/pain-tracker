@@ -67,9 +67,12 @@ test.describe('smoke: navigation + load stability', () => {
 
     await page.goto('/resources/what-to-include-in-pain-journal', { waitUntil: 'domcontentloaded' });
 
-    await expect(page.getByRole('heading', { name: /what to include in a pain journal/i })).toBeVisible({
-      timeout: 30_000,
-    });
+    await expect(
+      page.getByRole('heading', {
+        level: 1,
+        name: /what to include in a pain journal/i,
+      })
+    ).toBeVisible({ timeout: 30_000 });
 
     expect(pageErrors, 'no pageerror exceptions').toEqual([]);
   });
