@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **First Entry Loop**: Pain Tracker now gives practical search visitors a direct first-entry path: log pain locally, confirm the saved record, export a printable report, or manually draft feedback without hidden submission or telemetry.
+
 ## [1.2.0] - 2026-01-18
 
 ### Added
