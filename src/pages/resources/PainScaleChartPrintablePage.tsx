@@ -7,6 +7,7 @@
  */
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { SEOPageLayout, type SEOPageContent } from '../../components/seo';
 
 const pageContent: SEOPageContent = {
@@ -215,7 +216,29 @@ const pageContent: SEOPageContent = {
 };
 
 export const PainScaleChartPrintablePage: React.FC = () => {
-  return <SEOPageLayout content={pageContent} />;
+  return (
+    <SEOPageLayout content={pageContent}>
+      <section
+        className="my-10 rounded-2xl border border-sky-200 bg-sky-50 p-6 md:p-8"
+        aria-labelledby="pain-scale-to-chronic-diary-heading"
+      >
+        <h3 id="pain-scale-to-chronic-diary-heading" className="text-xl font-bold text-slate-800">
+          A consistent number becomes more useful in context
+        </h3>
+        <p className="mt-3 text-sm leading-relaxed text-slate-600">
+          Use this chart to rate pain consistently, then record whether each score reflects your
+          usual baseline, a flare, or a treatment change in the{' '}
+          <Link
+            to="/resources/chronic-pain-diary-template"
+            className="font-semibold text-sky-700 underline underline-offset-4 hover:text-sky-900"
+          >
+            chronic pain diary template
+          </Link>
+          . That context is more useful than a series of numbers on their own.
+        </p>
+      </section>
+    </SEOPageLayout>
+  );
 };
 
 export default PainScaleChartPrintablePage;

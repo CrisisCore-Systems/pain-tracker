@@ -29,4 +29,12 @@ describe('Blog SEO hygiene', () => {
     expect(sitemap).not.toContain('featureEntries');
     expect(sitemap).not.toContain('useCaseEntries');
   });
+
+  it('enforces noindex headers for tag and archive URL families', () => {
+    const nextConfig = readUtf8('packages/blog/next.config.js');
+
+    expect(nextConfig).toContain("source: '/tag/:path*'");
+    expect(nextConfig).toContain("source: '/archive/:path*'");
+    expect(nextConfig.match(/value: 'noindex, follow'/g)).toHaveLength(2);
+  });
 });

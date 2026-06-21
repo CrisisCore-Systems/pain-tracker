@@ -47,6 +47,19 @@ const nextConfig = {
           { key: 'X-Robots-Tag', value: 'noindex, nofollow' },
         ],
       },
+      // Tag and archive listings are navigation aids, not primary index targets.
+      {
+        source: '/tag/:path*',
+        headers: [
+          { key: 'X-Robots-Tag', value: 'noindex, follow' },
+        ],
+      },
+      {
+        source: '/archive/:path*',
+        headers: [
+          { key: 'X-Robots-Tag', value: 'noindex, follow' },
+        ],
+      },
       // Immutable cache for hashed PWA assets
       {
         source: '/app/assets/:path*',
