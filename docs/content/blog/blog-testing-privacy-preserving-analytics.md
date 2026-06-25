@@ -1,5 +1,5 @@
 <!-- pain-tracker:target-link:start -->
-> Track longer patterns: [chronic pain diary template](https://paintracker.ca/resources/chronic-pain-diary-template)
+> Track longer patterns: [chronic pain diary template](https://www.paintracker.ca/resources/chronic-pain-diary-template)
 <!-- pain-tracker:target-link:end -->
 # Testing Privacy-Preserving Analytics: Verifying That Insights Don't Leak Identity
 

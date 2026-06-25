@@ -90,6 +90,50 @@ test('posts outside a configured chain do not require series-chain markers', () 
   assert.equal(state.chainMarkersOk, true);
 });
 
+test('sync content replaces stale support-block Start Here placeholders', () => {
+  const state = buildSyncContentState({
+    post: {
+      title: 'Sync Conflict Handling in Offline-First PWAs',
+    },
+    current: {
+      title: 'Sync Conflict Handling in Offline-First PWAs',
+      body_markdown: [
+        '<!-- pain-tracker:cta-top -->',
+        '> If you want privacy-first, offline health tech to exist *without* surveillance funding it: sponsor the build → https://example.com/sponsor',
+        '',
+        '# Sync Conflict Handling in Offline-First PWAs',
+        '',
+        '<!-- pain-tracker:cta-bottom -->',
+        '---',
+        '## Support this work',
+        '',
+        '- Sponsor the project (primary): https://example.com/sponsor',
+        '- Star the repo (secondary): https://example.com/repo',
+        '* Read the full series from the start: (link)',
+        '',
+      ].join('\n'),
+      series: null,
+    },
+    config: {
+      sponsorUrl: 'https://example.com/sponsor',
+      repoUrl: 'https://example.com/repo',
+      seriesStartUrl: 'https://dev.to/example/start',
+    },
+    desiredSeries: null,
+    seriesStartUrl: null,
+    nextUpUrl: null,
+    partLabel: null,
+  });
+
+  assert.equal(state.ctaMarkersOk, true);
+  assert.equal(state.ctaBodyChanged, true);
+  assert.match(
+    state.body_markdown,
+    /\* Read the full series from the start: \[Start Here — PainTracker \/ CrisisCore Build Log\]\(https:\/\/dev\.to\/example\/start\)/,
+  );
+  assert.doesNotMatch(state.body_markdown, /Read the full series from the start: \(link\)/);
+});
+
 test('series profile resolves from matching series name', () => {
   const config = {
     series: 'Fallback Series',

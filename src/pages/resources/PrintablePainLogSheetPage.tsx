@@ -6,6 +6,7 @@
  */
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import {
   Clock, Printer,
   FileText, TrendingUp, Zap, PenLine,
@@ -190,6 +191,25 @@ export const PrintablePainLogSheetPage: React.FC = () => (
     <WhyPaper />
     <LogSheetContents />
     <PdfContentsPreview pages={painLogPdfPages} accentColor="orange" variant="badge" heading="Your 6-Page Printable Pain Log Kit" subtitle="Print the daily log (page 1) by itself for quick tracking, or print all 6 pages for a complete kit." />
+    <section
+      className="my-10 rounded-2xl border border-violet-200 bg-violet-50 p-6 md:p-8"
+      aria-labelledby="pain-log-to-chronic-diary-heading"
+    >
+      <h3 id="pain-log-to-chronic-diary-heading" className="text-xl font-bold text-slate-800">
+        Need more than a stack of daily sheets?
+      </h3>
+      <p className="mt-3 text-sm leading-relaxed text-slate-600">
+        Keep using this one-page log when energy is limited. When you need a clearer record of
+        recurring flares, triggers, function, and treatment response across several weeks, use the{' '}
+        <Link
+          to="/resources/chronic-pain-diary-template"
+          className="font-semibold text-violet-700 underline underline-offset-4 hover:text-violet-900"
+        >
+          chronic pain diary template
+        </Link>{' '}
+        for the longer review cycle.
+      </p>
+    </section>
     <BottomCTACallout
       icon={Printer}
       heading="Start with the format you can use today."

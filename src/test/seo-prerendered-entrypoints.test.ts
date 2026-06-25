@@ -115,6 +115,47 @@ describe('SEO prerendered entrypoints', () => {
     }
   });
 
+  it('server-renders the three priority resource pages from their real React components', () => {
+    const expectedRoutes = new Map([
+      [
+        '/resources/chronic-pain-diary-template',
+        ['ChronicPainDiaryTemplatePage', 'Baseline Pain vs. Flare Pain'],
+      ],
+      [
+        '/resources/endometriosis-pain-log',
+        ['EndometriosisPainLogPage', 'Endometriosis is Never Just Period Pain'],
+      ],
+      [
+        '/resources/daily-functioning-log-for-disability',
+        ['DailyFunctioningLogForDisabilityPage', 'The 4 Functioning Domains Evaluators Assess'],
+      ],
+    ]);
+
+    for (const [routePath, [expectedExport, expectedMarker]] of expectedRoutes) {
+      const route = publicRouteMetadata.find(item => item.path === routePath) as
+        | (Record<string, unknown> & { path: string; canonicalUrl: string })
+        | undefined;
+
+      expect(route).toBeDefined();
+      expect(route?.canonicalUrl).toBe(`https://www.paintracker.ca${routePath}`);
+      expect(route?.prerenderModule).toMatch(/^\/src\/pages\/resources\/.+Page\.tsx$/);
+      expect(route?.prerenderExport).toBe(expectedExport);
+      expect(route?.prerenderContentMarkers).toContain(expectedMarker);
+    }
+  });
+
+  it('adds contextual chronic-diary links from three printable resources', () => {
+    for (const sourceFile of [
+      'src/pages/resources/DailyPainTrackerPrintablePage.tsx',
+      'src/pages/resources/PrintablePainLogSheetPage.tsx',
+      'src/pages/resources/PainScaleChartPrintablePage.tsx',
+    ]) {
+      const source = readUtf8(sourceFile);
+      expect(source).toContain('to="/resources/chronic-pain-diary-template"');
+      expect(source).toContain('chronic pain diary template');
+    }
+  });
+
   it('keeps private auth and protected entrypoints out of the index with dedicated HTML shells', () => {
     const { rewrites } = JSON.parse(readUtf8('vercel.json')) as { rewrites: RewriteEntry[] };
 

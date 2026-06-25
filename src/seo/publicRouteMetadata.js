@@ -1077,11 +1077,20 @@ export const publicRouteMetadata = [
     ),
     lastmod: '2026-06-15',
   },
-  resource(
-    'chronic-pain-diary-template',
-    'Chronic Pain Diary Template — Free Long-Term Pain Tracker for Flares, Baseline & Trends | PainTracker.ca',
-    'Download a free 6-page chronic pain diary template with baseline/flare tracking, trigger identification, treatment logs, and monthly trend reviews for long-term pain management.'
-  ),
+  {
+    ...resource(
+      'chronic-pain-diary-template',
+      'Chronic Pain Diary Template — Free Long-Term Pain Tracker for Flares, Baseline & Trends | PainTracker.ca',
+      'Download a free 6-page chronic pain diary template with baseline/flare tracking, trigger identification, treatment logs, and monthly trend reviews for long-term pain management.'
+    ),
+    prerenderModule: '/src/pages/resources/ChronicPainDiaryTemplatePage.tsx',
+    prerenderExport: 'ChronicPainDiaryTemplatePage',
+    prerenderContentMarkers: [
+      'Baseline Pain vs. Flare Pain',
+      'What is this?',
+      '6-Page Chronic Pain Diary',
+    ],
+  },
   resource(
     '7-day-pain-diary-template',
     '7-Day Pain Diary Template — Free One-Week Pain Tracker for Doctor Appointments | PainTracker.ca',
@@ -1127,11 +1136,20 @@ export const publicRouteMetadata = [
     'Pain Journal for Disability Benefits — Free Benefits-Ready Template | PainTracker.ca',
     'Download a free pain journal template designed specifically for disability benefits applications. Covers SSDI, LTD, WorkSafeBC. Includes functional limitation tracking and evidence-ready formatting.'
   ),
-  resource(
-    'daily-functioning-log-for-disability',
-    'Daily Functioning Log for Disability | PainTracker.ca',
-    'Download the free PainTracker.ca daily functioning log designed for disability claims. Track self-care, household, work, social, and physical activities with capacity ratings evaluators use.'
-  ),
+  {
+    ...resource(
+      'daily-functioning-log-for-disability',
+      'Daily Functioning Log for Disability | PainTracker.ca',
+      'Download the free PainTracker.ca daily functioning log designed for disability claims. Track self-care, household, work, social, and physical activities with capacity ratings evaluators use.'
+    ),
+    prerenderModule: '/src/pages/resources/DailyFunctioningLogForDisabilityPage.tsx',
+    prerenderExport: 'DailyFunctioningLogForDisabilityPage',
+    prerenderContentMarkers: [
+      'The 4 Functioning Domains Evaluators Assess',
+      'The Functioning Scale: How to Rate Each Activity',
+      'What is this?',
+    ],
+  },
   resource(
     'fibromyalgia-pain-diary',
     'Fibromyalgia Pain Diary — Free 6-Page Fibro Symptom Tracker | PainTracker.ca',
@@ -1152,11 +1170,20 @@ export const publicRouteMetadata = [
     'Nerve Pain Symptom Log — Free 6-Page Neuropathy Tracker | PainTracker.ca',
     'Download a free nerve pain symptom log for neuropathy, sciatica, and neurological pain. Track burning, tingling, numbness, shooting pain, progression, and treatment response.'
   ),
-  resource(
-    'endometriosis-pain-log',
-    'Endometriosis Pain Log — Free 6-Page Endo Symptom Tracker | PainTracker.ca',
-    'Download a free endometriosis pain log that tracks pelvic pain, cycle phases, GI symptoms, fatigue, and treatment response. Designed to shorten the 7-year diagnostic wait.'
-  ),
+  {
+    ...resource(
+      'endometriosis-pain-log',
+      'Endometriosis Pain Log — Free 6-Page Endo Symptom Tracker | PainTracker.ca',
+      'Download a free endometriosis pain log that tracks pelvic pain, cycle phases, GI symptoms, fatigue, and treatment response. Designed to shorten the 7-year diagnostic wait.'
+    ),
+    prerenderModule: '/src/pages/resources/EndometriosisPainLogPage.tsx',
+    prerenderExport: 'EndometriosisPainLogPage',
+    prerenderContentMarkers: [
+      'Endometriosis is Never Just Period Pain',
+      'Why Cycle-Phase Tracking Changes Everything',
+      'What is this?',
+    ],
+  },
   resource(
     'crps-pain-diary-template',
     'CRPS Pain Diary Template — Free Complex Regional Pain Syndrome Tracker | PainTracker.ca',

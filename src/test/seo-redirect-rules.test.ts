@@ -37,4 +37,20 @@ describe('SEO redirect rules consistency', () => {
     expect(blogNextConfig).toContain('async redirects() {');
     expect(blogNextConfig).toContain('return [];');
   });
+
+  it('keeps the Open Graph image endpoint out of the search index', () => {
+    const vercelConfig = JSON.parse(readUtf8('vercel.json')) as {
+      headers: Array<{
+        source: string;
+        headers: Array<{ key: string; value: string }>;
+      }>;
+    };
+    const ogHeaders = vercelConfig.headers.find(entry => entry.source === '/og-image.png');
+
+    expect(ogHeaders).toBeDefined();
+    expect(ogHeaders?.headers).toContainEqual({
+      key: 'X-Robots-Tag',
+      value: 'noindex, nofollow',
+    });
+  });
 });

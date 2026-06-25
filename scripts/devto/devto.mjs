@@ -10,6 +10,9 @@ const ROOT = process.cwd();
 const SCHEDULE_PATH = path.join(ROOT, 'scripts', 'devto', 'schedule.json');
 const PUBLISHED_RETROFIT_PATH = path.join(ROOT, 'scripts', 'devto', 'published-retrofit.json');
 const FRONT_MATTER_LINE_RE = /^([A-Za-z_]\w*):\s*(.*)$/;
+const START_HERE_LINK_TEXT = 'Start Here — PainTracker / CrisisCore Build Log';
+const SERIES_START_SUPPORT_LINE_RE =
+  /^([-*])\s+Read the full series from the start:\s*(?:\(link\)|https?:\/\/\S+|\[[^\]]+\]\([^)]+\))\s*$/m;
 
 function parseArgs(argv) {
   const args = { _: [] };
@@ -63,7 +66,10 @@ function requireSponsorAndRepoUrls({ sponsorUrl, repoUrl }) {
 function getDevtoPublishConfig(schedule) {
   const sponsorUrl = process.env.DEVTO_SPONSOR_URL ?? schedule.defaults?.sponsor_url;
   const repoUrl = process.env.DEVTO_REPO_URL ?? schedule.defaults?.repo_url;
-  const seriesStartUrl = process.env.DEVTO_SERIES_START_URL ?? schedule.defaults?.series_start_url;
+  const seriesStartUrl = resolveDefaultSeriesStartUrl(
+    schedule,
+    process.env.DEVTO_SERIES_START_URL ?? schedule.defaults?.series_start_url,
+  );
   const series = process.env.DEVTO_SERIES ?? schedule.defaults?.series;
   const organizationIdRaw = process.env.DEVTO_ORGANIZATION_ID ?? schedule.defaults?.organization_id;
   const organization_id = resolveOrganizationId(organizationIdRaw);
@@ -138,6 +144,28 @@ function getSchedulePostByKey(schedule, key) {
   const safeKey = String(key ?? '').trim();
   if (!safeKey) return null;
   return schedule?.posts?.find((entry) => String(entry?.key ?? '').trim() === safeKey) ?? null;
+}
+
+function resolveDefaultSeriesStartUrl(schedule, configuredUrl) {
+  const safeConfiguredUrl = String(configuredUrl ?? '').trim();
+  if (safeConfiguredUrl) return safeConfiguredUrl;
+
+  const startHereKeys = new Set(['devto-series-start-here']);
+  const profiles = schedule?.defaults?.series_profiles;
+  if (profiles && typeof profiles === 'object') {
+    for (const profile of Object.values(profiles)) {
+      const key = String(profile?.startHereKey ?? '').trim();
+      if (key) startHereKeys.add(key);
+    }
+  }
+
+  for (const key of startHereKeys) {
+    const post = getSchedulePostByKey(schedule, key);
+    const url = String(post?.devtoUrl ?? '').trim();
+    if (url) return url;
+  }
+
+  return null;
 }
 
 function getOrderedSeriesPosts({ schedule, config, chainKey, profile }) {
@@ -364,14 +392,15 @@ function shouldInjectCtasForPost(post) {
 }
 
 function buildCtas({ sponsorUrl, repoUrl, seriesStartUrl }) {
+  const seriesStartLink = buildStartHereMarkdownLink(seriesStartUrl);
   const top = [
     '<!-- pain-tracker:cta-top -->',
     `> If you want privacy-first, offline health tech to exist *without* surveillance funding it: sponsor the build → ${sponsorUrl}`,
     '',
   ].join('\n');
 
-  const seriesLine = seriesStartUrl
-    ? `- Read the full series from the start: ${seriesStartUrl}`
+  const seriesLine = seriesStartLink
+    ? `- Read the full series from the start: ${seriesStartLink}`
     : null;
 
   const bottom = [
@@ -401,6 +430,12 @@ function buildCtas({ sponsorUrl, repoUrl, seriesStartUrl }) {
   return { top, bottom, pinnedComment };
 }
 
+function buildStartHereMarkdownLink(url) {
+  const safeUrl = String(url ?? '').trim();
+  if (!safeUrl) return null;
+  return `[${START_HERE_LINK_TEXT}](${safeUrl})`;
+}
+
 function injectCtasIntoMarkdown(md, { ctaTop, ctaBottom }) {
   const alreadyHasTop = md.includes('<!-- pain-tracker:cta-top -->');
   const alreadyHasBottom = md.includes('<!-- pain-tracker:cta-bottom -->');
@@ -420,7 +455,26 @@ function injectCtasIntoMarkdown(md, { ctaTop, ctaBottom }) {
     out += ctaBottom;
   }
 
+  out = updateExistingSeriesStartSupportLine(out, ctaBottom);
+
   return out;
+}
+
+function updateExistingSeriesStartSupportLine(md, ctaBottom) {
+  const desiredLine = String(ctaBottom ?? '')
+    .split(/\r?\n/)
+    .find((line) => /^[-*]\s+Read the full series from the start:/.test(line));
+  if (!desiredLine) return md;
+
+  const bottomMarker = '<!-- pain-tracker:cta-bottom -->';
+  const markerIdx = md.indexOf(bottomMarker);
+  if (markerIdx === -1) return md;
+
+  const before = md.slice(0, markerIdx + bottomMarker.length);
+  const after = md.slice(markerIdx + bottomMarker.length);
+  const desiredText = desiredLine.replace(/^[-*]\s+/, '');
+
+  return before + after.replace(SERIES_START_SUPPORT_LINE_RE, (_match, bullet) => `${bullet} ${desiredText}`);
 }
 
 function upsertFrontMatter(md, updates) {
@@ -1262,8 +1316,11 @@ function buildSyncContentState({ post, current, config, desiredSeries, seriesSta
   const fm = readFrontMatter(currentBody);
   const ctaArgs = buildCtaArgs(config);
   let body_markdown = normalizeBodyMarkdownForDev(currentBody);
+  let ctaBodyChanged = false;
   if (shouldInjectCtasForPost(post)) {
-    body_markdown = injectCtasIntoMarkdown(body_markdown, ctaArgs);
+    const bodyWithCtas = injectCtasIntoMarkdown(body_markdown, ctaArgs);
+    ctaBodyChanged = bodyWithCtas !== body_markdown;
+    body_markdown = bodyWithCtas;
   }
   if (desiredSeries && partLabel) {
     body_markdown = injectSeriesChainIntoMarkdown(body_markdown, {
@@ -1299,6 +1356,7 @@ function buildSyncContentState({ post, current, config, desiredSeries, seriesSta
     currentSeries: typeof current?.series === 'string' ? current.series.trim() : '',
     hasFrontMatter: Boolean(fm),
     ctaMarkersOk,
+    ctaBodyChanged,
     chainMarkersOk,
     targetMarkersOk,
   };
@@ -1539,7 +1597,10 @@ async function processSyncContentPost({ post, allCache, now, yes, allowPublished
   const needsTitle = normalizeDevComparableTitle(contentState.currentTitle) !== normalizeDevComparableTitle(desiredTitleRaw);
   const currentSeries = contentState.currentSeries || null;
   const needsSeries = shouldTreatSeriesAsDrift({ currentSeries, desiredSeries });
-  const needsBody = !(contentState.ctaMarkersOk && contentState.chainMarkersOk && contentState.targetMarkersOk) || contentState.hasFrontMatter;
+  const needsBody =
+    !(contentState.ctaMarkersOk && contentState.chainMarkersOk && contentState.targetMarkersOk) ||
+    contentState.hasFrontMatter ||
+    contentState.ctaBodyChanged;
 
   if (!(needsTitle || needsSeries || needsBody)) {
     console.log(`OK (content matches): ${desiredTitleRaw}`);

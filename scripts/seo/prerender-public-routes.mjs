@@ -1,5 +1,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import React from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
+import { StaticRouter } from 'react-router';
+import { createServer } from 'vite';
 import { privateRouteMetadata, publicRouteMetadata } from '../../src/seo/publicRouteMetadata.js';
 
 const distDir = path.join(process.cwd(), 'dist');
@@ -101,15 +105,71 @@ function injectRouteMetadata(template, route) {
   return html;
 }
 
+async function renderConfiguredResourceBodies(routes) {
+  const configuredRoutes = routes.filter(route => route.prerenderModule);
+  if (configuredRoutes.length === 0) return new Map();
+
+  const viteServer = await createServer({
+    appType: 'custom',
+    logLevel: 'error',
+    server: { middlewareMode: true },
+  });
+
+  try {
+    const bodies = new Map();
+
+    for (const route of configuredRoutes) {
+      const pageModule = await viteServer.ssrLoadModule(route.prerenderModule);
+      const PageComponent = pageModule[route.prerenderExport];
+      if (!PageComponent) {
+        throw new Error(
+          `Missing ${route.prerenderExport} export in ${route.prerenderModule} for ${route.path}`
+        );
+      }
+
+      const body = renderToStaticMarkup(
+        React.createElement(
+          StaticRouter,
+          { location: route.path },
+          React.createElement(PageComponent)
+        )
+      );
+
+      const missingMarkers = (route.prerenderContentMarkers ?? []).filter(
+        marker => !body.includes(marker)
+      );
+      if (!body.includes('<main') || missingMarkers.length > 0) {
+        throw new Error(
+          `Incomplete resource prerender for ${route.path}; missing: ${[
+            ...(!body.includes('<main') ? ['<main>'] : []),
+            ...missingMarkers,
+          ].join(', ')}`
+        );
+      }
+
+      bodies.set(route.path, body);
+    }
+
+    return bodies;
+  } finally {
+    await viteServer.close();
+  }
+}
+
 if (!fs.existsSync(indexHtmlPath)) {
   throw new Error(`Cannot prerender public routes because ${indexHtmlPath} does not exist`);
 }
 
 const template = fs.readFileSync(indexHtmlPath, 'utf8');
 const allPrerenderedRoutes = [...publicRouteMetadata, ...privateRouteMetadata];
+const renderedResourceBodies = await renderConfiguredResourceBodies(allPrerenderedRoutes);
 
 for (const route of allPrerenderedRoutes) {
-  const routeHtml = injectRouteMetadata(template, route);
+  const renderedBody = renderedResourceBodies.get(route.path);
+  const routeHtml = injectRouteMetadata(
+    template,
+    renderedBody ? { ...route, prerenderBodyHtml: renderedBody } : route
+  );
 
   if (route.path === '/') {
     fs.writeFileSync(indexHtmlPath, routeHtml, 'utf8');

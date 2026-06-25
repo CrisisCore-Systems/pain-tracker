@@ -984,6 +984,28 @@ export const DailyPainTrackerPrintablePage: React.FC = () => {
         </section>
 
         {/* ═══ RELATED RESOURCES ═══ */}
+        <section
+          className="py-10 bg-slate-900"
+          aria-labelledby="daily-to-chronic-diary-heading"
+        >
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 rounded-2xl border border-slate-700 bg-slate-800/70 p-6">
+            <h2 id="daily-to-chronic-diary-heading" className="text-xl font-bold text-white">
+              When one-day sheets stop showing the whole pattern
+            </h2>
+            <p className="mt-3 text-slate-300 leading-relaxed">
+              A daily printable is useful for starting quickly. If you need to compare baseline pain,
+              flare days, treatment response, and month-to-month change, move those entries into the{' '}
+              <Link
+                to="/resources/chronic-pain-diary-template"
+                className="font-semibold text-sky-300 underline underline-offset-4 hover:text-sky-200"
+              >
+                chronic pain diary template
+              </Link>
+              . It keeps the same paper-first workflow while adding weekly and monthly review pages.
+            </p>
+          </div>
+        </section>
+
         <RelatedPainResourceLinks topic="printable" links={RELATED_LINKS} />
 
         <ResourceCtaStack
