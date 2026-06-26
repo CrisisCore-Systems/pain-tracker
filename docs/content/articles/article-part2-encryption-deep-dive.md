@@ -6,21 +6,23 @@ tags: ["security", "javascript", "webdev", "encryption"]
 cover_image: https://dev-to-uploads.s3.amazonaws.com/uploads/articles/encryption-healthcare-cover.png
 canonical_url: 
 ---
-
+<!-- pain-tracker:target-link:start -->
+> Client-side encryption implementation details: [privacy architecture](https://paintracker.ca/privacy-architecture)
+<!-- pain-tracker:target-link:end -->
 <!-- markdownlint-disable-file MD013 MD025 MD060 -->
 
 > Series: Client-Side Encryption for Health Apps
 > Part 3 of 3.
 > Start here: [Client-Side Encryption for Health Apps: Start Here](/blog/client-side-encryption-health-apps-start-here)
-> Read first: [Keeping Your Health Data Out of Court](https://blog.paintracker.ca/keeping-your-health-data-out-of-court)
-> Read before this: [If Your Health App Can't Explain Its Encryption, It Doesn't Have Any](https://blog.paintracker.ca/if-your-health-app-cant-explain-its-encryption-it-doesnt-have-any)
+> Read first: [Keeping Your Health Data Out of Court](https://dev.to/crisiscoresystems/keeping-your-health-data-out-of-court-359i)
+> Read before this: [If Your Health App Can't Explain Its Encryption, It Doesn't Have Any](https://dev.to/crisiscoresystems/if-your-health-app-cant-explain-its-encryption-it-doesnt-have-any-57pf)
 
 I've had my data used against me in court.
 
 Not hypothetically. Actual court. Actual lawyers. Actual judge reading things I wrote during a pain flare, reframed as evidence of instability.
 
 If you want the threat model that explains why this level of encryption is
-necessary, read [Keeping Your Health Data Out of Court](https://blog.paintracker.ca/keeping-your-health-data-out-of-court).
+necessary, read [Keeping Your Health Data Out of Court](https://dev.to/crisiscoresystems/keeping-your-health-data-out-of-court-359i).
 
 That's why I use a strong KDF configuration and authenticated encryption (for example, PBKDF2 + AES-GCM via Web Crypto). That's why key material is kept client-side in normal use, and why I treat offline attacks as a first-class threat.
 

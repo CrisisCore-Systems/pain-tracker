@@ -457,9 +457,9 @@ The technical quality of your tests is irrelevant if the ethical quality is abse
 
 Related reading: if you want to validate that ethically constructed simulations still resemble reality, read [Testing the Testing](/blog/testing-the-testing).
 
-- [Trauma-Informed Design Research](https://www.nngroup.com/articles/trauma-informed-research/) — NNGroup
+- [Informed Consent for User Research](https://www.nngroup.com/articles/informed-consent/) — NNGroup
 - [Differential Privacy](https://www.cis.upenn.edu/~aaroth/Papers/privacybook.pdf) — Dwork & Roth (academic)
-- [Ethical UX Research](https://www.smashingmagazine.com/2022/06/ethics-ux-research/) — Smashing Magazine
+- [Ethical Considerations in UX Research](https://www.smashingmagazine.com/2020/12/ethical-considerations-ux-research/) — Smashing Magazine
 - [HIPAA and Synthetic Data](https://www.hhs.gov/hipaa/for-professionals/privacy/special-topics/de-identification/index.html) — HHS
 - Pain Tracker source: [github.com/CrisisCore-Systems/pain-tracker](https://github.com/CrisisCore-Systems/pain-tracker)
 

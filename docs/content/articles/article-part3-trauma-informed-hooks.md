@@ -6,7 +6,9 @@ tags: ["react", "accessibility", "typescript", "ux"]
 cover_image: https://dev-to-uploads.s3.amazonaws.com/uploads/articles/trauma-informed-hooks-cover.png
 canonical_url: 
 ---
-
+<!-- pain-tracker:target-link:start -->
+> Trauma-informed hooks for pain tracking under stress: [how to track pain for doctors](https://paintracker.ca/resources/how-to-track-pain-for-doctors)
+<!-- pain-tracker:target-link:end -->
 # Trauma-Informed React Hooks
 
 > For the full reading path around this work, start with [Trauma-Informed Design: Start Here](/blog/trauma-informed-design-start-here)

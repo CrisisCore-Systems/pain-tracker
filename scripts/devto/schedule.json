@@ -3,7 +3,7 @@
     "schemaVersion": 2,
     "timezoneNote": "All times are UTC. Schedule was planned for 9:00 AM PT (PST, UTC-8) => 17:00 UTC for these dates.",
     "created": "2025-12-13",
-    "lastReviewed": "2026-06-04",
+    "lastReviewed": "2026-06-26",
     "sourceOfTruth": "Repo-backed markdown front matter should stay aligned with schedule entries for title, description, tags, and canonical metadata."
   },
   "defaults": {
@@ -257,6 +257,141 @@
         "path": "/resources/how-to-track-pain-for-doctors",
         "anchorText": "how to track pain for doctors",
         "cue": "Trauma-informed hooks for pain tracking under stress"
+      },
+      "devto-learned-free-tool": {
+        "cue": "User-facing starting point",
+        "anchorText": "how to start a pain journal",
+        "path": "/resources/how-to-start-a-pain-journal"
+      },
+      "devto-patient-reports-provider": {
+        "cue": "Appointment-preparation resource",
+        "anchorText": "how to track pain for doctors",
+        "path": "/resources/how-to-track-pain-for-doctors"
+      },
+      "devto-health-software-overclaiming": {
+        "cue": "Responsible patient-context framing",
+        "anchorText": "how doctors use pain diaries",
+        "path": "/resources/how-doctors-use-pain-diaries"
+      },
+      "devto-vulnerable-data-checklist": {
+        "cue": "Architecture-level checklist context",
+        "anchorText": "health app privacy architecture",
+        "path": "/privacy-architecture"
+      },
+      "devto-export-consent-boundary": {
+        "cue": "Report-preparation resource",
+        "anchorText": "doctor visit pain summary template",
+        "path": "/resources/doctor-visit-pain-summary-template"
+      },
+      "devto-accountless-core-use": {
+        "cue": "Review the no-account privacy posture",
+        "anchorText": "PainTracker privacy boundary",
+        "path": "/privacy"
+      },
+      "devto-offline-first-failure-policy": {
+        "cue": "Offline-first privacy path",
+        "anchorText": "offline-first pain tracker",
+        "path": "/privacy-offline-first-pain-tracker"
+      },
+      "devto-protective-computing-fail-safe": {
+        "cue": "Apply the structural checklist",
+        "anchorText": "best pain tracking app criteria",
+        "path": "/resources/best-pain-tracking-app"
+      },
+      "devto-local-first-pain-tracker": {
+        "cue": "Review the production local-first app",
+        "anchorText": "download a private pain tracker",
+        "path": "/download"
+      },
+      "devto-paintracker-works-not-okay": {
+        "cue": "Try the local-first app path",
+        "anchorText": "free private pain tracker app",
+        "path": "/resources/free-pain-tracker-app"
+      },
+      "devto-series-01-offline-first": {
+        "path": "/download",
+        "anchorText": "download PainTracker",
+        "cue": "Install the private offline-capable app"
+      },
+      "devto-series-02-storage-layers": {
+        "path": "/privacy-architecture",
+        "anchorText": "privacy architecture",
+        "cue": "Review the local data boundary"
+      },
+      "devto-series-03-service-workers": {
+        "path": "/download",
+        "anchorText": "download PainTracker",
+        "cue": "Install the private offline-capable app"
+      },
+      "devto-series-04-zod-defensive-parsing": {
+        "path": "/tracking-data-policy",
+        "anchorText": "tracking data policy",
+        "cue": "Check the data boundary"
+      },
+      "devto-series-05-trauma-informed-ux": {
+        "path": "/resources/how-to-track-pain-for-doctors",
+        "anchorText": "how to track pain for doctors",
+        "cue": "Reduce appointment prep burden"
+      },
+      "devto-series-06-exports-boundary": {
+        "path": "/resources/doctor-visit-pain-summary-template",
+        "anchorText": "doctor visit pain summary template",
+        "cue": "Use an export-ready appointment summary"
+      },
+      "devto-series-07-worksafebc-workflows": {
+        "path": "/resources/worksafebc-pain-journal-template",
+        "anchorText": "WorkSafeBC pain journal template",
+        "cue": "Keep WorkSafeBC notes structured"
+      },
+      "devto-series-08-analytics-without-surveillance": {
+        "path": "/tracking-data-policy",
+        "anchorText": "tracking data policy",
+        "cue": "Check the data boundary"
+      },
+      "devto-series-09-quality-gates": {
+        "path": "/proof",
+        "anchorText": "PainTracker proof page",
+        "cue": "Review the verification evidence"
+      },
+      "devto-series-10-truthful-docs": {
+        "path": "/proof",
+        "anchorText": "PainTracker proof page",
+        "cue": "Review the verification evidence"
+      },
+      "devto-worksafebc-case-study": {
+        "path": "/resources/worksafebc-pain-journal-template",
+        "anchorText": "WorkSafeBC pain journal template",
+        "cue": "Use a structured WorkSafeBC tracking fallback"
+      },
+      "devto-support-diagnostics-without-surveillance": {
+        "path": "/tracking-data-policy",
+        "anchorText": "tracking data policy",
+        "cue": "Check the data boundary"
+      },
+      "devto-restore-receipts-local-first-apps": {
+        "path": "/privacy-architecture",
+        "anchorText": "privacy architecture",
+        "cue": "Review the local data boundary"
+      },
+      "devto-storage-pressure-product-requirement": {
+        "path": "/download",
+        "anchorText": "download PainTracker",
+        "cue": "Install the private offline-capable app"
+      },
+      "devto-destructive-actions-recovery-design": {
+        "path": "/resources/best-pain-tracking-app",
+        "anchorText": "best pain tracking app criteria",
+        "cue": "Apply the structural checklist"
+      },
+      "devto-ai-sensitive-apps-extraction-path": {
+        "path": "/privacy-architecture",
+        "anchorText": "privacy architecture",
+        "cue": "Review the local data boundary"
+      },
+      "devto-protective-runbooks-degraded-mode": {
+        "path": "/resources/daily-pain-tracker-printable",
+        "anchorText": "daily pain tracker printable",
+        "cue": "Use a paper-first fallback"
       }
     }
   },
@@ -495,7 +630,7 @@
         "typescript"
       ],
       "description": "A composite (privacy-safe) case study showing how structured, local-first pain tracking can reduce WorkSafeBC claim documentation burden.",
-      "canonical_url": "https://blog.paintracker.ca/worksafe-bc-case-study-documentation-time-savings",
+      "canonical_url": null,
       "articleId": 3190821,
       "devtoUrl": "https://dev.to/crisiscoresystems/how-pain-tracker-pro-streamlines-worksafebc-claims-a-composite-case-study-4ce8",
       "published": true
@@ -1159,13 +1294,17 @@
       "published": true,
       "publishAt": "2026-06-17T16:00:00Z",
       "tags": [
+        "learning",
         "privacy",
-        "opensource",
-        "pwa"
+        "showdev",
+        "sideprojects"
       ],
-      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
-      "description": "What I Learned Building a Free Tool Before Anyone Asked for It",
-      "devtoUrl": null
+      "canonical_url": "https://dev.to/crisiscoresystems/what-i-learned-building-a-free-tool-before-anyone-asked-for-it-1pdh",
+      "description": "User-facing starting point: how to start a pain journal     PainTracker started as a tool I thought...",
+      "devtoUrl": "https://dev.to/crisiscoresystems/what-i-learned-building-a-free-tool-before-anyone-asked-for-it-1pdh",
+      "series": null,
+      "sourceFile": "docs/content/blog/devto-learned-free-tool.md",
+      "main_image": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2F0du3axrt9p6xbwzbsrld.png"
     },
     {
       "key": "devto-patient-reports-provider",
@@ -1175,13 +1314,17 @@
       "published": true,
       "publishAt": "2026-06-18T16:00:00Z",
       "tags": [
+        "architecture",
+        "opensource",
         "privacy",
-        "healthtech",
-        "pwa"
+        "product"
       ],
-      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
-      "description": "Patient-Generated Reports Without Provider Integration",
-      "devtoUrl": null
+      "canonical_url": "https://dev.to/crisiscoresystems/patient-generated-reports-without-provider-integration-1pml",
+      "description": "Appointment-preparation resource: how to track pain for doctors     Not every useful health tool...",
+      "devtoUrl": "https://dev.to/crisiscoresystems/patient-generated-reports-without-provider-integration-1pml",
+      "series": null,
+      "sourceFile": "docs/content/blog/devto-patient-reports-provider.md",
+      "main_image": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2F5a8wuy7i6ui7timef50b.png"
     },
     {
       "key": "devto-health-software-overclaiming",
@@ -1191,13 +1334,17 @@
       "published": true,
       "publishAt": "2026-06-19T16:00:00Z",
       "tags": [
-        "healthtech",
+        "discuss",
         "privacy",
-        "webdev"
+        "sideprojects",
+        "softwaredevelopment"
       ],
-      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
-      "description": "Building Health-Adjacent Software Without Overclaiming",
-      "devtoUrl": null
+      "canonical_url": "https://dev.to/crisiscoresystems/building-health-adjacent-software-without-overclaiming-2c7d",
+      "description": "Responsible patient-context framing: how doctors use pain diaries     One of the fastest ways to...",
+      "devtoUrl": "https://dev.to/crisiscoresystems/building-health-adjacent-software-without-overclaiming-2c7d",
+      "series": null,
+      "sourceFile": "docs/content/blog/devto-health-software-overclaiming.md",
+      "main_image": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fg60iauorwwvsrqkxi8yv.png"
     },
     {
       "key": "devto-vulnerable-data-checklist",
@@ -1207,13 +1354,17 @@
       "published": true,
       "publishAt": "2026-06-20T16:00:00Z",
       "tags": [
-        "security",
+        "architecture",
+        "data",
         "privacy",
-        "webdev"
+        "security"
       ],
-      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
-      "description": "A Small Checklist for Apps That Handle Vulnerable User Data",
-      "devtoUrl": null
+      "canonical_url": "https://dev.to/crisiscoresystems/a-small-checklist-for-apps-that-handle-vulnerable-user-data-44i",
+      "description": "Architecture-level checklist context: health app privacy architecture     A normal web app checklist...",
+      "devtoUrl": "https://dev.to/crisiscoresystems/a-small-checklist-for-apps-that-handle-vulnerable-user-data-44i",
+      "series": null,
+      "sourceFile": "docs/content/blog/devto-vulnerable-data-checklist.md",
+      "main_image": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fbqlpyp968m8iqgyqjiah.png"
     },
     {
       "key": "devto-export-consent-boundary",
@@ -1223,13 +1374,17 @@
       "published": true,
       "publishAt": "2026-06-21T16:00:00Z",
       "tags": [
+        "data",
+        "design",
         "privacy",
-        "security",
-        "pwa"
+        "ux"
       ],
-      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
-      "description": "The Export Button Is a Consent Boundary",
-      "devtoUrl": null
+      "canonical_url": "https://dev.to/crisiscoresystems/the-export-button-is-a-consent-boundary-15ii",
+      "description": "Report-preparation resource: doctor visit pain summary template     In sensitive apps, the export...",
+      "devtoUrl": "https://dev.to/crisiscoresystems/the-export-button-is-a-consent-boundary-15ii",
+      "series": null,
+      "sourceFile": "docs/content/blog/devto-export-consent-boundary.md",
+      "main_image": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fq19djyoqsgb9dfkt9lpa.png"
     },
     {
       "key": "devto-accountless-core-use",
@@ -1239,13 +1394,16 @@
       "published": true,
       "publishAt": "2026-06-22T16:00:00Z",
       "tags": [
+        "discuss",
+        "mentalhealth",
         "privacy",
-        "security",
-        "webdev"
+        "ux"
       ],
-      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
-      "description": "Why Accountless Core Use Matters in Sensitive Apps",
-      "devtoUrl": null
+      "canonical_url": "https://dev.to/crisiscoresystems/why-accountless-core-use-matters-in-sensitive-apps-3in2",
+      "description": "Account walls are not neutral in sensitive tools; core use should not require identity unless the feature truly needs it.",
+      "devtoUrl": "https://dev.to/crisiscoresystems/why-accountless-core-use-matters-in-sensitive-apps-3in2",
+      "series": null,
+      "sourceFile": "docs/content/blog/devto-accountless-core-use.md"
     },
     {
       "key": "devto-offline-first-failure-policy",
@@ -1255,13 +1413,16 @@
       "published": true,
       "publishAt": "2026-06-23T16:00:00Z",
       "tags": [
-        "offlinefirst",
-        "pwa",
-        "architecture"
+        "architecture",
+        "mentalhealth",
+        "privacy",
+        "ux"
       ],
-      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
-      "description": "Offline-First Is Not a Feature. It Is a Failure Policy.",
-      "devtoUrl": null
+      "canonical_url": "https://dev.to/crisiscoresystems/offline-first-is-not-a-feature-it-is-a-failure-policy-2mjj",
+      "description": "Offline-first design decides what happens when connection, focus, or time disappears before sensitive information is safely saved.",
+      "devtoUrl": "https://dev.to/crisiscoresystems/offline-first-is-not-a-feature-it-is-a-failure-policy-2mjj",
+      "series": null,
+      "sourceFile": "docs/content/blog/devto-offline-first-failure-policy.md"
     },
     {
       "key": "devto-protective-computing-fail-safe",
@@ -1272,12 +1433,15 @@
       "publishAt": "2026-06-24T16:00:00Z",
       "tags": [
         "architecture",
-        "privacy",
-        "offlinefirst"
+        "softwareengineering",
+        "sre",
+        "ux"
       ],
-      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
-      "description": "Protective Computing: Software Should Fail Safely Under Stress",
-      "devtoUrl": null
+      "canonical_url": "https://dev.to/crisiscoresystems/protective-computing-software-should-fail-safely-under-stress-4egb",
+      "description": "Protective Computing is an engineering approach for building software that reduces exposure and fails safely under stress.",
+      "devtoUrl": "https://dev.to/crisiscoresystems/protective-computing-software-should-fail-safely-under-stress-4egb",
+      "series": null,
+      "sourceFile": "docs/content/blog/devto-protective-computing-fail-safe.md"
     },
     {
       "key": "devto-local-first-pain-tracker",
@@ -1289,11 +1453,14 @@
       "tags": [
         "architecture",
         "privacy",
-        "pwa"
+        "showdev",
+        "softwareengineering"
       ],
-      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
-      "description": "The Architecture of a Local-First Pain Tracker",
-      "devtoUrl": null
+      "canonical_url": "https://dev.to/crisiscoresystems/the-architecture-of-a-local-first-pain-tracker-2pe0",
+      "description": "How PainTracker.ca uses local-first design, offline support, and user-controlled exports for sensitive pain tracking.",
+      "devtoUrl": "https://dev.to/crisiscoresystems/the-architecture-of-a-local-first-pain-tracker-2pe0",
+      "series": null,
+      "sourceFile": "docs/content/blog/devto-local-first-pain-tracker.md"
     },
     {
       "key": "devto-paintracker-works-not-okay",
@@ -1303,13 +1470,172 @@
       "published": true,
       "publishAt": "2026-06-26T16:00:00Z",
       "tags": [
+        "a11y",
         "privacy",
-        "accessibility",
-        "pwa"
+        "showdev",
+        "ux"
       ],
-      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
-      "description": "I Built a Pain Tracker That Works When the User Is Not Okay",
-      "devtoUrl": null
+      "canonical_url": "https://dev.to/crisiscoresystems/i-built-a-pain-tracker-that-works-when-the-user-is-not-okay-34h7",
+      "description": "A practical look at building PainTracker.ca as a free local-first pain tracking app for users who may be in pain, offline, or overwhelmed.",
+      "devtoUrl": "https://dev.to/crisiscoresystems/i-built-a-pain-tracker-that-works-when-the-user-is-not-okay-34h7",
+      "series": null,
+      "sourceFile": "docs/content/blog/devto-paintracker-works-not-okay.md"
+    },
+    {
+      "key": "devto-support-diagnostics-without-surveillance",
+      "enabled": true,
+      "title": "Support Diagnostics Without Surveillance in Sensitive Apps",
+      "sourceFile": "docs/content/blog/devto-support-diagnostics-without-surveillance.md",
+      "publishAt": "2026-06-30T15:15:00Z",
+      "tags": [
+        "privacy",
+        "security",
+        "devops",
+        "architecture"
+      ],
+      "canonical_url": null,
+      "description": "How to design user-controlled diagnostic exports that help debugging without silently collecting sensitive state.",
+      "series": null,
+      "injectCtas": false,
+      "published": false,
+      "articleId": 3993998,
+      "devtoUrl": "https://dev.to/crisiscoresystems/support-diagnostics-without-surveillance-in-sensitive-apps-433a-temp-slug-2143373",
+      "draftVerification": {
+        "status": "verified",
+        "checkedAt": "2026-06-26T04:19:06.863Z"
+      },
+      "bodySha256": "98e016bb4501ec74da35988ed5ce5ed530fdfc510b213c613e9697f330b35931",
+      "bodyHashAlgorithm": "sha256"
+    },
+    {
+      "key": "devto-restore-receipts-local-first-apps",
+      "enabled": true,
+      "title": "Restore Receipts: The Missing Half of Export in Local-First Apps",
+      "sourceFile": "docs/content/blog/devto-restore-receipts-local-first-apps.md",
+      "publishAt": "2026-07-02T15:15:00Z",
+      "tags": [
+        "database",
+        "privacy",
+        "testing",
+        "webdev"
+      ],
+      "canonical_url": null,
+      "description": "A practical pattern for proving what an import restored, skipped, upgraded, and left untouched.",
+      "series": null,
+      "injectCtas": false,
+      "published": false,
+      "articleId": 3993999,
+      "devtoUrl": "https://dev.to/crisiscoresystems/restore-receipts-the-missing-half-of-export-in-local-first-apps-2e32-temp-slug-1691689",
+      "draftVerification": {
+        "status": "verified",
+        "checkedAt": "2026-06-26T04:19:09.192Z"
+      },
+      "bodySha256": "a34b67a06dc5c020ad1ec5d3bcf6322d462b8df973d527d64fc98101f7348190",
+      "bodyHashAlgorithm": "sha256"
+    },
+    {
+      "key": "devto-storage-pressure-product-requirement",
+      "enabled": true,
+      "title": "Storage Pressure Is a Product Requirement, Not a Browser Quirk",
+      "sourceFile": "docs/content/blog/devto-storage-pressure-product-requirement.md",
+      "publishAt": "2026-07-07T15:15:00Z",
+      "tags": [
+        "pwa",
+        "webdev",
+        "architecture",
+        "testing"
+      ],
+      "canonical_url": null,
+      "description": "Quota, eviction, private browsing, and low-storage states need explicit product behavior in offline-capable apps.",
+      "series": null,
+      "injectCtas": false,
+      "published": false,
+      "articleId": 3994000,
+      "devtoUrl": "https://dev.to/crisiscoresystems/storage-pressure-is-a-product-requirement-not-a-browser-quirk-2a7g-temp-slug-8348857",
+      "draftVerification": {
+        "status": "verified",
+        "checkedAt": "2026-06-26T04:19:10.054Z"
+      },
+      "bodySha256": "59a169376517cd85d3a750b02e9962bb1aa7c5eb64c05676919ffd7bd058b8e3",
+      "bodyHashAlgorithm": "sha256"
+    },
+    {
+      "key": "devto-destructive-actions-recovery-design",
+      "enabled": true,
+      "title": "Destructive Actions Need Recovery Design, Not Just Confirmation Modals",
+      "sourceFile": "docs/content/blog/devto-destructive-actions-recovery-design.md",
+      "publishAt": "2026-07-09T15:15:00Z",
+      "tags": [
+        "ux",
+        "security",
+        "design",
+        "a11y"
+      ],
+      "canonical_url": null,
+      "description": "A high-trust UX pattern for delete, wipe, reset, and export flows when users may be stressed or interrupted.",
+      "series": null,
+      "injectCtas": false,
+      "published": false,
+      "articleId": 3994001,
+      "devtoUrl": "https://dev.to/crisiscoresystems/destructive-actions-need-recovery-design-not-just-confirmation-modals-15ci-temp-slug-8913567",
+      "draftVerification": {
+        "status": "verified",
+        "checkedAt": "2026-06-26T04:19:10.623Z"
+      },
+      "bodySha256": "3ec6d2cee8c80e93b8c431f8fa70762e02bb1daa2e9adf49a6797006d5c18ac7",
+      "bodyHashAlgorithm": "sha256"
+    },
+    {
+      "key": "devto-ai-sensitive-apps-extraction-path",
+      "enabled": true,
+      "title": "How to Add AI to Sensitive Apps Without Turning It Into an Extraction Path",
+      "sourceFile": "docs/content/blog/devto-ai-sensitive-apps-extraction-path.md",
+      "publishAt": "2026-07-14T15:15:00Z",
+      "tags": [
+        "ai",
+        "privacy",
+        "architecture",
+        "security"
+      ],
+      "canonical_url": null,
+      "description": "A boundary pattern for AI assistants that keeps core use local, requires explicit send, and treats model output as untrusted.",
+      "series": null,
+      "injectCtas": false,
+      "published": false,
+      "articleId": 3994002,
+      "devtoUrl": "https://dev.to/crisiscoresystems/how-to-add-ai-to-sensitive-apps-without-turning-it-into-an-extraction-path-322o-temp-slug-9835184",
+      "draftVerification": {
+        "status": "verified",
+        "checkedAt": "2026-06-26T04:19:12.689Z"
+      },
+      "bodySha256": "9f1e13cda1990cd351421afc9d08acabf7aa579ce0dde913249f5d7d2cf37e42",
+      "bodyHashAlgorithm": "sha256"
+    },
+    {
+      "key": "devto-protective-runbooks-degraded-mode",
+      "enabled": true,
+      "title": "Protective Runbooks for Degraded-Mode Product Decisions",
+      "sourceFile": "docs/content/blog/devto-protective-runbooks-degraded-mode.md",
+      "publishAt": "2026-07-16T15:15:00Z",
+      "tags": [
+        "architecture",
+        "sre",
+        "product",
+        "ux"
+      ],
+      "canonical_url": null,
+      "description": "A practical runbook format for deciding what a sensitive app should do when network, storage, auth, or optional services fail.",
+      "series": null,
+      "injectCtas": false,
+      "published": false,
+      "articleId": 3994003,
+      "devtoUrl": "https://dev.to/crisiscoresystems/protective-runbooks-for-degraded-mode-product-decisions-2hh2-temp-slug-5045958",
+      "draftVerification": {
+        "status": "verified",
+        "checkedAt": "2026-06-26T04:19:14.588Z"
+      },
+      "bodySha256": "4515397e61291db3994584c8af2f82ab733098e367832349b5832e2ad766585e",
+      "bodyHashAlgorithm": "sha256"
     }
   ]
 }

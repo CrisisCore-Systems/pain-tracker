@@ -10,7 +10,9 @@ tags:
 canonical_url: "https://github.com/CrisisCore-Systems/pain-tracker"
 published: false
 ---
-
+<!-- pain-tracker:target-link:start -->
+> Reduce appointment prep burden: [how to track pain for doctors](https://paintracker.ca/resources/how-to-track-pain-for-doctors)
+<!-- pain-tracker:target-link:end -->
 **Series:**
 [Start here](https://dev.to/crisiscoresystems/start-here-paintracker-crisiscore-build-log-privacy-first-offline-first-no-surveillance-3h0k)
 · [Part 1](https://dev.to/crisiscoresystems/offline-first-without-a-backend-a-local-first-pwa-architecture-you-can-trust-3j15)
@@ -26,7 +28,7 @@ published: false
 
 This post is Part 5 in a Dev.to series grounded in the open-source **Pain Tracker** repo.
 
-For the full reading path around this design layer, start with [Trauma-Informed Design: Start Here](https://blog.paintracker.ca/trauma-informed-design-start-here).
+For the full reading path around this design layer, start with [Trauma-informed design left everyone asking: "How does it actually know I'm struggling without spying?"](https://dev.to/crisiscoresystems/trauma-informed-design-left-everyone-asking-how-does-it-actually-know-im-struggling-without-26a0).
 
 It also serves as the architecture anchor for the broader Trauma-Informed
 Design reading path alongside

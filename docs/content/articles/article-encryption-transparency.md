@@ -6,12 +6,14 @@ tags: ["security", "privacy", "healthtech", "webdev"]
 cover_image: https://dev-to-uploads.s3.amazonaws.com/uploads/articles/encryption-transparency-cover.png
 canonical_url:
 ---
-
+<!-- pain-tracker:target-link:start -->
+> How PainTracker protects data under duress: [tracking data policy](https://paintracker.ca/tracking-data-policy)
+<!-- pain-tracker:target-link:end -->
 > Series: Client-Side Encryption for Health Apps
 > Part 2 of 3.
 > Start here: [Client-Side Encryption for Health Apps: Start Here](/blog/client-side-encryption-health-apps-start-here)
-> Read first: [Keeping Your Health Data Out of Court](https://blog.paintracker.ca/keeping-your-health-data-out-of-court)
-> Read next: [Client-Side Encryption for Healthcare Apps](https://blog.paintracker.ca/client-side-encryption-for-healthcare-apps)
+> Read first: [Keeping Your Health Data Out of Court](https://dev.to/crisiscoresystems/keeping-your-health-data-out-of-court-359i)
+> Read next: [Client-Side Encryption for Healthcare Apps](https://dev.to/crisiscoresystems/client-side-encryption-for-healthcare-apps-dhm)
 
 "Your data is encrypted."
 
@@ -40,7 +42,7 @@ None of this protects you from the company itself. None of it protects you from
 subpoenas. None of it protects you from the inevitable breach.
 
 If you want the courtroom version of that threat model instead of the abstract
-warning, read [Keeping Your Health Data Out of Court](https://blog.paintracker.ca/keeping-your-health-data-out-of-court).
+warning, read [Keeping Your Health Data Out of Court](https://dev.to/crisiscoresystems/keeping-your-health-data-out-of-court-359i).
 
 ---
 
@@ -362,6 +364,6 @@ verify, it doesn't have encryption. It has marketing.
 The encryption implementation is in `src/services/EncryptionService.ts`. It's
 not perfect. It's auditable. That's the point. For the full Web Crypto API
 implementation behind Pain Tracker's encryption, read [Client-Side Encryption
-for Healthcare Apps](https://blog.paintracker.ca/client-side-encryption-for-healthcare-apps).
+for Healthcare Apps](https://dev.to/crisiscoresystems/client-side-encryption-for-healthcare-apps-dhm).
 
 Read it. Tell me what I missed. Build something better.

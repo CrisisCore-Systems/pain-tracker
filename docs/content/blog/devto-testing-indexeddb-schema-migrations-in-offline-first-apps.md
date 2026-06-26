@@ -10,7 +10,7 @@ published: false
 canonical_url: "https://github.com/CrisisCore-Systems/pain-tracker"
 ---
 <!-- pain-tracker:target-link:start -->
-> Track longer patterns: [chronic pain diary template](https://www.paintracker.ca/resources/chronic-pain-diary-template)
+> Track longer patterns: [chronic pain diary template](https://paintracker.ca/resources/chronic-pain-diary-template)
 <!-- pain-tracker:target-link:end -->
 This is the migration-safety stop in the failure-mode and testing path.
 

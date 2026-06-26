@@ -10,7 +10,9 @@ tags:
 canonical_url: "https://github.com/CrisisCore-Systems/pain-tracker"
 published: false
 ---
-
+<!-- pain-tracker:target-link:start -->
+> Install the private offline-capable app: [download PainTracker](https://paintracker.ca/download)
+<!-- pain-tracker:target-link:end -->
 **Series:**
 [Start here](https://dev.to/crisiscoresystems/start-here-paintracker-crisiscore-build-log-privacy-first-offline-first-no-surveillance-3h0k)
 · [Part 1](https://dev.to/crisiscoresystems/offline-first-without-a-backend-a-local-first-pwa-architecture-you-can-trust-3j15)

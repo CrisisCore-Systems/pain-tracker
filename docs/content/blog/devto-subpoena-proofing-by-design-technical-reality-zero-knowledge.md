@@ -13,7 +13,7 @@ published: false
 <!-- pain-tracker:target-link:end -->
 If you want the short Layer 1 path into this argument, read these first:
 
-1. [Keeping Your Health Data Out of Court](https://dev.to/crisiscoresystems/keeping-your-health-data-out-of-court-3f0m)
+1. [Keeping Your Health Data Out of Court](https://dev.to/crisiscoresystems/keeping-your-health-data-out-of-court-359i)
 2. [If Your Health App Can't Explain Its Encryption, It Doesn't Have Any](https://dev.to/crisiscoresystems/if-your-health-app-cant-explain-its-encryption-it-doesnt-have-any-57pf)
 3. [Client-Side Encryption for Healthcare Apps](https://dev.to/crisiscoresystems/client-side-encryption-for-healthcare-apps-dhm)
 

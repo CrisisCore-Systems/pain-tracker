@@ -1,4 +1,5 @@
 import fs from 'node:fs/promises';
+import crypto from 'node:crypto';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
@@ -352,10 +353,15 @@ function matchesOnlyKeys(post, onlyKeys) {
 }
 
 function ensureStringArrayTags(tags) {
-  if (!tags) return '';
-  if (typeof tags === 'string') return tags;
-  if (Array.isArray(tags)) return tags.join(', ');
-  return '';
+  if (!tags) return [];
+  if (typeof tags === 'string') {
+    return tags
+      .split(',')
+      .map((tag) => tag.trim())
+      .filter(Boolean);
+  }
+  if (Array.isArray(tags)) return tags.map((tag) => String(tag ?? '').trim()).filter(Boolean);
+  return [];
 }
 
 function resolvePostMainImage(post, currentArticle = null) {
@@ -599,6 +605,39 @@ function stripFrontMatter(md) {
 
 function normalizeBodyMarkdownForDev(md) {
   return stripFrontMatter(md).trimStart();
+}
+
+function normalizeBodyMarkdownForHash(md) {
+  return normalizeBodyMarkdownForDev(md).replace(/\r\n/g, '\n').trimEnd();
+}
+
+function computeBodySha256(md) {
+  return crypto.createHash('sha256').update(normalizeBodyMarkdownForHash(md), 'utf8').digest('hex');
+}
+
+function approvePostBodyHash(post, body_markdown) {
+  post.bodySha256 = computeBodySha256(body_markdown);
+  post.bodyHashAlgorithm = 'sha256';
+}
+
+function getApprovedBodyHash(post) {
+  return (
+    (typeof post?.bodySha256 === 'string' && post.bodySha256.trim()) ||
+    (typeof post?.body_sha256 === 'string' && post.body_sha256.trim()) ||
+    (typeof post?.bodyHash === 'string' && post.bodyHash.trim()) ||
+    null
+  );
+}
+
+function getArticleBodyHash(article) {
+  if (typeof article?.body_markdown !== 'string' || article.body_markdown.length === 0) {
+    return null;
+  }
+  return computeBodySha256(article.body_markdown);
+}
+
+function shortHash(hash) {
+  return String(hash ?? '').slice(0, 12) || '(none)';
 }
 
 function hasAllMarkers(md, markers) {
@@ -1063,6 +1102,80 @@ async function listAllUserArticles() {
   return all;
 }
 
+async function getUserArticleFromAllById(articleId) {
+  const id = Number(articleId);
+  if (!Number.isFinite(id)) return null;
+  const all = await listAllUserArticles();
+  return all.find((article) => article?.id === id) ?? null;
+}
+
+function normalizeTagsForCompare(tags) {
+  if (Array.isArray(tags)) {
+    return tags.map((tag) => String(tag ?? '').trim().toLowerCase()).filter(Boolean).sort();
+  }
+  return String(tags ?? '')
+    .split(',')
+    .map((tag) => tag.trim().toLowerCase())
+    .filter(Boolean)
+    .sort();
+}
+
+function getArticleTagsForCompare(article) {
+  if (Array.isArray(article?.tag_list)) return normalizeTagsForCompare(article.tag_list);
+  if (Array.isArray(article?.tags)) return normalizeTagsForCompare(article.tags);
+  return normalizeTagsForCompare(article?.tags ?? article?.tag_list ?? '');
+}
+
+function getPostTagsForCompare(post) {
+  return normalizeTagsForCompare(post?.tags ?? '');
+}
+
+function arraysEqual(a, b) {
+  if (a.length !== b.length) return false;
+  return a.every((value, index) => value === b[index]);
+}
+
+function validateDraftAgainstSchedule(post, article, body_markdown) {
+  const issues = [];
+  if (!article) {
+    return ['DEV draft was not found after creation/linking'];
+  }
+
+  const desiredTitle = String(post?.title ?? '').trim();
+  const currentTitle = String(article?.title ?? '').trim();
+  if (normalizeDevComparableTitle(currentTitle) !== normalizeDevComparableTitle(desiredTitle)) {
+    issues.push(`title mismatch (${currentTitle || '(blank)'})`);
+  }
+
+  const currentBodyHash = getArticleBodyHash(article);
+  const desiredBodyHash = computeBodySha256(body_markdown);
+  if (!currentBodyHash) {
+    issues.push('DEV draft did not include body_markdown');
+  } else if (currentBodyHash !== desiredBodyHash) {
+    issues.push(`body hash mismatch (DEV ${shortHash(currentBodyHash)} vs repo ${shortHash(desiredBodyHash)})`);
+  }
+
+  const desiredTags = getPostTagsForCompare(post);
+  const currentTags = getArticleTagsForCompare(article);
+  if (!arraysEqual(currentTags, desiredTags)) {
+    issues.push(`tag mismatch (DEV ${currentTags.join(',') || '(none)'} vs repo ${desiredTags.join(',') || '(none)'})`);
+  }
+
+  if (post?.description) {
+    const desiredDescription = String(post.description).trim();
+    const currentDescription = String(article?.description ?? '').trim();
+    if (currentDescription !== desiredDescription) {
+      issues.push('description mismatch');
+    }
+  }
+
+  if (article?.published === true && !isScheduledForFuture(article)) {
+    issues.push('article is already published');
+  }
+
+  return issues;
+}
+
 async function getArticleById(articleId) {
   try {
     return await devtoRequest('GET', `/articles/${articleId}`);
@@ -1123,6 +1236,7 @@ function isDueNow(publishAt, now = new Date()) {
 }
 
 function isPublishedInPast(article, now = new Date()) {
+  if (article?.published === false) return false;
   const ts = article?.published_at ?? article?.published_timestamp;
   if (!ts) return Boolean(article?.published);
   const t = Date.parse(ts);
@@ -1209,12 +1323,61 @@ function buildPublishedPayload(post, current, body_markdown, config) {
   });
 }
 
-async function publishArticleForPost(post, current, config) {
-  const body_markdown = await readBodyMarkdownForPost(post, config);
-  const payload = buildPublishedPayload(post, current, body_markdown, config);
+function getPublishApprovalState(post, current, body_markdown) {
+  const approvedHash = getApprovedBodyHash(post);
+  if (!approvedHash) {
+    return {
+      ok: false,
+      reason: 'missing approved body hash',
+      approvedHash: null,
+      expectedHash: computeBodySha256(body_markdown),
+      currentHash: getArticleBodyHash(current),
+    };
+  }
+
+  const expectedHash = computeBodySha256(body_markdown);
+  if (approvedHash !== expectedHash) {
+    return {
+      ok: false,
+      reason: 'repo body differs from approved body hash',
+      approvedHash,
+      expectedHash,
+      currentHash: getArticleBodyHash(current),
+    };
+  }
+
+  const currentHash = getArticleBodyHash(current);
+  if (!currentHash) {
+    return {
+      ok: false,
+      reason: 'DEV draft did not include body_markdown for verification',
+      approvedHash,
+      expectedHash,
+      currentHash: null,
+    };
+  }
+
+  if (currentHash !== approvedHash) {
+    return {
+      ok: false,
+      reason: 'DEV draft body differs from approved body hash',
+      approvedHash,
+      expectedHash,
+      currentHash,
+    };
+  }
+
+  return { ok: true, approvedHash, expectedHash, currentHash };
+}
+
+async function publishArticleForPost(post, current, config, body_markdown) {
+  const approvedBody = body_markdown ?? await readBodyMarkdownForPost(post, config);
+  const payload = buildPublishedPayload(post, current, approvedBody, config);
   const updated = await devtoRequest('PUT', `/articles/${post.articleId}`, payload);
   post.devtoUrl = updated.url ?? post.devtoUrl;
   post.published = true;
+  post.publishedAtActual = new Date().toISOString();
+  approvePostBodyHash(post, approvedBody);
   return updated;
 }
 
@@ -1558,9 +1721,33 @@ async function processPushSourcePost({ post, allCache, now, yes, allowPublished,
 
   const updated = await devtoRequest('PUT', `/articles/${post.articleId}`, payload);
   post.devtoUrl = updated?.url ?? post.devtoUrl;
+  const verifiedArticle =
+    typeof updated?.body_markdown === 'string'
+      ? updated
+      : await getUserArticleFromAllById(post.articleId);
+  const issues = validateDraftAgainstSchedule(post, verifiedArticle ?? updated, body_markdown);
+  if (issues.length > 0) {
+    post.draftVerification = {
+      status: 'failed',
+      checkedAt: new Date().toISOString(),
+      issues,
+    };
+    console.log(`Pushed but verification failed: ${post.title}`);
+    console.log(`  id:  ${post.articleId}`);
+    console.log(`  url: ${post.devtoUrl}`);
+    for (const issue of issues) console.log(`  - ${issue}`);
+    return { pushed: 1, linked: resolved.linked ? 1 : 0, skipped: 0 };
+  }
+
+  approvePostBodyHash(post, body_markdown);
+  post.draftVerification = {
+    status: 'verified',
+    checkedAt: new Date().toISOString(),
+  };
   console.log(`Pushed: ${post.title}`);
   console.log(`  id:  ${post.articleId}`);
   console.log(`  url: ${post.devtoUrl}`);
+  console.log(`  bodySha256: ${shortHash(post.bodySha256)}...`);
   return { pushed: 1, linked: resolved.linked ? 1 : 0, skipped: 0 };
 }
 
@@ -1781,6 +1968,7 @@ async function cmdCreateDrafts(schedule, { write, onlyKeys } = {}) {
   const pinned = [];
   let created = 0;
   let linked = 0;
+  let verificationFailed = 0;
 
   // Use /articles/me/all so we can link already-scheduled posts (they may not appear under /me/unpublished).
   const existingAll = await listAllUserArticles();
@@ -1792,15 +1980,65 @@ async function cmdCreateDrafts(schedule, { write, onlyKeys } = {}) {
 
     const resolved = resolveCurrentArticleForPost({ post, allCache: existingAll, now: new Date() });
     if (resolved.current?.id) {
+      const body_markdown = await readBodyMarkdownForPost(post, config);
+      const issues = validateDraftAgainstSchedule(post, resolved.current, body_markdown);
+      if (issues.length > 0) {
+        if (resolved.linked) {
+          post.articleId = null;
+          post.devtoUrl = null;
+        }
+        post.draftVerification = {
+          status: 'failed',
+          checkedAt: new Date().toISOString(),
+          issues,
+        };
+        verificationFailed += 1;
+        console.log(`Skip (existing DEV draft failed verification): ${post.title}`);
+        for (const issue of issues) console.log(`  - ${issue}`);
+        continue;
+      }
+
+      approvePostBodyHash(post, body_markdown);
+      post.draftVerification = {
+        status: 'verified',
+        checkedAt: new Date().toISOString(),
+      };
       linked += 1;
       console.log(`Linked existing draft: ${post.title}`);
       console.log(`  id: ${post.articleId}`);
       console.log(`  url: ${post.devtoUrl}`);
+      console.log(`  bodySha256: ${shortHash(post.bodySha256)}...`);
       continue;
     }
 
+    const body_markdown = await readBodyMarkdownForPost(post, config);
     const createdArticle = await createDraftArticleForPost(post, config);
-    existingAll.push(createdArticle);
+    const verifiedArticle =
+      typeof createdArticle?.body_markdown === 'string'
+        ? createdArticle
+        : await getUserArticleFromAllById(post.articleId);
+    existingAll.push(verifiedArticle ?? createdArticle);
+
+    const issues = validateDraftAgainstSchedule(post, verifiedArticle ?? createdArticle, body_markdown);
+    if (issues.length > 0) {
+      post.draftVerification = {
+        status: 'failed',
+        checkedAt: new Date().toISOString(),
+        issues,
+      };
+      verificationFailed += 1;
+      console.log(`Created draft but verification failed: ${post.title}`);
+      console.log(`  id: ${post.articleId}`);
+      console.log(`  url: ${post.devtoUrl}`);
+      for (const issue of issues) console.log(`  - ${issue}`);
+      continue;
+    }
+
+    approvePostBodyHash(post, body_markdown);
+    post.draftVerification = {
+      status: 'verified',
+      checkedAt: new Date().toISOString(),
+    };
     created += 1;
 
     const { pinnedComment } = buildCtas(config);
@@ -1809,6 +2047,7 @@ async function cmdCreateDrafts(schedule, { write, onlyKeys } = {}) {
     console.log(`Created draft: ${post.title}`);
     console.log(`  id: ${post.articleId}`);
     console.log(`  url: ${post.devtoUrl}`);
+    console.log(`  bodySha256: ${shortHash(post.bodySha256)}...`);
   }
 
   if (created > 0) {
@@ -1820,13 +2059,13 @@ async function cmdCreateDrafts(schedule, { write, onlyKeys } = {}) {
       onWrite: 'Wrote updated article IDs back into schedule.json',
       onSkip: 'Drafts created, but schedule.json not modified (run with --write to persist IDs).',
     });
-  } else if (linked > 0) {
+  } else if (linked > 0 || verificationFailed > 0) {
     console.log('');
     await persistScheduleWrite({
       write,
       schedule,
-      onWrite: 'Wrote linked article IDs back into schedule.json',
-      onSkip: 'Linked drafts, but schedule.json not modified (run with --write to persist IDs).',
+      onWrite: 'Wrote linked/verification state back into schedule.json',
+      onSkip: 'Linked or verified drafts, but schedule.json not modified (run with --write to persist state).',
     });
   } else {
     console.log('No drafts to create or link.');
@@ -1842,6 +2081,7 @@ async function cmdPublishDue(schedule, { yes, write, onlyKeys } = {}) {
 
   const now = new Date();
   let publishedCount = 0;
+  let linkedCount = 0;
 
   // Use /articles/me/all to avoid duplicating already-scheduled posts.
   const allCache = await listAllUserArticles();
@@ -1851,21 +2091,34 @@ async function cmdPublishDue(schedule, { yes, write, onlyKeys } = {}) {
     if (!post.enabled) continue;
     if (!isDueNow(post.publishAt, now)) continue;
 
-    const ensured = await ensureDraftArticleForPost({ post, allCache, now, config });
-    if (!post.articleId || !ensured.current) {
-      console.log(`Skip (no article id): ${post.title}`);
+    const resolved = resolveCurrentArticleForPost({ post, allCache, now });
+    logRelinkIfNeeded(post, resolved);
+    if (resolved.linked) linkedCount += 1;
+
+    if (!post.articleId || !resolved.current) {
+      console.log(`Skip (no approved DEV draft found): ${post.title}`);
       continue;
     }
-    if (isLockedPublishedArticle(ensured.current, now)) {
+    if (isLockedPublishedArticle(resolved.current, now)) {
       console.log(`Skip (already published): ${post.title}`);
       continue;
     }
-    if (isScheduledForFuture(ensured.current, now)) {
+    if (isScheduledForFuture(resolved.current, now)) {
       console.log(`Skip (already scheduled): ${post.title}`);
       continue;
     }
 
-    await publishArticleForPost(post, ensured.current, config);
+    const body_markdown = await readBodyMarkdownForPost(post, config);
+    const approval = getPublishApprovalState(post, resolved.current, body_markdown);
+    if (!approval.ok) {
+      console.log(`Skip (${approval.reason}): ${post.title}`);
+      console.log(`  approved: ${shortHash(approval.approvedHash)}`);
+      console.log(`  repo:     ${shortHash(approval.expectedHash)}`);
+      console.log(`  DEV:      ${shortHash(approval.currentHash)}`);
+      continue;
+    }
+
+    await publishArticleForPost(post, resolved.current, config, body_markdown);
 
     publishedCount += 1;
 
@@ -1874,7 +2127,7 @@ async function cmdPublishDue(schedule, { yes, write, onlyKeys } = {}) {
     console.log(`  url: ${post.devtoUrl}`);
   }
 
-  if (publishedCount === 0) {
+  if (publishedCount === 0 && linkedCount === 0) {
     console.log('No posts were due to publish.');
     return;
   }
@@ -1883,8 +2136,8 @@ async function cmdPublishDue(schedule, { yes, write, onlyKeys } = {}) {
   await persistScheduleWrite({
     write,
     schedule,
-    onWrite: 'Wrote published flags back into schedule.json',
-    onSkip: 'Published posts, but schedule.json not modified (run with --write to persist flags).',
+    onWrite: 'Wrote published/link state back into schedule.json',
+    onSkip: 'Published or linked posts, but schedule.json not modified (run with --write to persist state).',
   });
 }
 

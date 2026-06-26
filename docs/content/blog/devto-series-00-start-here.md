@@ -46,9 +46,9 @@ This is the doctrine layer. Read this path first if you want the argument undern
 This layer answers the hard question: what makes the system harder to seize, subpoena, or casually over-collect?
 
 1. [Client-Side Encryption for Healthcare Apps](https://dev.to/crisiscoresystems/client-side-encryption-for-healthcare-apps-dhm)
-2. [If Your Health App Can't Explain Its Encryption, It Doesn't Have Any](https://dev.to/crisiscoresystems/if-your-health-app-cant-explain-its-encryption-it-doesnt-have-any-1647)
-3. [No Backend, No Excuses: The Architecture Behind a Private Health App](https://dev.to/crisiscoresystems/no-backend-no-excuses-the-architecture-behind-a-private-health-app-1g52)
-4. [Keeping Your Health Data Out of Court](https://dev.to/crisiscoresystems/keeping-your-health-data-out-of-court-3f0m)
+2. [If Your Health App Can't Explain Its Encryption, It Doesn't Have Any](https://dev.to/crisiscoresystems/if-your-health-app-cant-explain-its-encryption-it-doesnt-have-any-57pf)
+3. [No Backend, No Excuses: Building a Pain Tracker That Doesn't Sell You Out](https://dev.to/crisiscoresystems/no-backend-no-excuses-building-a-pain-tracker-that-doesnt-sell-you-out-118j)
+4. [Keeping Your Health Data Out of Court](https://dev.to/crisiscoresystems/keeping-your-health-data-out-of-court-359i)
 
 ## Layer 2: The Resilience
 
@@ -65,7 +65,7 @@ This layer covers degraded-mode behavior. It is where the system proves it still
 This layer explains why the interface is allowed to resist speed, reduce pressure, and adapt to instability instead of optimizing for throughput.
 
 1. [Trauma-Informed React Hooks](https://dev.to/crisiscoresystems/trauma-informed-react-hooks-483n)
-2. [Trauma-Informed UX: Accessibility as Architecture](https://dev.to/crisiscoresystems/trauma-informed-ux-accessibility-as-architecture-3j0d)
+2. [Trauma-informed UX + accessibility as architecture (not polish)](https://dev.to/crisiscoresystems/trauma-informed-ux-accessibility-as-architecture-not-polish-22jg)
 3. [The Micro-Coercion of Speed: Why Friction Is an Engineering Prerequisite](https://dev.to/crisiscoresystems/the-micro-coercion-of-speed-why-friction-is-an-engineering-prerequisite-g4j)
 4. [Coercion-Resistant UX: Designing Interfaces That Don't Pressure Users Under Stress](https://dev.to/crisiscoresystems/coercion-resistant-ux-designing-interfaces-that-dont-pressure-users-under-stress-18m9)
 

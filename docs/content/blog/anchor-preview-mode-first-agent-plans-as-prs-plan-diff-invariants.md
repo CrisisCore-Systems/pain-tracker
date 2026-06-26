@@ -14,7 +14,7 @@ published: true
 If you’re using AI agents in delivery workflows, the safest default is not “let it run.”
 It’s **Preview Mode First**.
 
-If you want the short reading path around this topic instead of a single post, start with [AI Agents Under Protective Computing: Start Here](https://blog.paintracker.ca/ai-agents-protective-computing-start-here).
+If you want the broader reading path around this topic instead of a single post, start with [Start Here: PainTracker and the CrisisCore Build Log](https://dev.to/crisiscoresystems/start-here-paintracker-crisiscore-build-log-privacy-first-offline-first-no-surveillance-3h0k).
 
 For the broader trust and release path this also belongs to, read this sequence:
 

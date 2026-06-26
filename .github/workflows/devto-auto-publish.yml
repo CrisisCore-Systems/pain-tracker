@@ -16,7 +16,7 @@ on:
         default: "false"
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: devto-auto-publish
@@ -65,7 +65,20 @@ jobs:
           fi
 
           if [ "${{ inputs.command }}" = "publish-due" ]; then
-            node scripts/devto/devto.mjs publish-due --yes
+            node scripts/devto/devto.mjs publish-due --yes --write
           else
             node scripts/devto/devto.mjs "${{ inputs.command }}" --write
           fi
+
+      - name: Persist DEV.to schedule state
+        run: |
+          if git diff --quiet -- scripts/devto/schedule.json scripts/devto/pinned-comments.md; then
+            echo "No DEV.to schedule state changes to persist."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add scripts/devto/schedule.json scripts/devto/pinned-comments.md
+          git commit -m "chore(devto): persist auto-publish state"
+          git push

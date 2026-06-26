@@ -11,9 +11,9 @@ cover_image:
 > conformance framing, and PLS links, read
 > [Architecting for Vulnerability: Introducing Protective Computing Core v1.0](https://dev.to/crisiscoresystems/architecting-for-vulnerability-introducing-protective-computing-core-v10-91g)
 >
-> If you want the AI / agentic systems reading path that grows out of this
+> If you want the broader implementation reading path that grows out of this
 > doctrine, start with
-> [AI Agents Under Protective Computing: Start Here](https://blog.paintracker.ca/ai-agents-protective-computing-start-here)
+> [Start Here: PainTracker and the CrisisCore Build Log](https://dev.to/crisiscoresystems/start-here-paintracker-crisiscore-build-log-privacy-first-offline-first-no-surveillance-3h0k)
 
 Privacy features are easy to ship. A toggle. A consent modal. An export button.
 Protective Computing asks a different question: does this system stay legible

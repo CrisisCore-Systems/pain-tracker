@@ -10,7 +10,9 @@ tags:
 canonical_url: "https://github.com/CrisisCore-Systems/pain-tracker"
 published: false
 ---
-
+<!-- pain-tracker:target-link:start -->
+> Keep WorkSafeBC notes structured: [WorkSafeBC pain journal template](https://paintracker.ca/resources/worksafebc-pain-journal-template)
+<!-- pain-tracker:target-link:end -->
 **Series:**
 [Start here](https://dev.to/crisiscoresystems/start-here-paintracker-crisiscore-build-log-privacy-first-offline-first-no-surveillance-3h0k)
 · [Part 1](https://dev.to/crisiscoresystems/offline-first-without-a-backend-a-local-first-pwa-architecture-you-can-trust-3j15)
@@ -26,11 +28,11 @@ published: false
 
 This post is Part 7 in a Dev.to series grounded in the open-source **Pain Tracker** repo.
 
-For the short reading path around this specific workflow cluster, start with [WorkSafeBC Documentation Workflows: Start Here](https://blog.paintracker.ca/worksafebc-documentation-workflows-start-here).
+For the short reading path around this specific workflow cluster, start with [WorkSafeBC-oriented workflows without overclaims](https://dev.to/crisiscoresystems/worksafebc-oriented-workflows-without-overclaims-structured-summaries-careful-language-2n3i).
 
 If you want the worked example after the philosophy, read the companion case study next:
 
-- [How Pain Tracker Pro Streamlines WorkSafeBC Claims: A Composite Case Study](https://blog.paintracker.ca/how-pain-tracker-pro-streamlines-worksafebc-claims-a-composite-case-study)
+- [How Pain Tracker Pro Streamlines WorkSafeBC Claims: A Composite Case Study](https://dev.to/crisiscoresystems/how-pain-tracker-pro-streamlines-worksafebc-claims-a-composite-case-study-4ce8)
 
 - Not medical advice.
 - Not a compliance claim.

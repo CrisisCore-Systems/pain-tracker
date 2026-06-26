@@ -311,8 +311,8 @@ Huckvale, K., et al. “Unaddressed Privacy Risks in Accredited Health and Welln
 University of Washington. “PainTracker Patient Questionnaire.” UW Medicine Center for Pain Relief,
 [https://paintracker.uwmedicine.org](https://paintracker.uwmedicine.org). Accessed 1 Dec. 2025.
 
-—. “PainTracker.” CoMotion at the University of Washington,
-[https://els2.comotion.uw.edu/product/paintracker](https://els2.comotion.uw.edu/product/paintracker). Accessed 1 Dec. 2025.
+CrisisCore Systems. “PainTracker.”
+[https://paintracker.ca](https://paintracker.ca). Accessed 1 Dec. 2025.
 
 Teale, Chris. “A Major Obstacle to Tech Companies Developing Health Apps: About 2 in 3 Adults Worry About Their Privacy.” Morning Consult Pro, 1 Oct. 2021,
 [https://pro.morningconsult.com/articles/health-tech-tracking-apps-data-privacy-poll](https://pro.morningconsult.com/articles/health-tech-tracking-apps-data-privacy-poll). Accessed 1 Dec. 2025.
