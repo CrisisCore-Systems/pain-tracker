@@ -12,12 +12,12 @@ boundaries.
 - No shipping while exhausted.
 - No “just one more fix” after cutoff.
 
-## Daily Baseline (Eating / Sleeping / Cutoff)
+## Daily Baseline (Sleep / Meals / Cutoff)
 
 - **Sleep target**: 7–9 hours.
-- **Meals**: 2–3 meals (or equivalent) + water. If meals are hard, prioritize *something* before coding.
+- **Meals**: 2–3 meals (or adequate nutrition) + water. If a full meal is difficult, prioritize having some food and water before coding.
 - **Hard code cutoff**: stop coding by **21:00 local time**.
-- **Hard deploy cutoff**: no production deploys after **18:00 local time**.
+- **Hard deploy cutoff**: no production deployments after **18:00 local time**.
 
 If you’re already sleep-deprived, the only acceptable work is:
 
@@ -47,7 +47,7 @@ See `docs/security/DATA_FLOW_MAP.md` for a full inventory of data ingress/egress
 
 ## Work Rhythm
 
-- **Pomodoro default**: 25/5, with a longer break every 2 hours.
+- **Default Pomodoro rhythm**: 25/5, with a longer break every 2 hours.
 - **Body check**: every break—water, bathroom, posture.
 - **“Done for today” rule**: end the session after the first clean green test run.
 
